@@ -167,6 +167,16 @@ Calçados Mágicos e, com ela na página de runas, entram — e as Botas comuns 
 estava numa caixa que conta ganha o cadeado quando a rota muda; e na loja o card trancado mostra o cadeado (também
 depois de a busca redesenhar a grade) e o clique não entra.
 
+**Aviso** (F13-T72; Leo, 15/10/2026: "como o sistema de lentidão, que sempre prioriza o valor mais alto, e o Feridas
+Dolorosas") — o que o aviso lê do catálogo bate: a passiva (ou ativa) única de mesmo nome — fora as sem nome ("—") — e
+as etiquetas Lentidão e Anti-Cura dão 81 pares em 32 itens; a mensagem exata da passiva (Morellonomicon e Orbe do
+Oblívio, sem repetir o Anti-Cura dos dois) e da etiqueta (Serrespada, Presságio); a cópia repetida também avisa; e o
+par que já divide um grupo "Limitado a 1" (as Hidras, Manamune e Muramana) fica só com o cadeado. Com cliques de
+verdade: na bandeja, a Orbe com o selo para a Comum (não para a Opcional), entra e o recado da forja diz com o que não
+acumula; no molde, o selo nos dois que contam — não na Opcional nem na alternativa da Escolha 1 — e o motivo no balão;
+na loja, o card com o selo, também quando a build muda com a loja aberta (a Zeke ganha o selo quando o Presságio
+entra), a Zhonya sem; o clique no Rylai entra e o recado da loja diz a Lentidão.
+
 **Passiva do Ornn** (F13-T60; Leo, 23/10/2026) — o "Mestre Forjador" virou "Passiva do Ornn" na tela e a placa
 "MF" do item virou "Ornn": nenhum texto do app diz mais o nome velho — o HTML inteiro (inclusive o que está
 escondido, menos script e style), os `title` e os `placeholder`, com o item forjado na forja, o balão aberto e a

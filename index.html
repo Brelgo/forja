@@ -4239,6 +4239,15 @@ body:not(.editando) .build-empty::after { content: "Esta build ainda não tem ne
 }
 .picker-row.trancado .pk-abbr img, .card.trancado .card-icon img, .item-tile.trancado .item-icon img { filter: grayscale(.75) brightness(.6); }
 .picker-row.trancado { cursor: not-allowed; }
+/* F13-T72: o aviso — um efeito que não acumula com outro item que conta. Não
+   tranca: o selo (moedas empilhadas, riscadas em brasa) fica no canto oposto */
+.picker-row.nao-soma .pk-abbr, .card.nao-soma .card-icon, .item-tile.nao-soma .item-icon { position: relative; }
+.picker-row.nao-soma .pk-abbr::before, .card.nao-soma .card-icon::before, .item-tile.nao-soma .item-icon::before {
+  content: ""; position: absolute; left: 2px; bottom: 2px; width: 17px; height: 17px; z-index: 4; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%231b120a'/%3E%3Cellipse cx='8' cy='10.4' rx='4.2' ry='1.6' fill='%23e7c46f'/%3E%3Cellipse cx='8' cy='7.8' rx='4.2' ry='1.6' fill='%23e7c46f' stroke='%231b120a' stroke-width='.8'/%3E%3Cellipse cx='8' cy='5.2' rx='4.2' ry='1.6' fill='%23e7c46f' stroke='%231b120a' stroke-width='.8'/%3E%3Cpath d='M3.4 12.6 12.6 3.4' stroke='%23ff7a1e' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.85));
+}
+.item-tooltip .tt-aviso { color: #e7c46f; font-style: italic; margin-top: 4px; }
 .item-tile.mf-elegivel .mf-badge { display: block; }
 body.editando .item-tile.mf-elegivel .item-icon { cursor: pointer; }
 body.editando .item-tile.mf-elegivel:not(.mf):hover .item-icon { border-color: #e7c46f; box-shadow: 0 0 12px rgba(231,196,111,.6); }
@@ -6059,7 +6068,10 @@ function motivoNaCaixaEscolhida(item, ctx) {
   return motivoDoCadeado(item, ctx);
 }
 function avisarCadeado(item, motivo) {
-  const html = `<b>${esc(item.namePt)}</b> está trancado nesta build: ${esc(motivo)}. Numa caixa Opcional ele entra.`;
+  mostrarAvisoDaBuild(`<b>${esc(item.namePt)}</b> está trancado nesta build: ${esc(motivo)}. Numa caixa Opcional ele entra.`);
+}
+// O recado do cadeado e do aviso: na loja, a faixa da loja; na forja, a da forja.
+function mostrarAvisoDaBuild(html) {
   if (!document.getElementById("view-catalog").classList.contains("hidden")) { showCatalogModeHint(html); return; }
   const h = document.getElementById("edit-hint");
   if (!h) return;
@@ -6067,6 +6079,69 @@ function avisarCadeado(item, motivo) {
   h.classList.add("show");
   clearTimeout(editHintTimer);
   editHintTimer = setTimeout(() => h.classList.remove("show"), 4500);
+}
+
+// F13-T72: o efeito que não acumula (Leo, 15/10/2026: "como o sistema de
+// lentidão, que sempre prioriza o valor mais alto, e o Feridas Dolorosas").
+// Não tranca: avisa. Do catálogo: a passiva (ou ativa) única de mesmo nome — no
+// jogo ela vale uma vez só — e as etiquetas de efeito em que só o mais forte
+// vale. Qual é o mais forte pede o número de cada efeito num campo (pendência D4
+// do Capítulo 1); por isso o aviso não aponta o inferior. O par que já divide um
+// grupo "Limitado a 1" fica com o cadeado, não com o aviso.
+const EFEITOS_SO_O_MAIS_FORTE = ["Lentidão", "Anti-Cura"];
+let unicasProntas = null;
+function unicasDoItem(slug) {
+  if (!unicasProntas) {
+    unicasProntas = {};
+    CATALOG.items.forEach(it => {
+      const vistas = new Map();
+      (it.abilities || []).forEach(a => {
+        const nome = (a.name || "").trim();
+        if (/única/.test(a.type || "") && nome && !/^[—–-]+$/.test(nome) && !vistas.has(nome)) vistas.set(nome, /ativa/.test(a.type) ? "ativa" : "passiva");
+      });
+      unicasProntas[it.slug] = [...vistas].map(([nome, tipo]) => ({ nome, tipo }));
+    });
+  }
+  return unicasProntas[slug] || [];
+}
+function juntarNomes(slugs) {
+  const n = slugs.map(s => byId[s].namePt);
+  return n.length > 1 ? n.slice(0, -1).join(", ") + " e " + n[n.length - 1] : n[0];
+}
+// Com o que o item não acumula nesta build ("" = nada). `ignorar`: como no cadeado.
+// Uma segunda cópia do mesmo item também conta: duas Orbes não somam a passiva.
+function motivoDoAviso(item, ctx, ignorar = []) {
+  const t = travas(), gs = t.grupos[item.slug] || [];
+  const outros = ctx.contam.filter(e => !ignorar.includes(e) && byId[e.itemId]
+    && !(t.grupos[e.itemId] || []).some(g => gs.includes(g)));
+  const out = [], ja = new Set();
+  unicasDoItem(item.slug).forEach(({ nome, tipo }) => {
+    const com = [...new Set(outros.filter(e => unicasDoItem(e.itemId).some(u => u.nome === nome)).map(e => e.itemId))];
+    if (!com.length) return;
+    com.forEach(s => ja.add(s));
+    out.push(`a ${tipo} única ${nome} não acumula com ${juntarNomes(com)} — vale uma só`);
+  });
+  EFEITOS_SO_O_MAIS_FORTE.forEach(tag => {
+    if (!(item.specialEffects || []).includes(tag)) return;
+    const com = [...new Set(outros.filter(e => !ja.has(e.itemId) && (byId[e.itemId].specialEffects || []).includes(tag)).map(e => e.itemId))];
+    if (com.length) out.push(`o efeito ${tag} não soma com ${juntarNomes(com)} — vale o mais forte`);
+  });
+  return out.join("; ");
+}
+// O aviso da bandeja e da loja, para a caixa escolhida — como o cadeado.
+function avisoNaCaixaEscolhida(item, ctx) {
+  const alvo = getCat(build.selectedCatId);
+  if (alvo && (alvo.kind === "opcional" || (alvo.kind === "escolha" && alvo.items.length))) return "";
+  return motivoDoAviso(item, ctx);
+}
+// Depois de pôr: entrou, e o recado diz com o que não acumula.
+function avisoDepoisDePor(cat, entry) {
+  const i = cat.items.indexOf(entry);
+  if (i < 0 || !contaNaBuild(cat, i) || !byId[entry.itemId]) return "";
+  return motivoDoAviso(byId[entry.itemId], contextoDoCadeado(), [entry]);
+}
+function htmlDoAviso(item, motivo) {
+  return `<b>${esc(item.namePt)}</b> entrou. Aviso: ${esc(motivo)}.`;
 }
 
 // Três estados, alternados clicando no rótulo do cabeçalho da categoria.
@@ -6103,7 +6178,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.71";
+const ATUALIZACAO = "13.72";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -7326,6 +7401,9 @@ function addItemToCategory(itemId, catId, index) {
   Som.play("build:item_add", { item: byId[itemId] });   // genérico, ou Lendário por núcleo + fala rara
   renderBuild();
   saveBuild();
+  // F13-T72: entra, e o recado diz com o que não acumula
+  const naoSoma = avisoDepoisDePor(cat, novo);
+  if (naoSoma) mostrarAvisoDaBuild(htmlDoAviso(byId[itemId], naoSoma));
   return true;
 }
 
@@ -8768,6 +8846,9 @@ function renderCategories() {
         // F13-T70: já na build numa posição que conta e trancado (a rota ou as runas mudaram depois)
         const trava = contaNaBuild(cat, index) ? motivoDoCadeado(item, ctxCadeado, [entry]) : "";
         if (trava) { tile.classList.add("trancado"); tile.dataset.cadeado = trava; }
+        // F13-T72: e o efeito que não acumula com outro item que conta
+        const naoSoma = contaNaBuild(cat, index) ? motivoDoAviso(item, ctxCadeado, [entry]) : "";
+        if (naoSoma) { tile.classList.add("nao-soma"); tile.dataset.aviso = naoSoma; }
         if (offMode) tile.title = `${item.namePt} não existe em ${build.mode}`;
         tile.draggable = build.editing;
         tile.style.setProperty("--tier-color", TIER_CSS[item.tier] || "");
@@ -8893,6 +8974,8 @@ function renderPicker() {
     // F13-T70: o cadeado para a caixa escolhida (sem caixa, como se contasse)
     const trava = build.id ? motivoNaCaixaEscolhida(item, ctxCadeado) : "";
     if (trava) { row.classList.add("trancado"); row.title += ` · trancado: ${trava}`; }
+    const naoSoma = build.id && !trava ? avisoNaCaixaEscolhida(item, ctxCadeado) : "";   // F13-T72
+    if (naoSoma) { row.classList.add("nao-soma"); row.title += ` · aviso: ${naoSoma}`; }
     row.innerHTML = `
       <span class="pk-abbr">${iconInner(item)}</span>
       <span class="pk-name">${item.namePt}<span class="pk-tier">${TIER_LABEL[item.tier] || item.tier}</span></span>
@@ -9314,6 +9397,7 @@ function showTooltip(tile) {
       ? `<div class="tt-offmode">Não disponível em ${build.mode}</div>` : ""}
     ${tile.classList.contains("mudou") ? `<div class="tt-offmode">Mudou no jogo depois do patch desta build</div>` : ""}
     ${tile.dataset.cadeado ? `<div class="tt-offmode">Trancado nesta build: ${esc(tile.dataset.cadeado)}</div>` : ""}
+    ${tile.dataset.aviso ? `<div class="tt-aviso">Aviso: ${esc(tile.dataset.aviso)}</div>` : ""}
     ${state.applyApex && hasApex(item) ? `
       <div class="tt-apex"><span class="k">Ápice</span>
         ${(apexAttributes(item) || []).filter(a => a.changed).map(a => `<div><b>${esc(a.raw)}</b>${a.added ? " (só no ápice)" : ` <span style="opacity:.7">no lugar de ${esc(a.baseRaw)}</span>`}${a.note ? ` <span style="opacity:.7">· ${esc(a.note)}</span>` : ""}</div>`).join("") || `<div>${esc(item.apex)}</div>`}
@@ -12917,8 +13001,11 @@ function renderCard(item, attrSorting) {
 
   if (findInBuild(item.slug)) card.classList.add("in-build");
   else if (build.id) {   // F13-T70: o cadeado também no card que nasce (a busca e os filtros redesenham a grade)
-    const trava = motivoNaCaixaEscolhida(item, contextoDoCadeado());
+    const ctx = contextoDoCadeado();
+    const trava = motivoNaCaixaEscolhida(item, ctx);
     if (trava) { card.classList.add("trancado"); card.dataset.cadeado = trava; }
+    const naoSoma = trava ? "" : avisoNaCaixaEscolhida(item, ctx);   // F13-T72
+    if (naoSoma) { card.classList.add("nao-soma"); card.dataset.aviso = naoSoma; }
   }
   if (state.applyApex && hasApex(item)) card.classList.add("apex-on");
   const regiaoHtml = vestirDeRegiao(card, item);
@@ -13112,10 +13199,13 @@ function toggleItemInBuild(slug) {
     if (trava) { cat.items.pop(); avisarCadeado(byId[slug], trava); return; }
     const it = byId[slug];
     Som.play("build:item_add", { item: it });   // mesmos sons e falas da forja (F10-T4)
+    // F13-T72: o efeito que não acumula vai no mesmo recado
+    const naoSoma = avisoDepoisDePor(cat, novo);
     // Aviso por modo de jogo (Fase 5, T3): a build tem modo e o item não existe nele.
     if (build.mode && it && !itemAvailableIn(it, build.mode)) {
-      showCatalogModeHint(`<b>${esc(it.namePt)}</b> não existe em <b>${esc(build.mode)}</b>, o modo da build "${esc(build.name)}". Foi marcado mesmo assim; na forja ele aparece apagado.`);
-    }
+      showCatalogModeHint(`<b>${esc(it.namePt)}</b> não existe em <b>${esc(build.mode)}</b>, o modo da build "${esc(build.name)}". Foi marcado mesmo assim; na forja ele aparece apagado.`
+        + (naoSoma ? ` Aviso: ${esc(naoSoma)}.` : ""));
+    } else if (naoSoma) showCatalogModeHint(htmlDoAviso(it, naoSoma));
   }
   saveBuild();
   renderBuild();          // já chama refreshInBuildMarks()
@@ -13177,6 +13267,9 @@ function refreshInBuildMarks() {
     const trava = build.id && !naBuild && byId[card.dataset.slug] ? motivoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";
     card.classList.toggle("trancado", !!trava);
     if (trava) card.dataset.cadeado = trava; else delete card.dataset.cadeado;
+    const naoSoma = build.id && !naBuild && !trava && byId[card.dataset.slug] ? avisoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T72
+    card.classList.toggle("nao-soma", !!naoSoma);
+    if (naoSoma) card.dataset.aviso = naoSoma; else delete card.dataset.aviso;
   });
   const n = (build.cats || []).reduce((s, c) => s + c.items.length, 0);
   const badge = document.getElementById("build-tab-count");

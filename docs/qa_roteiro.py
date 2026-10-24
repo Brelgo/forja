@@ -1732,6 +1732,100 @@ def checar_reembolso_e_topo(s, p):
     s.js("(() => { build.habilidades = normHabilidades(null); build.champion = null; build.rota = ''; salvarAgora(); return 1; })()")
 
 
+def checar_aviso(s, p):
+    """F13-T72 (Leo, 15/10/2026: "como o sistema de lentidão, que sempre prioriza
+    o valor mais alto, e o Feridas Dolorosas"): o efeito que não acumula — a
+    passiva (ou ativa) única de mesmo nome e as etiquetas Lentidão e Anti-Cura.
+    Não tranca: o item entra, e o selo e o recado dizem com o que não acumula. O
+    par que já divide um grupo "Limitado a 1" fica só com o cadeado."""
+    print("\n%sAVISO%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    dado = s.js("""(() => { const por = (n) => CATALOG.items.find(i => i.namePt === n).slug;
+      const caso = (item, outros) => motivoDoAviso(byId[por(item)], { contam: outros.map(n => ({ itemId: por(n), note: '' })), runas: new Set(), rota: '' });
+      let pares = 0; const itens = new Set();
+      CATALOG.items.forEach(a => CATALOG.items.forEach(b => {
+        if (a.slug >= b.slug || !motivoDoAviso(a, { contam: [{ itemId: b.slug }], runas: new Set(), rota: '' })) return;
+        pares++; itens.add(a.slug); itens.add(b.slug); }));
+      return { pares, itens: itens.size, passiva: caso('Morellonomicon', ['Orbe do Oblívio']), etiqueta: caso('Morellonomicon', ['Serrespada Quimiopunk']),
+               lentidao: caso('Cetro de Cristal de Rylai', ['Presságio de Randuin']), grupo: caso('Hidra Raivosa', ['Hidra Titânica']) + caso('Manamune', ['Muramana']),
+               nada: caso('Gume do Infinito', ['Morellonomicon']), copia: caso('Orbe do Oblívio', ['Orbe do Oblívio']) }; })()""")
+    p.conta("aviso", "o aviso lê do catálogo: passiva única de mesmo nome (e a cópia repetida), Lentidão e Anti-Cura; o par do mesmo grupo fica com o cadeado",
+            dado["pares"] == 81 and dado["itens"] == 32
+            and dado["passiva"] == "a passiva única Feridas Dolorosas não acumula com Orbe do Oblívio — vale uma só"
+            and dado["etiqueta"] == "o efeito Anti-Cura não soma com Serrespada Quimiopunk — vale o mais forte"
+            and dado["lentidao"].startswith("o efeito Lentidão não soma com Presságio de Randuin") and dado["grupo"] == "" and dado["nada"] == ""
+            and dado["copia"] == "a passiva única Feridas Dolorosas não acumula com Orbe do Oblívio — vale uma só", "%s" % dado)
+
+    # cenário: caixas Comum (0), Prioridade (1), Opcional (2), Escolha 1 (3); Morellonomicon na Prioridade
+    s.js("""(() => { if (rascunho.sujo) descartarAlteracoes(); ligarEdicao(true);
+      const por = (n) => CATALOG.items.find(i => i.namePt === n).slug; window.__por = por;
+      build.mode = "Summoner's Rift"; build.rota = ''; build.runas = normRunas(null);
+      while (build.cats.length < 4) build.cats.push({ id: 'cat-qa-' + build.cats.length + '-' + Date.now(), name: 'Caixa', desc: '', kind: 'comum', span: 2, cols: 3, rows: 0, items: [] });
+      build.cats = build.cats.slice(0, 4);
+      ['comum', 'prioridade', 'opcional', 'escolha'].forEach((k, i) => { build.cats[i].kind = k; build.cats[i].items = []; });
+      build.cats[1].items = [{ itemId: por('Morellonomicon'), note: '' }];
+      build.cats[3].items = [{ itemId: por('Gume do Infinito'), note: '' }];
+      build.selectedCatId = build.cats[0].id; build.pickerQuery = ''; switchTab('build'); showBuildScreen('forja'); renderBuildAll(); return 'ok'; })()""")
+    time.sleep(0.8)
+    def pela_bandeja(nome, caixa):
+        s.js("""(() => { build.selectedCatId = build.cats[%d].id; build.pickerQuery = %s; document.getElementById('picker-search').value = %s; renderBuildAll(); return 1; })()"""
+             % (caixa, json.dumps(nome), json.dumps(nome)))
+        time.sleep(0.3)
+        sel = '#picker-list .picker-row[data-item-id="%s"]' % s.js("__por(%s)" % json.dumps(nome))
+        marca = s.js("(() => { const r = document.querySelector(%s); return r ? { aviso: r.classList.contains('nao-soma'), titulo: r.title } : null; })()" % json.dumps(sel))
+        antes = s.js("build.cats[%d].items.length" % caixa)
+        s.js("document.getElementById('edit-hint').textContent = ''; 1")
+        s.clicar(sel, 0.5)
+        return {"marca": marca, "entrou": s.js("build.cats[%d].items.length" % caixa) > antes, "recado": s.js("document.getElementById('edit-hint').textContent")}
+    opc = pela_bandeja("Orbe do Oblívio", 2)        # na Opcional é alternativa: nem selo, nem recado
+    comum = pela_bandeja("Orbe do Oblívio", 0)
+    p.conta("aviso", "na bandeja: o selo para a caixa que conta, o item entra e o recado diz com o que não acumula (na Opcional, nada)",
+            opc["marca"] and not opc["marca"]["aviso"] and opc["entrou"] and "Aviso" not in opc["recado"]
+            and comum["marca"]["aviso"] and "Feridas Dolorosas" in comum["marca"]["titulo"] and comum["entrou"]
+            and "entrou. Aviso: a passiva única Feridas Dolorosas" in comum["recado"] and "Morellonomicon" in comum["recado"],
+            "Opcional %s · Comum %s" % (opc, comum))
+
+    # no molde: os dois que contam com o selo e o motivo no balão; o da Opcional e a alternativa da Escolha 1 sem
+    s.js("(() => { build.cats[3].items.push({ itemId: __por('Orbe do Oblívio'), note: '' }); renderBuildAll(); return 1; })()")
+    time.sleep(0.4)
+    molde = s.js("""(() => { const nomes = (i) => [...document.querySelectorAll('.build-cat[data-cat-id="' + build.cats[i].id + '"] .item-tile.nao-soma')]
+        .map(t => byId[build.cats[i].items[Number(t.dataset.index)].itemId].namePt);
+      return { comum: nomes(0), prioridade: nomes(1), opcional: nomes(2), escolha: nomes(3) }; })()""")
+    s.js("document.getElementById('build-canvas').scrollIntoView({ block: 'start' }); 1"); time.sleep(0.3)
+    s.hover('.build-cat[data-cat-id="%s"] .item-tile.nao-soma .item-icon' % s.js("build.cats[1].id")); time.sleep(0.6)
+    balao = s.js("(() => { const a = document.querySelector('#item-tooltip .tt-aviso'); return a ? a.textContent : ''; })()")
+    s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": 5, "y": 5}); time.sleep(0.3)
+    p.conta("aviso", "no molde: o selo nos dois que contam (não na Opcional nem na alternativa da Escolha 1) e o motivo no balão",
+            molde == {"comum": ["Orbe do Oblívio"], "prioridade": ["Morellonomicon"], "opcional": [], "escolha": []}
+            and balao.startswith("Aviso: a passiva única Feridas Dolorosas") and "Orbe do Oblívio" in balao, "%s · balão %r" % (molde, balao))
+
+    # na loja: o card com o selo; o clique entra e o recado da loja explica
+    s.js("""(() => { build.cats[0].items = []; build.cats[1].items = [{ itemId: __por('Presságio de Randuin'), note: '' }]; build.selectedCatId = build.cats[0].id;
+      renderBuildAll(); switchTab('catalog'); document.getElementById('search-input').value = 'Rylai';
+      document.getElementById('search-input').dispatchEvent(new Event('input', { bubbles: true })); return 1; })()""")
+    time.sleep(0.8)
+    card = '#grid .card[data-slug="%s"]' % s.js("__por('Cetro de Cristal de Rylai')")
+    selo = s.js("(() => { const c = document.querySelector(%s); return c ? c.classList.contains('nao-soma') : null; })()" % json.dumps(card))
+    busca = "(() => { const b = document.getElementById('search-input'); b.value = %s; b.dispatchEvent(new Event('input', { bubbles: true })); return 1; })()"
+    # a loja aberta acompanha a build sem redesenhar a busca: o Presságio entra e o card da Zeke ganha o selo
+    s.js("(() => { build.cats[1].items = []; renderBuildAll(); return 1; })()")
+    s.js(busca % json.dumps("Converg")); time.sleep(0.6)
+    ZEKE = "(() => { const c = document.querySelector('#grid .card[data-slug=\"' + __por('Convergência de Zeke') + '\"]'); return c ? c.classList.contains('nao-soma') : null; })()"
+    zeke_antes = s.js(ZEKE)
+    s.js("(() => { build.cats[1].items = [{ itemId: __por('Presságio de Randuin'), note: '' }]; renderBuildAll(); return 1; })()"); time.sleep(0.3)
+    zeke_depois = s.js(ZEKE)
+    s.js(busca % json.dumps("Zhonya")); time.sleep(0.6)   # sem nada em comum com o Presságio: sem selo
+    zhonya = s.js("(() => { const c = document.querySelector('#grid .card[data-slug=\"' + __por('Ampulheta de Zhonya') + '\"]'); return c ? c.classList.contains('nao-soma') : null; })()")
+    s.js(busca % json.dumps("Rylai")); time.sleep(0.6)
+    s.clicar(card + " .card-name, " + card, 0.8)
+    loja = s.js("({ entrou: build.cats[0].items.some(e => e.itemId === __por('Cetro de Cristal de Rylai')), recado: (document.getElementById('catalog-mode-hint') || {}).textContent || '' })")
+    p.conta("aviso", "na loja: o card com o selo, também quando a build muda com a loja aberta (a Zhonya, sem nada em comum, sem); o clique entra e o recado diz Lentidão",
+            zeke_antes is False and zeke_depois and selo and zhonya is False and loja["entrou"] and "entrou. Aviso: o efeito Lentidão não soma com Presságio de Randuin" in loja["recado"] and "Lentidão" in loja["recado"],
+            "Zeke antes %s, depois %s · selo %s · Zhonya %s · %s" % (zeke_antes, zeke_depois, selo, zhonya, loja))
+    s.js("""(() => { document.getElementById('search-input').value = ''; document.getElementById('search-input').dispatchEvent(new Event('input', { bubbles: true }));
+      descartarAlteracoes(); return 1; })()""")
+
+
 def checar_passiva_do_ornn(s, p):
     """F13-T60 (Leo, 23/10/2026): o "Mestre Forjador" virou "Passiva do Ornn" na
     tela, e a placa MF virou "Ornn". O formato de texto continua escrevendo
@@ -4435,6 +4529,7 @@ GRUPOS = [
     ("rota", checar_rota),
     ("cadeado", checar_cadeado),
     ("reembolso e topo", checar_reembolso_e_topo),
+    ("aviso", checar_aviso),
     ("runas", checar_runas),
     ("habilidades", checar_habilidades),
     ("texto", checar_texto),
