@@ -177,6 +177,21 @@ acumula; no molde, o selo nos dois que contam — não na Opcional nem na altern
 na loja, o card com o selo, também quando a build muda com a loja aberta (a Zeke ganha o selo quando o Presságio
 entra), a Zhonya sem; o clique no Rylai entra e o recado da loja diz a Lentidão.
 
+**Robô de patch** (F13-T73; `docs/robo_de_patch.md`) — sem navegador e sem rede, roda junto com os arquivos: o leitor de
+Lua (`data/robo/lua_tabela.py`) com um texto de prova — escapes, comentário longo, chave por nome, `nil`, a chave
+repetida que vale a última e vira aviso, e o texto cortado que para com erro (antes estourava sem dizer onde); as
+referências `=>` da wiki — a que resolve, a que aponta para um campo que o destino não tem e a que dá volta, as duas
+no aviso; as regras da comparação num catálogo de mentira (id de variante 22xxxx, item não comprável, Elixir por
+extenso e efeito sem nome passam; a fonte dividida e o erro de verdade aparecem); e a foto do patch do catálogo
+inteira, com o relatório no repositório dizendo o mesmo que a conta refeita sem rede.
+
+**O clique do roteiro espera a animação** (F13-T73) — o `clicar` espera acabar a animação finita no caminho do
+elemento (ele ou quem o contém) antes de medir. O painel que acaba de abrir desenrola (`modal-unroll`, 0,25 s) e o
+`hover` mede, espera 0,25 s e clica: o botão já estava em outro lugar e o clique caía no painel. Era o "Usar esta
+aba" da aba de link no grupo "duas abas" — quatro falhas em cascata, um roteiro sim, outro não, sem nada mudado no
+app. O diário da aba (cada carga e cada `pointerdown`/`click` com o alvo, gravado no `sessionStorage`) é que mostrou:
+o clique chegava no lugar medido, e o alvo era o painel.
+
 **Passiva do Ornn** (F13-T60; Leo, 23/10/2026) — o "Mestre Forjador" virou "Passiva do Ornn" na tela e a placa
 "MF" do item virou "Ornn": nenhum texto do app diz mais o nome velho — o HTML inteiro (inclusive o que está
 escondido, menos script e style), os `title` e os `placeholder`, com o item forjado na forja, o balão aberto e a

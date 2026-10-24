@@ -14,3 +14,6 @@ assets/Icon/
 
 # lixo do Python ao importar o roteiro de QA
 __pycache__/
+
+# o que o robô de patch baixa cru (F13-T73): a foto que vale fica em data/robo/fonte/<patch>/
+data/robo/fonte/_baixado/

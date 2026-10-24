@@ -268,9 +268,22 @@ class Sessao:
         time.sleep(0.25)
         return p
 
-    def clicar(self, seletor, espera=0.4):
+    def clicar(self, seletor, espera=0.4, na_hora=False):
         """Clique de verdade. O mouseMoved antes não é enfeite: sem ele, controle
-        que só existe no hover tem tamanho zero e o clique cai no vazio."""
+        que só existe no hover tem tamanho zero e o clique cai no vazio.
+        F13-T73: antes de medir, espera acabar a animação finita no caminho do
+        elemento (ele ou quem o contém). O painel que acaba de abrir desenrola
+        (modal-unroll, 0,25 s) e o hover mede, espera 0,25 s e clica: o botão já
+        estava em outro lugar e o clique caía no painel — o "Usar esta aba" do grupo
+        "duas abas" falhava um roteiro sim, outro não (o diário da aba mostrou).
+        `na_hora`: o teste que precisa do clique já (no meio da conferência da trava)."""
+        if not na_hora:
+            self.js("""(async () => { const el = document.querySelector(%s); if (!el) return 0;
+              const correndo = () => document.getAnimations().some(a => a.playState === 'running' && a.effect && a.effect.target
+                && a.effect.target.contains && a.effect.target.contains(el) && a.effect.getTiming().iterations !== Infinity);
+              const fim = Date.now() + 2000;
+              while (Date.now() < fim && correndo()) await new Promise(r => setTimeout(r, 30));
+              return 1; })()""" % json.dumps(seletor))
         p = self.hover(seletor)
         for tipo in ("mousePressed", "mouseReleased"):
             self.envia("Input.dispatchMouseEvent",
@@ -2898,7 +2911,7 @@ def checar_abas(s, p):
         # "Entrar na loja" não abre nada (antes, por 2 s, a loja abria e o que se
         # fazia parecia gravado e depois sumia)
         b.abrir()
-        b.clicar("#entrar", 0.2)
+        b.clicar("#entrar", 0.2, na_hora=True)
         cf = b.js("({ conferindo: !!document.querySelector('#aba-dona.conferindo'), entrou: document.getElementById('entrada').classList.contains('saindo') || document.getElementById('entrada').classList.contains('fechada'), decidido: typeof decidido === 'undefined' ? null : decidido })")
         p.conta("duas abas", "enquanto confere a trava, a aba nova já nasce parada", cf["conferindo"] and not cf["entrou"] and not cf["decidido"],
                 "enquanto confere: %s" % cf)
@@ -3078,13 +3091,24 @@ def checar_abas(s, p):
         # "Usar esta aba" numa aba de link: assume sem o aviso falso de saída ("Recarregar
         # site?") — o #b= fica na URL e a build do link entra na carga nova
         hash2 = d.js("(() => { const x = library.builds.find(y => !y.temp); const l = buildParaLink({ ...x, id: 'qa-link-35b', name: 'Do link 2' }); return l.slice(l.indexOf('#')); })()")
-        f = s.nova_aba(); f.abrir(hash2); decidiu(f)
+        f = s.nova_aba()
+        # o diário da aba (sessionStorage, sobrevive à recarga): cada carga, o pedido de
+        # assumir que ela encontrou e os cliques que chegaram ao botão — quando falha, diz onde
+        f.envia("Page.addScriptToEvaluateOnNewDocument", {"source": "(() => { try { const d = JSON.parse(sessionStorage.getItem('qa.diario') || '[]');"
+            " d.push('carga' + (sessionStorage.getItem('montador.assumir') ? ' com pedido' : '')); sessionStorage.setItem('qa.diario', JSON.stringify(d)); } catch (e) {}"
+            " ['pointerdown', 'click'].forEach(tipo => window.addEventListener(tipo, (e) => { const d = JSON.parse(sessionStorage.getItem('qa.diario') || '[]');"
+            " d.push(tipo + ':' + ((e.target && (e.target.id || e.target.className || e.target.nodeName)) || '?') + '@' + Math.round(e.clientX) + ',' + Math.round(e.clientY));"
+            " sessionStorage.setItem('qa.diario', JSON.stringify(d)); }, true)); })()"})
+        f.abrir(hash2); decidiu(f)
         f.dialogos.clear()
+        na_hora = f.js("(() => { const b = document.getElementById('aba-dona-usar'); const r = b.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);"
+                       " return document.visibilityState + '/' + document.hasFocus() + ' · no ponto ' + (e && (e.id || e.className || e.nodeName)) + ' @' + Math.round(r.left + r.width / 2) + ',' + Math.round(r.top + r.height / 2); })()")
         assumiu = recarregou(f, "#aba-dona-usar")
-        rf = f.js("({ dona: souDona, link: library.builds.some(x => x.name === 'Do link 2') })") if assumiu else {}
+        rf = f.js("({ dona: souDona, link: library.builds.some(x => x.name === 'Do link 2') })") if assumiu else \
+            f.js("({ veu: (document.getElementById('aba-dona-texto') || {}).textContent, marca: JSON.stringify(lerDona()), diario: sessionStorage.getItem('qa.diario'), decidido })")
         avisos = [x for x in f.dialogos if x.startswith("beforeunload")]
         p.conta("duas abas", "\"Usar esta aba\" numa aba de link assume sem o aviso falso de saída, com a build do link",
-                assumiu and rf["dona"] and rf["link"] and not avisos, "assumiu %s · %s · avisos: %s" % (assumiu, rf, avisos or "nenhum"))
+                assumiu and rf["dona"] and rf["link"] and not avisos, "assumiu %s · %s · avisos: %s · na hora do clique: %s" % (assumiu, rf, avisos or "nenhum", na_hora))
         # a dona que quebra sem avisar (sem pagehide, a marca não diz "saiu"): a parada percebe pela trava
         f.ws.send(json.dumps({"id": 99999, "method": "Page.crash"}))
         espera(s, "(document.getElementById('aba-dona-texto') || {}).textContent.includes('não responde mais')", 6)
@@ -4513,6 +4537,95 @@ def checar_console(s, p):
     p.conta("console", "nenhum arquivo faltando (404)", not quatro04, "; ".join(quatro04[:3]))
 
 
+def checar_robo(p):
+    """F13-T73: o leitor do robô de patch (data/robo/ler_fonte.py). Sem rede e sem
+    navegador: o leitor de Lua com um texto de prova, as referências "=>", as
+    regras da comparação num catálogo de mentira e a conta refeita sobre a foto
+    guardada — o relatório no repositório tem de dizer o que ela diz."""
+    print("\n%sROBÔ DE PATCH%s" % (AMARELO, FIM))
+    import importlib
+    pasta = os.path.join(RAIZ, "data", "robo")
+    if pasta not in sys.path:
+        sys.path.insert(0, pasta)
+    lua = importlib.import_module("lua_tabela")
+    lf = importlib.import_module("ler_fonte")
+
+    prova = ('-- comentário\nreturn {\n'
+             '  ["A"] = { ["id"] = 1, ["n"] = -2.5, ["t"] = "aspas \\"dentro\\" e\\nquebra", ["ok"] = true, ["nada"] = nil,\n'
+             '    ["lista"] = {"x", "y",}, ["sub"] = { k = 3 }, --[[ comentário longo ]] ["id"] = 7 },\n'
+             '  ["B"] = { ["stats"] = { ["hp"] = "=>A" }, ["type"] = "=>C" },\n'
+             '  ["C"] = { ["type"] = {"Epic"} },\n'
+             '  ["X"] = { ["type"] = "=>Y" }, ["Y"] = { ["type"] = "=>X" },\n}\n')
+    avisos = []
+    d = lua.ler_modulo(prova, avisos)
+    a = d["A"]
+    def corta(texto):
+        try:
+            lua.ler_modulo(texto, [])
+        except lua.ErroLua as e:
+            return str(e)
+        return None
+    # cortado dentro da tabela e logo depois de um "=": cada um pega uma guarda diferente
+    cortado = [corta(prova[:-6]), corta('return { ["a"] = ')]
+    p.conta("robô", "o leitor de Lua lê o que um módulo de dados usa, avisa a chave repetida e para no texto cortado",
+            a == {"id": 7, "n": -2.5, "t": 'aspas "dentro" e\nquebra', "ok": True, "nada": None, "lista": ["x", "y"], "sub": {"k": 3}}
+            and len(avisos) == 1 and "'id'" in avisos[0] and all(cortado),
+            "A %s · avisos %s · cortado %r" % (a, avisos, cortado))
+
+    r, faltou = lf.resolver(d)
+    p.conta("robô", "as referências \"=>\" resolvem; a sem o campo e a que dá volta ficam no aviso (sem virar nada calado)",
+            r["B"]["type"] == ["Epic"] and r["B"]["stats"]["hp"] == "=>A" and len(faltou) == 3
+            and any("B: stats.hp" in x for x in faltou) and sum(1 for x in faltou if x.startswith(("X:", "Y:"))) == 2,
+            "B %s · faltou %s" % (r["B"], faltou))
+
+    # as regras, num catálogo de mentira: cada linha é um caso que o catálogo de verdade tem
+    cat = {"meta": {"patch": "0.0.1"}, "items": [
+        {"id": 4004, "namePt": "Variante", "nameEn": "Variant", "priceGold": 100, "gameModes": ["ARAM", "ARAM: Mayhem"]},
+        {"id": 2151, "namePt": "Grátis", "nameEn": "Free", "priceGold": 0, "priceNote": "não comprável; concedido pela runa X"},
+        {"id": 2138, "namePt": "Elixir", "nameEn": "Elx", "priceGold": 500, "condition": "Limitado a 1 efeito de Elixir por vez."},
+        {"id": 3001, "namePt": "Sem nome", "nameEn": "Unnamed", "priceGold": 10,
+         "abilities": [{"name": "—", "nameEn": "transformação", "type": "passiva"}, {"name": "Fenda", "nameEn": "Cleave", "type": "passiva única"}]},
+        {"id": 3002, "namePt": "Dividido", "nameEn": "Split", "priceGold": 2300},
+        {"id": 3003, "namePt": "Errado", "nameEn": "Wrong", "priceGold": 999,
+         "attributes": [{"stat": "Vida", "unit": "flat", "value": 100}]},
+    ]}
+    wiki = {"Variant": {"id": 224004, "buy": 100, "modes": {"aram": True}},
+            "Free": {"id": 2151},
+            "Elx": {"id": 2138, "buy": 500, "itemlimit": "Elixir"},
+            "Unnamed": {"id": 3001, "buy": 10, "effects": {"pass": {"name": "Cleave", "unique": True}}},
+            "Split": {"id": 3002, "buy": 2250},
+            "Wrong": {"id": 3003, "buy": 1000, "stats": {"hp": 150}}}
+    dd = {"data": {"4004": {"name": "Variante", "gold": {"total": 100, "purchasable": True}},
+                   "2151": {"name": "Grátis", "gold": {"total": 50, "purchasable": False}},
+                   "2138": {"name": "Elixir", "gold": {"total": 500, "purchasable": True}},
+                   "3001": {"name": "Sem nome", "gold": {"total": 10, "purchasable": True}},
+                   "3002": {"name": "Dividido", "gold": {"total": 2300, "purchasable": True}},
+                   "3003": {"name": "Errado", "gold": {"total": 1000, "purchasable": True}}}}
+    dif, conta, so_cat, sem_par, dividida = lf.comparar(cat, wiki, dd)
+    achado = {k: [x[0] for x in v] for k, v in dif.items() if v}
+    p.conta("robô", "as regras da comparação: id de variante, item não comprável, Elixir por extenso e efeito sem nome passam; a fonte dividida e o erro de verdade aparecem",
+            achado == {"preco": ["Errado (Wrong)"], "atributos": ["Errado (Wrong)"], "ddragon": ["Errado (Wrong)"]} and [x[:2] for x in dividida] == [("preço", "Dividido (Split)")] and not sem_par,
+            "a conferir %s · dividida %s" % (achado, dividida))
+
+    # a foto do patch do catálogo e o relatório: a conta refeita sem rede tem de bater
+    cat_real = lf.ler_catalogo()
+    patch = cat_real["meta"]["patch"]
+    try:
+        w, ddx, meta = lf.ler_foto(patch)
+    except OSError as e:
+        p.conta("robô", "a foto do patch %s existe (rode data/robo/ler_fonte.py)" % patch, False, str(e)[:120])
+        return
+    dif, conta, so_cat, sem_par, dividida = lf.comparar(cat_real, lf.resolver(w)[0], ddx)
+    total = sum(len(v) for v in dif.values())
+    rel = os.path.join(pasta, "relatorio_%s.md" % patch)
+    resumo = re.search(r"\*\*(Nenhuma diferença|(\d+) diferenças?) a conferir\.\*\* (\d+) itens do catálogo casados com a wiki \((\d+) sem par\); (\d+) em que",
+                       open(rel, encoding="utf-8").read()) if os.path.exists(rel) else None
+    no_rel = resumo and (int(resumo.group(2) or 0), int(resumo.group(3)), int(resumo.group(4)), int(resumo.group(5)))
+    p.conta("robô", "a foto do patch %s está inteira e o relatório bate com a conta refeita sem rede" % patch,
+            len(w) == meta["wiki"]["itens"] and meta["patch"] == patch and no_rel == (total, len(cat_real["items"]) - len(sem_par), len(sem_par), len(dividida)),
+            "%d itens na foto (meta %s) · conta %s · relatório %s" % (len(w), meta["wiki"]["itens"], (total, len(cat_real["items"]) - len(sem_par), len(sem_par), len(dividida)), no_rel))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -4577,6 +4690,10 @@ def main():
         url = servidor.url
         print("Alvo: %sesta pasta, servida em %s%s" % (CINZA, url, FIM))
         checar_arquivos(p)
+        try:   # sem navegador, mas com a mesma regra: grupo que estoura vira falha dele
+            checar_robo(p)
+        except Exception as e:
+            p.conta("robô", "o grupo rodou até o fim", False, "%s: %s" % (type(e).__name__, str(e)[:110]))
 
     s = Sessao(url)
     try:
