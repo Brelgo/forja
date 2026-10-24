@@ -81,6 +81,6 @@ Cada medida tem um peso, porque uma cópia custa muito mais ao usuário do que u
 
 ## A rota da build (F13-T69, 24/10/2026)
 - `docs/servidor/rota.sql` acrescenta a coluna `rota` (`''`, `top`, `selva`, `meio`, `atirador` ou `suporte`),
-  o parâmetro `p_rota` no `publicar_build` e a coluna na `builds_publicas` (com o grant dela). **Ainda não rodado:**
-  roda o Leo no painel do Supabase (SQL Editor), ou o Forjador com a permissão dele. Até lá o Montador publica sem
-  a rota (o resto vai igual) e as públicas aparecem sem ela.
+  o parâmetro `p_rota` no `publicar_build` e a coluna na `builds_publicas` (com o grant dela). **Rodado em 24/10/2026**
+  pelo Forjador, com a permissão do Leo (migração `rota_da_build`). As builds publicadas antes ficam com a rota
+  vazia (qualquer) até serem publicadas de novo; a volta sem `p_rota` do Montador continua lá, inofensiva.

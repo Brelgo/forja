@@ -100,5 +100,10 @@ grant select (rota) on public.builds to anon, authenticated;
 -- select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 --  where n.nspname = 'public' and p.proname = 'publicar_build';   -- tem de ser 1
 
--- AINDA NÃO RODADO (24/10/2026). Roda o Leo no painel do Supabase, ou o Forjador
--- com a permissão dele, no projeto okifbriwwxohkjxhqzfc.
+-- RODADO em 24/10/2026 pelo Forjador, com a permissão do Leo ("pode rodar o
+-- Supabase"), no projeto okifbriwwxohkjxhqzfc, como a migração rota_da_build.
+-- Conferido: um publicar_build só (14 parâmetros, execução para anon e
+-- authenticated como antes); a view com security_invoker e as 69 públicas
+-- legíveis como anon, todas com rota ''; a REST com a chave publishable responde
+-- 200 com a coluna; a chamada com p_rota chega à função (recusada pelo nome vazio,
+-- sem gravar nada).
