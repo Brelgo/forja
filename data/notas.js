@@ -11,7 +11,8 @@ window.NOTAS = {
     "As notas de atualização: o mural da loja, com o que mudou, o que vem por aí e como apoiar o projeto.",
     "Cada tela tem o seu endereço (#builds, #runas, #calculadora…): dá para favoritar, mandar o link e usar o voltar do navegador.",
     "Num patch novo, a build com um item que mudou fica marcada como desatualizada, com a borda vermelha no item.",
-    "Dá para assinar as suas builds publicadas com um apelido (opcional), lembrado no seu navegador."
+    "Dá para assinar as suas builds publicadas com um apelido (opcional), lembrado no seu navegador.",
+    "Na Acessibilidade, a Fonte para dislexia (OpenDyslexic): troca as letras do site por uma de base mais pesada, que ajuda a não girar nem trocar as letras."
    ],
    "aj": [
     "Com a rota Suporte, os outros itens iniciais ficam trancados: o Atlas Mundial já vem comprado.",
