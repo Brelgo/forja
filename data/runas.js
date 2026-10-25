@@ -1,8 +1,8 @@
 window.RUNAS = {
  "meta": {
   "fonte": "data/Runas_League_of_Legends.md",
-  "gerado": "2026-09-27",
-  "patch": "16.18.1",
+  "gerado": "2026-10-25",
+  "patch": "16.21.1",
   "trilhas": 5,
   "runas": 62,
   "fragmentos": 9
@@ -983,7 +983,7 @@ window.RUNAS = {
         "O texto oficial da Riot não traz o valor da cura; pelo dado do jogo e pela wiki, 10 – 50 (corpo a corpo) e 7 – 35 (à distância), do nível 1 ao 18."
        ],
        "cg": {
-        "categoria": "\"debilitar o movimento\" (Imobiliza + Lentidão)",
+        "categoria": "\"debilitar o movimento\" (Imobiliza + Lentidão + Ancoragem + Sonolência)",
         "inclui": [
          "Aéreo",
          "Berserk",
@@ -995,7 +995,9 @@ window.RUNAS = {
          "Estase",
          "Atordoamento",
          "Supressão",
-         "Lentidão"
+         "Lentidão",
+         "Ancoragem",
+         "Sonolência"
         ],
         "naoInclui": "",
         "obs": ""
@@ -1418,7 +1420,8 @@ window.RUNAS = {
          "Atordoamento",
          "Supressão",
          "Ancoragem",
-         "Lentidão"
+         "Lentidão",
+         "Sonolência"
         ],
         "naoInclui": "",
         "obs": ""

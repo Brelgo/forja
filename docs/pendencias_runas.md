@@ -22,7 +22,7 @@ python data/gerar_runas_json.py
 |---|---|---|---|
 | F1–F8, F10 | Números, descrições, trocas automáticas, notas técnicas, nomes, `Atributos:`, lemas e as notas opcionais | Leo (fonte) | ✔ resolvido em 23/09/2026 (F13-T16) |
 | F9 | Cabeçalho: nota de Força Adaptativa | Leo | ✔ resolvido (F13-T16) |
-| F9b | Cabeçalho: o que é "movimento debilitado" (as páginas da wiki divergem entre si) | Leo | **aberto, é escolha sua** |
+| F9b | Cabeçalho: o que é "movimento debilitado" (as páginas da wiki divergem entre si) | Leo | ✔ decidido em 25/10/2026 (F13-T84): inclui também Ancoragem e Sonolência |
 | A1 | O leitor jogava fora o bloco "Controle de grupo válido" de 5 runas, calado | Forjador | ✔ resolvido em 23/09/2026 (F13-T17) |
 | A2 | Bug nº 35: o texto perde a primária e a secundária quando a primária está sem runa | Forjador | ✔ resolvido em 17/10/2026 (F13-T38); resta o aviso para `RUNAS 2:` escrito à mão sem `RUNAS:` |
 | A3 | Bug nº 19: "Copiar como texto" do lote não leva runas | Forjador | ✔ resolvido em 01/10/2026 (F13-T37, aprovada em 17/10/2026): o lote usa o mesmo escritor da build |

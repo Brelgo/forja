@@ -21,7 +21,10 @@ NOTA SOBRE CONTROLE DE GRUPO (CG) VÁLIDO:
   são categorias PRECISAS e documentadas — e cada runa usa uma categoria
   diferente (nem sempre a mesma!). A categoria base "Imobiliza" cobre os
   seguintes efeitos de CG: Aéreo, Berserk, Encantamento, Fuga Forçada, Provocação, Enraizamento, Sono, Estase, Atordoamento, Supressão.
-  "Movimento debilitado" = Imobiliza + Lentidão. "Movimento ou ações
+  "Movimento debilitado" = Imobiliza + Lentidão + Ancoragem + Sonolência
+  (decisão do Leo em 25/10/2026, pendência F9b: a página geral de controle de
+  grupo da wiki inclui as duas; a da Fonte da Vida dizia só Imobiliza +
+  Lentidão). "Movimento ou ações
   debilitadas" = Imobiliza + Lentidão + Cegueira + Desarmamento +
   Ancoragem + Visão Reduzida + Metamorfose + Silenciamento (categoria
   mais ampla, usada pelo Golpe Desleal). Cada runa abaixo especifica sua
@@ -331,8 +334,8 @@ Runas Primarias{
                 Fonte da Vida[Debilitar o movimento de um Campeão Inimigo restaura Vida para o usuário e para o Campeão aliado próximo com a Vida mais baixa. 70% de eficácia para usuários de ataque à distância. Tempo de Recarga: 20s.]
                     Atributos: Cura
                     Classes: Suporte, Tank
-                    Controle de grupo válido (categoria oficial: "debilitar o movimento" (Imobiliza + Lentidão)):
-                      Inclui: Aéreo, Berserk, Encantamento, Fuga Forçada, Provocação, Enraizamento, Sono, Estase, Atordoamento, Supressão, Lentidão.
+                    Controle de grupo válido (categoria oficial: "debilitar o movimento" (Imobiliza + Lentidão + Ancoragem + Sonolência)):
+                      Inclui: Aéreo, Berserk, Encantamento, Fuga Forçada, Provocação, Enraizamento, Sono, Estase, Atordoamento, Supressão, Lentidão, Ancoragem, Sonolência.
                     Notas técnicas (wiki oficial):
                       - Não concede assistência (assist) pela cura.
                       - Ativa mesmo com o usuário ou alvo já em 100% de vida (o dano/cura listado no total pode não refletir cura real aplicada).
@@ -466,7 +469,7 @@ Runas Primarias{
                     Atributos: Velocidade de Movimento
                     Classes: Tank, Suporte
                     Controle de grupo válido (categoria oficial: "imobilizado, ancorado ou lento"):
-                      Inclui: Aéreo, Berserk, Encantamento, Fuga Forçada, Provocação, Enraizamento, Sono, Estase, Atordoamento, Supressão, Ancoragem, Lentidão.
+                      Inclui: Aéreo, Berserk, Encantamento, Fuga Forçada, Provocação, Enraizamento, Sono, Estase, Atordoamento, Supressão, Ancoragem, Lentidão, Sonolência.
                     Notas técnicas (wiki oficial):
                       - Alvos válidos precisam estar dentro de um ângulo de 180° na direção em que o usuário está virado.
                       - O bônus de velocidade é concedido mesmo que o usuário esteja parado.
