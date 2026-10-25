@@ -4747,6 +4747,9 @@ body.ac-movimento .chamar { box-shadow: 0 0 0 3px var(--forja-brasa), 0 0 18px v
 
 /* ---- Fase 7, T5: marcadores da build (até 3), como os marcadores dos guias do Deadlock ---- */
 .build-marks { display: inline-flex; gap: 6px; margin-left: 12px; flex-shrink: 0; }
+.mark-ajuda { align-self: center; max-width: 180px; margin-left: 4px; font-family: var(--loja-texto); font-style: italic; font-size: 11.5px; line-height: 1.25;
+  color: var(--forja-texto-suave, #9a8778); }
+body:not(.editando) .mark-ajuda { display: none; }
 .mark-slot {
   width: 40px; height: 40px; border: 1px dashed #4a3f36; border-radius: 4px; background: rgba(0,0,0,.35); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; position: relative; color: #7a6a5a; font-size: 20px; padding: 0; line-height: 1;
@@ -6259,7 +6262,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.77";
+const ATUALIZACAO = "13.79";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -8661,9 +8664,12 @@ function renderMarkSlots() {
   const ms = normMarkers(build.markers);
   box.innerHTML = Array.from({ length: MAX_MARCADORES }, (_, i) => {
     const m = ms[i];
-    if (!m) return `<button type="button" class="mark-slot" data-i="${i}" title="Escolher marcador">+</button>`;
+    if (!m) return `<button type="button" class="mark-slot" data-i="${i}" title="Escolher marcador — os ${MAX_MARCADORES} filtram a lista de builds, aparecem na vitrine e são obrigatórios para publicar">+</button>`;
     return `<button type="button" class="mark-slot cheio" data-i="${i}" title="${esc(markerLabel(m, build.champion))} — clique para trocar">${markerHtml(m, build.champion, renderMarkSlots)}<span class="mark-x" data-x="${i}" title="Remover">×</span></button>`;
-  }).join("");
+  }).join("")
+    // F13-T79 (docs/ux_forja.md, ponto 6: "os marcadores não dizem para que servem"): enquanto falta
+    // marcador, com o Editar ligado, uma linha diz para que eles servem — a mesma regra da publicação
+    + (ms.length < MAX_MARCADORES ? `<span class="mark-ajuda">Marcadores: filtram a lista, vão para a vitrine e são obrigatórios para publicar${ms.length ? ` (falta${MAX_MARCADORES - ms.length > 1 ? "m" : ""} ${MAX_MARCADORES - ms.length})` : ""}</span>` : "");
 }
 
 let markerSlot = 0;

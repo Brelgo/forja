@@ -5313,12 +5313,33 @@ def checar_camada_robo(s, p):
             and "A conferir" in ficha and "Shaped Charge" in ficha and "Do patch %s" % patch in ficha and "análise de custo" in ficha, ficha[:400])
 
 
+def checar_marcadores_ajuda(s, p):
+    """F13-T79 (docs/ux_forja.md, ponto 6: "os marcadores não dizem para que servem"): com o Editar
+    ligado e marcador faltando, uma linha ao lado dos espaços diz para que eles servem e quantos
+    faltam; com os três, ou sem o Editar, ela não aparece."""
+    print("\n%sMARCADORES: A AJUDA%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    def linha(marcadores, editando):
+        s.js("(() => { ligarEdicao(%s); build.markers = normMarkers(%s); switchTab('build'); showBuildScreen('forja'); renderBuildAll(); renderMarkSlots(); return 1; })()"
+             % ("true" if editando else "false", json.dumps(marcadores)))
+        time.sleep(0.3)
+        return s.js("(() => { const a = document.querySelector('#build-marks .mark-ajuda'); return a && getComputedStyle(a).display !== 'none' ? a.textContent : ''; })()")
+    um = [{"t": "item", "slug": "infinity-edge"}]
+    tres = um + [{"t": "item", "slug": "bloodthirster"}, {"t": "item", "slug": "rabadon-s-deathcap"}]
+    vazia, com_um, cheia, leitura = linha([], True), linha(um, True), linha(tres, True), linha([], False)
+    s.js("(() => { ligarEdicao(true); return 1; })()")
+    p.conta("marcadores: ajuda", "com o Editar e marcador faltando, a linha diz para que servem (e quantos faltam); com os três, ou sem o Editar, some",
+            "obrigatórios para publicar" in vazia and "faltam 2" in com_um and cheia == "" and leitura == "",
+            "vazia %r · com um %r · com três %r · sem o Editar %r" % (vazia, com_um, cheia, leitura))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
     ("ficha", checar_ficha),
     ("forja", checar_forja),
     ("marcadores", checar_marcadores),
+    ("marcadores: ajuda", checar_marcadores_ajuda),
     ("visualização", checar_visualizacao),
     ("passiva do Ornn", checar_passiva_do_ornn),
     ("teclado", checar_teclado),
