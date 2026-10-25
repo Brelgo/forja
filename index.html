@@ -6302,7 +6302,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.80";
+const ATUALIZACAO = "13.81";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -10479,6 +10479,37 @@ function initRunas() {
   });
 }
 
+// F13-T81 (Leo, 22/10/2026: "como todo site profissional… ao clicar em Builds fica /builds, em Runas
+// /runas… porque no nosso é tudo um único URL?"): um endereço por tela, pelo # — funciona aberto do
+// disco e no GitHub Pages (o caminho com barra não abre do disco). O voltar e o avançar do navegador
+// trocam de tela; dá para favoritar e mandar o link. Os # de captura e o #b= dos links de build
+// continuam valendo: o app só escreve o endereço depois que a carga termina.
+const ROTAS_DE_TELA = { catalogo: { tab: "catalog" }, builds: { tab: "build", tela: "lista" }, forja: { tab: "build", tela: "forja" },
+  runas: { tab: "runas" }, calculadora: { tab: "calc" } };
+let rotaPronta = false, aplicandoRota = false;
+function rotaDaTela() {
+  const ativa = document.querySelector(".tab-btn.active");
+  const tab = ativa ? ativa.dataset.tab : "catalog";
+  if (tab === "build") return buildScreen === "forja" ? "forja" : "builds";
+  return { catalog: "catalogo", runas: "runas", calc: "calculadora" }[tab] || "catalogo";
+}
+function marcarRota() {
+  if (!rotaPronta || aplicandoRota) return;
+  const h = "#" + rotaDaTela();
+  if (location.hash !== h) history.pushState(null, "", h);
+}
+function aplicarRota(hash) {
+  const r = ROTAS_DE_TELA[(hash || "").replace(/^#/, "")];
+  if (!r) return false;
+  aplicandoRota = true;
+  try {
+    if (r.tela) showBuildScreen(r.tela);
+    switchTab(r.tab);
+  } finally { aplicandoRota = false; }
+  // sem build na bigorna, a forja não tem o que mostrar: o endereço diz a lista
+  if (r.tela === "forja" && buildScreen !== "forja") history.replaceState(null, "", "#builds");
+  return true;
+}
 function switchTab(tab) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
   document.getElementById("view-catalog").classList.toggle("hidden", tab !== "catalog");
@@ -10503,6 +10534,7 @@ function switchTab(tab) {
   if (tab === "build") { if (buildScreen === "lista") renderBuildIndex(); else renderBuildAll(); }
   if (tab === "calc" && typeof renderCalc === "function") renderCalc();
   if (tab === "runas") renderRunas();
+  marcarRota();   // F13-T81
 }
 
 // ---------------- checagem de modo de jogo ----------------
@@ -10650,6 +10682,7 @@ function showBuildScreen(tela) {
   editor.hidden = tela !== "forja";
   if (tela === "lista") { if (!biSelected) biSelected = build.id; renderBuildIndex(); if (abrindoLista) chuvaDeEntrada(index); }
   else renderBuildAll();
+  marcarRota();   // F13-T81
 }
 
 // ---------------- Aba Públicas (Fase 8, T4) ----------------
@@ -14127,6 +14160,11 @@ function init() {
     const card = document.querySelector(`.card[data-slug="${f[1]}"]`);
     if (card) { hoveredCard = card; shiftHeld = true; applyFullCard(); }
   }
+  // F13-T81: o endereço da tela — o que veio no link vale; sem nada, o da tela de agora. Um # de
+  // captura ou de link de build fica como veio (o primeiro clique numa aba já escreve o endereço)
+  if (!aplicarRota(location.hash) && !location.hash) history.replaceState(null, "", "#" + rotaDaTela());
+  rotaPronta = true;
+  window.addEventListener("popstate", () => { aplicarRota(location.hash); });
 }
 
 init();

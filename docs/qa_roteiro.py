@@ -5370,6 +5370,47 @@ def checar_notas(s, p):
     p.conta("notas", "o Esc, o × e o clique fora fecham o mural", esc_fecha and x_fecha and fora_fecha, "Esc %s · × %s · fora %s" % (esc_fecha, x_fecha, fora_fecha))
 
 
+def checar_enderecos(s, p):
+    """F13-T81 (Leo, 22/10/2026: "ao clicar em Builds fica /builds, em Runas /runas"): um endereço
+    por tela, pelo #. Com clique de verdade nas abas, o endereço acompanha; o voltar do navegador
+    volta de tela; e o link direto (#runas, numa aba nova) abre na tela dele."""
+    print("\n%sENDEREÇO POR TELA%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    tela = """(() => ({ hash: location.hash, aba: (document.querySelector('.tab-btn.active') || {}).dataset ? document.querySelector('.tab-btn.active').dataset.tab : null,
+      forja: !document.getElementById('build-editor').hidden }))()"""
+    # a aba Builds abre na tela em que se estava (a lista ou a forja): começa na lista
+    s.js("(() => { showBuildScreen('lista'); switchTab('catalog'); return 1; })()"); time.sleep(0.3)
+    passos = {}
+    for aba, nome in (("build", "builds"), ("runas", "runas"), ("calc", "calculadora"), ("catalog", "catalogo")):
+        s.clicar('.tab-btn[data-tab="%s"]' % aba, 0.5)
+        passos[nome] = s.js(tela)["hash"]
+    s.clicar('.tab-btn[data-tab="build"]', 0.5)
+    s.js("(() => { showBuildScreen('forja'); return 1; })()"); time.sleep(0.3)
+    forja = s.js(tela)
+    s.js("history.back(); 1"); time.sleep(0.6)
+    volta1 = s.js(tela)
+    s.js("history.back(); 1"); time.sleep(0.6)
+    volta2 = s.js(tela)
+    s.js("history.forward(); 1"); time.sleep(0.6)
+    avanca = s.js(tela)
+    p.conta("endereço por tela", "o endereço acompanha a aba (#builds, #runas, #calculadora, #catalogo, #forja); o voltar e o avançar do navegador trocam de tela",
+            passos == {"builds": "#builds", "runas": "#runas", "calculadora": "#calculadora", "catalogo": "#catalogo"}
+            and forja["hash"] == "#forja" and forja["forja"] and volta1["hash"] == "#builds" and volta1["aba"] == "build" and not volta1["forja"]
+            and volta2["hash"] == "#catalogo" and volta2["aba"] == "catalog" and avanca["hash"] == "#builds" and avanca["aba"] == "build",
+            "abas %s · forja %s · voltar %s, %s · avançar %s" % (passos, forja, volta1, volta2, avanca))
+    r = Sessao(s.url)
+    try:
+        r.abrir("#runas"); r.tela(1600, 900); r.entrar(); time.sleep(0.5)
+        direto = r.js(tela)
+        r.js("(() => { location.hash = '#calculadora'; return 1; })()"); time.sleep(0.6)   # como quem troca o endereço na barra
+        calc = r.js(tela)
+        erros = list(r.erros)
+    finally:
+        r.fechar()
+    p.conta("endereço por tela", "o link direto abre na tela dele (#runas numa aba nova; #calculadora trocado na barra de endereço)",
+            direto["hash"] == "#runas" and direto["aba"] == "runas" and calc["aba"] == "calc" and not erros, "direto %s · calculadora %s · erros %s" % (direto, calc, erros[:2]))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5378,6 +5419,7 @@ GRUPOS = [
     ("marcadores", checar_marcadores),
     ("marcadores: ajuda", checar_marcadores_ajuda),
     ("notas", checar_notas),
+    ("endereço por tela", checar_enderecos),
     ("visualização", checar_visualizacao),
     ("passiva do Ornn", checar_passiva_do_ornn),
     ("teclado", checar_teclado),

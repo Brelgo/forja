@@ -189,6 +189,10 @@ botão de rodar, a escrita, o aviso, os dois passos e o que entra no commit.
 número da atualização e fica aceso até a versão ser vista; abre o mural com o "Em breve na loja", o "Apoie o projeto" e as notas
 por data (Adicionado · Ajustado · Removido); o Esc, o × e o clique fora fecham.
 
+**Endereço por tela** (F13-T81; Leo, 22/10/2026: "ao clicar em Builds fica /builds, em Runas /runas") — com clique de verdade
+nas abas, o endereço acompanha (#builds, #runas, #calculadora, #catalogo, e #forja com a build aberta); o voltar e o avançar do
+navegador trocam de tela; numa aba nova, o link #runas abre nas Runas, e trocar o # na barra leva à Calculadora.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar
