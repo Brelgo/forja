@@ -1,5 +1,7 @@
 -- =====================================================================
 -- Eventos que o roteiro de QA registrou no servidor de verdade (F13-T56)
+-- RODADO em 25/10/2026, com a autorização do Leo: a limpeza do trecho 4 apagou
+-- 4.724 impressões e 130 detalhes repetidos (os engajamentos não foram tocados).
 -- =====================================================================
 -- O que aconteceu: até 19/10/2026 ~16:10, o grupo "públicas" do
 -- docs/qa_roteiro.py abria a aba Públicas sem barrar o registrar_evento.
