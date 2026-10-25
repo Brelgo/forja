@@ -10,14 +10,16 @@ window.NOTAS = {
     "A atualização por patch roda sozinha, todo dia.",
     "As notas de atualização: o mural da loja, com o que mudou, o que vem por aí e como apoiar o projeto.",
     "Cada tela tem o seu endereço (#builds, #runas, #calculadora…): dá para favoritar, mandar o link e usar o voltar do navegador.",
-    "Num patch novo, a build com um item que mudou fica marcada como desatualizada, com a borda vermelha no item."
+    "Num patch novo, a build com um item que mudou fica marcada como desatualizada, com a borda vermelha no item.",
+    "Dá para assinar as suas builds publicadas com um apelido (opcional), lembrado no seu navegador."
    ],
    "aj": [
     "Com a rota Suporte, os outros itens iniciais ficam trancados: o Atlas Mundial já vem comprado.",
     "As caixas Opcional e Escolha 1 ficam fora do cadeado.",
     "Sem o Editar, mexer na build avisa e faz o botão Editar pulsar.",
     "O cadeado de item único só vale entre itens do mesmo tier: o Fulgor ainda vira Trindade.",
-    "Os marcadores dizem para que servem."
+    "Os marcadores dizem para que servem.",
+    "Nas runas, \"movimento debilitado\" inclui também Ancoragem e Sonolência (Fonte da Vida e Velocidade de Aproximação)."
    ],
    "rem": []
   },
