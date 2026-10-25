@@ -198,6 +198,12 @@ navegador trocam de tela; numa aba nova, o link #runas abre nas Runas, e trocar 
 "Autor nas suas publicações" no resumo da build começa vazio; o apelido digitado (com espaços nas pontas) vai no `p_autor` limpo,
 fica lembrado no navegador e volta no campo; apagado, a publicação seguinte sai sem autor.
 
+**Fonte para dislexia** (F13-T85; Leo, 18/10/2026, escolheu a OpenDyslexic em 25/10/2026) — com clique de verdade no
+interruptor da Acessibilidade, a OpenDyslexic carrega e vale no texto e nos títulos, e fica lembrada; nada estoura para o lado
+em 1600 e 1280, na loja e na forja (a plaqueta da bigorna passava 57 px em 1280 — agora para a 16 px da borda); nenhum card corta
+atributo nem nome com "…" (eram 225 em 1600: a linha quebra e o card cresce); desligada, volta à Alegreya, e a plaqueta, à aba
+Builds (o caminho antigo).
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar

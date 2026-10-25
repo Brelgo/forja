@@ -5458,6 +5458,52 @@ def checar_autor(s, p):
             "vazio %r · guardado %r · lembrado %r · enviados %s" % (vazio, guardado, lembrado, enviados))
 
 
+def checar_dislexia(s, p):
+    """F13-T85: a fonte para dislexia (OpenDyslexic, em assets/fonts/opendyslexic/). Com clique de
+    verdade no interruptor da Acessibilidade: a fonte carrega e vale no texto e nos títulos, nada
+    estoura para o lado em 1600 e 1280 (a loja e a forja; era a plaqueta da bigorna que passava 57 px),
+    fica lembrada; desligar volta à Alegreya. O caminho antigo: com a fonte normal a plaqueta segue a
+    4 px da aba Builds, antes de ligar e depois de desligar."""
+    print("\n%sFONTE PARA DISLEXIA%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    s.js("(() => { switchTab('catalog'); window.scrollTo(0, 0); return 1; })()"); time.sleep(0.3)
+    PLAQUETA = "(() => { const p = document.getElementById('bigorna'); return p.hidden ? null : p.offsetLeft - document.querySelector('.tab-btn[data-tab=\"build\"]').offsetLeft; })()"
+    s.tela(1280, 800); time.sleep(0.3)   # o redimensionar refaz a posição (no carregamento ela fica 2 px atrás — antigo)
+    antes = s.js(PLAQUETA)
+    s.tela_normal(); time.sleep(0.3)
+    s.clicar("#acess-btn", 0.4)
+    s.clicar('label.som-opt:has(#ac-dislexia)', 0.6)
+    fonte = s.js("""(async () => { await document.fonts.ready; await document.fonts.load('16px OpenDyslexic');
+      const c = getComputedStyle(document.querySelector('.counts')).fontFamily, h = getComputedStyle(document.querySelector('header.top h1')).fontFamily;
+      return { classe: document.body.classList.contains('ac-dislexia'), texto: c, titulo: h, carregou: document.fonts.check('16px OpenDyslexic'),
+               guardado: JSON.parse(localStorage.getItem('acessibilidade') || '{}').dislexia === true }; })()""")
+    s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+    s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+    lados, cortes = {}, {}
+    for w, h in ((1600, 900), (1280, 800)):
+        s.tela(w, h)
+        for aba in ("catalog", "build"):
+            s.js("(() => { switchTab('%s'); if ('%s' === 'build') showBuildScreen('forja'); window.scrollTo(0, 0); return 1; })()" % (aba, aba)); time.sleep(0.4)
+            lados["%d %s" % (w, aba)] = s.js("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+            if aba == "catalog":   # a letra larga não corta atributo nem nome: a linha quebra e o card cresce
+                cortes["%d" % w] = s.js("""[...document.querySelectorAll('#grid .card')].filter(c => [...c.querySelectorAll('.attr-line, .card-name .en')].some(e => e.scrollWidth > e.clientWidth + 1)
+                  || c.querySelector('.card-main').scrollHeight > c.querySelector('.card-main').clientHeight + 1).length""")
+    s.tela_normal()
+    s.js("(() => { switchTab('catalog'); return 1; })()")
+    s.clicar("#acess-btn", 0.4)
+    s.clicar('label.som-opt:has(#ac-dislexia)', 0.4)
+    volta = s.js("({ classe: document.body.classList.contains('ac-dislexia'), texto: getComputedStyle(document.querySelector('.counts')).fontFamily })")
+    volta["plaqueta"] = s.js(PLAQUETA)
+    s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+    s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+    primeira = lambda f: f.split(",")[0].strip().strip('"').strip("'")
+    p.conta("dislexia", "o interruptor troca o texto e os títulos pela OpenDyslexic (carregada), fica lembrado, nada estoura para o lado em 1600 e 1280 nem corta atributo no card; desligado, volta à Alegreya e a plaqueta à aba Builds",
+            fonte["classe"] and fonte["carregou"] and primeira(fonte["texto"]) == "OpenDyslexic" and primeira(fonte["titulo"]) == "OpenDyslexic" and fonte["guardado"]
+            and all(v <= 1 for v in lados.values()) and not volta["classe"] and primeira(volta["texto"]) == "Alegreya"
+            and antes == 4 and volta["plaqueta"] == 4 and all(v == 0 for v in cortes.values()),
+            "ligada %s · lados %s · cards cortados %s · desligada %s · plaqueta antes %s" % (fonte, lados, cortes, volta, antes))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5468,6 +5514,7 @@ GRUPOS = [
     ("notas", checar_notas),
     ("endereço por tela", checar_enderecos),
     ("autor", checar_autor),
+    ("dislexia", checar_dislexia),
     ("visualização", checar_visualizacao),
     ("passiva do Ornn", checar_passiva_do_ornn),
     ("teclado", checar_teclado),

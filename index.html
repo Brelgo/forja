@@ -3006,6 +3006,20 @@ body:not(.editando) .build-habs .bh-limpar { display: none; }
 .pinta b:nth-child(2) { background: var(--b); }
 .pinta b:nth-child(3) { background: var(--c); }
 
+/* F13-T85 (Leo, 18/10/2026: "alteração da fonte para leitura mais confortável para dislexia"; escolheu a
+   OpenDyslexic em 25/10/2026): a fonte em assets/fonts/opendyslexic/ (SIL OFL 1.1, o OFL.txt junto, sem
+   modificação). Só baixa quando o interruptor liga; um pouco menor (size-adjust), porque ela é larga. */
+@font-face { font-family: "OpenDyslexic"; src: url("assets/fonts/opendyslexic/OpenDyslexic-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap; size-adjust: 90%; }
+@font-face { font-family: "OpenDyslexic"; src: url("assets/fonts/opendyslexic/OpenDyslexic-Bold.woff2") format("woff2");
+  font-weight: 600 800; font-style: normal; font-display: swap; size-adjust: 90%; }
+body.ac-dislexia { --loja-texto: 'OpenDyslexic', 'Alegreya', Georgia, serif; --loja-titulos: 'OpenDyslexic', 'IM Fell English SC', Georgia, serif; }
+/* A letra larga não cabe na linha do card: em vez de cortar o atributo com "…" (327
+   linhas cortadas em 1600), a linha quebra e o card cresce — a fileira acompanha o maior. */
+body.ac-dislexia .card { height: auto; min-height: 196px; }
+body.ac-dislexia .card-name { max-height: none; }
+body.ac-dislexia .card-name .en, body.ac-dislexia .attr-line { white-space: normal; overflow: visible; text-overflow: clip; }
+
 /* 1. Menos movimento — a mesma coisa que o prefers-reduced-motion já faz,
    agora ligável à mão por quem tem o sistema configurado de outro jeito. */
 body.ac-movimento *, body.ac-movimento *::before, body.ac-movimento *::after {
@@ -5208,6 +5222,7 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
           <label class="som-opt"><input type="checkbox" id="ac-movimento"><span>Menos movimento</span><small>desliga as animações e as transições — golpes, molduras, chuva e brasas</small></label>
           <label class="som-opt"><input type="checkbox" id="ac-brilho"><span>Menos brilho</span><small>tira os halos, o reflexo do card e o fundo em brasa</small></label>
           <label class="som-opt"><input type="checkbox" id="ac-leitura"><span>Leitura calma</span><small>texto maior e fundo liso atrás dele; a arte da região recua</small></label>
+          <label class="som-opt"><input type="checkbox" id="ac-dislexia"><span>Fonte para dislexia</span><small>troca as letras pela OpenDyslexic, de base mais pesada — ajuda a não girar nem trocar as letras</small></label>
           <div class="som-sep"></div>
           <!-- F13-T50: o daltonismo virou escolha de tipo. As bolinhas são as três
                cores do núcleo (AD, AP, Vitalidade) em cada modo: quem não sabe o
@@ -6305,7 +6320,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.83";
+const ATUALIZACAO = "13.85";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -6936,10 +6951,15 @@ function refletirBigorna() {
   }
   posicionarBigorna();
 }
-// a plaqueta fica sob a aba Builds; a posição da aba depende da fonte carregada
+// a plaqueta fica sob a aba Builds; a posição da aba depende da fonte carregada.
+// F13-T85: com a fonte para dislexia (mais larga) ela passava 57 px da janela em
+// 1280 — encosta a 16 px da borda da janela em vez de sair da tela. (O limite é a
+// janela e não as abas: com a fonte normal ela já avança uns px na margem.)
 function posicionarBigorna() {
   const p = document.getElementById("bigorna"), aba = document.querySelector('.tab-btn[data-tab="build"]');
-  if (p && aba) p.style.left = (aba.offsetLeft + 4) + "px";
+  if (!p || !aba) return;
+  const limite = document.documentElement.clientWidth - 16 - aba.parentElement.getBoundingClientRect().left - p.offsetWidth;
+  p.style.left = Math.max(0, Math.min(aba.offsetLeft + 4, limite)) + "px";
 }
 function refletirSalvar(msg) {
   refletirBigorna();
@@ -7048,6 +7068,8 @@ function initSalvar() {
   ["bg-fechar", "cff-fechar"].forEach(id => document.getElementById(id).addEventListener("click", () => confirmarSaida(fecharBuild)));
   window.addEventListener("resize", posicionarBigorna);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(posicionarBigorna);
+  // F13-T85: a OpenDyslexic só baixa quando o interruptor liga — a aba anda depois
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", posicionarBigorna);
   document.getElementById("discard-btn").addEventListener("click", () => confirmarSaida(() => {}));
   const dlg = document.getElementById("save-dialog");
   dlg.addEventListener("click", (e) => {
@@ -10299,7 +10321,7 @@ function marcarHabilidade(letra, nivel) {
 // leitura e dependência de cor.
 // F13-T50: o daltonismo deixou de ser sim/não — guarda o tipo ("geral",
 // "protan", "deutan", "tritan"). O "ligado" de antes (true) vira a Geral.
-const ACESSIBILIDADE = ["movimento", "brilho", "leitura", "daltonismo"];
+const ACESSIBILIDADE = ["movimento", "brilho", "leitura", "daltonismo", "dislexia"];   // F13-T85: a fonte para dislexia
 const TIPOS_DALTONISMO = ["geral", "protan", "deutan", "tritan"];
 const DIZ_DALTONISMO = {
   "": "As cores do jogo: laranja, roxo e verde.",
@@ -10329,6 +10351,7 @@ function aplicarAcessibilidade() {
   const ligados = ACESSIBILIDADE.filter(k => acess[k]).length;
   if (btn) btn.title = ligados ? `Acessibilidade — ${ligados} ${ligados === 1 ? "ajuste ligado" : "ajustes ligados"}` : "Acessibilidade";
   try { localStorage.setItem("acessibilidade", JSON.stringify(acess)); } catch (e) { /* idem */ }
+  posicionarBigorna();   // F13-T85: a fonte para dislexia muda a largura das abas
 }
 
 function initAcessibilidade() {
