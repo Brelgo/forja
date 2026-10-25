@@ -3679,6 +3679,16 @@ body.names-only .card .stamp { font-size: 9px; padding: 3px 7px; letter-spacing:
 body.names-only .card.full .card-surface { padding: 12px 12px 12px 16px; align-items: stretch; }
 body.names-only .card.full .card-main { padding-bottom: 22px; }
 /* ---- Fase 5, T3: aviso por modo de jogo no Catálogo ---- */
+/* F13-T77: o selo e o aviso da camada do robô — lacre de cera, o mesmo da loja */
+.robo-selo { display: inline-block; width: max-content; align-self: flex-start; justify-self: start; margin: 2px 0 0; padding: 1px 7px; border-radius: 9px; font-family: var(--loja-texto); font-size: 11px; font-style: normal;
+  letter-spacing: .02em; color: var(--loja-papel); background: var(--loja-cera); border: 1px solid rgba(0,0,0,.25); white-space: nowrap; }
+.robo-selo.conferir { background: transparent; color: var(--loja-cera); border: 1px dashed var(--loja-cera); }
+.robo-aviso { margin: 0 0 12px; padding: 8px 12px; background: var(--loja-papel); color: var(--loja-tinta, #3b2a1a); border: 1px solid var(--loja-papel-borda);
+  border-left: 4px solid var(--loja-cera); font-family: var(--loja-texto); font-size: 13.5px; border-radius: 2px; }
+.modal-section.robo { border-left: 3px solid var(--loja-cera); padding-left: 10px; }
+.modal-section.robo .rb-linha { display: grid; grid-template-columns: 118px 1fr; gap: 0 8px; margin: 4px 0; line-height: 1.45; }
+.modal-section.robo .rb-k { font-variant: small-caps; letter-spacing: .04em; color: var(--loja-cera); }
+.modal-section.robo .rb-fonte { opacity: .7; font-style: italic; }
 .catalog-mode-hint {
   display: none; margin: -6px 0 12px; padding: 7px 12px;
   background: var(--loja-papel); color: var(--loja-cera); border: 1px solid var(--loja-papel-borda); border-left: 4px solid var(--loja-cera);
@@ -5231,6 +5241,8 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
     <nav id="class-tabs" class="class-tabs" aria-label="Classe do item"></nav>
     <div id="catalog-mode-hint" class="catalog-mode-hint" role="status"></div>
     <!-- F10-T3 (Leo, 16/09/2026): a forja entra na loja — faixa de ferro dizendo para qual caixa vão os cliques -->
+    <!-- F13-T77: a camada do robô, dita no alto da loja quando há patch novo aplicado -->
+    <div id="robo-aviso" class="robo-aviso" hidden></div>
     <div id="catalog-forja-faixa" class="catalog-forja-faixa" hidden>
       <span class="cff-brasa" aria-hidden="true"></span>
       <!-- F13-T51: a faixa diz a build aberta o tempo todo (antes, só com uma caixa
@@ -5617,6 +5629,34 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
 </div>
 
 <script src="data/catalog.js"></script>
+<script src="data/atualizacao_patch.js"></script>
+<script>
+// F13-T77: o robô de patch, parte 3 — o app lê a camada (data/atualizacao_patch.js; docs/robo_de_patch.md)
+// por cima do catálogo, antes de qualquer outro código ler um item. Só vale a camada do patch do
+// catálogo; e, item a item, só se o catálogo ainda disser o "base" de cada campo (o Capítulo 1 pode
+// ter mexido no item depois que ela nasceu) — senão o item fica inteiro como o catálogo diz.
+window.ROBO = { ativo: false, de: null, para: null, itens: {}, aConferir: {}, novos: [], statPricesVelhos: [] };
+function aplicarCamadaDoRobo(cat, c, robo) {
+  const canon = (v) => JSON.stringify(v, (k, x) => x && typeof x === "object" && !Array.isArray(x)
+    ? Object.keys(x).sort().reduce((o, k2) => { o[k2] = x[k2]; return o; }, {}) : x);
+  if (!c || !cat || !cat.meta || c.de !== cat.meta.patch || !c.para || c.para === c.de) return robo;
+  const porSlug = {};
+  cat.items.forEach(i => { porSlug[i.slug] = i; });
+  Object.entries(c.itens || {}).forEach(([slug, e]) => {
+    const it = porSlug[slug];
+    if (!it) return;
+    const campos = Object.keys(e.campos || {});
+    const vale = campos.every(k => canon(it[k]) === canon((e.base || {})[k]));
+    if (vale) campos.forEach(k => { it[k] = e.campos[k]; });
+    robo.itens[slug] = { aplicados: vale ? campos : [], recusados: vale ? [] : campos,
+                         contaVelha: vale ? (e.contaVelha || []) : [], mudou: vale ? (e.mudou || []) : [] };
+  });
+  (c.aConferir || []).forEach(x => { (robo.aConferir[x.slug] = robo.aConferir[x.slug] || []).push(x); });
+  robo.ativo = true; robo.de = c.de; robo.para = c.para; robo.novos = c.novos || []; robo.statPricesVelhos = c.statPricesVelhos || [];
+  return robo;
+}
+aplicarCamadaDoRobo(window.CATALOG, window.ATUALIZACAO_PATCH, window.ROBO);
+</script>
 <script src="data/mudancas.js"></script>
 <script src="data/regioes.js"></script>
 <script src="data/runas.js"></script>
@@ -6219,7 +6259,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.76";
+const ATUALIZACAO = "13.77";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -13111,6 +13151,7 @@ function renderCard(item, attrSorting) {
           <div class="card-name">${item.namePt}<span class="en">${item.nameEn}${item.itemClass && item.itemClass.core ? " · " + item.itemClass.core : ""}</span></div>
           <div class="card-price">${priceLabel(item)}</div>
         </div>
+        ${seloDoRobo(item)}
         <div class="card-tags">
           <span class="tag tier-badge">${TIER_LABEL[item.tier] || item.tier}</span>
         </div>
@@ -13559,6 +13600,48 @@ function viraHtml(lista) {
     <div class="vira-grade">${its.map(it => `<button type="button" class="vira-item" data-goto="${it.slug}" title="${esc(it.namePt)}">${iconInner(it)}<span>${fmtG(it.priceGold)}</span></button>`).join("")}</div></div>`).join("");
 }
 
+// F13-T77: o que a camada do robô diz do item, na tela
+const CONTA_VELHA_ROTULO = { costAnalysis: "análise de custo", itemClass: "núcleo", apexNumeric: "eficiência no Ápice", masterwork: "Passiva do Ornn",
+  attributeCategory: "categoria de atributo", combineCost: "custo de combinação", cashback: "Reembolso", components: "preço das peças", abilities: "Mecânica",
+  apex: "Ápice", notes: "notas", aramNotes: "nota de ARAM", mayhemNotes: "nota de ARAM: Mayhem", fragments: "fragmentos" };
+function valorDoRobo(v) {
+  if (v === null || v === undefined) return "—";
+  if (Array.isArray(v)) return v.join(", ");
+  return typeof v === "number" ? fmtNum(v) : String(v);
+}
+function seloDoRobo(item) {
+  if (!ROBO.ativo) return "";
+  const r = ROBO.itens[item.slug];
+  if (r && r.aplicados.length) return `<span class="robo-selo" title="Mudou no patch ${esc(ROBO.para)}: o robô já aplicou o que a wiki e o Data Dragon dizem; o Capítulo 1 ainda confere">patch ${esc(ROBO.para)}</span>`;
+  if (ROBO.aConferir[item.slug]) return `<span class="robo-selo conferir" title="Mudou no patch ${esc(ROBO.para)}, e o robô não aplicou: o Capítulo 1 confere — até lá, o item é o do patch ${esc(ROBO.de)}">a conferir</span>`;
+  return "";
+}
+function fichaDoRobo(item) {
+  if (!ROBO.ativo) return "";
+  const r = ROBO.itens[item.slug], conf = ROBO.aConferir[item.slug] || [];
+  const feito = r ? r.mudou : [], velhas = r ? r.contaVelha : [];
+  if (!feito.length && !conf.length && !velhas.length) return "";
+  const linha = (m) => m.nota ? `${esc(m.campo)}: ${esc(m.nota)}`
+    : `${esc(m.campo)}: ${esc(valorDoRobo(m.de))} → <b>${esc(valorDoRobo(m.para))}</b> <span class="rb-fonte">(${esc(m.fonte)})</span>`;
+  return `
+    <div class="modal-section robo">
+      <div class="modal-section-title">Patch ${esc(ROBO.para)} · pelo robô</div>
+      ${feito.length ? `<div class="rb-linha"><span class="rb-k">Já aplicado</span><span>${feito.map(linha).join(" · ")}</span></div>` : ""}
+      ${conf.length ? `<div class="rb-linha conferir"><span class="rb-k">A conferir</span><span>${conf.map(x => `${esc(x.campo)}: ${esc(x.porque)}`).join(" · ")}</span></div>` : ""}
+      ${velhas.length ? `<div class="rb-linha velha"><span class="rb-k">Do patch ${esc(ROBO.de)}</span><span>${velhas.map(k => esc(CONTA_VELHA_ROTULO[k] || k)).join(", ")} — o Capítulo 1 refaz</span></div>` : ""}
+    </div>`;
+}
+function mostrarAvisoDoRobo() {
+  const el = document.getElementById("robo-aviso");
+  if (!el || !ROBO.ativo) return;
+  const itens = Object.values(ROBO.itens).filter(r => r.aplicados.length).length;
+  const mudancas = Object.values(ROBO.itens).reduce((s, r) => s + r.mudou.length, 0);
+  const conferir = Object.keys(ROBO.aConferir).length;
+  el.innerHTML = `<b>Patch ${esc(ROBO.para)}</b>: o robô já aplicou ${mudancas} ${mudancas === 1 ? "mudança" : "mudanças"} da wiki e do Data Dragon em ${itens} ${itens === 1 ? "item" : "itens"} (selo <span class="robo-selo">patch ${esc(ROBO.para)}</span>)`
+    + (conferir ? `; ${conferir} ${conferir === 1 ? "item" : "itens"} o Capítulo 1 ainda confere (selo <span class="robo-selo conferir">a conferir</span>)` : "")
+    + (ROBO.statPricesVelhos.length ? `. O valor em ouro dos atributos ainda é o do patch ${esc(ROBO.de)} (${esc(ROBO.statPricesVelhos.join(", "))} ${ROBO.statPricesVelhos.length === 1 ? "mudou" : "mudaram"})` : "") + ".";
+  el.hidden = false;
+}
 function openModal(id) {
   const item = byId[id];
   if (!item) return;
@@ -13712,6 +13795,7 @@ function openModal(id) {
       ${item.priceNote ? `<div class="stat">Nota<b style="font-size:12px;color:var(--text-dim)">${item.priceNote}</b></div>` : ""}
       ${(item.gameModes || []).length ? `<div class="stat">Modo de jogo<b style="font-size:12px;color:var(--text-dim)">${item.gameModes.join(", ")}</b></div>` : ""}
     </div>
+    ${fichaDoRobo(item)}
     ${noteHtml}
     ${conditionHtml}
     ${(attrHtml || attrNoteHtml) ? `<div class="modal-section">
@@ -13814,6 +13898,7 @@ function init() {
   render();
   initCardTilt();
   initShiftFullCard();
+  mostrarAvisoDoRobo();   // F13-T77
   document.getElementById("catalog-cat-select").addEventListener("change", (e) => {
     if (!build.editing) { e.target.value = ""; chamarEditar(); return; }   // F13-T76
     build.selectedCatId = e.target.value || null;

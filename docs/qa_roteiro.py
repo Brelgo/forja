@@ -5228,6 +5228,69 @@ def checar_cadeado_ajustes(s, p):
     s.js("(() => { ligarEdicao(true); switchTab('build'); return 1; })()")
 
 
+def checar_camada_robo(s, p):
+    """F13-T77: o app lê a camada do robô (data/atualizacao_patch.js) por cima do catálogo — só
+    a do patch do catálogo, e item a item só se o catálogo ainda disser o "base" de cada campo.
+    Numa aba própria, a camada de um patch simulado entra pelo caminho de verdade (a página carrega
+    o arquivo; o roteiro só troca o que ele diz): o preço e o atributo aplicados, o selo no card,
+    o bloco na ficha, o aviso no alto da loja; o item cujo catálogo mudou fica como o catálogo diz."""
+    print("\n%sCAMADA DO ROBÔ%s" % (AMARELO, FIM))
+    import importlib, copy
+    pasta = os.path.join(RAIZ, "data", "robo")
+    if pasta not in sys.path:
+        sys.path.insert(0, pasta)
+    lf = importlib.import_module("ler_fonte")
+    ap = importlib.import_module("aplicar_patch")
+    cat = lf.ler_catalogo()
+    patch = cat["meta"]["patch"]
+    w0, dd0, m0 = lf.ler_foto(patch)
+    w1, dd1, m1 = copy.deepcopy(w0), copy.deepcopy(dd0), copy.deepcopy(m0)
+    idc = {i["nameEn"]: str(i["id"]).split(" ")[0] for i in cat["items"]}
+    w1["Bastionbreaker"]["buy"] += 100; dd1["data"][idc["Bastionbreaker"]]["gold"]["total"] += 100; dd1["data"][idc["Bastionbreaker"]]["gold"]["base"] += 100
+    w1["Bastionbreaker"]["stats"]["lethality"] = 20
+    w1["Bastionbreaker"]["effects"]["pass"]["description"] += " (texto novo)"
+    dd1["data"][idc["Redemption"]]["gold"]["total"] += 50; dd1["data"][idc["Redemption"]]["gold"]["base"] += 50
+    w1["Abyssal Mask"]["buy"] = 2700
+    c = ap.regra(cat, (w0, dd0, m0), (w1, dd1, m1))
+    camada = {"de": patch, "para": "16.22.1", "itens": c["itens"], "aConferir": c["aConferir"], "novos": c["novos"], "statPricesVelhos": c.get("statPricesVelhos", [])}
+    # o Capítulo 1 mexeu na Redenção depois que a camada nasceu: o "base" não bate e ela fica como o catálogo diz
+    camada["itens"]["redemption"]["base"]["priceGold"] = 9999
+    preco_bb = next(i for i in cat["items"] if i["slug"] == "bastionbreaker")["priceGold"]
+    preco_rd = next(i for i in cat["items"] if i["slug"] == "redemption")["priceGold"]
+
+    # a camada do repositório (vazia, do próprio patch) não liga nada
+    vazia = s.js("({ ativo: ROBO.ativo, selos: document.querySelectorAll('.robo-selo').length, aviso: document.getElementById('robo-aviso').hidden })")
+    outro = s.js("""(() => { const r = { itens: {}, aConferir: {}, novos: [], statPricesVelhos: [] };
+      aplicarCamadaDoRobo(JSON.parse(JSON.stringify(CATALOG)), { de: '16.20.1', para: '16.21.1', itens: { 'bastionbreaker': { campos: { priceGold: 1 }, base: { priceGold: byId['bastionbreaker'].priceGold } } } }, r);
+      return { ativo: !!r.ativo, itens: Object.keys(r.itens).length }; })()""")
+
+    r = Sessao(s.url)
+    try:
+        r.envia("Page.addScriptToEvaluateOnNewDocument", {"source": "(() => { const C = %s; Object.defineProperty(window, 'ATUALIZACAO_PATCH', { configurable: true, get() { return C; }, set(v) {} }); })()" % json.dumps(camada, ensure_ascii=False)})
+        r.abrir(); r.tela(1600, 900); r.entrar()
+        r.js("(() => { switchTab('catalog'); return 1; })()"); time.sleep(0.8)
+        dado = r.js("""(() => { const bb = byId['bastionbreaker'], rd = byId['redemption'];
+          const selo = (s) => { const e = document.querySelector('#grid .card[data-slug="' + s + '"] .robo-selo'); return e ? e.className + ':' + e.textContent : ''; };
+          return { ativo: ROBO.ativo, bb: bb.priceGold, letal: bb.attributes.filter(a => a.stat === 'Letalidade').map(a => a.value), rd: rd.priceGold,
+                   recusou: ROBO.itens.redemption ? ROBO.itens.redemption.recusados : null,
+                   selo_bb: selo('bastionbreaker'), selo_am: selo('abyssal-mask'), selo_rd: selo('redemption'),
+                   aviso: document.getElementById('robo-aviso').hidden ? '' : document.getElementById('robo-aviso').textContent }; })()""")
+        r.js("(() => { openModal('bastionbreaker'); return 1; })()"); time.sleep(0.6)
+        ficha = r.js("(() => { const f = document.querySelector('#modal .modal-section.robo'); return f ? f.textContent.replace(/\\s+/g, ' ') : ''; })()")
+        erros = list(r.erros)
+    finally:
+        r.fechar()
+    p.conta("camada do robô", "a camada do repositório (do próprio patch) não liga nada, e a de outro patch é ignorada",
+            vazia == {"ativo": False, "selos": 0, "aviso": True} and outro == {"ativo": False, "itens": 0}, "repositório %s · outro patch %s" % (vazia, outro))
+    p.conta("camada do robô", "a camada do patch do catálogo entra: o preço e a Letalidade aplicados, o selo \"patch 16.22.1\" no card e o \"a conferir\" no que o robô não aplicou; o item que o Capítulo 1 mexeu depois fica como o catálogo diz",
+            dado["ativo"] and dado["bb"] == preco_bb + 100 and dado["letal"] == [20] and dado["rd"] == preco_rd and dado["recusou"] and "priceGold" in dado["recusou"]
+            and dado["selo_bb"].endswith(":patch 16.22.1") and "conferir" in dado["selo_am"] and dado["selo_rd"] == ""
+            and dado["aviso"].startswith("Patch 16.22.1") and not erros, "%s · erros %s" % (dado, erros[:2]))
+    p.conta("camada do robô", "na ficha, o bloco do robô diz o que já foi aplicado (de → para, de onde), o que está a conferir e as contas do patch anterior",
+            "Patch 16.22.1 · pelo robô" in ficha and "Já aplicado" in ficha and "%s → %s" % (ap.fmt_num(preco_bb), ap.fmt_num(preco_bb + 100)) in ficha
+            and "A conferir" in ficha and "Shaped Charge" in ficha and "Do patch %s" % patch in ficha and "análise de custo" in ficha, ficha[:400])
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5247,6 +5310,7 @@ GRUPOS = [
     ("reembolso e topo", checar_reembolso_e_topo),
     ("aviso", checar_aviso),
     ("cadeado: ajustes", checar_cadeado_ajustes),
+    ("camada do robô", checar_camada_robo),
     ("runas", checar_runas),
     ("habilidades", checar_habilidades),
     ("texto", checar_texto),

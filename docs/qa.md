@@ -173,6 +173,13 @@ nas Runas, trocar a trilha avisa e o "Ligar Editar" de lá pulsa; com "menos mov
 o Fulgor com a Força da Trindade não tem aviso nem cadeado, a Trindade com Aurora e Crepúsculo continua trancada, e o par do
 aviso passou a ser o Morellonomicon com o Lembrete Mortal (os dois Lendários com Feridas Dolorosas).
 
+**Camada do robô** (F13-T77) — a camada do repositório (do próprio patch) não liga nada, e a de outro patch é ignorada; numa
+aba própria, a camada de um patch simulado entra pelo caminho de verdade (a página carrega o `data/atualizacao_patch.js`; o
+roteiro só troca o que ele diz, antes da carga): o preço e a Letalidade do Quebra-Bastião aplicados, o selo "patch 16.22.1"
+no card, "a conferir" na Máscara Abissal, o aviso no alto da loja; a Redenção, com o `base` trocado (o Capítulo 1 mexeu nela
+depois), fica com o preço do catálogo e sem selo; e a ficha diz o que já foi aplicado, o que está a conferir e as contas do
+patch anterior.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar
