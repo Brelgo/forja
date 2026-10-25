@@ -7,7 +7,8 @@ window.NOTAS = {
     "Num patch novo, o Montador decide sozinho o que é seguro atualizar; o resto fica a conferir.",
     "A busca de builds filtra por rota, em Minhas e em Públicas.",
     "Num patch novo, a loja já mostra o que mudou (o selo \"patch\"), antes mesmo da revisão do catálogo.",
-    "A atualização por patch roda sozinha, todo dia."
+    "A atualização por patch roda sozinha, todo dia.",
+    "As notas de atualização: o mural da loja, com o que mudou, o que vem por aí e como apoiar o projeto."
    ],
    "aj": [
     "Com a rota Suporte, os outros itens iniciais ficam trancados: o Atlas Mundial já vem comprado.",

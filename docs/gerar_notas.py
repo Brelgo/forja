@@ -50,7 +50,8 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     n, sem_nota = notas()
     if "--conferir" in sys.argv:
-        atual = open(SAIDA, encoding="utf-8").read() if os.path.exists(SAIDA) else ""
+        # o fim de linha não conta: o git do Windows devolve o arquivo em CRLF
+        atual = open(SAIDA, "rb").read().decode("utf-8").replace("\r\n", "\n") if os.path.exists(SAIDA) else ""
         print("em dia" if atual == texto(n) else "desatualizado", "· sem nota:", sem_nota or "nenhuma")
         return
     with open(SAIDA, "w", encoding="utf-8", newline="\n") as f:
