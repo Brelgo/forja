@@ -8,7 +8,8 @@ window.NOTAS = {
     "A busca de builds filtra por rota, em Minhas e em Públicas.",
     "Num patch novo, a loja já mostra o que mudou (o selo \"patch\"), antes mesmo da revisão do catálogo.",
     "A atualização por patch roda sozinha, todo dia.",
-    "As notas de atualização: o mural da loja, com o que mudou, o que vem por aí e como apoiar o projeto."
+    "As notas de atualização: o mural da loja, com o que mudou, o que vem por aí e como apoiar o projeto.",
+    "Cada tela tem o seu endereço (#builds, #runas, #calculadora…): dá para favoritar, mandar o link e usar o voltar do navegador."
    ],
    "aj": [
     "Com a rota Suporte, os outros itens iniciais ficam trancados: o Atlas Mundial já vem comprado.",
