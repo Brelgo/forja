@@ -4780,7 +4780,9 @@ body.forja #som-volume { accent-color: #ff7a1e; }
 .bi-tab.ativa { color: var(--forja-brasa-clara); background: linear-gradient(180deg, var(--forja-placa-1), var(--forja-placa-2)); box-shadow: inset 0 2px 0 var(--forja-brasa); }
 .bi-tab:disabled { opacity: .45; cursor: not-allowed; }
 .bi-filter-wrap { position: relative; }
-.bi-filter-menu { width: 520px; left: 0; right: auto; }
+/* F13-T75: alinhado pela direita do botão — pela esquerda, em 1600 e 1280 o menu
+   passava 60 px da janela e a página ganhava rolagem lateral */
+.bi-filter-menu { width: 520px; left: auto; right: 0; }
 .bi-filter-menu .md-label { margin: 6px 0 6px; }
 .bf-champs { display: flex; flex-wrap: wrap; gap: 6px; }
 .bf-champ { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border-radius: 20px; cursor: pointer; border: 1px solid #3a3029; background: rgba(0,0,0,.3); color: var(--forja-texto); font-family: var(--loja-texto); font-size: 13px; }
@@ -4788,6 +4790,13 @@ body.forja #som-volume { accent-color: #ff7a1e; }
 .bf-champ .bp-todos { display: inline-flex; align-items: center; justify-content: center; font-family: var(--loja-gravado); font-size: 9px; color: #c9973f; }
 .bf-champ:hover { border-color: var(--forja-brasa); }
 .bf-champ.ativo { border-color: #c9973f; color: var(--forja-brasa-clara); box-shadow: 0 0 0 1px #c9973f; }
+/* F13-T75: a rota no filtro — o ícone do cliente do jogo, o nome no balão */
+.bf-rota { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 40px; padding: 0; border-radius: 6px; cursor: pointer; border: 1px solid #3a3029; background: rgba(0,0,0,.3); }
+.bf-rota img { width: 28px; height: 28px; opacity: .75; transition: opacity .15s, filter .15s; }
+.bf-rota:hover { border-color: var(--forja-brasa); }
+.bf-rota:hover img { opacity: 1; }
+.bf-rota.ativo { border-color: #c9973f; box-shadow: 0 0 0 1px #c9973f, 0 0 10px var(--forja-brasa-glow); }
+.bf-rota.ativo img { opacity: 1; filter: drop-shadow(0 0 4px rgba(255,176,102,.7)); }
 .bi-filter-menu { max-height: calc(100vh - 120px); overflow: auto; }
 #bf-item-search { width: 100%; box-sizing: border-box; padding: 6px 10px; margin-bottom: 8px; border-radius: 2px; background: rgba(0,0,0,.35); border: 1px solid #3a3029; color: var(--forja-texto); font-family: var(--loja-texto); font-size: 13.5px; }
 #bf-item-search:focus { outline: none; border-color: var(--forja-brasa); }
@@ -5273,6 +5282,9 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
             <div id="bf-champs" class="bf-champs"></div>
             <div class="md-label">Marcadores padrão</div>
             <div id="bf-tags" class="md-grid"></div>
+            <!-- F13-T75 (Leo, 24/10/2026: "implementar a rota no sistema de busca… em baixo dos marcadores padrão") -->
+            <div class="md-label">Rota</div>
+            <div id="bf-rotas" class="bf-champs"></div>
             <div class="md-label">Habilidades</div>
             <div id="bf-habs" class="md-grid"></div>
             <p id="bf-habs-note" class="md-note">Escolha um campeão no filtro para ver as habilidades.</p>
@@ -5974,6 +5986,11 @@ const build = {
 // o cadeado vai ler (itens de selva, a linha do Atlas). ARAM não tem rota.
 const ROTAS = { top: "Top", selva: "Selva", meio: "Meio", atirador: "Atirador", suporte: "Suporte" };
 const ROTA_APELIDOS = { topo: "top", jungle: "selva", jg: "selva", mid: "meio", adc: "atirador", bot: "atirador", sup: "suporte", support: "suporte" };
+// F13-T75 (Leo, 24/10/2026: "melhor o ícone do que o texto"): os ícones de rota do
+// cliente do jogo (CommunityDragon, rcp-fe-lol-static-assets/svg/position-*.svg),
+// guardados em assets/rotas/ — o Data Dragon não tem ícone de rota
+const ROTA_ICONE = { top: "position-top", selva: "position-jungle", meio: "position-middle", atirador: "position-bottom", suporte: "position-utility" };
+function rotaIconeUrl(r) { return ROTA_ICONE[r] ? `assets/rotas/${ROTA_ICONE[r]}.svg` : ""; }
 function rotaValida(r) { return Object.prototype.hasOwnProperty.call(ROTAS, r) ? r : ""; }
 function rotaPossivel(mode) { return !mode || mode === "Summoner's Rift"; }
 function rotaDoTexto(t) {
@@ -6178,7 +6195,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.74";
+const ATUALIZACAO = "13.75";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -10611,6 +10628,7 @@ function publicasOrdenadas() {
 function passaFiltro(d, q) {
   if (q && !norm(`${d.name} ${d.pubId || ""} ${d.id} ${d.champ ? d.champ.name : ""} ${d.mode}`).includes(q)) return false;
   if (biFilter.champ && !(d.champ && d.champ.key === biFilter.champ.key)) return false;
+  if (biFilter.rota && rotaDaBuild(d) !== biFilter.rota) return false;
   if (biFilter.marker) {
     const temMarcador = d.markers.some(m => markerEquals(m, biFilter.marker));
     const temItem = biFilter.marker.t === "item" && d.cats.some(c => c.items.some(e => e.itemId === biFilter.marker.slug));
@@ -10665,7 +10683,7 @@ function renderPublicasIndex(rows) {
   const fora = publicas.lista.filter(p => !publicaNoCatalogoAtual(p)).length;
   const nota = fora && !(dados.length && dados.every(d => d.desatualizada))
     ? `<div class="bi-fora">${fora === 1 ? "1 build publicada no catálogo está desatualizada estando de fora até ser republicada" : fora + " builds publicadas no catálogo estão desatualizadas estando de fora até serem republicadas"} para o Patch-${esc(CATALOG.meta.patch)}. Pelo ID, ainda dá para achar.</div>` : "";
-  rows.innerHTML = (dados.length ? dados.map(linhaHtml).join("") : `<div class="bi-empty">${q || biFilter.marker || biFilter.champ ? "Nenhuma build publicada combina com a busca ou o filtro." : fora ? `Ainda não há builds publicadas no catálogo ${esc(CATALOG.meta.patch)}.` : "Ainda não há builds publicadas."}</div>`) + nota;
+  rows.innerHTML = (dados.length ? dados.map(linhaHtml).join("") : `<div class="bi-empty">${q || biFilter.marker || biFilter.champ || biFilter.rota ? "Nenhuma build publicada combina com a busca ou o filtro." : fora ? `Ainda não há builds publicadas no catálogo ${esc(CATALOG.meta.patch)}.` : "Ainda não há builds publicadas."}</div>`) + nota;
   dados.forEach(d => registrarEvento(d.pubId, "impressao"));   // F10-T15: apareceu na lista
   atualizarBarraLote();
   renderBuildDetail();
@@ -10767,7 +10785,10 @@ function registrarEvento(pubId, tipo) {
 // Estado da tela "Builds": seleção, filtro por marcador (+ campeão) e aba.
 let biSelected = null;
 let biLote = null;   // F10-T7: null = modo normal; Set de ids = modo Selecionar
-const biFilter = { marker: null, champ: null };   // marker: {t,id|letter}; champ: {key,id,name}
+const biFilter = { marker: null, champ: null, rota: null };   // marker: {t,id|letter}; champ: {key,id,name}; rota: "top"… (F13-T75)
+// A rota de uma build para o filtro: fora da Summoner's Rift não há rota. Build
+// com a rota "Qualquer" não entra no filtro de uma rota (ela não é de nenhuma).
+function rotaDaBuild(d) { return rotaPossivel(d.mode) ? rotaValida(d.rota) : ""; }
 
 function fmtData(ts) {
   if (!ts) return "—";
@@ -10781,6 +10802,7 @@ function buildsFiltradas() {
   return library.builds.map(buildResumo).filter(d => {
     if (q && !norm(`${d.name} ${d.id} ${d.champ ? d.champ.name : ""} ${d.mode}`).includes(q)) return false;
     if (biFilter.champ && !(d.champ && d.champ.key === biFilter.champ.key)) return false;
+    if (biFilter.rota && rotaDaBuild(d) !== biFilter.rota) return false;
     if (biFilter.marker) {
       const temMarcador = d.markers.some(m => markerEquals(m, biFilter.marker));
       const temItem = biFilter.marker.t === "item" && d.cats.some(c => c.items.some(e => e.itemId === biFilter.marker.slug));
@@ -10866,7 +10888,7 @@ function renderBuildIndex() {
   if (!rows) return;
   if (biView === "publicas") { renderPublicasIndex(rows); return; }
   const dados = buildsFiltradas();
-  const filtrando = !!(biFilter.marker || biFilter.champ || (document.getElementById("bi-search").value || "").trim());
+  const filtrando = !!(biFilter.marker || biFilter.champ || biFilter.rota || (document.getElementById("bi-search").value || "").trim());
   // favoritas do site também moram em "Minhas" (Leo, 14/09/2026)
   const q = norm((document.getElementById("bi-search").value || "").trim());
   const favIds = favoritosIds();
@@ -10981,6 +11003,8 @@ function renderFilterMenu() {
       `<button type="button" class="bf-champ${biFilter.champ && biFilter.champ.key === c.key ? " ativo" : ""}" data-key="${c.key}"><img src="${Campeoes.iconUrl(c.id)}" alt="">${esc(c.name)}</button>`).join("");
   const cell = (m, inner, label) => `<button type="button" class="md-cell${markerEquals(m, biFilter.marker) ? " ativo" : ""}" data-m='${esc(JSON.stringify(m))}' title="${esc(label)}">${inner}</button>`;
   document.getElementById("bf-tags").innerHTML = MARCADORES.map(t => cell({ t: "tag", id: t.id }, `<img class="mk" src="${marcadorUrl(t.id)}" alt="">`, t.label)).join("");
+  document.getElementById("bf-rotas").innerHTML = Object.entries(ROTAS).map(([id, nome]) =>
+    `<button type="button" class="bf-rota${biFilter.rota === id ? " ativo" : ""}" data-rota="${id}" title="${esc(nome)}" aria-label="${esc(nome)}" aria-pressed="${biFilter.rota === id}"><img src="${rotaIconeUrl(id)}" alt=""></button>`).join("");
   // Itens (Leo, 14/09/2026: "deve aparecer o ícone de todos os itens"): os 225 do catálogo, com busca
   const itemsBox = document.getElementById("bf-items");
   if (!itemsBox.dataset.filled) {
@@ -11003,9 +11027,9 @@ function filtrarItensDoFiltro() {
 }
 function refletirFiltro() {
   const btn = document.getElementById("bi-filter");
-  const ativo = !!(biFilter.marker || biFilter.champ);
+  const ativo = !!(biFilter.marker || biFilter.champ || biFilter.rota);
   btn.classList.toggle("ativo", ativo);
-  btn.textContent = ativo ? `Filtro: ${[biFilter.champ ? biFilter.champ.name : "", biFilter.marker ? markerLabel(biFilter.marker, biFilter.champ) : ""].filter(Boolean).join(" · ")}` : "Filtrar por marcador";
+  btn.textContent = ativo ? `Filtro: ${[biFilter.champ ? biFilter.champ.name : "", biFilter.rota ? ROTAS[biFilter.rota] : "", biFilter.marker ? markerLabel(biFilter.marker, biFilter.champ) : ""].filter(Boolean).join(" · ")}` : "Filtrar por marcador";
 }
 
 // ---- chuva de entrada (Leo, 14/09/2026): pingos revelam a tela, como tinta molhada
@@ -11241,7 +11265,7 @@ function initBuildIndex() {
     biView = t.dataset.view;
     document.querySelectorAll(".bi-tab").forEach(x => x.classList.toggle("ativa", x === t));
     qtd.hidden = refresh.hidden = biView !== "publicas";
-    biSelected = null; biFilter.marker = null; biFilter.champ = null; refletirFiltro();
+    biSelected = null; biFilter.marker = null; biFilter.champ = null; biFilter.rota = null; refletirFiltro();
     if (biLote) { biLote.clear(); loteMsg(""); }
     renderBuildIndex();
     if (biView === "publicas") carregarPublicas(false);
@@ -11267,6 +11291,11 @@ function initBuildIndex() {
   const abrirFiltro = (on) => { fmenu.hidden = !on; fbtn.setAttribute("aria-expanded", on ? "true" : "false"); if (on) renderFilterMenu(); };
   fbtn.addEventListener("click", () => abrirFiltro(fmenu.hidden));
   fmenu.addEventListener("click", (e) => {
+    const ro = e.target.closest(".bf-rota");
+    if (ro) {
+      biFilter.rota = biFilter.rota === ro.dataset.rota ? null : ro.dataset.rota;
+      renderFilterMenu(); refletirFiltro(); renderBuildIndex(); return;
+    }
     const c = e.target.closest(".bf-champ");
     if (c) {
       const fonte = biView === "publicas" ? publicas.lista.filter(publicaNoCatalogoAtual).map(p => p.campeao) : library.builds.map(b => b.champion);
@@ -11280,7 +11309,7 @@ function initBuildIndex() {
       biFilter.marker = markerEquals(m, biFilter.marker) ? null : m;
       renderFilterMenu(); refletirFiltro(); renderBuildIndex(); return;
     }
-    if (e.target.closest("#bf-clear")) { biFilter.marker = null; biFilter.champ = null; refletirFiltro(); renderBuildIndex(); abrirFiltro(false); }
+    if (e.target.closest("#bf-clear")) { biFilter.marker = null; biFilter.champ = null; biFilter.rota = null; refletirFiltro(); renderBuildIndex(); abrirFiltro(false); }
   });
   document.getElementById("bf-item-search").addEventListener("input", filtrarItensDoFiltro);
   document.addEventListener("mousedown", (e) => { if (!fmenu.hidden && !e.target.closest("#bi-filter-wrap")) abrirFiltro(false); });

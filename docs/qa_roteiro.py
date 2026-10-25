@@ -1534,6 +1534,80 @@ def checar_rota(s, p):
     s.js("descartarAlteracoes && rascunho.sujo && descartarAlteracoes(); 'ok'")
 
 
+def checar_filtro_rota(s, p):
+    """F13-T75 (Leo, 24/10/2026: "implementar a rota no sistema de busca, acho bom
+    colocar em baixo dos marcadores padrão"): no "Filtrar por marcador", a seção
+    Rota logo abaixo dos marcadores padrão; vale em Minhas e em Públicas; a build
+    de rota "Qualquer" e a de ARAM (sem rota) não entram no filtro de uma rota."""
+    print("\n%sFILTRO DE ROTA%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    s.js("""(() => { if (rascunho.sujo) descartarAlteracoes(); ligarEdicao(false);
+      const base = library.builds.find(b => !b.temp);
+      const mk = (id, nome, mode, rota) => Object.assign(JSON.parse(JSON.stringify(base)), { id, name: nome, mode, rota, pubId: null, updatedAt: Date.now() });
+      library.builds = library.builds.filter(b => !String(b.id).startsWith('qa-ro-'));
+      library.builds.push(mk('qa-ro-top', 'QA rota Top', "Summoner's Rift", 'top'), mk('qa-ro-selva', 'QA rota Selva', "Summoner's Rift", 'selva'),
+        mk('qa-ro-qualquer', 'QA rota Qualquer', "Summoner's Rift", ''), mk('qa-ro-aram', 'QA rota ARAM', 'ARAM', 'selva'));
+      gravarBiblioteca(); biFilter.marker = null; biFilter.champ = null; biFilter.rota = null;
+      switchTab('build'); showBuildScreen('lista'); document.getElementById('bi-search').value = 'QA rota'; renderBuildIndex(); refletirFiltro(); return 1; })()""")
+    time.sleep(0.6)
+    NA_TELA = "[...document.querySelectorAll('#bi-rows .bi-row')].map(r => r.dataset.pub || r.dataset.id).filter(x => /^qa-ro-|^qr7/.test(x)).sort()"
+    s.clicar("#bi-filter", 0.4)
+    menu = s.js("""(() => { const r = document.getElementById('bf-rotas'); if (!r) return null; const rot = r.previousElementSibling;
+      return { rotulo: rot && rot.textContent, antes: rot && rot.previousElementSibling && rot.previousElementSibling.id,
+               chips: [...r.querySelectorAll('.bf-rota')].map(b => b.getAttribute('aria-label') + (b.querySelector('img') && b.querySelector('img').naturalWidth > 0 ? '' : ' (sem ícone)')) }; })()""")
+    todas = s.js(NA_TELA)
+    sel = '#bf-rotas .bf-rota[data-rota="%s"]'
+    tem_selva = s.js("!!document.querySelector(%s)" % json.dumps(sel % "selva"))
+    if tem_selva:
+        s.clicar(sel % "selva", 0.4)
+    selva = {"tela": s.js(NA_TELA), "botao": s.js("document.getElementById('bi-filter').textContent")}
+    if tem_selva:
+        s.clicar(sel % "selva", 0.4)             # de novo: solta
+    solto = s.js(NA_TELA)
+    p.conta("filtro de rota", "no filtro, a Rota (os cinco ícones, com o nome) vem logo abaixo dos marcadores padrão; em Minhas, a Selva mostra só a da Selva (nem a \"Qualquer\", nem a de ARAM) e o segundo clique solta",
+            menu == {"rotulo": "Rota", "antes": "bf-tags", "chips": ["Top", "Selva", "Meio", "Atirador", "Suporte"]}
+            and todas == ["qa-ro-aram", "qa-ro-qualquer", "qa-ro-selva", "qa-ro-top"] and selva["tela"] == ["qa-ro-selva"]
+            and selva["botao"] == "Filtro: Selva" and solto == todas,
+            "menu %s · todas %s · Selva %s · solto %s" % (menu, todas, selva, solto))
+
+    # públicas: a lista de mentira (sem tocar no servidor); a de ARAM e a sem rota ficam de fora
+    s.js("""(() => { const pub = (id, nome, modo, rota) => ({ id, nome, descricao: 'x', campeao: null, modo, marcadores: [], versao: 1,
+        atualizado_em: new Date().toISOString(), patch: CATALOG.meta.patch, autor: '', engajamentos: 0, pop_dia: 0, popular_semana: false, dias_no_top: 0,
+        layout: null, runas: null, habilidades: null, rota, caixas: [{ name: 'Core', kind: 'comum', items: [{ itemId: 'long-sword' }] }] });
+      publicas.lista = [pub('qr7001', 'QA rota pub Meio', "Summoner's Rift", 'meio'), pub('qr7002', 'QA rota pub sem rota', "Summoner's Rift", ''),
+        pub('qr7003', 'QA rota pub ARAM', 'ARAM', 'meio'), pub('qr7004', 'QA rota pub Meio 2', '', 'meio')];
+      publicas.favs = []; publicas.erro = null; publicas.carregadoEm = Date.now(); return 1; })()""")
+    s.envia("Input.dispatchMouseEvent", {"type": "mousePressed", "x": 5, "y": 5, "button": "left", "clickCount": 1})
+    s.envia("Input.dispatchMouseEvent", {"type": "mouseReleased", "x": 5, "y": 5, "button": "left", "clickCount": 1})
+    time.sleep(0.3)
+    s.clicar('.bi-tab[data-view="publicas"]', 0.6)
+    s.js("(() => { publicas.carregadoEm = Date.now(); renderBuildIndex(); return 1; })()"); time.sleep(0.4)
+    pub_todas = s.js(NA_TELA)
+    s.clicar("#bi-filter", 0.4)
+    if s.js("!!document.querySelector(%s)" % json.dumps(sel % "meio")):
+        s.clicar(sel % "meio", 0.4)
+    pub_meio = s.js(NA_TELA)
+    s.clicar("#bf-clear", 0.4)
+    limpo = {"tela": s.js(NA_TELA), "rota": s.js("biFilter.rota"), "botao": s.js("document.getElementById('bi-filter').textContent")}
+    p.conta("filtro de rota", "em Públicas, a Meio mostra as duas da Meio (não a de ARAM, não a sem rota); \"Limpar filtro\" solta a rota",
+            pub_todas == ["qr7001", "qr7002", "qr7003", "qr7004"] and pub_meio == ["qr7001", "qr7004"]
+            and limpo == {"tela": pub_todas, "rota": None, "botao": "Filtrar por marcador"},
+            "todas %s · Meio %s · limpo %s" % (pub_todas, pub_meio, limpo))
+    s.js("""(() => { publicas.lista = []; publicas.carregadoEm = 0; library.builds = library.builds.filter(b => !String(b.id).startsWith('qa-ro-'));
+      gravarBiblioteca(); document.getElementById('bi-search').value = ''; return 1; })()""")
+    s.clicar('.bi-tab[data-view="minhas"]', 0.4)
+    # o menu cabe na janela nas resoluções do Leo (alinhado pela esquerda do botão, passava 60 px em 1600 e 1280)
+    cabe = {}
+    for w, h in ((2560, 1440), (1920, 1080), (1600, 900), (1280, 800)):
+        s.tela(w, h)
+        s.js("document.getElementById('bi-filter-menu').hidden = true; 1")
+        s.clicar("#bi-filter", 0.4)
+        cabe[w] = s.js("(() => { const m = document.getElementById('bi-filter-menu').getBoundingClientRect(); return Math.round(m.left) >= 0 && Math.round(m.right) <= window.innerWidth && document.documentElement.scrollWidth <= window.innerWidth; })()")
+        s.clicar("#bi-filter", 0.3)
+    s.tela_normal()
+    p.conta("filtro de rota", "o menu do filtro cabe na janela em 2560, 1920, 1600 e 1280 (sem rolagem lateral)", all(cabe.values()), "%s" % cabe)
+
+
 def checar_cadeado(s, p):
     """F13-T70 (Leo, 15/10 e 24/10/2026): o cadeado impede o item trancado nas
     caixas que contam (Comum, Prioridade e o padrão da Escolha 1); a Opcional e as
@@ -5080,6 +5154,7 @@ GRUPOS = [
     ("lote e ornn", checar_lote_e_ornn),
     ("conferência", checar_conferencia),
     ("rota", checar_rota),
+    ("filtro de rota", checar_filtro_rota),
     ("cadeado", checar_cadeado),
     ("reembolso e topo", checar_reembolso_e_topo),
     ("aviso", checar_aviso),

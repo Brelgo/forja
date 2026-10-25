@@ -157,6 +157,12 @@ níveis"); passando para a Meio, os dois pontos ficam, em vermelho, com o motivo
 formato guarda 18 casas quando o 19 e o 20 estão vazios (a build de sempre grava e assina igual), com texto e link
 levando os 20 quando têm ponto.
 
+**Filtro de rota** (F13-T75; Leo, 24/10/2026: "implementar a rota no sistema de busca, acho bom colocar em baixo dos
+marcadores padrão") — com cliques de verdade: no "Filtrar por marcador", a seção Rota vem logo abaixo dos marcadores
+padrão, com as cinco rotas; em Minhas, a Selva mostra só a build da Selva — a de rota "Qualquer" e a de ARAM (que não tem
+rota) ficam de fora —, o botão diz "Filtro: Selva" e o segundo clique solta; em Públicas (uma lista de mentira, sem
+tocar no servidor), a Meio mostra as duas da Meio, e "Limpar filtro" solta a rota.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar
