@@ -5333,6 +5333,43 @@ def checar_marcadores_ajuda(s, p):
             "vazia %r · com um %r · com três %r · sem o Editar %r" % (vazia, com_um, cheia, leitura))
 
 
+def checar_notas(s, p):
+    """F13-T80: as notas de atualização — o mural da loja (a opção B do Leo, 25/10/2026). O
+    data/notas.js em dia com os commits de tarefa (docs/gerar_notas.py) e nenhuma tarefa sem nota;
+    o ícone com o número da atualização, aceso enquanto a versão não foi vista; o clique abre o
+    mural (Em breve, Apoie o projeto, as notas por data em Adicionado · Ajustado · Removido); o ×,
+    o Esc e o clique fora fecham."""
+    print("\n%sNOTAS DE ATUALIZAÇÃO%s" % (AMARELO, FIM))
+    out = subprocess.run([sys.executable, "-I", os.path.join(RAIZ, "docs", "gerar_notas.py"), "--conferir"], capture_output=True, text=True, encoding="utf-8").stdout.strip()
+    p.conta("notas", "o data/notas.js está em dia com os commits de tarefa, e nenhuma tarefa ficou sem nota", out == "em dia · sem nota: nenhuma", out)
+    s.js("(() => { try { localStorage.removeItem('notas.vista'); } catch (e) {} refletirNotasBtn(); switchTab('catalog'); window.scrollTo(0, 0); return 1; })()")
+    time.sleep(0.3)
+    antes = s.js("({ novo: document.getElementById('notas-btn').classList.contains('novo'), num: document.querySelector('#notas-btn .nb-num').textContent, at: ATUALIZACAO })")
+    s.clicar("#notas-btn", 0.6)
+    aberto = s.js("""(() => { const m = document.getElementById('mural'); const r = m.getBoundingClientRect();
+      return { visivel: !m.hidden && r.width > 0, texto: m.textContent.replace(/\\s+/g, ' '), datas: m.querySelectorAll('.bilhete:not(.embreve):not(.apoie)').length,
+               expandido: document.getElementById('notas-btn').getAttribute('aria-expanded'), novo: document.getElementById('notas-btn').classList.contains('novo'),
+               cabe: r.right <= window.innerWidth + 1 && r.left >= 0 }; })()""")
+    s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+    s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+    time.sleep(0.3)
+    esc_fecha = s.js("document.getElementById('mural').hidden")
+    s.clicar("#notas-btn", 0.6)
+    s.clicar("#mural .m-fechar", 0.4)
+    x_fecha = s.js("document.getElementById('mural').hidden")
+    s.clicar("#notas-btn", 0.6)
+    s.envia("Input.dispatchMouseEvent", {"type": "mousePressed", "x": 200, "y": 450, "button": "left", "clickCount": 1})
+    s.envia("Input.dispatchMouseEvent", {"type": "mouseReleased", "x": 200, "y": 450, "button": "left", "clickCount": 1})
+    time.sleep(0.3)
+    fora_fecha = s.js("document.getElementById('mural').hidden")
+    p.conta("notas", "o ícone mostra o número da atualização e fica aceso até a versão ser vista; o clique abre o mural com o Em breve, o Apoie o projeto e as notas por data",
+            antes["novo"] and antes["num"] == antes["at"] and aberto["visivel"] and aberto["expandido"] == "true" and not aberto["novo"] and aberto["cabe"]
+            and "Mural da loja" in aberto["texto"] and "Em breve na loja" in aberto["texto"] and "Nunca pedirei por doações. Me ajude divulgando com seus amigos!" in aberto["texto"]
+            and aberto["datas"] >= 1 and ("Adicionado" in aberto["texto"] or "Ajustado" in aberto["texto"]),
+            "antes %s · aberto %s" % (antes, {k: (v if k != "texto" else v[:160]) for k, v in aberto.items()}))
+    p.conta("notas", "o Esc, o × e o clique fora fecham o mural", esc_fecha and x_fecha and fora_fecha, "Esc %s · × %s · fora %s" % (esc_fecha, x_fecha, fora_fecha))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5340,6 +5377,7 @@ GRUPOS = [
     ("forja", checar_forja),
     ("marcadores", checar_marcadores),
     ("marcadores: ajuda", checar_marcadores_ajuda),
+    ("notas", checar_notas),
     ("visualização", checar_visualizacao),
     ("passiva do Ornn", checar_passiva_do_ornn),
     ("teclado", checar_teclado),

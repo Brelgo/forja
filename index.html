@@ -3679,6 +3679,38 @@ body.names-only .card .stamp { font-size: 9px; padding: 3px 7px; letter-spacing:
 body.names-only .card.full .card-surface { padding: 12px 12px 12px 16px; align-items: stretch; }
 body.names-only .card.full .card-main { padding-bottom: 22px; }
 /* ---- Fase 5, T3: aviso por modo de jogo no Catálogo ---- */
+/* F13-T80: o ícone das notas (o número da atualização; aceso enquanto a versão não foi vista) e o
+   mural da loja — um quadro de madeira com bilhetes pregados, deslizando da direita */
+.notas-btn { position: relative; }
+/* o ícone das notas não pode empurrar a fila do topo para duas linhas em 1280: abaixo de 1366, "225 itens" */
+@media (max-width: 1365px) { .counts-palavra { display: none; } }
+.notas-btn svg { width: 18px; height: 18px; }
+.notas-btn .nb-num { position: absolute; right: -10px; bottom: -6px; padding: 0 4px; border-radius: 7px; font: 600 9.5px/14px var(--loja-texto);
+  color: var(--loja-papel); background: #6b5a44; border: 1px solid rgba(0,0,0,.35); }
+.notas-btn.novo .nb-num { background: var(--loja-cera); box-shadow: 0 0 6px rgba(160,40,30,.7); }
+.mural { position: fixed; top: 0; right: 0; bottom: 0; width: 460px; max-width: 92vw; z-index: 85; padding: 18px 18px 28px; overflow: auto;
+  background: linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,0) 14px), repeating-linear-gradient(90deg, #5a3a22 0 46px, #4f331e 46px 92px), #4f331e;
+  box-shadow: -10px 0 30px rgba(0,0,0,.6); border-left: 3px solid #2c1d12; animation: mural-entra .28s ease-out; }
+@keyframes mural-entra { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .mural { animation: none; } }
+.mural h2 { font-family: var(--loja-titulo, Georgia); color: #f1dcae; margin: 0 0 2px; text-shadow: 0 2px 2px rgba(0,0,0,.6); }
+.mural .m-sub { font: italic 12.5px var(--loja-texto); color: #e2c793; margin-bottom: 12px; }
+.mural .m-fechar { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1;
+  color: #f1dcae; background: rgba(0,0,0,.3); border: 1px solid rgba(241,220,174,.35); }
+.mural .bilhete { position: relative; margin: 12px 4px 16px; padding: 14px 14px 10px; background: var(--loja-papel); color: var(--loja-tinta);
+  box-shadow: 0 6px 12px rgba(0,0,0,.45); font-family: var(--loja-texto); font-size: 13px; line-height: 1.45; }
+.mural .bilhete:nth-of-type(odd) { transform: rotate(-.6deg); } .mural .bilhete:nth-of-type(even) { transform: rotate(.5deg); }
+.mural .bilhete::before { content: ""; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e6c27a, #7a5a26); box-shadow: 0 2px 2px rgba(0,0,0,.6); }
+.mural .bilhete.embreve { background: #efe1bf; border: 1px dashed var(--loja-cera); }
+.mural .bilhete.apoie { background: #f3e4c4; border-left: 4px solid var(--loja-cera); text-align: center; }
+.mural .bilhete.apoie p { margin: 0; font-size: 13.5px; }
+.mural .bilhete h3 { margin: 0 0 6px; font: 600 12px var(--loja-texto); letter-spacing: .1em; text-transform: uppercase; color: var(--loja-cera); }
+.mural .bilhete ul { margin: 0; padding-left: 16px; }
+.mural .bilhete b { color: var(--loja-tinta); }
+.mural .m-k { font-variant: small-caps; letter-spacing: .05em; margin-right: 5px; }
+.mural .m-k.add { color: #3f6b2a; } .mural .m-k.aj { color: #8a5a12; } .mural .m-k.rem { color: #6a6058; }
+.mural .m-pe { font: italic 11.5px var(--loja-texto); color: #e2c793; margin: 4px 6px 0; }
 /* F13-T77: o selo e o aviso da camada do robô — lacre de cera, o mesmo da loja */
 .robo-selo { display: inline-block; width: max-content; align-self: flex-start; justify-self: start; margin: 2px 0 0; padding: 1px 7px; border-radius: 9px; font-family: var(--loja-texto); font-size: 11px; font-style: normal;
   letter-spacing: .02em; color: var(--loja-papel); background: var(--loja-cera); border: 1px solid rgba(0,0,0,.25); white-space: nowrap; }
@@ -5156,9 +5188,14 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
       </div>
     </nav>
     <div class="counts-wrap">
-      <div class="counts"><b id="total-count">0</b> itens catalogados</div>
+      <div class="counts"><b id="total-count">0</b> itens<span class="counts-palavra"> catalogados</span></div>
       <!-- F12-T5 (Leo, 18/09/2026): acessibilidade. Quatro interruptores, cada um
            resolvendo uma barreira que o app cria. -->
+      <!-- F13-T80 (Leo, 17/10/2026: "um ícone que contém os nossos patch notes"): o mural da loja -->
+      <button type="button" id="notas-btn" class="som-btn notas-btn" aria-label="Notas de atualização" aria-haspopup="dialog" aria-expanded="false" title="Notas de atualização — o que mudou e o que vem por aí">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4z"/><path d="M6 4a2 2 0 0 0-2 2v2h2M9 9h7M9 12h7M9 15h5"/></svg>
+        <span class="nb-num" data-atualizacao></span>
+      </button>
       <div class="acess-ctl" id="acess-ctl">
         <button type="button" id="acess-btn" class="som-btn" aria-label="Acessibilidade" aria-haspopup="true" aria-expanded="false" title="Acessibilidade">
           <span class="acess-sim" aria-hidden="true">A</span>
@@ -5283,6 +5320,8 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
 </div>
 
 <!-- ============ ABA BUILD ============ -->
+<!-- F13-T80 (Leo, 25/10/2026: a opção B, "o mural da loja"): as notas de atualização, deslizando da direita -->
+<aside id="mural" class="mural" role="dialog" aria-label="Notas de atualização" hidden></aside>
 <!-- F13-T76: fora da forja, para o aviso do Editar aparecer também nas Runas -->
 <div id="edit-hint" class="edit-hint" aria-live="polite"></div>
 <div id="view-build" class="build-view hidden">
@@ -5661,6 +5700,7 @@ function aplicarCamadaDoRobo(cat, c, robo) {
 aplicarCamadaDoRobo(window.CATALOG, window.ATUALIZACAO_PATCH, window.ROBO);
 </script>
 <script src="data/mudancas.js"></script>
+<script src="data/notas.js"></script>
 <script src="data/regioes.js"></script>
 <script src="data/runas.js"></script>
 <script src="data/habilidades.js"></script>
@@ -6262,7 +6302,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.79";
+const ATUALIZACAO = "13.80";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -13606,6 +13646,52 @@ function viraHtml(lista) {
     <div class="vira-grade">${its.map(it => `<button type="button" class="vira-item" data-goto="${it.slug}" title="${esc(it.namePt)}">${iconInner(it)}<span>${fmtG(it.priceGold)}</span></button>`).join("")}</div></div>`).join("");
 }
 
+// F13-T80 (Leo, 17/10/2026: "um ícone que contém os nossos patch notes, para eu e os outros usuários
+// saberem o que foi adicionado, ajustado ou removido"; 20/10: o roteiro, "para interessar os usuários";
+// 25/10: a opção B, o mural da loja; "Apoie o projeto — nunca pediremos doações"). As notas vêm de
+// data/notas.js (docs/gerar_notas.py, dos commits de tarefa); nada é digitado aqui.
+const NOTAS_ROT = { add: "Adicionado", aj: "Ajustado", rem: "Removido" };
+function renderMural() {
+  const el = document.getElementById("mural");
+  const n = window.NOTAS || { datas: [], embreve: [] };
+  el.innerHTML = `
+    <button type="button" class="m-fechar" aria-label="Fechar o mural" title="Fechar (Esc)">×</button>
+    <h2>Mural da loja</h2>
+    <div class="m-sub">Atualização ${esc(ATUALIZACAO)} · patch ${esc(CATALOG.meta.patch)}</div>
+    ${n.embreve.length ? `<div class="bilhete embreve"><h3>Em breve na loja</h3><ul>${n.embreve.map(([t, f]) => `<li><b>${esc(t)}</b> — ${esc(f)}</li>`).join("")}</ul></div>
+      <p class="m-pe">Sem data prometida: a ordem pode mudar, e a lista muda junto.</p>` : ""}
+    <div class="bilhete apoie"><h3>Apoie o projeto</h3><p>Nunca pedirei por doações. Me ajude divulgando com seus amigos!</p></div>
+    ${n.datas.map(d => `<div class="bilhete"><h3>${esc(d.data)}</h3><ul>${["add", "aj", "rem"].flatMap(k => (d[k] || []).map(x =>
+      `<li><span class="m-k ${k}">${NOTAS_ROT[k]}</span>${esc(x)}</li>`)).join("")}</ul></div>`).join("")}`;
+}
+function versaoVista() { try { return localStorage.getItem("notas.vista") === ATUALIZACAO; } catch (e) { return true; } }
+function refletirNotasBtn() {
+  const b = document.getElementById("notas-btn");
+  if (b) b.classList.toggle("novo", !versaoVista());
+}
+function abrirMural(abrir) {
+  const el = document.getElementById("mural"), b = document.getElementById("notas-btn");
+  if (!el) return;
+  if (abrir) {
+    renderMural();
+    el.hidden = false;
+    try { localStorage.setItem("notas.vista", ATUALIZACAO); } catch (e) { /* sem armazenamento, o ícone fica aceso */ }
+    refletirNotasBtn();
+    el.querySelector(".m-fechar").focus();
+  } else {
+    el.hidden = true;
+  }
+  if (b) b.setAttribute("aria-expanded", String(!!abrir));
+}
+function initMural() {
+  const b = document.getElementById("notas-btn"), el = document.getElementById("mural");
+  if (!b || !el) return;
+  refletirNotasBtn();
+  b.addEventListener("click", () => abrirMural(el.hidden));
+  el.addEventListener("click", (e) => { if (e.target.closest(".m-fechar")) { abrirMural(false); b.focus(); } });
+  window.addEventListener("keydown", (e) => { if (e.key === "Escape" && !el.hidden) { abrirMural(false); b.focus(); } });
+  document.addEventListener("pointerdown", (e) => { if (!el.hidden && !el.contains(e.target) && !b.contains(e.target)) abrirMural(false); });
+}
 // F13-T77: o que a camada do robô diz do item, na tela
 const CONTA_VELHA_ROTULO = { costAnalysis: "análise de custo", itemClass: "núcleo", apexNumeric: "eficiência no Ápice", masterwork: "Passiva do Ornn",
   attributeCategory: "categoria de atributo", combineCost: "custo de combinação", cashback: "Reembolso", components: "preço das peças", abilities: "Mecânica",
@@ -13905,6 +13991,7 @@ function init() {
   initCardTilt();
   initShiftFullCard();
   mostrarAvisoDoRobo();   // F13-T77
+  initMural();            // F13-T80
   document.getElementById("catalog-cat-select").addEventListener("change", (e) => {
     if (!build.editing) { e.target.value = ""; chamarEditar(); return; }   // F13-T76
     build.selectedCatId = e.target.value || null;

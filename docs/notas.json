@@ -1,0 +1,42 @@
+{
+ "_comentario": "Fonte das notas de atualização (F13-T80; docs/gerar_notas.py → data/notas.js). Daqui em diante cada tarefa leva no commit uma linha 'Notas: Adicionado|Ajustado|Removido — <frase para quem usa>' (escolha do Leo, 25/10/2026). 'antigas' são as tarefas de antes disso, classificadas uma vez para o Leo conferir. 'embreve' é o roteiro na língua de quem usa (sem número de tarefa nem data prometida) — muda quando a fila muda.",
+ "desde": "2026-10-22",
+ "antigas": {
+  "F13-T58": [["Adicionado", "A ordem de habilidades segue as regras do jogo: em que nível cada ponto pode entrar, e as exceções de campeão."]],
+  "F13-T55": [["Adicionado", "A ficha do item mostra a receita em árvore (ou como conta de somar), em que itens ele vira e, em \"Exibir detalhes\", a análise de custo e as notas."]],
+  "F13-T59": [["Ajustado", "Sem o Editar, a build só se lê: nome, marcadores, modo, campeão e runas não mudam por engano."],
+              ["Ajustado", "A grade de habilidades e o seletor de campeão ficaram mais legíveis."]],
+  "F13-T60": [["Ajustado", "A passiva do Ornn ganhou o nome da tela: \"Passiva do Ornn\", em todo lugar."]],
+  "F13-T61": [["Ajustado", "O catálogo está no patch 16.21.1."],
+              ["Ajustado", "Só a build com um item que mudou fica desatualizada, e o item ganha a borda vermelha."]],
+  "F13-T63": [["Ajustado", "As listas com rolagem não espremem mais as linhas."]],
+  "F13-T64": [["Ajustado", "O Esc fecha só o diálogo, sem largar a caixa escolhida; o Enter e o coração da lista respondem certo."]],
+  "F13-T65": [["Ajustado", "A grade não mostra mais a arte do campeão anterior, e a build importada aparece na hora."]],
+  "F13-T66": [["Ajustado", "A importação lê melhor o texto colado e não cria build fantasma."]],
+  "F13-T67": [["Ajustado", "Selecionar várias builds fecha a que estava só para ver, e a Passiva do Ornn que fica fora da soma é avisada."]],
+  "F13-T68": [["Ajustado", "A conferência das abas virou um ícone discreto no canto, no lugar do painel grande."]],
+  "F13-T69": [["Adicionado", "A build tem rota (Top, Selva, Meio, Atirador, Suporte), escolhida na barra da forja."]],
+  "F13-T70": [["Adicionado", "O cadeado: pela rota, pelo grupo \"Limitado a 1\" e pelas runas, o item que não pode entrar na build fica trancado."]],
+  "F13-T71": [["Adicionado", "Com a runa Reembolso na página da build, o Reembolso liga sozinho."],
+              ["Adicionado", "O Udyr vai aos níveis 19 e 20 com a rota Top."]],
+  "F13-T72": [["Adicionado", "O aviso de efeito que não acumula: duas passivas únicas iguais, ou duas Lentidões, valem uma só."]],
+  "F13-T73": [["Adicionado", "O Montador começa a acompanhar sozinho cada patch novo do jogo (a wiki e o Data Dragon)."]],
+  "F13-T74": [["Adicionado", "Num patch novo, o Montador decide sozinho o que é seguro atualizar; o resto fica a conferir."]],
+  "F13-T75": [["Adicionado", "A busca de builds filtra por rota, em Minhas e em Públicas."]],
+  "F13-T76": [["Ajustado", "Com a rota Suporte, os outros itens iniciais ficam trancados: o Atlas Mundial já vem comprado."],
+              ["Ajustado", "As caixas Opcional e Escolha 1 ficam fora do cadeado."],
+              ["Ajustado", "Sem o Editar, mexer na build avisa e faz o botão Editar pulsar."],
+              ["Ajustado", "O cadeado de item único só vale entre itens do mesmo tier: o Fulgor ainda vira Trindade."]],
+  "F13-T77": [["Adicionado", "Num patch novo, a loja já mostra o que mudou (o selo \"patch\"), antes mesmo da revisão do catálogo."]],
+  "F13-T78": [["Adicionado", "A atualização por patch roda sozinha, todo dia."]],
+  "F13-T79": [["Ajustado", "Os marcadores dizem para que servem."]]
+ },
+ "embreve": [
+  ["Catálogo e Builds em abas", "cada tela com o seu link, para abrir as duas lado a lado e mandar o endereço direto"],
+  ["A entrada da loja e o tour", "a fachada de uma região a cada visita, e um passeio guiado pelo Montador"],
+  ["Mapa interativo", "onde pôr a visão e as rotas da selva e do farm"],
+  ["Calculadora de armadura", "quanto o tanque aguenta, na forja"],
+  ["Comparar duas builds", "lado a lado, atributo por atributo"],
+  ["Campeões e o Bestiário", "as fichas dos campeões e dos monstros, e a calculadora dos épicos"]
+ ]
+}

@@ -184,6 +184,11 @@ patch anterior.
 antes; sem isso, um commit por dia só de data) e a que mudou se regrava; o `.github/workflows/robo.yml` tem o agendamento, o
 botão de rodar, a escrita, o aviso, os dois passos e o que entra no commit.
 
+**Notas de atualização** (F13-T80; o mural da loja, a opção B do Leo) — o `data/notas.js` em dia com os commits de tarefa
+(`docs/gerar_notas.py --conferir`) e nenhuma tarefa sem nota; com clique de verdade: o ícone ao lado da Acessibilidade mostra o
+número da atualização e fica aceso até a versão ser vista; abre o mural com o "Em breve na loja", o "Apoie o projeto" e as notas
+por data (Adicionado · Ajustado · Removido); o Esc, o × e o clique fora fecham.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar
