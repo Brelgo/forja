@@ -1,0 +1,67 @@
+# F13-T78 — o robô de patch, parte 4 (docs/robo_de_patch.md). Autorizado pelo Leo em 25/10/2026:
+# "pode enviar", "total permissão", e o aviso (Issue) do patch novo: "ótima ideia".
+# Todo dia: o leitor fotografa a fonte do patch do dia (Data Dragon + Module:ItemData/data da wiki),
+# a regra grava a camada (data/atualizacao_patch.js) e o relatório; se algo mudou, um commit — e,
+# com patch novo aplicado, um aviso (Issue) com o que mudou. O catálogo do Capítulo 1 nunca é tocado.
+name: Robô de patch
+
+on:
+  schedule:
+    - cron: "17 13 * * *"     # todo dia, 10:17 em Brasília
+  workflow_dispatch: {}       # e quando o Leo pedir (Actions → Robô de patch → Run workflow)
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: robo-de-patch
+  cancel-in-progress: false
+
+jobs:
+  robo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: O leitor (a foto do patch do dia)
+        run: python -I data/robo/ler_fonte.py
+
+      - name: A regra (a camada)
+        run: python -I data/robo/aplicar_patch.py
+
+      - name: Grava o que mudou
+        id: grava
+        run: |
+          git config user.name "robo-de-patch"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/robo data/atualizacao_patch.js
+          if git diff --cached --quiet; then
+            echo "nada mudou: sem commit"
+            echo "mudou=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Robô de patch: $(date -u +%Y-%m-%d)"
+          git push
+          echo "mudou=true" >> "$GITHUB_OUTPUT"
+
+      - name: O aviso do patch novo (Issue)
+        if: steps.grava.outputs.mudou == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          read -r DE PARA < <(python -I -c "import json; t = open('data/atualizacao_patch.js', encoding='utf-8').read(); c = json.loads(t[t.index('{'): t.rindex('}') + 1]); print(c['de'], c['para'])")
+          if [ "$DE" = "$PARA" ]; then echo "camada vazia: sem aviso"; exit 0; fi
+          TITULO="Robô de patch: $DE → $PARA"
+          CORPO="data/robo/mudancas_${DE}_${PARA}.md"
+          N=$(gh issue list --state open --search "\"$TITULO\" in:title" --json number --jq '.[0].number')
+          if [ -n "$N" ]; then
+            gh issue comment "$N" --body-file "$CORPO"
+          else
+            gh issue create --title "$TITULO" --body-file "$CORPO"
+          fi

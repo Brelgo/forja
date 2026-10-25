@@ -180,6 +180,10 @@ no card, "a conferir" na Máscara Abissal, o aviso no alto da loja; a Redenção
 depois), fica com o preço do catálogo e sem selo; e a ficha diz o que já foi aplicado, o que está a conferir e as contas do
 patch anterior.
 
+**O robô no GitHub Actions** (F13-T78, no grupo do robô) — a camada igual não se regrava (a hora em que ela foi gerada fica a de
+antes; sem isso, um commit por dia só de data) e a que mudou se regrava; o `.github/workflows/robo.yml` tem o agendamento, o
+botão de rodar, a escrita, o aviso, os dois passos e o que entra no commit.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar

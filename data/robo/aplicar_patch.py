@@ -653,6 +653,13 @@ def escrever_camada(camada, de, para, m0, m1, caminho=CAMADA):
     }
     if camada.get("statPricesVelhos"):
         corpo["statPricesVelhos"] = camada["statPricesVelhos"]   # o valor em ouro dos atributos é do patch anterior
+    # F13-T78: o robô roda todo dia no GitHub; a camada igual (fora o "gerado") não se regrava —
+    # nem vira um commit só de data
+    velha = camada_no_disco(caminho)
+    sem_data = lambda c: {k: v for k, v in c.items() if k != "gerado"}
+    if velha is not None and sem_data(velha) == json.loads(json.dumps(sem_data(corpo), ensure_ascii=False)):
+        corpo["gerado"] = velha.get("gerado", corpo["gerado"])
+        return corpo
     with open(caminho, "w", encoding="utf-8", newline="\n") as f:
         f.write("// Gerado por data/robo/aplicar_patch.py (o robô de patch, F13-T74). Não editar à mão:\n")
         f.write("// o que mudou na fonte de %s para %s e passou na regra de segurança (docs/robo_de_patch.md).\n" % (de, para))

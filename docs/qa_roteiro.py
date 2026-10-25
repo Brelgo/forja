@@ -5139,6 +5139,28 @@ def checar_robo_regra(p):
                 bool(aplicados) and not errados and not silencio,
                 "%d campos aplicados, %d errados %s · %d itens a conferir · em silêncio %s" % (len(aplicados), len(errados), errados[:5], len(a_conferir), silencio[:8] or "nada"))
 
+    # F13-T78: o robô roda todo dia no GitHub Actions; a camada igual não se regrava (sem commit só
+    # de data), e o serviço tem o que precisa (os dois passos, a escrita, o aviso)
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        cam = os.path.join(tmp, "camada.js")
+        vazia = {"itens": {}, "aConferir": [], "novos": []}
+        ap.escrever_camada(vazia, cat["meta"]["patch"], cat["meta"]["patch"], m0, m0, caminho=cam)
+        velho = open(cam, encoding="utf-8").read()
+        antigo = re.sub(r'"gerado": "[^"]*"', '"gerado": "2026-01-01T00:00:00Z"', velho)
+        open(cam, "w", encoding="utf-8", newline="\n").write(antigo)
+        ap.escrever_camada(vazia, cat["meta"]["patch"], cat["meta"]["patch"], m0, m0, caminho=cam)
+        ficou = open(cam, encoding="utf-8").read() == antigo
+        ap.escrever_camada({"itens": {}, "aConferir": [{"slug": "x", "item": "X", "campo": "preço", "porque": "teste"}], "novos": []},
+                           cat["meta"]["patch"], "16.22.1", m0, m0, caminho=cam)
+        mudou = '"gerado": "2026-01-01T00:00:00Z"' not in open(cam, encoding="utf-8").read()
+    wf = os.path.join(RAIZ, ".github", "workflows", "robo.yml")
+    yml = open(wf, encoding="utf-8").read() if os.path.exists(wf) else ""
+    tem = [x for x in ("cron:", "workflow_dispatch", "contents: write", "issues: write", "python -I data/robo/ler_fonte.py",
+                       "python -I data/robo/aplicar_patch.py", "git add -A data/robo data/atualizacao_patch.js", "gh issue create") if x not in yml]
+    p.conta("robô", "no GitHub Actions todo dia: a camada igual não se regrava (sem commit só de data), a que mudou sim; o serviço lê, aplica, grava e avisa",
+            ficou and mudou and not tem, "igual ficou %s · mudada regravou %s · falta no robo.yml %s" % (ficou, mudou, tem or "nada"))
+
     # a camada do repositório: a do patch do catálogo, vazia — e um JS que se lê
     txt = open(os.path.join(RAIZ, "data", "atualizacao_patch.js"), encoding="utf-8").read()
     corpo = json.loads(txt[txt.index("{"): txt.rindex("}") + 1])

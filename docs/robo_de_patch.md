@@ -9,7 +9,7 @@ Pedido do Leo (16/10/2026): "precisamos fazer com que os itens e o conteúdo sem
 | 1 | F13-T73 | **O leitor**: baixa a fonte, guarda a foto do patch e compara com o catálogo, sem mexer em nada | feita |
 | 2 | F13-T74 | **A regra de segurança**: foto antiga × foto nova × catálogo; aplica só o que mudou na fonte **e** que o catálogo tinha igual à fonte antiga, numa camada à parte (`data/atualizacao_patch.js`, aprovada pelo Leo em 24/10/2026); o resto vira "a conferir" | feita |
 | 3 | F13-T77 | **O app lê a camada** por cima do `catalog.js`, com o selo "patch novo: a conferir" | feita |
-| 4 | F13-T78 | **No GitHub Actions**, todo dia; grava a camada e abre um aviso (Issue) com o que mudou | a fazer (enviar o robô e dar escrita a ele pedem o OK do Leo) |
+| 4 | F13-T78 | **No GitHub Actions**, todo dia; grava a camada e abre um aviso (Issue) com o que mudou | feita (OK do Leo em 25/10/2026) |
 
 O `data/Catalogo_Itens_LoL.md` (Capítulo 1) nunca é tocado pelo robô.
 
@@ -121,6 +121,12 @@ Com o catálogo já no patch mais novo, a camada sai vazia (`de` = `para`). O re
 ## Parte 3 — o app lê a camada
 
 O `index.html` carrega `data/atualizacao_patch.js` logo depois do `catalog.js` e, antes de qualquer outro código ler um item, aplica a camada (`aplicarCamadaDoRobo`): só a do patch do catálogo (`de` = `meta.patch`, `para` diferente), e, item a item, só se o catálogo ainda disser o `base` de cada campo — senão o item fica inteiro como o catálogo diz (o Capítulo 1 mexeu nele depois que a camada nasceu). Na tela: um aviso no alto da loja ("Patch 16.22.1: o robô já aplicou N mudanças… M itens o Capítulo 1 ainda confere"); o selo **patch 16.22.1** no card do item aplicado e **a conferir** no que o robô não aplicou; e, na ficha, o bloco "Patch 16.22.1 · pelo robô" com o que já foi aplicado (de → para, de onde), o que está a conferir e as contas que ainda são do patch anterior. Com a camada vazia (o catálogo já no patch mais novo), nada disso aparece.
+
+## Parte 4 — no GitHub Actions
+
+`.github/workflows/robo.yml` (autorizado pelo Leo em 25/10/2026: "pode enviar", "total permissão", o aviso: "ótima ideia"). Todo dia às 10:17 de Brasília — e quando pedido, em Actions → Robô de patch → Run workflow — o serviço roda o leitor e a regra; se algo em `data/robo/` ou na camada mudou, faz um commit ("Robô de patch: <data>") e, com patch novo aplicado, abre um aviso (Issue) "Robô de patch: <de> → <para>" com o relatório (`data/robo/mudancas_<de>_<para>.md`) — ou comenta no aviso aberto do mesmo patch. Permissões: escrever no repositório e abrir avisos; nada além de `data/robo/` e `data/atualizacao_patch.js` entra no commit, e o catálogo do Capítulo 1 nunca é tocado. Se o leitor ou a regra param (sem rede, a base errada, a revisão do Capítulo 1 sem registro), o serviço falha e o GitHub avisa o Leo por e-mail.
+
+Para não virar um commit por dia: a camada igual (fora a hora em que foi gerada) não se regrava, e o relatório do patch novo diz a hora da foto, não a da leitura. E, como o robô grava no `main`, quem trabalha no repositório puxa antes de enviar (`git pull --rebase`).
 
 ## QA
 

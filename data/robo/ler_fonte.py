@@ -522,9 +522,13 @@ def main():
     # 3. um patch mais novo: a foto se refaz enquanto a wiki se completa (nem se regrava se nada mudou)
     if foto_igual(pasta, meta):
         print("a foto do %s já é desta revisão da wiki e deste Data Dragon: nada a regravar" % patch)
+        meta_da_foto = json.load(open(os.path.join(pasta, "meta.json"), encoding="utf-8"))
     else:
         gravar_foto(pasta, wiki, ddragon, meta)
-    escrever_relatorio(patch, meta, wiki, catalogo, extrato_ddragon(ddragon), por_fora)
+        meta_da_foto = meta
+    # F13-T78: o relatório diz a hora da foto, não a de hoje — sem foto nova ele não muda (o robô
+    # roda todo dia no GitHub, e um commit só de data seria barulho)
+    escrever_relatorio(patch, meta_da_foto, wiki, catalogo, extrato_ddragon(ddragon), por_fora)
     if not a.offline:
         gravar_conferido(meta)      # a leitura de hoje viu a wiki nesta revisão (a espera de 24 h conta até aqui)
 
