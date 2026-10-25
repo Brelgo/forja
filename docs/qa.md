@@ -194,6 +194,10 @@ por data (Adicionado · Ajustado · Removido); o Esc, o × e o clique fora fecha
 nas abas, o endereço acompanha (#builds, #runas, #calculadora, #catalogo, e #forja com a build aberta); o voltar e o avançar do
 navegador trocam de tela; numa aba nova, o link #runas abre nas Runas, e trocar o # na barra leva à Calculadora.
 
+**Autor na publicação** (F13-T83; servidor SIMULADO: o roteiro segura o `publicar_build` e só lê o que sairia) — o campo
+"Autor nas suas publicações" no resumo da build começa vazio; o apelido digitado (com espaços nas pontas) vai no `p_autor` limpo,
+fica lembrado no navegador e volta no campo; apagado, a publicação seguinte sai sem autor.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar

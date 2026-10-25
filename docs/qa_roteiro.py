@@ -5424,6 +5424,40 @@ def checar_enderecos(s, p):
             direto["hash"] == "#runas" and direto["aba"] == "runas" and calc["aba"] == "calc" and not erros, "direto %s · calculadora %s · erros %s" % (direto, calc, erros[:2]))
 
 
+def checar_autor(s, p):
+    """F13-T83: o autor opcional na publicação — um apelido lembrado neste navegador, que vai no
+    p_autor. Servidor SIMULADO: o roteiro segura o publicar_build e só lê o que sairia."""
+    print("\n%sAUTOR NA PUBLICAÇÃO%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    s.js("""(() => { window.__autores = []; window.__fetchOrigA = window.fetch;
+      window.fetch = function (u, ...a) { const t = String(u);
+        if (t.includes('publicar_build')) { const o = a[0] || {}; try { window.__autores.push(JSON.parse(o.body).p_autor); } catch (e) {}
+          return Promise.resolve(new Response(JSON.stringify({ id: 'qa0083', versao: 1 }), { status: 200, headers: { 'Content-Type': 'application/json' } })); }
+        if (t.includes('/rpc/') || t.includes('/rest/')) return Promise.resolve(new Response('[]', { status: 200, headers: { 'Content-Type': 'application/json' } }));
+        return window.__fetchOrigA.call(this, u, ...a); };
+      try { localStorage.removeItem('montador.autor'); } catch (e) {}
+      if (rascunho.sujo) descartarAlteracoes();
+      build.name = 'Autor de teste'; build.desc = 'descrição'; build.markers = normMarkers(MARCADORES.slice(0, 3).map(m => ({ t: 'tag', id: m.id })));
+      if (!build.cats.some(c => c.items.length)) build.cats[0].items.push({ itemId: 'long-sword', note: '' });
+      gravarBuild(); switchTab('build'); showBuildScreen('lista'); biSelected = build.id; renderBuildIndex(); return 1; })()""")
+    time.sleep(0.6)
+    vazio = s.js("document.getElementById('bd-autor') ? document.getElementById('bd-autor').value : null")
+    s.clicar("#bd-autor", 0.2)
+    s.envia("Input.insertText", {"text": "  brelgo QA  "})
+    s.clicar("#bi-detail .bd-pub-note", 0.3)        # sai do campo: o change grava
+    guardado = s.js("localStorage.getItem('montador.autor')")
+    s.clicar('#bi-detail [data-act="publish"]', 1.0)
+    s.js("(() => { if (!document.getElementById('pub-dialog').hidden && !document.getElementById('pub-foot').hidden) fecharPub(); renderBuildIndex(); return 1; })()"); time.sleep(0.4)
+    lembrado = s.js("document.getElementById('bd-autor').value")
+    s.js("(() => { const i = document.getElementById('bd-autor'); i.value = ''; i.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()")
+    s.clicar('#bi-detail [data-act="publish"]', 1.0)
+    s.js("(() => { if (!document.getElementById('pub-dialog').hidden && !document.getElementById('pub-foot').hidden) fecharPub(); window.fetch = window.__fetchOrigA; return 1; })()")
+    enviados = s.js("window.__autores")
+    p.conta("autor", "o apelido digitado vai no p_autor (sem os espaços das pontas), fica lembrado no navegador, e o campo vazio publica sem autor",
+            vazio == "" and guardado == "brelgo QA" and lembrado == "brelgo QA" and enviados == ["brelgo QA", ""],
+            "vazio %r · guardado %r · lembrado %r · enviados %s" % (vazio, guardado, lembrado, enviados))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5433,6 +5467,7 @@ GRUPOS = [
     ("marcadores: ajuda", checar_marcadores_ajuda),
     ("notas", checar_notas),
     ("endereço por tela", checar_enderecos),
+    ("autor", checar_autor),
     ("visualização", checar_visualizacao),
     ("passiva do Ornn", checar_passiva_do_ornn),
     ("teclado", checar_teclado),

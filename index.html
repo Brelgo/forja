@@ -4965,6 +4965,9 @@ body.editando .save-wrap { display: inline-flex; }
 .bi-etiqueta.publicada { background: #3b4a6b; color: #dbe4ff; }
 .bd-stats { font-family: var(--loja-texto); font-style: italic; font-size: 12.5px; color: var(--forja-texto-suave); margin: -4px 0 10px; }
 .bd-autor { font-family: var(--loja-texto); font-size: 13px; color: var(--forja-texto-suave); margin: 0 0 8px; }
+.bd-autor-campo { display: flex; align-items: center; gap: 8px; margin: 8px 0 0; font: italic 12.5px var(--loja-texto); color: var(--forja-texto-suave, #9a8778); }
+.bd-autor-campo input { flex: 1; max-width: 220px; padding: 4px 8px; font: 13px var(--loja-texto); color: var(--forja-texto, #e8dcc8);
+  background: rgba(0,0,0,.3); border: 1px solid var(--forja-placa-borda, #3a3029); border-radius: 2px; }
 #bi-refresh { padding: 8px 12px; font-size: 16px; line-height: 1; }
 .bi-carregando { padding: 34px 18px; text-align: center; font-family: var(--loja-texto); font-style: italic; color: var(--forja-texto-suave); }
 .bi-carregando::after { content: "…"; animation: pub-pontos 1.2s steps(4) infinite; display: inline-block; width: 1.2em; text-align: left; }
@@ -6302,7 +6305,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.82";
+const ATUALIZACAO = "13.83";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -8042,7 +8045,7 @@ async function publicarBuild(id) {
       "O servidor está demorando. Pode fechar esta placa: o pedido continua e, quando a resposta chegar, ela volta com o resultado.");
     const params = {
       p_nome: d.name, p_descricao: d.desc, p_campeao: d.champ, p_modo: d.mode, p_marcadores: d.markers,
-      p_caixas: caixasParaServidor(d.cats), p_patch: CATALOG.meta.patch, p_autor: "", p_segredo: Servidor.segredo(), p_id: d.pubId || null, p_layout: layoutValido(d.layout),
+      p_caixas: caixasParaServidor(d.cats), p_patch: CATALOG.meta.patch, p_autor: autorDasPublicacoes(), p_segredo: Servidor.segredo(), p_id: d.pubId || null, p_layout: layoutValido(d.layout),
       // F12 (Leo, 20/09/2026): a build publicada leva também a página de runas e a
       // ordem de habilidades. Servidor ainda sem as colunas? O catch abaixo
       // republica sem elas, como já era feito com o layout.
@@ -11184,6 +11187,7 @@ function renderBuildDetail() {
       <button type="button" class="btn ghost" data-act="del"${buildsProprias().length <= 1 ? " disabled" : ""} title="${d.pubId ? "Apaga a build daqui e do site" : "Apaga a build da biblioteca"}">Excluir</button>`,
     nota: `
       <p class="bd-pub-note">${falta.length ? `Para publicar ainda falta: <b>${esc(falta.join(", "))}</b>.` : !Servidor.ativo() ? "Pronta para publicar — falta configurar o servidor." : d.pubId ? (temAlteracaoPublicada(d) ? `Há alterações depois da última publicação (versão ${d.pubVersao}).` : `Publicada na versão ${d.pubVersao}.`) : "Pronta para publicar."}</p>
+      <label class="bd-autor-campo">Autor nas suas publicações <input id="bd-autor" type="text" maxlength="30" spellcheck="false" placeholder="seu apelido (opcional)" value="${esc(autorDasPublicacoes())}"></label>
       <p id="bd-link-msg" class="bd-pub-note" hidden></p>
       <input id="bd-link" class="bd-link" type="text" readonly hidden aria-label="Link da build">`,
   });
@@ -13746,6 +13750,19 @@ function initMural() {
   window.addEventListener("keydown", (e) => { if (e.key === "Escape" && !el.hidden) { abrirMural(false); b.focus(); } });
   document.addEventListener("pointerdown", (e) => { if (!el.hidden && !el.contains(e.target) && !b.contains(e.target)) abrirMural(false); });
 }
+// F13-T83 (pendente desde a Fase 10: o autor opcional na publicação): um apelido para as suas
+// publicações, lembrado neste navegador; vazio, a pública sai sem autor, como antes. A pública
+// mostra "por <autor>" no resumo (F10).
+const AUTOR_KEY = "montador.autor";
+function autorDasPublicacoes() {
+  try { return (localStorage.getItem(AUTOR_KEY) || "").trim().slice(0, 30); } catch (e) { return ""; }
+}
+document.addEventListener("change", (e) => {
+  if (!e.target || e.target.id !== "bd-autor") return;
+  const v = e.target.value.trim().slice(0, 30);
+  e.target.value = v;
+  try { if (v) localStorage.setItem(AUTOR_KEY, v); else localStorage.removeItem(AUTOR_KEY); } catch (err) { /* sem armazenamento: vale só nesta publicação */ }
+});
 // F13-T77: o que a camada do robô diz do item, na tela
 const CONTA_VELHA_ROTULO = { costAnalysis: "análise de custo", itemClass: "núcleo", apexNumeric: "eficiência no Ápice", masterwork: "Passiva do Ornn",
   attributeCategory: "categoria de atributo", combineCost: "custo de combinação", cashback: "Reembolso", components: "preço das peças", abilities: "Mecânica",
