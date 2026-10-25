@@ -1653,11 +1653,12 @@ def checar_cadeado(s, p):
             and selva_opc["trancada"] is False and selva_opc["entrou"], "Prioridade %s · Opcional %s" % (selva_prio, selva_opc))
     hidra = poe_pela_bandeja("Hidra Titânica", 1)
     alternativa = poe_pela_bandeja("Hidra Titânica", 3)
-    sobe = s.js("""(() => { const c = build.cats[3]; const antes = c.items[0].itemId; moveItem(c.id, c.items.length - 1, c.id, 0);
-      return { ficou: c.items[0].itemId === antes, aviso: document.getElementById('edit-hint').textContent }; })()""")
-    p.conta("cadeado", "o grupo “Limitado a 1”: a segunda Hidra não conta junto (como alternativa da Escolha 1, entra — e não sobe a padrão)",
+    sobe = s.js("""(() => { const c = build.cats[3]; const ultimo = c.items[c.items.length - 1].itemId; moveItem(c.id, c.items.length - 1, c.id, 0);
+      return { subiu: c.items[0].itemId === ultimo }; })()""")
+    # F13-T76 (Leo, 24/10/2026): a Escolha 1 é exceção do cadeado — a alternativa entra e pode virar a padrão
+    p.conta("cadeado", "o grupo “Limitado a 1”: a segunda Hidra não conta junto; na Escolha 1 (exceção do cadeado) ela entra e pode subir a padrão",
             hidra["trancada"] and not hidra["entrou"] and "grupo Hidra" in hidra["aviso"] and "Hidra Raivosa" in hidra["aviso"]
-            and alternativa["entrou"] and sobe["ficou"] and "grupo Hidra" in sobe["aviso"], "Prioridade %s · alternativa %s · subir %s" % (hidra, alternativa, sobe))
+            and alternativa["entrou"] and alternativa["trancada"] is False and sobe["subiu"], "Prioridade %s · alternativa %s · subir %s" % (hidra, alternativa, sobe))
 
     # a runa: Botas Levemente Mágicas pedem Calçados Mágicos; com a runa, as Botas comuns ficam trancadas
     sem_runa = poe_pela_bandeja("Botas Levemente Mágicas", 1)
@@ -1833,12 +1834,17 @@ def checar_aviso(s, p):
       CATALOG.items.forEach(a => CATALOG.items.forEach(b => {
         if (a.slug >= b.slug || !motivoDoAviso(a, { contam: [{ itemId: b.slug }], runas: new Set(), rota: '' })) return;
         pares++; itens.add(a.slug); itens.add(b.slug); }));
-      return { pares, itens: itens.size, passiva: caso('Morellonomicon', ['Orbe do Oblívio']), etiqueta: caso('Morellonomicon', ['Serrespada Quimiopunk']),
+      return { pares, itens: itens.size, passiva: caso('Morellonomicon', ['Lembrete Mortal']), etiqueta: caso('Morellonomicon', ['Serrespada Quimiopunk']),
                lentidao: caso('Cetro de Cristal de Rylai', ['Presságio de Randuin']), grupo: caso('Hidra Raivosa', ['Hidra Titânica']) + caso('Manamune', ['Muramana']),
-               nada: caso('Gume do Infinito', ['Morellonomicon']), copia: caso('Orbe do Oblívio', ['Orbe do Oblívio']) }; })()""")
-    p.conta("aviso", "o aviso lê do catálogo: passiva única de mesmo nome (e a cópia repetida), Lentidão e Anti-Cura; o par do mesmo grupo fica com o cadeado",
-            dado["pares"] == 81 and dado["itens"] == 32
-            and dado["passiva"] == "a passiva única Feridas Dolorosas não acumula com Orbe do Oblívio — vale uma só"
+               nada: caso('Gume do Infinito', ['Morellonomicon']), copia: caso('Orbe do Oblívio', ['Orbe do Oblívio']),
+               // F13-T76 (Leo, 25/10/2026): só entre itens do mesmo tier — o Fulgor ainda vira Trindade
+               tier: caso('Força da Trindade', ['Fulgor']) + caso('Morellonomicon', ['Orbe do Oblívio']),
+               trava: { fulgor: motivoDoCadeado(byId['sheen'], { contam: [{ itemId: 'trinity-force' }], runas: new Set(), rota: '' }),
+                        lich: motivoDoCadeado(byId['trinity-force'], { contam: [{ itemId: 'lich-bane' }], runas: new Set(), rota: '' }) } }; })()""")
+    p.conta("aviso", "o aviso lê do catálogo: passiva única de mesmo nome (e a cópia repetida), Lentidão e Anti-Cura; o par do mesmo grupo fica com o cadeado; entre tiers diferentes, nem aviso nem cadeado (o Fulgor ainda vira Trindade)",
+            dado["pares"] == 54 and dado["itens"] == 26
+            and dado["passiva"] == "a passiva única Feridas Dolorosas não acumula com Lembrete Mortal — vale uma só"
+            and dado["tier"] == "" and dado["trava"]["fulgor"] == "" and "Lâmina Arcana" in dado["trava"]["lich"]
             and dado["etiqueta"] == "o efeito Anti-Cura não soma com Serrespada Quimiopunk — vale o mais forte"
             and dado["lentidao"].startswith("o efeito Lentidão não soma com Presságio de Randuin") and dado["grupo"] == "" and dado["nada"] == ""
             and dado["copia"] == "a passiva única Feridas Dolorosas não acumula com Orbe do Oblívio — vale uma só", "%s" % dado)
@@ -1864,8 +1870,8 @@ def checar_aviso(s, p):
         s.js("document.getElementById('edit-hint').textContent = ''; 1")
         s.clicar(sel, 0.5)
         return {"marca": marca, "entrou": s.js("build.cats[%d].items.length" % caixa) > antes, "recado": s.js("document.getElementById('edit-hint').textContent")}
-    opc = pela_bandeja("Orbe do Oblívio", 2)        # na Opcional é alternativa: nem selo, nem recado
-    comum = pela_bandeja("Orbe do Oblívio", 0)
+    opc = pela_bandeja("Lembrete Mortal", 2)        # na Opcional é alternativa: nem selo, nem recado
+    comum = pela_bandeja("Lembrete Mortal", 0)      # F13-T76: do mesmo tier do Morellonomicon (os dois Lendários)
     p.conta("aviso", "na bandeja: o selo para a caixa que conta, o item entra e o recado diz com o que não acumula (na Opcional, nada)",
             opc["marca"] and not opc["marca"]["aviso"] and opc["entrou"] and "Aviso" not in opc["recado"]
             and comum["marca"]["aviso"] and "Feridas Dolorosas" in comum["marca"]["titulo"] and comum["entrou"]
@@ -1873,7 +1879,7 @@ def checar_aviso(s, p):
             "Opcional %s · Comum %s" % (opc, comum))
 
     # no molde: os dois que contam com o selo e o motivo no balão; o da Opcional e a alternativa da Escolha 1 sem
-    s.js("(() => { build.cats[3].items.push({ itemId: __por('Orbe do Oblívio'), note: '' }); renderBuildAll(); return 1; })()")
+    s.js("(() => { build.cats[3].items.push({ itemId: __por('Lembrete Mortal'), note: '' }); renderBuildAll(); return 1; })()")
     time.sleep(0.4)
     molde = s.js("""(() => { const nomes = (i) => [...document.querySelectorAll('.build-cat[data-cat-id="' + build.cats[i].id + '"] .item-tile.nao-soma')]
         .map(t => byId[build.cats[i].items[Number(t.dataset.index)].itemId].namePt);
@@ -1883,8 +1889,8 @@ def checar_aviso(s, p):
     balao = s.js("(() => { const a = document.querySelector('#item-tooltip .tt-aviso'); return a ? a.textContent : ''; })()")
     s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": 5, "y": 5}); time.sleep(0.3)
     p.conta("aviso", "no molde: o selo nos dois que contam (não na Opcional nem na alternativa da Escolha 1) e o motivo no balão",
-            molde == {"comum": ["Orbe do Oblívio"], "prioridade": ["Morellonomicon"], "opcional": [], "escolha": []}
-            and balao.startswith("Aviso: a passiva única Feridas Dolorosas") and "Orbe do Oblívio" in balao, "%s · balão %r" % (molde, balao))
+            molde == {"comum": ["Lembrete Mortal"], "prioridade": ["Morellonomicon"], "opcional": [], "escolha": []}
+            and balao.startswith("Aviso: a passiva única Feridas Dolorosas") and "Lembrete Mortal" in balao, "%s · balão %r" % (molde, balao))
 
     # na loja: o card com o selo; o clique entra e o recado da loja explica
     s.js("""(() => { build.cats[0].items = []; build.cats[1].items = [{ itemId: __por('Presságio de Randuin'), note: '' }]; build.selectedCatId = build.cats[0].id;
@@ -3982,7 +3988,7 @@ def checar_bigorna(s, p):
     com_caixa = s.js("({ caixa: !document.getElementById('cff-caixa').hidden, nome: document.getElementById('cff-nome').textContent, soltar: !document.getElementById('cff-soltar').hidden, esperado: build.cats[2].name })")
     s.js("build.selectedCatId = null; renderBuild(); 'ok'")
     p.conta("bigorna", "a faixa da loja diz a build e fica no topo ao rolar",
-            sem_caixa["visivel"] and sem_caixa["build"] == "Ezreal meio" and not sem_caixa["caixa"] and "pergunta" in sem_caixa["dica"]
+            sem_caixa["visivel"] and sem_caixa["build"] == "Ezreal meio" and not sem_caixa["caixa"] and "ligue o Editar" in sem_caixa["dica"]   # F13-T76: sem o Editar, a dica diz para ligá-lo
             and 0 <= presa[0] <= 20 and com_caixa["caixa"] and com_caixa["nome"] == com_caixa["esperado"] and com_caixa["soltar"],
             "sem caixa %s; rolada a 1600 a faixa fica em %s; com caixa %s" % (sem_caixa, presa, com_caixa))
     # a gravação recusada chega à plaqueta na hora (o coração da lista, o lote…)
@@ -5140,6 +5146,88 @@ def checar_robo_regra(p):
             corpo["de"] == cat["meta"]["patch"] and (corpo["para"] != corpo["de"] or (not corpo["itens"] and not corpo["aConferir"])),
             "de %s para %s · %d itens · %d a conferir" % (corpo["de"], corpo["para"], len(corpo["itens"]), len(corpo["aConferir"])))
 
+def checar_cadeado_ajustes(s, p):
+    """F13-T76 (Leo, 24/10/2026): com a rota Suporte, os outros itens iniciais ficam trancados
+    (o Atlas Mundial já vem comprado); a Opcional e a Escolha 1 ficam fora do cadeado — escolhida
+    a caixa, os cadeados somem; sem o Editar, nada de cadeado na loja, e toda tentativa de mexer
+    na build avisa e faz o Editar pulsar (três pulsos; com menos movimento, só o brilho)."""
+    print("\n%sCADEADO: OS AJUSTES%s" % (AMARELO, FIM))
+    garantir_build_editavel(s)
+    s.js("""(() => { if (rascunho.sujo) descartarAlteracoes(); ligarEdicao(true);
+      const por = (n) => CATALOG.items.find(i => i.namePt === n).slug;
+      build.mode = "Summoner's Rift"; build.rota = 'suporte'; build.runas = normRunas(null);
+      while (build.cats.length < 3) build.cats.push({ id: 'cat-qa-' + build.cats.length + '-' + Date.now(), name: 'Caixa', desc: '', kind: 'comum', span: 2, cols: 3, rows: 0, items: [] });
+      build.cats = build.cats.slice(0, 3);
+      ['comum', 'opcional', 'escolha'].forEach((k, i) => { build.cats[i].kind = k; build.cats[i].items = []; });
+      build.cats[0].items = [{ itemId: por('Hidra Raivosa'), note: '' }];
+      build.cats[2].items = [{ itemId: por('Hidra Titânica'), note: '' }];
+      build.selectedCatId = build.cats[0].id; switchTab('catalog'); renderBuildAll(); window.__por = por; return 'ok'; })()""")
+    time.sleep(0.8)
+    def card(slug):
+        return s.js("(() => { const c = document.querySelector('#grid .card[data-slug=\"%s\"]'); return c ? { trancado: c.classList.contains('trancado'), motivo: c.dataset.cadeado || '' } : null; })()" % slug)
+    def caixa(i):   # escolhe a caixa como o jogador: o seletor "Marcar em" da loja
+        s.js("(() => { const sel = document.getElementById('catalog-cat-select'); sel.value = build.cats[%d].id; sel.dispatchEvent(new Event('change')); return 1; })()" % i)
+        time.sleep(0.3)
+    doran, atlas, cancao = card("doran-s-blade"), card("world-atlas"), card("bloodsong")
+    s.js("(() => { build.rota = 'top'; renderBuildAll(); return 1; })()"); time.sleep(0.3)
+    doran_top = card("doran-s-blade")
+    s.js("(() => { build.rota = 'suporte'; renderBuildAll(); return 1; })()"); time.sleep(0.3)
+    p.conta("cadeado: ajustes", "com a rota Suporte, os outros itens iniciais ficam trancados (o Atlas Mundial já vem comprado); o Atlas e a linha dele, não; com a Top, a Lâmina de Doran volta",
+            bool(doran) and doran["trancado"] and "Atlas Mundial já vem comprado" in doran["motivo"] and atlas and not atlas["trancado"]
+            and cancao and not cancao["trancado"] and doran_top and not doran_top["trancado"],
+            "Doran %s · Atlas %s · Canção %s · Doran na Top %s" % (doran, atlas, cancao, doran_top))
+
+    # uma Hidra do mesmo grupo que não está na build (o card de item que já está na build não leva cadeado)
+    outra = s.js("""(() => { const na = new Set(build.cats.flatMap(c => c.items.map(e => e.itemId)));
+      const tier = byId[__por('Hidra Raivosa')].tier;   // do mesmo tier: a Tiamat (Épico) é do grupo, mas não tranca a Lendária
+      return Object.entries(travas().grupos).find(([slug, g]) => g.includes('Hidra') && !na.has(slug) && byId[slug].tier === tier)[0]; })()""")
+    caixa(0); comum = {"doran": card("doran-s-blade"), "hidra": card(outra)}
+    caixa(1); opcional = {"doran": card("doran-s-blade"), "hidra": card(outra)}
+    caixa(2); escolha = {"doran": card("doran-s-blade"), "hidra": card(outra)}
+    s.js("(() => { switchTab('build'); showBuildScreen('forja'); renderBuildAll(); return 1; })()"); time.sleep(0.6)
+    tile = s.js("(() => { const c = build.cats[2]; const t = document.querySelector('.item-tile[data-cat-id=\"' + c.id + '\"][data-index=\"0\"]'); return t ? t.classList.contains('trancado') : null; })()")
+    p.conta("cadeado: ajustes", "a Opcional e a Escolha 1 são a exceção: escolhida a caixa, os cadeados da loja somem; na Escolha 1 a segunda Hidra não ganha cadeado",
+            comum["doran"]["trancado"] and comum["hidra"]["trancado"] and not opcional["doran"]["trancado"] and not opcional["hidra"]["trancado"]
+            and not escolha["doran"]["trancado"] and not escolha["hidra"]["trancado"] and tile is False,
+            "Comum %s · Opcional %s · Escolha 1 %s · cadeado no ladrilho da Escolha 1 %s" % (comum, opcional, escolha, tile))
+
+    # sem o Editar: nada de cadeado na loja; o clique no item não mexe e avisa, com o Editar pulsando
+    s.js("(() => { ligarEdicao(false); switchTab('catalog'); renderBuildAll(); return 1; })()"); time.sleep(0.6)
+    trancados = s.js("document.querySelectorAll('#grid .card.trancado, #grid .card.nao-soma').length")
+    antes = s.js("JSON.stringify(build.cats.map(c => c.items.map(e => e.itemId)))")
+    s.clicar('#grid .card[data-slug="doran-s-blade"] .card-name', 0.5)
+    depois = s.js("JSON.stringify(build.cats.map(c => c.items.map(e => e.itemId)))")
+    loja = s.js("""(() => { const h = document.getElementById('catalog-mode-hint'), b = h.querySelector('[data-ligar-editar]');
+      return { aviso: h.classList.contains('show') ? h.textContent : '', pulsa: !!(b && b.classList.contains('chamar')), voltas: b ? getComputedStyle(b).animationIterationCount : null }; })()""")
+    s.clicar('#catalog-mode-hint [data-ligar-editar]', 0.5)
+    ligou = s.js("build.editing")
+    p.conta("cadeado: ajustes", "sem o Editar, a loja não mostra cadeado e o clique no item não mexe na build: avisa, o Editar pulsa (três vezes) e o \"Ligar Editar\" do aviso liga",
+            trancados == 0 and antes == depois and "ligue o Editar" in loja["aviso"] and loja["pulsa"] and loja["voltas"] == "3" and ligou is True,
+            "cadeados na loja %s · build igual %s · %s · ligou %s" % (trancados, antes == depois, loja, ligou))
+
+    # a forja: o toque no campo que o modo leitura desliga (o modo de jogo, disabled) avisa; nas Runas também
+    s.js("(() => { ligarEdicao(false); switchTab('build'); showBuildScreen('forja'); renderBuildAll(); document.getElementById('edit-hint').classList.remove('show'); return 1; })()"); time.sleep(0.6)
+    s.clicar("#build-mode", 0.4)
+    forja = s.js("""(() => ({ aviso: document.getElementById('edit-hint').classList.contains('show') ? document.getElementById('edit-hint').textContent : '',
+      pulsa: document.getElementById('edit-switch').classList.contains('chamar'), modo: build.mode }))()""")
+    s.js("(() => { document.getElementById('edit-hint').classList.remove('show'); runasEstado.modo = 'montar'; switchTab('runas'); return 1; })()"); time.sleep(0.8)
+    # montando a página da build sem o Editar, trocar a trilha primária é a tentativa de mexer
+    outra_trilha = s.js("(() => { const b = [...document.querySelectorAll('.trilha-btn[data-trilha]')].find(x => !x.classList.contains('ativa')); return b ? b.dataset.trilha : null; })()")
+    tem_runa = bool(outra_trilha)
+    if tem_runa:
+        s.clicar('.trilha-btn[data-trilha="%s"]' % outra_trilha, 0.4)
+    runas = s.js("""(() => ({ aviso: document.getElementById('edit-hint').classList.contains('show'),
+      pulsa: !!(document.getElementById('rd-ligar') && document.getElementById('rd-ligar').classList.contains('chamar')) }))()""")
+    s.js("(() => { document.body.classList.add('ac-movimento'); switchTab('build'); showBuildScreen('forja'); chamarEditar(); return 1; })()"); time.sleep(0.3)
+    parado = s.js("(() => { const e = getComputedStyle(document.getElementById('edit-switch')); return { animacao: e.animationName, brilho: e.boxShadow !== 'none' }; })()")
+    s.js("(() => { document.body.classList.remove('ac-movimento'); return 1; })()")
+    p.conta("cadeado: ajustes", "sem o Editar, tocar no modo de jogo (desligado) avisa e faz o Editar pulsar; nas Runas, trocar a trilha avisa e o \"Ligar Editar\" de lá pulsa; com menos movimento, o brilho fica parado",
+            "ligue o Editar" in forja["aviso"] and forja["pulsa"] and tem_runa and runas["aviso"] and runas["pulsa"]
+            and parado["animacao"] == "none" and parado["brilho"],
+            "forja %s · runas %s (runa na tela %s) · menos movimento %s" % (forja, runas, tem_runa, parado))
+    s.js("(() => { ligarEdicao(true); switchTab('build'); return 1; })()")
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5158,6 +5246,7 @@ GRUPOS = [
     ("cadeado", checar_cadeado),
     ("reembolso e topo", checar_reembolso_e_topo),
     ("aviso", checar_aviso),
+    ("cadeado: ajustes", checar_cadeado_ajustes),
     ("runas", checar_runas),
     ("habilidades", checar_habilidades),
     ("texto", checar_texto),

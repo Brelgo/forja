@@ -4562,11 +4562,17 @@ body.forja #som-volume { accent-color: #ff7a1e; }
 
 /* ---- Fase 6, T5: tentativa de arrastar em visualização chama o "Editar" ---- */
 #edit-switch { border-radius: 4px; }
-#edit-switch.chamar { animation: chamar-editar 1.1s ease-out 2; }
+/* F13-T76: os pulsos do Editar (três) — no interruptor, nos "Ligar Editar" e no botão do aviso
+   da loja; com menos movimento, só o brilho, parado */
+#edit-switch.chamar, #ml-ligar.chamar, #rd-ligar.chamar, .cmh-ligar.chamar { animation: chamar-editar 1.1s ease-out 3; }
 @keyframes chamar-editar {
-  0%, 100% { box-shadow: none; }
-  50% { box-shadow: 0 0 0 3px var(--forja-brasa), 0 0 18px var(--forja-brasa-glow); }
+  0%, 100% { box-shadow: none; transform: none; }
+  50% { box-shadow: 0 0 0 3px var(--forja-brasa), 0 0 18px var(--forja-brasa-glow); transform: scale(1.06); }
 }
+body.ac-movimento .chamar { box-shadow: 0 0 0 3px var(--forja-brasa), 0 0 18px var(--forja-brasa-glow) !important; }
+@media (prefers-reduced-motion: reduce) { .chamar { animation: none !important; box-shadow: 0 0 0 3px var(--forja-brasa), 0 0 18px var(--forja-brasa-glow) !important; } }
+.cmh-ligar { margin-left: 8px; padding: 2px 10px; cursor: pointer; font: inherit; font-size: 12.5px; font-style: normal;
+  background: var(--loja-cera); color: var(--loja-papel); border: 1px solid var(--loja-cera); border-radius: 2px; }
 .edit-hint {
   position: fixed; left: 50%; bottom: 28px; z-index: 70; pointer-events: none;
   transform: translateX(-50%) translateY(12px); opacity: 0; transition: opacity .25s, transform .25s;
@@ -5262,6 +5268,8 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
 </div>
 
 <!-- ============ ABA BUILD ============ -->
+<!-- F13-T76: fora da forja, para o aviso do Editar aparecer também nas Runas -->
+<div id="edit-hint" class="edit-hint" aria-live="polite"></div>
 <div id="view-build" class="build-view hidden">
   <!-- Tela 1 (Fase 7, T3): lista de arsenais, como no cliente do LoL. Clique abre a forja. -->
   <section id="build-index" class="build-index" hidden aria-label="Builds">
@@ -5378,7 +5386,6 @@ body.forja .build-cat.drop-after  { transform: translateX(-5px); box-shadow: ins
   <div id="mode-warning" class="mode-warning"></div>
   <div id="revisao-warning" class="mode-warning revisao" hidden></div>
   <div id="temp-warning" class="mode-warning temp" hidden></div>
-  <div id="edit-hint" class="edit-hint" aria-live="polite"></div>
   <div id="build-totals" class="build-totals"></div>
 
   <div class="library-bar">
@@ -6033,10 +6040,23 @@ function travas() {
   });
   const desce = (slug) => { t.rota[slug] = "suporte"; ((byId[slug] || {}).buildsIntoIds || []).forEach(x => { if (t.rota[x] !== "suporte") desce(x); }); };
   CATALOG.items.filter(i => /escolhido como Suporte/.test(i.notes || "")).forEach(i => desce(i.slug));
+  // F13-T76 (Leo, 24/10/2026: "ao selecionar a rota de suporte ele deixa ativo os itens iniciais,
+  // sendo que os itens iniciais ficam bloqueados para compra de suporte"): o item que o jogo compra
+  // sozinho para o Suporte ("comprado automaticamente… pelo jogador escolhido como Suporte" — o Atlas
+  // Mundial) ocupa o grupo dele; com a rota Suporte, os outros do grupo ficam trancados
+  const auto = CATALOG.items.find(i => /comprado automaticamente/.test(i.notes || "") && /escolhido como Suporte/.test(i.notes || ""));
+  t.autoSuporte = auto ? auto.slug : null;
   return (travasProntas = t);
 }
-// Conta na build: fora da Opcional e, na Escolha 1, só o padrão (o de cima).
-function contaNaBuild(cat, index) { return cat.kind !== "opcional" && (cat.kind !== "escolha" || index === 0); }
+// F13-T76 (Leo, 25/10/2026: "as travas de efeitos únicos devem ser aplicadas a itens de mesmo tier,
+// porque o Fulgor ainda pode se tornar Trindade ou Perdição do Lich"): o grupo "Limitado a 1" e o
+// efeito único só valem entre itens do mesmo tier — o Fulgor (Épico) não tranca nem avisa com a
+// Força da Trindade (Lendário); a Manamune e a Muramana, a linha do Atlas, também não.
+function mesmoTier(a, b) { return (a && a.tier || "") === (b && b.tier || ""); }
+// Conta na build (para o cadeado e o aviso): fora da Opcional e da Escolha 1 — F13-T76 (Leo,
+// 24/10/2026: "os opcionais e Escolha 1 estão com os cadeados, que o correto é estes serem as
+// exceções à regra"). Nos totais a Escolha 1 continua contando o padrão (itensContados).
+function contaNaBuild(cat) { return cat.kind !== "opcional" && cat.kind !== "escolha"; }
 function runaIdPorNome(nome) {
   if (!nome || !runasOk()) return null;
   for (const tr of RUNAS.trilhas) for (const s of tr.slots) for (const r of s.runas) if (norm(r.nome) === norm(nome)) return r.id;
@@ -6044,7 +6064,7 @@ function runaIdPorNome(nome) {
 }
 function contextoDoCadeado() {
   const contam = [];
-  (build.cats || []).forEach(c => c.items.forEach((e, i) => { if (contaNaBuild(c, i)) contam.push(e); }));
+  (build.cats || []).forEach(c => { if (contaNaBuild(c)) contam.push(...c.items); });
   const p = normRunas(build.runas);
   return { contam, runas: new Set([p.assinatura, ...p.slots, ...p.secundarios, ...p.fragmentos].filter(Boolean)),
            rota: rotaPossivel(build.mode) ? rotaValida(build.rota) : "" };
@@ -6053,16 +6073,21 @@ function contextoDoCadeado() {
 // as entradas que não contam contra ele (ele mesmo, quando já está na build).
 function motivoDoCadeado(item, ctx, ignorar = []) {
   const t = travas(), out = [];
+  const gs = t.grupos[item.slug] || [];
   const r = t.rota[item.slug];
   if (r && ctx.rota && r !== ctx.rota) out.push(`só na rota ${ROTAS[r]}`);
+  // F13-T76: com a rota Suporte, o Atlas Mundial já vem comprado — os outros do grupo dele trancam
+  if (ctx.rota === "suporte" && t.autoSuporte && item.slug !== t.autoSuporte && r !== "suporte" && mesmoTier(byId[t.autoSuporte], item)) {
+    const g = (t.grupos[t.autoSuporte] || []).find(x => gs.includes(x));
+    if (g) out.push(`com a rota Suporte, ${byId[t.autoSuporte].namePt} já vem comprado — limitado a 1 do grupo ${g}`);
+  }
   const runa = t.runa[item.slug];
   if (runa && !ctx.runas.has(runaIdPorNome(runa))) out.push(`pede a runa ${runa}`);
   Object.entries(t.substitui).forEach(([quem, alvo]) => {
     if (alvo === item.slug && ctx.runas.has(runaIdPorNome(t.runa[quem]))) out.push(`com a runa ${t.runa[quem]}, ${byId[quem].namePt} vem no lugar`);
   });
-  const gs = t.grupos[item.slug] || [];
   if (gs.length) {
-    const outro = ctx.contam.find(e => !ignorar.includes(e) && (t.grupos[e.itemId] || []).some(g => gs.includes(g)));
+    const outro = ctx.contam.find(e => !ignorar.includes(e) && mesmoTier(byId[e.itemId], item) && (t.grupos[e.itemId] || []).some(g => gs.includes(g)));
     if (outro) {
       const g = t.grupos[outro.itemId].find(x => gs.includes(x));
       out.push(`${g.startsWith("=") ? "limitado a 1" : "limitado a 1 do grupo " + g} — a build já tem ${byId[outro.itemId].namePt}`);
@@ -6073,19 +6098,18 @@ function motivoDoCadeado(item, ctx, ignorar = []) {
 // Depois de pôr: a entrada numa posição que conta não pode ficar trancada.
 function cadeadoDepoisDePor(cat, entry) {
   const i = cat.items.indexOf(entry);
-  if (i < 0 || !contaNaBuild(cat, i) || !byId[entry.itemId]) return "";
+  if (i < 0 || !contaNaBuild(cat) || !byId[entry.itemId]) return "";
   return motivoDoCadeado(byId[entry.itemId], contextoDoCadeado(), [entry]);
 }
 // O cadeado da bandeja e do Catálogo: o que aconteceria com o item posto na caixa
-// escolhida (sem caixa, como se contasse). Numa Opcional, ou numa Escolha 1 que já
-// tem o padrão (o item entra como alternativa), nada tranca.
+// escolhida (sem caixa, como se contasse). Numa Opcional ou numa Escolha 1, nada tranca (F13-T76).
 function motivoNaCaixaEscolhida(item, ctx) {
   const alvo = getCat(build.selectedCatId);
-  if (alvo && (alvo.kind === "opcional" || (alvo.kind === "escolha" && alvo.items.length))) return "";
+  if (alvo && (alvo.kind === "opcional" || alvo.kind === "escolha")) return "";
   return motivoDoCadeado(item, ctx);
 }
 function avisarCadeado(item, motivo) {
-  mostrarAvisoDaBuild(`<b>${esc(item.namePt)}</b> está trancado nesta build: ${esc(motivo)}. Numa caixa Opcional ele entra.`);
+  mostrarAvisoDaBuild(`<b>${esc(item.namePt)}</b> está trancado nesta build: ${esc(motivo)}. Numa caixa Opcional ou Escolha 1 ele entra.`);
 }
 // O recado do cadeado e do aviso: na loja, a faixa da loja; na forja, a da forja.
 function mostrarAvisoDaBuild(html) {
@@ -6129,7 +6153,7 @@ function juntarNomes(slugs) {
 // Uma segunda cópia do mesmo item também conta: duas Orbes não somam a passiva.
 function motivoDoAviso(item, ctx, ignorar = []) {
   const t = travas(), gs = t.grupos[item.slug] || [];
-  const outros = ctx.contam.filter(e => !ignorar.includes(e) && byId[e.itemId]
+  const outros = ctx.contam.filter(e => !ignorar.includes(e) && byId[e.itemId] && mesmoTier(byId[e.itemId], item)
     && !(t.grupos[e.itemId] || []).some(g => gs.includes(g)));
   const out = [], ja = new Set();
   unicasDoItem(item.slug).forEach(({ nome, tipo }) => {
@@ -6148,13 +6172,13 @@ function motivoDoAviso(item, ctx, ignorar = []) {
 // O aviso da bandeja e da loja, para a caixa escolhida — como o cadeado.
 function avisoNaCaixaEscolhida(item, ctx) {
   const alvo = getCat(build.selectedCatId);
-  if (alvo && (alvo.kind === "opcional" || (alvo.kind === "escolha" && alvo.items.length))) return "";
+  if (alvo && (alvo.kind === "opcional" || alvo.kind === "escolha")) return "";
   return motivoDoAviso(item, ctx);
 }
 // Depois de pôr: entrou, e o recado diz com o que não acumula.
 function avisoDepoisDePor(cat, entry) {
   const i = cat.items.indexOf(entry);
-  if (i < 0 || !contaNaBuild(cat, i) || !byId[entry.itemId]) return "";
+  if (i < 0 || !contaNaBuild(cat) || !byId[entry.itemId]) return "";
   return motivoDoAviso(byId[entry.itemId], contextoDoCadeado(), [entry]);
 }
 function htmlDoAviso(item, motivo) {
@@ -6195,7 +6219,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.75";
+const ATUALIZACAO = "13.76";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -8861,10 +8885,10 @@ function renderCategories() {
         tile.className = "item-tile named" + (itensSaindo.has(entry) ? " tile-saindo" : "") + (entry.note ? " has-note" : "") + (offMode ? " off-mode" : "") + (mfApplies(item, entry) ? " mf" : "") + (build.masterwork && mfEligible(item) ? " mf-elegivel" : "") + (state.applyApex && hasApex(item) ? " apex" : "")
           + (cat.kind !== "opcional" && mudados.includes(entry.itemId) ? " mudou" : "");
         // F13-T70: já na build numa posição que conta e trancado (a rota ou as runas mudaram depois)
-        const trava = contaNaBuild(cat, index) ? motivoDoCadeado(item, ctxCadeado, [entry]) : "";
+        const trava = contaNaBuild(cat) ? motivoDoCadeado(item, ctxCadeado, [entry]) : "";
         if (trava) { tile.classList.add("trancado"); tile.dataset.cadeado = trava; }
         // F13-T72: e o efeito que não acumula com outro item que conta
-        const naoSoma = contaNaBuild(cat, index) ? motivoDoAviso(item, ctxCadeado, [entry]) : "";
+        const naoSoma = contaNaBuild(cat) ? motivoDoAviso(item, ctxCadeado, [entry]) : "";
         if (naoSoma) { tile.classList.add("nao-soma"); tile.dataset.aviso = naoSoma; }
         if (offMode) tile.title = `${item.namePt} não existe em ${build.mode}`;
         tile.draggable = build.editing;
@@ -8989,9 +9013,9 @@ function renderPicker() {
     // título com o mesmo que a linha mostra: no modo Ícones é o que resta para ler
     row.title = `${item.namePt} · ${TIER_LABEL[item.tier] || item.tier} · ${fmtG(effectivePrice(item))}`;
     // F13-T70: o cadeado para a caixa escolhida (sem caixa, como se contasse)
-    const trava = build.id ? motivoNaCaixaEscolhida(item, ctxCadeado) : "";
+    const trava = build.id && build.editing ? motivoNaCaixaEscolhida(item, ctxCadeado) : "";   // F13-T76: só com o Editar
     if (trava) { row.classList.add("trancado"); row.title += ` · trancado: ${trava}`; }
-    const naoSoma = build.id && !trava ? avisoNaCaixaEscolhida(item, ctxCadeado) : "";   // F13-T72
+    const naoSoma = build.id && build.editing && !trava ? avisoNaCaixaEscolhida(item, ctxCadeado) : "";   // F13-T72
     if (naoSoma) { row.classList.add("nao-soma"); row.title += ` · aviso: ${naoSoma}`; }
     row.innerHTML = `
       <span class="pk-abbr">${iconInner(item)}</span>
@@ -9006,14 +9030,32 @@ function renderPicker() {
 
 let dragCatId = null;
 let dragItemPayload = null;
+const EDITAVEIS_NA_FORJA = ".build-name, .build-desc, .cat-name, .cat-desc, .cat-kind, .build-habs .bh-cel, #mf-switch, .champ-btn, #build-mode, #build-rota, #build-marks .mark-slot";
 
 let editHintTimer = null;
+// F13-T76 (Leo, 24/10/2026: "deve sempre fazer uma notificação informando que o modo de edição
+// precisa estar ativo para ser realizado qualquer edição na build"; "implementar alguns pulsos no
+// botão de editar para o usuário saber que precisa clicar em editar"): toda tentativa de mexer na
+// build sem o Editar avisa e faz o Editar pulsar — na forja, o interruptor e o "Ligar Editar" da
+// faixa Modo leitura; nas Runas, o "Ligar Editar" de lá; na loja, o botão do próprio aviso.
+function pulsar(el) {
+  if (!el) return;
+  el.classList.remove("chamar"); void el.offsetWidth; el.classList.add("chamar");
+  clearTimeout(el._chamar); el._chamar = setTimeout(() => el.classList.remove("chamar"), 3400);
+}
 function chamarEditar() {
-  const sw = document.getElementById("edit-switch");
+  if (build.temp) { chamarEditarTemp(); return; }
+  if (!document.getElementById("view-catalog").classList.contains("hidden")) {
+    showCatalogModeHint(`A build <b>${esc(build.name)}</b> está em <b>visualização</b>: para mexer nela, ligue o <b>Editar</b>. <button type="button" class="cmh-ligar" data-ligar-editar>Ligar Editar</button>`);
+    pulsar(document.querySelector("#catalog-mode-hint [data-ligar-editar]"));
+    return;
+  }
+  pulsar(document.getElementById("edit-switch"));
+  pulsar(document.getElementById("ml-ligar"));
+  pulsar(document.getElementById("rd-ligar"));
   const hint = document.getElementById("edit-hint");
-  if (sw) { sw.classList.remove("chamar"); void sw.offsetWidth; sw.classList.add("chamar"); }
   if (hint) {
-    hint.innerHTML = `A build está em <b>visualização</b> — ligue <b>Editar</b> para mover os moldes.`;
+    hint.innerHTML = `A build está em <b>visualização</b>: para mexer nela, ligue o <b>Editar</b>.`;
     hint.classList.add("show");
     clearTimeout(editHintTimer);
     editHintTimer = setTimeout(() => hint.classList.remove("show"), 3200);
@@ -9064,6 +9106,18 @@ function initCategoryDrag() {
     if (Math.abs(e.clientX - tentativa.x) + Math.abs(e.clientY - tentativa.y) > 6) { tentativa = null; chamarEditar(); }
   });
   window.addEventListener("mouseup", () => { tentativa = null; });
+  // F13-T76: sem o Editar, tocar no que mexe na build avisa. O modo leitura desliga esses campos
+  // (o nome, a descrição, o tipo da caixa: pointer-events none; o modo, a rota, o campeão:
+  // disabled), e eles não recebem o clique — por isso vai pela posição do toque
+  document.addEventListener("pointerdown", (e) => {
+    if (build.editing || !build.id || e.button !== 0 || document.getElementById("view-build").classList.contains("hidden")) return;
+    const x = e.clientX, y = e.clientY;
+    const sobre = [...document.querySelectorAll(EDITAVEIS_NA_FORJA)].some(el => {
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    });
+    if (sobre) chamarEditar();
+  }, true);
 
   canvas.addEventListener("dragend", () => {
     dragCatId = null;
@@ -9327,7 +9381,8 @@ function initCategoryUI() {
   // Observação por item — equivalente às notas de item do Deadlock.
   canvas.addEventListener("dblclick", (e) => {
     const tile = e.target.closest(".item-tile");
-    if (!tile || !build.editing) return;
+    if (!tile) return;
+    if (!build.editing) { chamarEditar(); return; }   // F13-T76
     const cat = getCat(tile.dataset.catId);
     const entry = cat && cat.items[Number(tile.dataset.index)];
     if (!entry) return;
@@ -9337,7 +9392,8 @@ function initCategoryUI() {
 
   canvas.addEventListener("contextmenu", (e) => {
     const tile = e.target.closest(".item-tile");
-    if (!tile || !build.editing) return;
+    if (!tile) return;
+    if (!build.editing) { e.preventDefault(); chamarEditar(); return; }   // F13-T76
     e.preventDefault();
     hideTooltip();
     removeItemFromCategory(tile.dataset.catId, Number(tile.dataset.index));
@@ -10292,7 +10348,7 @@ function initRunas() {
     // Montando, trocar de primária começa a página de novo: as runas da trilha
     // velha não existem na nova.
     if (runasEstado.modo === "montar") {
-      if (!build.editing) return;   // Leo, 23/10/2026: sem o Editar a página não muda
+      if (!build.editing) { chamarEditar(); return; }   // Leo, 23/10/2026: sem o Editar a página não muda (F13-T76: e avisa)
       const p = paginaDaBuild();
       if (p.primaria !== b.dataset.trilha) {
         build.runas = normRunas({ primaria: b.dataset.trilha, fragmentos: p.fragmentos });
@@ -10310,21 +10366,21 @@ function initRunas() {
     // Leo, 23/10/2026: escolher, trocar a secundária e limpar só com o Editar;
     // abrir a ficha de uma runa continua valendo
     if (escolha && !e.target.closest("[data-runa]")) {
-      if (!build.editing) return;
+      if (!build.editing) { chamarEditar(); return; }
       const [papel, i, id] = escolha.dataset.escolher.split(":");
       escolherRuna(papel, Number(i), id);
       return;
     }
     const secB = e.target.closest("[data-secundaria]");
     if (secB) {
-      if (!build.editing) return;
+      if (!build.editing) { chamarEditar(); return; }
       const p = paginaDaBuild();
       build.runas = normRunas({ ...p, secundaria: p.secundaria === secB.dataset.secundaria ? "" : secB.dataset.secundaria, secundarios: [] });
       gravarPagina();
       return;
     }
     if (e.target.closest("[data-limpar]")) {
-      if (!build.editing) return;
+      if (!build.editing) { chamarEditar(); return; }
       build.runas = normRunas({ primaria: paginaDaBuild().primaria });
       gravarPagina();
       return;
@@ -13002,6 +13058,8 @@ function renderCard(item, attrSorting) {
     // F13-T52 (Leo, 19/10/2026): sem build na bigorna, o clique só abre a ficha
     // do item — não pergunta em qual build pôr, nem cria uma
     if (!build.id) { Som.play("catalog:click", { item }); openModal(item.slug); return; }
+    // F13-T76: sem o Editar, o clique não põe nem tira — avisa e faz o Editar pulsar
+    if (!build.editing) { chamarEditar(); return; }
     // F12-T2: sem caixa escolhida o clique PERGUNTA em qual caixa, em vez de
     // abrir a ficha — abrir a ficha parecia "o clique não funcionou".
     // Item já na build continua saindo com um clique, sem pergunta.
@@ -13029,7 +13087,7 @@ function renderCard(item, attrSorting) {
   }
 
   if (findInBuild(item.slug)) card.classList.add("in-build");
-  else if (build.id) {   // F13-T70: o cadeado também no card que nasce (a busca e os filtros redesenham a grade)
+  else if (build.id && build.editing) {   // F13-T70: o cadeado também no card que nasce (a busca e os filtros redesenham a grade); F13-T76: só com o Editar
     const ctx = contextoDoCadeado();
     const trava = motivoNaCaixaEscolhida(item, ctx);
     if (trava) { card.classList.add("trancado"); card.dataset.cadeado = trava; }
@@ -13275,7 +13333,7 @@ function refreshCatalogCatSelect() {
     document.getElementById("cff-caixa").hidden = !cat;
     document.getElementById("cff-soltar").hidden = !cat;
     document.getElementById("cff-dica").textContent = cat ? "os itens clicados vão para esta caixa"
-      : build.temp ? "só visualização" : "o clique no item pergunta a caixa";
+      : build.temp ? "só visualização" : !build.editing ? "visualização — ligue o Editar para mexer" : "o clique no item pergunta a caixa";
     if (cat) {
       document.getElementById("cff-nome").textContent = cat.name || "(sem nome)";
       const n = cat.items.length;
@@ -13293,10 +13351,10 @@ function refreshInBuildMarks() {
   document.querySelectorAll("#grid .card").forEach(card => {
     const naBuild = !!findInBuild(card.dataset.slug);
     card.classList.toggle("in-build", naBuild);
-    const trava = build.id && !naBuild && byId[card.dataset.slug] ? motivoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";
+    const trava = build.id && build.editing && !naBuild && byId[card.dataset.slug] ? motivoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T76: só com o Editar
     card.classList.toggle("trancado", !!trava);
     if (trava) card.dataset.cadeado = trava; else delete card.dataset.cadeado;
-    const naoSoma = build.id && !naBuild && !trava && byId[card.dataset.slug] ? avisoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T72
+    const naoSoma = build.id && build.editing && !naBuild && !trava && byId[card.dataset.slug] ? avisoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T72
     card.classList.toggle("nao-soma", !!naoSoma);
     if (naoSoma) card.dataset.aviso = naoSoma; else delete card.dataset.aviso;
   });
@@ -13757,8 +13815,15 @@ function init() {
   initCardTilt();
   initShiftFullCard();
   document.getElementById("catalog-cat-select").addEventListener("change", (e) => {
+    if (!build.editing) { e.target.value = ""; chamarEditar(); return; }   // F13-T76
     build.selectedCatId = e.target.value || null;
     renderBuild();
+  });
+  // F13-T76: o "Ligar Editar" do aviso da loja
+  document.getElementById("catalog-mode-hint").addEventListener("click", (e) => {
+    if (!e.target.closest("[data-ligar-editar]")) return;
+    ligarEdicao(true);
+    document.getElementById("catalog-mode-hint").classList.remove("show");
   });
   document.getElementById("cff-soltar").addEventListener("click", () => { build.selectedCatId = null; renderBuild(); });
 

@@ -163,6 +163,16 @@ padrão, com as cinco rotas; em Minhas, a Selva mostra só a build da Selva — 
 rota) ficam de fora —, o botão diz "Filtro: Selva" e o segundo clique solta; em Públicas (uma lista de mentira, sem
 tocar no servidor), a Meio mostra as duas da Meio, e "Limpar filtro" solta a rota.
 
+**Cadeado: os ajustes** (F13-T76; Leo, 24/10/2026) — com a rota Suporte, a Lâmina de Doran fica trancada ("o Atlas Mundial já
+vem comprado"), o Atlas e a Canção de Sangue (a linha dele) não, e com a Top a Doran volta; escolhida a caixa pelo "Marcar em"
+da loja, a Comum tranca a Doran e a segunda Hidra, a Opcional e a Escolha 1 não, e o ladrilho da Escolha 1 fica sem cadeado;
+sem o Editar, a loja não mostra cadeado nenhum, o clique (de verdade) no item não mexe na build e avisa, o botão "Ligar
+Editar" do aviso pulsa três vezes e liga; na forja, o toque no modo de jogo (desligado) avisa e o interruptor Editar pulsa;
+nas Runas, trocar a trilha avisa e o "Ligar Editar" de lá pulsa; com "menos movimento", o brilho fica parado. E o grupo
+"Limitado a 1" e o efeito único só valem entre itens do mesmo tier (Leo, 25/10/2026: "o Fulgor ainda pode se tornar Trindade"):
+o Fulgor com a Força da Trindade não tem aviso nem cadeado, a Trindade com Aurora e Crepúsculo continua trancada, e o par do
+aviso passou a ser o Morellonomicon com o Lembrete Mortal (os dois Lendários com Feridas Dolorosas).
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar
