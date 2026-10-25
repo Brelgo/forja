@@ -5299,6 +5299,16 @@ def checar_camada_robo(s, p):
                    aviso: document.getElementById('robo-aviso').hidden ? '' : document.getElementById('robo-aviso').textContent }; })()""")
         r.js("(() => { openModal('bastionbreaker'); return 1; })()"); time.sleep(0.6)
         ficha = r.js("(() => { const f = document.querySelector('#modal .modal-section.robo'); return f ? f.textContent.replace(/\\s+/g, ' ') : ''; })()")
+        # F13-T82: a build com item que o robô viu mudar fica desatualizada (fora das Opcionais), com a borda vermelha
+        r.js("(() => { document.getElementById('overlay').classList.remove('show'); return 1; })()")
+        garantir_build_editavel(r)
+        etiqueta = r.js("""(() => { ligarEdicao(true);
+          build.cats = [{ id: 'qa-r1', name: 'Núcleo', desc: '', kind: 'comum', span: 2, cols: 3, rows: 0, items: [{ itemId: 'bastionbreaker', note: '' }, { itemId: 'long-sword', note: '' }] },
+                        { id: 'qa-r2', name: 'Talvez', desc: '', kind: 'opcional', span: 2, cols: 3, rows: 0, items: [{ itemId: 'abyssal-mask', note: '' }] }];
+          switchTab('build'); showBuildScreen('forja'); renderBuildAll();
+          const tile = (s) => { const t = [...document.querySelectorAll('.item-tile')].find(x => build.cats[Number(x.dataset.catId === 'qa-r1' ? 0 : 1)].items[Number(x.dataset.index)].itemId === s); return t ? t.classList.contains('mudou') : null; };
+          const html = etiquetaHtml(buildResumo({ id: build.id }));
+          return { robo: itensDoRobo(build.cats), borda_bb: tile('bastionbreaker'), borda_ls: tile('long-sword'), borda_am: tile('abyssal-mask'), etiqueta: /desatualizada/.test(html) && /patch 16\\.22\\.1/.test(html) }; })()""")
         erros = list(r.erros)
     finally:
         r.fechar()
@@ -5311,6 +5321,9 @@ def checar_camada_robo(s, p):
     p.conta("camada do robô", "na ficha, o bloco do robô diz o que já foi aplicado (de → para, de onde), o que está a conferir e as contas do patch anterior",
             "Patch 16.22.1 · pelo robô" in ficha and "Já aplicado" in ficha and "%s → %s" % (ap.fmt_num(preco_bb), ap.fmt_num(preco_bb + 100)) in ficha
             and "A conferir" in ficha and "Shaped Charge" in ficha and "Do patch %s" % patch in ficha and "análise de custo" in ficha, ficha[:400])
+    p.conta("camada do robô", "a build com item que o robô viu mudar fica desatualizada, com a borda vermelha nele (o da Opcional não conta, o que não mudou também não)",
+            etiqueta["robo"] == ["bastionbreaker"] and etiqueta["borda_bb"] is True and etiqueta["borda_ls"] is False and etiqueta["borda_am"] is False and etiqueta["etiqueta"],
+            "%s" % etiqueta)
 
 
 def checar_marcadores_ajuda(s, p):

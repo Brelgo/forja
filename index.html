@@ -6302,7 +6302,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.81";
+const ATUALIZACAO = "13.82";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -7129,11 +7129,29 @@ function itensQueDesatualizam(cats, patch) {
   });
   return out;
 }
+// F13-T82 (Leo, 25/10/2026): o item que o robô de patch viu mudar no jogo (já aplicado, ou a
+// conferir) desatualiza a build como a troca de catálogo — fora das Opcionais, como na regra de
+// sempre. Calculado na hora, da camada: quando o Capítulo 1 sobe o catálogo, a camada esvazia e
+// a revisão de sempre (data/mudancas.js) assume.
+function itensDoRobo(cats) {
+  if (!ROBO.ativo) return [];
+  const out = [];
+  (cats || []).forEach(c => {
+    if (c.kind === "opcional") return;
+    (c.items || []).forEach(e => {
+      const r = ROBO.itens[e.itemId];
+      if (((r && r.aplicados.length) || ROBO.aConferir[e.itemId]) && !out.includes(e.itemId)) out.push(e.itemId);
+    });
+  });
+  return out;
+}
+const juntarMudados = (a, b) => b.length ? [...new Set((a || []).concat(b))] : (a || []);
 // A borda vermelha da forja: os itens da revisão de uma build sua; numa pública
-// aberta para ver, os que mudaram desde o patch em que ela foi publicada.
+// aberta para ver, os que mudaram desde o patch em que ela foi publicada; e os do robô.
 function itensMudadosDaBuild() {
-  if (build.revisao && Array.isArray(build.revisao.mudados)) return build.revisao.mudados;
-  return build.temp ? itensQueDesatualizam(build.cats, build.patch) : [];
+  const base = build.revisao && Array.isArray(build.revisao.mudados) ? build.revisao.mudados
+    : build.temp ? itensQueDesatualizam(build.cats, build.patch) : [];
+  return juntarMudados(base, itensDoRobo(build.cats));
 }
 
 function loadBuild() {
@@ -10658,6 +10676,7 @@ function buildResumo(b) {
     pubEm: (isActive ? build.pubEm : b.pubEm) || 0,
     pubPatch: (isActive ? build.pubPatch : b.pubPatch) || "",
     pubAssinatura: (isActive ? build.pubAssinatura : b.pubAssinatura) || "",
+    robo: itensDoRobo(cats),   // F13-T82
     revisao: (isActive ? build.revisao : b.revisao) || null,
     temp: !!(isActive ? build.temp : b.temp),
     pubOrigem: (isActive ? build.pubOrigem : b.pubOrigem) || null,
@@ -10745,7 +10764,7 @@ function publicaResumo(p) {
     // F10-T15: só o engajamento aparece; o resto alimenta a popularidade e fica oculto.
     engajamentos: p.engajamentos || 0, popDia: p.pop_dia || 0,
     popularSemana: !!p.popular_semana, diasNoTop: p.dias_no_top || 0,
-    fav: favoritosIds().includes(p.id), desatualizada: !publicaNoCatalogoAtual(p),
+    fav: favoritosIds().includes(p.id), desatualizada: !publicaNoCatalogoAtual(p), robo: itensDoRobo(cats),   // F13-T82
     layout: layoutValido(p.layout),
     runas: p.runas || null, habilidades: p.habilidades || null,
   };
@@ -10819,6 +10838,8 @@ function etiquetaHtml(d) {
   if (d.favoritaEmMinhas) out.push(`<span class="bi-etiqueta favorita">favorita</span>`);
   if (!d.publica && d.temp) out.push(`<span class="bi-etiqueta publicada" title="Aberta só para ver — some ao recarregar a página">visualização</span>`);
   if (!d.publica && d.revisao) out.push(`<span class="bi-etiqueta desatualizada" title="Itens desta build mudaram no jogo ou saíram do catálogo desde a última gravação — veja o resumo">desatualizada</span>`);
+  // F13-T82: o patch novo que o robô já viu (a pública continua na lista: ela é do catálogo de agora)
+  else if ((d.robo || []).length && !d.desatualizada) out.push(`<span class="bi-etiqueta desatualizada" title="${d.robo.length === 1 ? "Um item desta build mudou" : d.robo.length + " itens desta build mudaram"} no patch ${esc(ROBO.para)} — estão com a borda vermelha no resumo e na forja">desatualizada</span>`);
   if (!d.publica && d.pubId) out.push(`<span class="bi-etiqueta publicada" title="ID ${esc(d.pubId)} · versão ${d.pubVersao}">publicada</span>`);
   if (!d.publica && d.id === build.id) out.push(`<span class="bi-etiqueta" title="Aberta na forja">na forja</span>`);
   return out.join("");
@@ -11108,7 +11129,7 @@ function detalheHtml(d, partes) {
   const vistos = new Set(); const itens = [];
   itensDoResumo(d.cats).forEach(it => { if (!vistos.has(it.slug)) { vistos.add(it.slug); itens.push(it); } });
   // F13-T61: a borda vermelha também no resumo da lista, onde a etiqueta aparece
-  const mudados = d.publica ? itensQueDesatualizam(d.cats, d.pubPatch) : ((d.revisao && d.revisao.mudados) || []);
+  const mudados = juntarMudados(d.publica ? itensQueDesatualizam(d.cats, d.pubPatch) : ((d.revisao && d.revisao.mudados) || []), d.robo || []);   // F13-T82: e os do robô
   return `
     <div class="bd-head">${champIconHtml(d.champ, "")}<h3>${esc(d.name)}</h3></div>
     <div class="bd-marks">${marcas}</div>

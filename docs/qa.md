@@ -178,7 +178,8 @@ aba própria, a camada de um patch simulado entra pelo caminho de verdade (a pá
 roteiro só troca o que ele diz, antes da carga): o preço e a Letalidade do Quebra-Bastião aplicados, o selo "patch 16.22.1"
 no card, "a conferir" na Máscara Abissal, o aviso no alto da loja; a Redenção, com o `base` trocado (o Capítulo 1 mexeu nela
 depois), fica com o preço do catálogo e sem selo; e a ficha diz o que já foi aplicado, o que está a conferir e as contas do
-patch anterior.
+patch anterior. E a build com item que o robô viu mudar (F13-T82) fica "desatualizada", com a
+borda vermelha nele — o item numa Opcional não conta, e o que não mudou fica sem a borda.
 
 **O robô no GitHub Actions** (F13-T78, no grupo do robô) — a camada igual não se regrava (a hora em que ela foi gerada fica a de
 antes; sem isso, um commit por dia só de data) e a que mudou se regrava; o `.github/workflows/robo.yml` tem o agendamento, o
