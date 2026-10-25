@@ -32,11 +32,18 @@ class _Leitor:
             if c in " \t\r\n":
                 self.i += 1
             elif t.startswith("--", self.i):
-                if t.startswith("--[[", self.i):
-                    fim = t.find("]]", self.i + 4)
+                # comentário longo: --[[ … ]] e também com nível, --[=[ … ]=] (revisão da
+                # T74: o com nível era lido como comentário de uma linha só, e o resto
+                # do bloco comentado entrava como dado)
+                j = self.i + 3
+                while t.startswith("=", j):
+                    j += 1
+                if t.startswith("--[", self.i) and t.startswith("[", j):
+                    fecha = "]" + "=" * (j - self.i - 3) + "]"
+                    fim = t.find(fecha, j + 1)
                     if fim < 0:
                         self.erro("comentário longo sem fim")
-                    self.i = fim + 2
+                    self.i = fim + len(fecha)
                 else:
                     fim = t.find("\n", self.i)
                     self.i = len(t) if fim < 0 else fim + 1
@@ -158,6 +165,14 @@ class _Leitor:
         linha = self.t.count("\n", 0, self.i) + 1
         self.avisos.append("chave repetida %r na linha %d (vale a última, como no Lua)" % (chave, linha))
 
+    def guarda(self, tabela, chave, valor):
+        # no Lua, "chave = nil" não cria a chave (e apaga a que havia) — antes ela ficava
+        # com None, e quem lia com .get(chave, padrão) recebia None em vez do padrão
+        if valor is None:
+            tabela.pop(chave, None)
+        else:
+            tabela[chave] = valor
+
     def tabela(self):
         self.espera("{")
         com_chave, lista = {}, []
@@ -175,13 +190,13 @@ class _Leitor:
                 self.espera("=")
                 if chave in com_chave:
                     self.repetida(chave)
-                com_chave[chave] = self.valor()
+                self.guarda(com_chave, chave, self.valor())
             elif (c.isalpha() or c == "_") and self._e_atribuicao():
                 chave = self.nome()
                 self.espera("=")
                 if chave in com_chave:
                     self.repetida(chave)
-                com_chave[chave] = self.valor()
+                self.guarda(com_chave, chave, self.valor())
             else:
                 lista.append(self.valor())
             c = self.ve()

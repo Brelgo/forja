@@ -1,0 +1,20 @@
+{
+ "patch": "16.20.1",
+ "lido_em": "2026-10-24T21:19:55Z",
+ "primeira_foto": "2026-10-24T21:19:55Z",
+ "wiki": {
+  "pagina": "Module:ItemData/data",
+  "revid": 4082420,
+  "revisao_de": "2026-10-10T10:05:07Z",
+  "sha256": "a852bb864f499ef5cab5f45c4f1a775e03f335391e85138acf174564ad35d887",
+  "itens": 334
+ },
+ "ddragon": {
+  "versao": "16.20.1",
+  "itens": 870
+ },
+ "avisos_do_leitor": [
+  "chave repetida 'nickname' na linha 3626 (vale a última, como no Lua)",
+  "foto refeita em 24/10/2026 para o teste com dado real (F13-T74): a base do 16.20.1, da revisão que o Capítulo 1 registrou na reconciliação do 16.20.1"
+ ]
+}

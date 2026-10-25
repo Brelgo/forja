@@ -185,6 +185,37 @@ no aviso; as regras da comparação num catálogo de mentira (id de variante 22x
 extenso e efeito sem nome passam; a fonte dividida e o erro de verdade aparecem); e a foto do patch do catálogo
 inteira, com o relatório no repositório dizendo o mesmo que a conta refeita sem rede.
 
+**Robô: a regra** (F13-T74; `docs/robo_de_patch.md`) — sem rede, roda junto com os arquivos: um patch simulado a
+partir da foto do patch do catálogo, com um caso de cada — preço nas duas fontes (aplica, e refaz Reembolso e custo de
+combinação: 7,5% de 3.100 = 232,5; 763), só na wiki com o catálogo seguindo o Data Dragon (o Atma: nada), só no Data
+Dragon (a Redenção: aplica), o preço da Espada Longa chegando aos itens que a usam, atributo que muda e que entra, o
+catálogo que não seguia a fonte (a AdH do Atma), as fontes divergindo (a Máscara Abissal), texto de efeito, item que
+sai e item novo — e a camada do repositório (`data/atualizacao_patch.js`) sendo a do patch do catálogo. Os preços sobem
+como no jogo: a Espada Longa leva junto toda a árvore acima dela, e o custo de combinação refeito bate com o `gold.base`
+do Data Dragon. E um caso para cada achado da revisão adversarial (24/10/2026), nenhum podendo virar "aplica": item
+que sai do Data Dragon, item sem modos, `=>` sem destino, preço que some, receita, item não comprável, nome em
+português, atributo que o robô não lê; o pai com o preço em aberto e a conta que não fecha com o `base` ficam com o
+custo de combinação marcado; o Ápice marcado como conta velha. No leitor: o comentário com nível, o `= nil` que não
+cria chave e a foto base que não se regrava. Na 2ª rodada: o item inteiro na conferência sem conta na camada, o valor
+em ouro velho em todo item quando muda a Espada Longa (`statPricesVelhos`), o preço com nota ("gratuito"), a chave de modo
+renomeada, o salto (Letalidade 18 → 1038), a wiki com menos de 24 h, a categoria marcada quando um atributo entra, a
+contagem por fora que não depende da formatação e a foto base sendo a revisão que o Capítulo 1 registrou. Na 3ª: o zero
+(Letalidade 0, preço 0), o teto do atributo que entra (Vida 1038), o item com salto esperando inteiro, os modos contra o
+Data Dragon (a wiki tira o ARAM da Tiamat, o Data Dragon não), a troca de unidade (as Botas: plano → percentual), os
+Elixires na conta velha, a espera que conta também da 1ª foto do patch, a entrada repetida na contagem e o que fazer com a
+base (fazer, refazer, avisar sem rede). Na 4ª: o que entra com 0, negativo, fração ou `true`, a troca de unidade pela
+família (o Berrante do Guardião, o Quebra-Bastião), o salto por outra porta (o preço que salta só na wiki, o atributo
+ilegível) segurando o item, a marca da conta que outro item deixa velha no item que espera (componente, fragmentos), a
+chave de modo que o robô não lê, a Mecânica marcada, o `spec`, o `req` e o tier, os novos que voltam e os que só o Data
+Dragon traz, o `base` de cada campo da camada, a camada presa ao catálogo, a revisão da base ligada ao patch (um Ajuste
+fora de patch não muda a base) e a base que não é o módulo; a espera contando até a última leitura (com datas de janeiro,
+longe de "agora"). Na 5ª: o atributo que muda para longe da faixa (55 → 155; o Sanguinário 80 → 85 passa), o texto que faz
+conta com o preço (as notas da Redenção, o Ápice da Abatedora), com o atributo sem "de" (a Húbris, o Atma), com o modo (o Anjo
+Guardião volta ao ARAM) e com o valor em ouro (os fragmentos), cada porta da marca de texto isolada numa cópia do catálogo com
+uma nota escrita de propósito (a combinação, o Reembolso, o componente, o componente do item que espera, e o controle sem
+número), a variante que não é item novo, o sha pelo conteúdo, a revisão da seção da reconciliação (o Ajuste de sessão, a Fonte
+noutro parágrafo, a seção refeita) e a espera pelo conteúdo (a revisão desfeita).
+
 **O clique do roteiro espera a animação** (F13-T73) — o `clicar` espera acabar a animação finita no caminho do
 elemento (ele ou quem o contém) antes de medir. O painel que acaba de abrir desenrola (`modal-unroll`, 0,25 s) e o
 `hover` mede, espera 0,25 s e clica: o botão já estava em outro lugar e o clique caía no painel. Era o "Usar esta

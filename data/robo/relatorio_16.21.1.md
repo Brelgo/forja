@@ -45,7 +45,7 @@ A wiki diz outra coisa, e o Data Dragon do patch bate com o catálogo: foi o que
 
 ## O que o robô não compara (e por quê)
 
-- **Atributos que só o catálogo tem** (25): vêm do texto do efeito, não da tabela `stats` da wiki — o robô vê a mudança pelo texto do efeito, na parte 2.
+- **Atributos que só o catálogo tem** (25): não estão nos números da tabela `stats` da wiki — vêm do texto do efeito ou do texto livre `stats.spec` (a Vida ao contato da Abatedora); o robô vê a mudança pelo texto (do efeito ou do `spec`) e a manda para a conferir, na parte 2.
   - Abatedora (Cull): Vida ao contato 3
   - Biscoito Total da Determinação Eterna (Total Biscuit of Everlasting Will): Vida máxima permanente por biscoito consumido ou vendido 30
   - Botas da Rapidez (Boots of Swiftness): Resistência a Lentidão 25

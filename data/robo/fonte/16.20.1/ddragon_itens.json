@@ -1,0 +1,7767 @@
+{
+ "data": {
+  "1001": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 210,
+    "total": 300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Botas"
+  },
+  "1004": {
+   "from": [],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 140,
+    "total": 200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Amuleto da Fada"
+  },
+  "1006": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 120,
+    "total": 300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Pérola do Rejuvenescimento"
+  },
+  "1011": {
+   "from": [
+    "1028"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cinto do Gigante"
+  },
+  "1018": {
+   "from": [],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 420,
+    "total": 600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Capa da Agilidade"
+  },
+  "1026": {
+   "from": [],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 595,
+    "total": 850
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Varinha Explosiva"
+  },
+  "1027": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 210,
+    "total": 300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cristal de Safira"
+  },
+  "1028": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cristal de Rubi"
+  },
+  "1029": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 210,
+    "total": 300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Couraça de Pano"
+  },
+  "1031": {
+   "from": [
+    "1029"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cota de Malha"
+  },
+  "1033": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Manto Anula-Magia"
+  },
+  "1036": {
+   "from": [],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 245,
+    "total": 350
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Espada Longa"
+  },
+  "1037": {
+   "from": [],
+   "gold": {
+    "base": 875,
+    "purchasable": true,
+    "sell": 613,
+    "total": 875
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Picareta"
+  },
+  "1038": {
+   "from": [],
+   "gold": {
+    "base": 1300,
+    "purchasable": true,
+    "sell": 910,
+    "total": 1300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Espada G. p. C."
+  },
+  "1042": {
+   "from": [],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 175,
+    "total": 250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Adaga"
+  },
+  "1043": {
+   "from": [
+    "1042"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 490,
+    "total": 700
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Arco Recurvo"
+  },
+  "1052": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Tomo Amplificador"
+  },
+  "1053": {
+   "from": [
+    "1036"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cetro Vampírico"
+  },
+  "1054": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Escudo de Doran"
+  },
+  "1055": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lâmina de Doran"
+  },
+  "1056": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Anel de Doran"
+  },
+  "1057": {
+   "from": [
+    "1033"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 595,
+    "total": 850
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Capa Negatron"
+  },
+  "1058": {
+   "from": [],
+   "gold": {
+    "base": 1200,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Bastão Desnecessariamente Grande"
+  },
+  "1082": {
+   "from": [],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 140,
+    "total": 350
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Lacre Sombrio"
+  },
+  "1083": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Abatedora"
+  },
+  "1086": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Arco de Doran"
+  },
+  "1101": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 0,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Filhote de Garrabrasa"
+  },
+  "1102": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 0,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Cria de Andabrisas"
+  },
+  "1103": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 0,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Broto de Esmagamusgo"
+  },
+  "1105": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Broto de Esmagamusgo"
+  },
+  "1106": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Cria de Andabrisas"
+  },
+  "1107": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Filhote de Garrabrasa"
+  },
+  "1111": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": false,
+    "sell": 210,
+    "total": 300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Jarvan I"
+  },
+  "1120": {
+   "from": [],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 180,
+    "total": 450
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elmo de Doran"
+  },
+  "123430": {
+   "from": [
+    "1018",
+    "3113",
+    "3108"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Ritual da Ruína"
+  },
+  "124011": {
+   "from": [
+    "3114",
+    "1052",
+    "3067"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 1645,
+    "total": 2350
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada da Alvorada Florescente"
+  },
+  "126697": {
+   "from": [
+    "3134",
+    "3133"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 2065,
+    "total": 2950
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Húbris"
+  },
+  "1500": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Projétil Perfurante"
+  },
+  "1501": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fortificação"
+  },
+  "1502": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura Reforçada"
+  },
+  "1503": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Olho do Vigia"
+  },
+  "1505": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura Reforçada"
+  },
+  "1506": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura Reforçada"
+  },
+  "1507": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sobrecarga"
+  },
+  "1508": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Meias Antitorre"
+  },
+  "1509": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Entusiasmo"
+  },
+  "1510": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Entusiasmo Sem Noção"
+  },
+  "1511": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura Super Mech"
+  },
+  "1512": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Campo de Força Super Mech"
+  },
+  "1515": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Barricada da Torre"
+  },
+  "1516": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Recompensa de estrutura"
+  },
+  "1517": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Recompensa de estrutura"
+  },
+  "1518": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Recompensa de estrutura"
+  },
+  "1519": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Recompensa de estrutura"
+  },
+  "1520": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "SobrecarregadoHA"
+  },
+  "1521": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fortificação"
+  },
+  "1522": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fortalecimento de Torre"
+  },
+  "1523": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sobrecarga"
+  },
+  "1524": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Crescimento"
+  },
+  "2001": {
+   "from": [],
+   "gold": {
+    "base": 60,
+    "purchasable": false,
+    "sell": 42,
+    "total": 60
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Retorno"
+  },
+  "2003": {
+   "from": [],
+   "gold": {
+    "base": 50,
+    "purchasable": true,
+    "sell": 20,
+    "total": 50
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Poção de Vida"
+  },
+  "2007": {
+   "from": [],
+   "gold": {
+    "base": 60,
+    "purchasable": false,
+    "sell": 42,
+    "total": 60
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Retorno Desabilitado"
+  },
+  "2010": {
+   "from": [],
+   "gold": {
+    "base": 50,
+    "purchasable": false,
+    "sell": 5,
+    "total": 50
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Biscoito Total da Determinação Eterna"
+  },
+  "2019": {
+   "from": [
+    "1029",
+    "1036",
+    "1029"
+   ],
+   "gold": {
+    "base": 150,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sigilo de Aço"
+  },
+  "2020": {
+   "from": [
+    "2022",
+    "1037"
+   ],
+   "gold": {
+    "base": 212,
+    "purchasable": true,
+    "sell": 936,
+    "total": 1337
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Brutalizador"
+  },
+  "2021": {
+   "from": [
+    "1036",
+    "1028"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 805,
+    "total": 1150
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Tunelizador"
+  },
+  "2022": {
+   "from": [],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 175,
+    "total": 250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Partícula Brilhante"
+  },
+  "2031": {
+   "from": [],
+   "gold": {
+    "base": 150,
+    "purchasable": true,
+    "sell": 60,
+    "total": 150
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Poção com Refil"
+  },
+  "2033": {
+   "from": [
+    "2031"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": false,
+    "sell": 200,
+    "total": 500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Poção Corrupta"
+  },
+  "2051": {
+   "from": [],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 665,
+    "total": 950
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Berrante do Guardião"
+  },
+  "2052": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Poritos"
+  },
+  "2055": {
+   "from": [],
+   "gold": {
+    "base": 75,
+    "purchasable": true,
+    "sell": 30,
+    "total": 75
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Sentinela de Controle"
+  },
+  "2065": {
+   "from": [
+    "3113",
+    "4642"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hino Bélico de Shurelya"
+  },
+  "2138": {
+   "from": [],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 200,
+    "total": 500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elixir de Ferro"
+  },
+  "2139": {
+   "from": [],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 200,
+    "total": 500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elixir da Feitiçaria"
+  },
+  "2140": {
+   "from": [],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 200,
+    "total": 500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elixir da Ira"
+  },
+  "2141": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 300,
+    "total": 300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Suco de Chapéu"
+  },
+  "2150": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elixir da Habilidade"
+  },
+  "2151": {
+   "from": [],
+   "gold": {
+    "base": 50,
+    "purchasable": false,
+    "sell": 20,
+    "total": 50
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elixir da Avareza"
+  },
+  "2152": {
+   "from": [],
+   "gold": {
+    "base": 50,
+    "purchasable": false,
+    "sell": 20,
+    "total": 50
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Elixir da Força"
+  },
+  "220008": {
+   "from": [],
+   "gold": {
+    "base": 750,
+    "purchasable": false,
+    "sell": 0,
+    "total": 750
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cupom de Bigorna"
+  },
+  "223069": {
+   "from": [],
+   "gold": {
+    "base": 6000,
+    "purchasable": true,
+    "sell": 4200,
+    "total": 6000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Imolação do Vazio"
+  },
+  "223084": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1250,
+    "total": 2500
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Coração de Aço"
+  },
+  "226668": {
+   "from": [],
+   "gold": {
+    "base": 6000,
+    "purchasable": true,
+    "sell": 4200,
+    "total": 6000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Ultra-Hidra"
+  },
+  "228002": {
+   "from": [],
+   "gold": {
+    "base": 6000,
+    "purchasable": true,
+    "sell": 4200,
+    "total": 6000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Chapéu Mágico de Wooglet"
+  },
+  "2403": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Pulverizador de Tropas"
+  },
+  "2420": {
+   "from": [
+    "1052",
+    "1029",
+    "1052"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 640,
+    "total": 1600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armaguarda da Caçadora"
+  },
+  "2421": {
+   "from": [
+    "1052",
+    "1029",
+    "1052"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 640,
+    "total": 1600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armaguarda Despedaçada"
+  },
+  "2422": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": false,
+    "sell": 90,
+    "total": 300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Botas Levemente Mágicas"
+  },
+  "2501": {
+   "from": [
+    "2021",
+    "2021"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura Sangrenta do Suserano"
+  },
+  "2502": {
+   "from": [
+    "1031",
+    "3067",
+    "1028"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Desespero Eterno"
+  },
+  "2503": {
+   "from": [
+    "3802",
+    "2508"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Tocha de Chamas Negras"
+  },
+  "2504": {
+   "from": [
+    "3211",
+    "1057"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Rookern Lamúrico"
+  },
+  "2508": {
+   "from": [
+    "1052"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cinzas do Destino"
+  },
+  "2510": {
+   "from": [
+    "3057",
+    "1026",
+    "3067",
+    "1042"
+   ],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Aurora e Crepúsculo"
+  },
+  "2512": {
+   "from": [
+    "3086",
+    "3144"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Dardos de Caça-Demônios"
+  },
+  "2517": {
+   "from": [
+    "3133",
+    "1037",
+    "1036"
+   ],
+   "gold": {
+    "base": 825,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fome Eterna"
+  },
+  "2520": {
+   "from": [
+    "2020",
+    "3134"
+   ],
+   "gold": {
+    "base": 663,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Quebra-Bastião"
+  },
+  "2522": {
+   "from": [
+    "3802",
+    "1026"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Concretizador"
+  },
+  "2523": {
+   "from": [
+    "1037",
+    "6670",
+    "1036"
+   ],
+   "gold": {
+    "base": 275,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hexótica C44"
+  },
+  "2524": {
+   "from": [
+    "3067",
+    "1029",
+    "1033"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Bandocanos"
+  },
+  "2525": {
+   "from": [
+    "3067",
+    "1011"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Couraça Protoplasmática"
+  },
+  "2526": {
+   "from": [
+    "3114",
+    "1028",
+    "3070"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1575,
+    "total": 2250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Tiara Sussurrante"
+  },
+  "2530": {
+   "from": [],
+   "gold": {
+    "base": 2250,
+    "purchasable": false,
+    "sell": 1575,
+    "total": 2250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Diadema de Canções"
+  },
+  "3002": {
+   "from": [
+    "3066",
+    "1031"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": false,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Desbravador"
+  },
+  "3003": {
+   "from": [
+    "3070",
+    "3802",
+    "3108"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cajado do Arcanjo"
+  },
+  "3004": {
+   "from": [
+    "3070",
+    "3133",
+    "1036"
+   ],
+   "gold": {
+    "base": 1100,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Manamune"
+  },
+  "3006": {
+   "from": [
+    "1001",
+    "1042",
+    "1042"
+   ],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Grevas do Berserker"
+  },
+  "3008": {
+   "from": [
+    "1001"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Grevas Vorazes"
+  },
+  "3009": {
+   "from": [
+    "1001"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Botas da Rapidez"
+  },
+  "3010": {
+   "from": [
+    "1001"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": false,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Solas Simbióticas"
+  },
+  "3011": {
+   "from": [
+    "3916",
+    "3114"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": false,
+    "sell": 1330,
+    "total": 1900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Putrificador Quimtec"
+  },
+  "3013": {
+   "from": [
+    "3010"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Almas Sincronizadas"
+  },
+  "3020": {
+   "from": [
+    "1001"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sapatos do Feiticeiro"
+  },
+  "3024": {
+   "from": [
+    "1029",
+    "1027",
+    "2022"
+   ],
+   "gold": {
+    "base": 50,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Broquel Glacial"
+  },
+  "3026": {
+   "from": [
+    "2019",
+    "1038"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1280,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Anjo Guardião"
+  },
+  "3031": {
+   "from": [
+    "1038",
+    "1037",
+    "1018"
+   ],
+   "gold": {
+    "base": 725,
+    "purchasable": true,
+    "sell": 2450,
+    "total": 3500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Gume do Infinito"
+  },
+  "3032": {
+   "from": [
+    "1038",
+    "3144",
+    "1036"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Flechatroz de Yun Tal"
+  },
+  "3033": {
+   "from": [
+    "3123",
+    "3035",
+    "1018"
+   ],
+   "gold": {
+    "base": 150,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lembrete Mortal"
+  },
+  "3035": {
+   "from": [
+    "1036",
+    "1036"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1015,
+    "total": 1450
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Último Sussurro"
+  },
+  "3036": {
+   "from": [
+    "3035",
+    "6670"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lembranças do Lorde Dominik"
+  },
+  "3039": {
+   "from": [
+    "1011",
+    "1018",
+    "1011"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Acerto de Contas de Atma"
+  },
+  "3040": {
+   "from": [],
+   "gold": {
+    "base": 2900,
+    "purchasable": false,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Abraço de Seraph"
+  },
+  "3041": {
+   "from": [
+    "1082"
+   ],
+   "gold": {
+    "base": 1150,
+    "purchasable": true,
+    "sell": 1050,
+    "total": 1500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Ladrão de Almas de Mejai"
+  },
+  "3042": {
+   "from": [],
+   "gold": {
+    "base": 2900,
+    "purchasable": false,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Muramana"
+  },
+  "3044": {
+   "from": [
+    "1028",
+    "1036"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fago"
+  },
+  "3046": {
+   "from": [
+    "1042",
+    "3086",
+    "1042"
+   ],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Dançarina Fantasma"
+  },
+  "3047": {
+   "from": [
+    "1001",
+    "1029"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Botas Galvanizadas de Aço"
+  },
+  "3050": {
+   "from": [
+    "3067",
+    "1029",
+    "1033"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Convergência de Zeke"
+  },
+  "3051": {
+   "from": [
+    "1036",
+    "1042",
+    "1036"
+   ],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Machado Termestre"
+  },
+  "3053": {
+   "from": [
+    "1037",
+    "2021",
+    "1028"
+   ],
+   "gold": {
+    "base": 775,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sinal de Sterak"
+  },
+  "3057": {
+   "from": [
+    "2022"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fulgor"
+  },
+  "3065": {
+   "from": [
+    "3211",
+    "3067"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Semblante Espiritual"
+  },
+  "3066": {
+   "from": [
+    "1028"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Couraça Lunar Alada"
+  },
+  "3067": {
+   "from": [
+    "1028",
+    "2022"
+   ],
+   "gold": {
+    "base": 150,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Gema Ardente"
+  },
+  "3068": {
+   "from": [
+    "6660",
+    "1031",
+    "1028"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Égide de Fogo Solar"
+  },
+  "3070": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lágrima da Deusa"
+  },
+  "3071": {
+   "from": [
+    "3044",
+    "3067",
+    "1037"
+   ],
+   "gold": {
+    "base": 225,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cutelo Negro"
+  },
+  "3072": {
+   "from": [
+    "1038",
+    "1037",
+    "1053"
+   ],
+   "gold": {
+    "base": 325,
+    "purchasable": true,
+    "sell": 2380,
+    "total": 3400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sedenta por Sangue"
+  },
+  "3073": {
+   "from": [
+    "2021",
+    "1042",
+    "3044"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hexoplaca Experimental"
+  },
+  "3074": {
+   "from": [
+    "3077",
+    "1053",
+    "3133"
+   ],
+   "gold": {
+    "base": 150,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hidra Raivosa"
+  },
+  "3075": {
+   "from": [
+    "3076",
+    "1031",
+    "1028"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1715,
+    "total": 2450
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura de Espinhos"
+  },
+  "3076": {
+   "from": [
+    "1029",
+    "1029"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Colete Espinhoso"
+  },
+  "3077": {
+   "from": [
+    "1036",
+    "1036"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Tiamat"
+  },
+  "3078": {
+   "from": [
+    "3057",
+    "3044",
+    "3051"
+   ],
+   "gold": {
+    "base": 133,
+    "purchasable": true,
+    "sell": 2333,
+    "total": 3333
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Força da Trindade"
+  },
+  "3082": {
+   "from": [
+    "1029",
+    "1029"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Carapaça do Vigia"
+  },
+  "3083": {
+   "from": [
+    "1011",
+    "1011",
+    "3801"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Armadura de Warmog"
+  },
+  "3084": {
+   "from": [
+    "1011",
+    "3801",
+    "1011"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Coração de Aço"
+  },
+  "3085": {
+   "from": [
+    "3086",
+    "3144"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Furacão de Runaan"
+  },
+  "3086": {
+   "from": [
+    "1018",
+    "1042"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Zelo"
+  },
+  "3087": {
+   "from": [
+    "3144",
+    "3113",
+    "1037"
+   ],
+   "gold": {
+    "base": 625,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Faca de Statikk"
+  },
+  "3089": {
+   "from": [
+    "1058",
+    "1058"
+   ],
+   "gold": {
+    "base": 1100,
+    "purchasable": true,
+    "sell": 2450,
+    "total": 3500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Capuz da Morte de Rabadon"
+  },
+  "3091": {
+   "from": [
+    "1043",
+    "1057",
+    "1043"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Limite da Razão"
+  },
+  "3094": {
+   "from": [
+    "3086",
+    "3144"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Canhão Fumegante"
+  },
+  "3095": {
+   "from": [
+    "1038",
+    "1018",
+    "3144"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Chuva de Canivete"
+  },
+  "3100": {
+   "from": [
+    "3057",
+    "3113",
+    "1026"
+   ],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Perdição de Lich"
+  },
+  "3102": {
+   "from": [
+    "1058",
+    "4632"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Véu da Banshee"
+  },
+  "3107": {
+   "from": [
+    "3108",
+    "3114"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Redenção"
+  },
+  "3108": {
+   "from": [
+    "1052",
+    "2022"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 595,
+    "total": 850
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Códex Demoníaco"
+  },
+  "3109": {
+   "from": [
+    "3067",
+    "1031",
+    "1006"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Juramento do Cavaleiro"
+  },
+  "3110": {
+   "from": [
+    "3082",
+    "3024"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Coração Congelado"
+  },
+  "3111": {
+   "from": [
+    "1001",
+    "1033"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 875,
+    "total": 1250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Passos de Mercúrio"
+  },
+  "3112": {
+   "from": [],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 665,
+    "total": 950
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Orbe do Guardião"
+  },
+  "3113": {
+   "from": [
+    "1052"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cintilação Etérea"
+  },
+  "3114": {
+   "from": [
+    "1004"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 420,
+    "total": 600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Ídolo Proibido"
+  },
+  "3115": {
+   "from": [
+    "1043",
+    "1026",
+    "3108"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Dente de Na'Shor"
+  },
+  "3116": {
+   "from": [
+    "1026",
+    "1011",
+    "1052"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cetro de Cristal de Rylai"
+  },
+  "3117": {
+   "from": [
+    "1001"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": false,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Botas da Mobilidade"
+  },
+  "3118": {
+   "from": [
+    "3802",
+    "1026"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Malevolência"
+  },
+  "3119": {
+   "from": [
+    "3070",
+    "1011",
+    "3067"
+   ],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Aproximação Invernal"
+  },
+  "3121": {
+   "from": [],
+   "gold": {
+    "base": 2400,
+    "purchasable": false,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Fimbulwinter"
+  },
+  "3123": {
+   "from": [
+    "1036"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Chamado do Carrasco"
+  },
+  "3124": {
+   "from": [
+    "1052",
+    "1043",
+    "1037"
+   ],
+   "gold": {
+    "base": 1025,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lâmina da Fúria de Guinsoo"
+  },
+  "3133": {
+   "from": [
+    "1036",
+    "2022",
+    "1036"
+   ],
+   "gold": {
+    "base": 100,
+    "purchasable": true,
+    "sell": 735,
+    "total": 1050
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Martelo de Guerra de Caulfield"
+  },
+  "3134": {
+   "from": [
+    "1036",
+    "1036"
+   ],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Punhal Serrilhado"
+  },
+  "3135": {
+   "from": [
+    "4630",
+    "1026"
+   ],
+   "gold": {
+    "base": 1050,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cajado do Vazio"
+  },
+  "3137": {
+   "from": [
+    "4630",
+    "3108",
+    "3108"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Criptoflora"
+  },
+  "3139": {
+   "from": [
+    "3140",
+    "1037",
+    "1053"
+   ],
+   "gold": {
+    "base": 125,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cimitarra Mercurial"
+  },
+  "3140": {
+   "from": [
+    "1033"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 910,
+    "total": 1300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Bandana de Mercúrio"
+  },
+  "3142": {
+   "from": [
+    "3134",
+    "6690",
+    "1036"
+   ],
+   "gold": {
+    "base": 675,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lâmina Fantasma de Youmuu"
+  },
+  "3143": {
+   "from": [
+    "3082",
+    "1011"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Presságio de Randuin"
+  },
+  "3144": {
+   "from": [
+    "1042",
+    "1042"
+   ],
+   "gold": {
+    "base": 100,
+    "purchasable": true,
+    "sell": 420,
+    "total": 600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Estilingue do Patrulheiro"
+  },
+  "3145": {
+   "from": [
+    "1052",
+    "1052"
+   ],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Alternador Hextec"
+  },
+  "3146": {
+   "from": [
+    "1053",
+    "3145",
+    "1052"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Pistola Laminar Hextec"
+  },
+  "3147": {
+   "from": [
+    "1052",
+    "1028"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 910,
+    "total": 1300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Máscara Assustadora"
+  },
+  "3152": {
+   "from": [
+    "3145",
+    "3067",
+    "1028"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Explocinturão Hextec"
+  },
+  "3153": {
+   "from": [
+    "1053",
+    "1043",
+    "1037"
+   ],
+   "gold": {
+    "base": 725,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Espada do Rei Destruído"
+  },
+  "3155": {
+   "from": [
+    "1036",
+    "1033",
+    "1036"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 910,
+    "total": 1300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hexdrinker"
+  },
+  "3156": {
+   "from": [
+    "3155",
+    "3133"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Mandíbula de Malmortius"
+  },
+  "3157": {
+   "from": [
+    "1058",
+    "2420"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 2275,
+    "total": 3250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Ampulheta de Zhonya"
+  },
+  "3158": {
+   "from": [
+    "1001",
+    "2022"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Botas Ionianas da Lucidez"
+  },
+  "3161": {
+   "from": [
+    "1037",
+    "2021",
+    "1028"
+   ],
+   "gold": {
+    "base": 675,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lança de Shojin"
+  },
+  "3165": {
+   "from": [
+    "3916",
+    "1026",
+    "3067"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 1995,
+    "total": 2850
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Morellonomicon"
+  },
+  "3168": {
+   "from": [
+    "3008"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Caminho Imortal"
+  },
+  "3170": {
+   "from": [
+    "3009"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Marcha Célere"
+  },
+  "3171": {
+   "from": [
+    "3158"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Lucidez Escarlate"
+  },
+  "3172": {
+   "from": [
+    "3006"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Grevas Bélicas"
+  },
+  "3173": {
+   "from": [
+    "3111"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 875,
+    "total": 1250
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Esmagadores Acorrentados"
+  },
+  "3174": {
+   "from": [
+    "3047"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Mobilização Blindada"
+  },
+  "3175": {
+   "from": [
+    "3020"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Sapatos Enfeitiçados"
+  },
+  "3176": {
+   "from": [
+    "3013"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Sempre Avante"
+  },
+  "3177": {
+   "from": [],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 665,
+    "total": 950
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lâmina do Guardião"
+  },
+  "3179": {
+   "from": [
+    "3134",
+    "3133"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Glaive Sombria"
+  },
+  "3181": {
+   "from": [
+    "2021",
+    "3066",
+    "1037"
+   ],
+   "gold": {
+    "base": 175,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Quebracascos"
+  },
+  "3184": {
+   "from": [],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 665,
+    "total": 950
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Martelo do Guardião"
+  },
+  "3190": {
+   "from": [
+    "3067",
+    "1029",
+    "1033"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Medalhão dos Solari de Ferro"
+  },
+  "3211": {
+   "from": [
+    "1028",
+    "1033",
+    "1006"
+   ],
+   "gold": {
+    "base": 150,
+    "purchasable": true,
+    "sell": 875,
+    "total": 1250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Capuz do Espectro"
+  },
+  "322065": {
+   "from": [
+    "3113",
+    "4642"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Hino Bélico de Shurelya"
+  },
+  "3222": {
+   "from": [
+    "3067",
+    "3114"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Bênção de Mikael"
+  },
+  "322526": {
+   "from": [
+    "3114",
+    "1028",
+    "323070"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1575,
+    "total": 2250
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Tiara Sussurrante"
+  },
+  "322530": {
+   "from": [],
+   "gold": {
+    "base": 2250,
+    "purchasable": false,
+    "sell": 1575,
+    "total": 2250
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Diadema de Canções"
+  },
+  "323002": {
+   "from": [
+    "3066",
+    "1031"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": false,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Desbravador"
+  },
+  "323003": {
+   "from": [
+    "323070",
+    "3802",
+    "3108"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Cajado do Arcanjo"
+  },
+  "323004": {
+   "from": [
+    "323070",
+    "3133",
+    "1036"
+   ],
+   "gold": {
+    "base": 1100,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Manamune"
+  },
+  "323040": {
+   "from": [],
+   "gold": {
+    "base": 2900,
+    "purchasable": false,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Abraço de Seraph"
+  },
+  "323042": {
+   "from": [],
+   "gold": {
+    "base": 2900,
+    "purchasable": false,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Muramana"
+  },
+  "323050": {
+   "from": [
+    "1029",
+    "3067",
+    "1033"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Convergência de Zeke"
+  },
+  "323070": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Lágrima da Deusa"
+  },
+  "323075": {
+   "from": [
+    "3076",
+    "1031",
+    "1028"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Armadura de Espinhos"
+  },
+  "323107": {
+   "from": [
+    "3067",
+    "1028",
+    "3114"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Redenção"
+  },
+  "323109": {
+   "from": [
+    "3067",
+    "1031",
+    "1006"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Juramento do Cavaleiro"
+  },
+  "323110": {
+   "from": [
+    "3082",
+    "3024"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Coração Congelado"
+  },
+  "323119": {
+   "from": [
+    "323070",
+    "1011",
+    "3067"
+   ],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Aproximação Invernal"
+  },
+  "323121": {
+   "from": [],
+   "gold": {
+    "base": 2400,
+    "purchasable": false,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Fimbulwinter"
+  },
+  "323190": {
+   "from": [
+    "3067",
+    "1029",
+    "1033"
+   ],
+   "gold": {
+    "base": 1100,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Medalhão dos Solari de Ferro"
+  },
+  "323222": {
+   "from": [
+    "3067",
+    "1028",
+    "3114"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Bênção de Mikael"
+  },
+  "323504": {
+   "from": [
+    "3113",
+    "1052",
+    "3114"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Turíbulo Ardente"
+  },
+  "324005": {
+   "from": [
+    "1026",
+    "4642"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Mandato Imperial"
+  },
+  "326616": {
+   "from": [
+    "3108",
+    "1052",
+    "3114"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Cajado Aquafluxo"
+  },
+  "326617": {
+   "from": [
+    "3067",
+    "1028",
+    "4642"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Regenerador de Pedra Lunar"
+  },
+  "326620": {
+   "from": [
+    "3067",
+    "4642"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Ecos de Helia"
+  },
+  "326621": {
+   "from": [
+    "1026",
+    "3114",
+    "3114"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Auronúcleo"
+  },
+  "326657": {
+   "from": [
+    "1026",
+    "3803"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Bastão das Eras"
+  },
+  "328020": {
+   "from": [
+    "3067",
+    "1057"
+   ],
+   "gold": {
+    "base": 1200,
+    "purchasable": true,
+    "sell": 1995,
+    "total": 2850
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Máscara Abissal"
+  },
+  "3302": {
+   "from": [
+    "3051",
+    "1043"
+   ],
+   "gold": {
+    "base": 1100,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Terminus"
+  },
+  "3330": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Efígie do Espantalho"
+  },
+  "3340": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Sentinela Invisível"
+  },
+  "3363": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Alteração Vidente"
+  },
+  "3364": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Lente do Oráculo"
+  },
+  "3400": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Sua Parte"
+  },
+  "3504": {
+   "from": [
+    "3113",
+    "3114"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Turíbulo Ardente"
+  },
+  "3508": {
+   "from": [
+    "3057",
+    "3133",
+    "1018"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2135,
+    "total": 3050
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Colhedor de Essência"
+  },
+  "3599": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lança Negra da Kalista"
+  },
+  "3600": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Lança Negra da Kalista"
+  },
+  "3742": {
+   "from": [
+    "3066",
+    "1028",
+    "1031"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Couraça do Defunto"
+  },
+  "3748": {
+   "from": [
+    "3077",
+    "2021",
+    "1011"
+   ],
+   "gold": {
+    "base": 50,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hidra Titânica"
+  },
+  "3801": {
+   "from": [
+    "1028",
+    "1006"
+   ],
+   "gold": {
+    "base": 100,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Braçadeira Cristalina"
+  },
+  "3802": {
+   "from": [
+    "1052",
+    "1027",
+    "2022"
+   ],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Capítulo Perdido"
+  },
+  "3803": {
+   "from": [
+    "1028",
+    "1028",
+    "1027"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 910,
+    "total": 1300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Catalisador das Eras"
+  },
+  "3814": {
+   "from": [
+    "3134",
+    "2021"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Limiar da Noite"
+  },
+  "3865": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Atlas Mundial"
+  },
+  "3866": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": false,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Bússola Rúnica"
+  },
+  "3867": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": false,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Dádiva dos Mundos"
+  },
+  "3869": {
+   "from": [
+    "3867"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Oposição Celestial"
+  },
+  "3870": {
+   "from": [
+    "3867"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Criassonhos"
+  },
+  "3871": {
+   "from": [
+    "3867"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Invadomínio de Zaz'Zak"
+  },
+  "3876": {
+   "from": [
+    "3867"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Trenó do Solstício"
+  },
+  "3877": {
+   "from": [
+    "3867"
+   ],
+   "gold": {
+    "base": 0,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Canção de Sangue"
+  },
+  "3901": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "<rarityLegendary>Disparar à Vontade</rarityLegendary><br><subtitleLeft><silver>500 Serpentes de Prata</silver></subtitleLeft>"
+  },
+  "3902": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "<rarityLegendary>Filha da Morte</rarityLegendary><br><subtitleLeft><silver>500 Serpentes de Prata</silver></subtitleLeft>"
+  },
+  "3903": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "<rarityLegendary>Levantar o Moral</rarityLegendary><br><subtitleLeft><silver>500 Serpentes de Prata</silver></subtitleLeft>"
+  },
+  "3916": {
+   "from": [
+    "1052"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Orbe do Oblívio"
+  },
+  "4003": {
+   "from": [
+    "6690",
+    "1036"
+   ],
+   "gold": {
+    "base": 475,
+    "purchasable": true,
+    "sell": 1120,
+    "total": 1600
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Salva-Vidas"
+  },
+  "4004": {
+   "from": [
+    "4003",
+    "3134"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Alfanje Espectral"
+  },
+  "4005": {
+   "from": [
+    "1052",
+    "4642",
+    "1052"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Mandato Imperial"
+  },
+  "4401": {
+   "from": [
+    "1057",
+    "1028",
+    "3066"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Força da Natureza"
+  },
+  "4628": {
+   "from": [
+    "3108",
+    "3108",
+    "1052"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Foco do Horizonte"
+  },
+  "4629": {
+   "from": [
+    "3067",
+    "3113",
+    "3108"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Ímpeto Cósmico"
+  },
+  "4630": {
+   "from": [
+    "1052"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Joia da Ruína"
+  },
+  "4632": {
+   "from": [
+    "1052",
+    "1033",
+    "1052"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 1120,
+    "total": 1600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Barreira Verdejante"
+  },
+  "4633": {
+   "from": [
+    "3147",
+    "3108"
+   ],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Criafendas"
+  },
+  "4635": {
+   "from": [
+    "1028",
+    "1052"
+   ],
+   "gold": {
+    "base": 465,
+    "purchasable": false,
+    "sell": 886,
+    "total": 1265
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Olhar Sanguessuga"
+  },
+  "4636": {
+   "from": [
+    "3145",
+    "3108"
+   ],
+   "gold": {
+    "base": 815,
+    "purchasable": false,
+    "sell": 1936,
+    "total": 2765
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Colhedor Noturno"
+  },
+  "4637": {
+   "from": [
+    "1026",
+    "1011",
+    "1052"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": false,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Abraço Demoníaco"
+  },
+  "4641": {
+   "from": [],
+   "gold": {
+    "base": 350,
+    "purchasable": false,
+    "sell": 140,
+    "total": 350
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Pedra-vigia Inspiradora"
+  },
+  "4642": {
+   "from": [
+    "1004",
+    "1052",
+    "2022"
+   ],
+   "gold": {
+    "base": 50,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Espelho de Bandópolis"
+  },
+  "4645": {
+   "from": [
+    "3145",
+    "1058"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Chama Sombria"
+  },
+  "4646": {
+   "from": [
+    "3145",
+    "3113"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Ápice da Tempestade"
+  },
+  "6032": {
+   "from": [],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 375,
+    "total": 750
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Atributo adicional"
+  },
+  "6333": {
+   "from": [
+    "2019",
+    "1037",
+    "3133"
+   ],
+   "gold": {
+    "base": 275,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Dança da Morte"
+  },
+  "6609": {
+   "from": [
+    "3123",
+    "1011",
+    "3133"
+   ],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Serrespada Quimiopunk"
+  },
+  "6610": {
+   "from": [
+    "2021",
+    "3133"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Céu Dividido"
+  },
+  "6616": {
+   "from": [
+    "3108",
+    "3114"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1575,
+    "total": 2250
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cajado Aquafluxo"
+  },
+  "6617": {
+   "from": [
+    "3067",
+    "4642"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Regenerador de Pedra Lunar"
+  },
+  "6620": {
+   "from": [
+    "3067",
+    "4642"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Ecos de Helia"
+  },
+  "6621": {
+   "from": [
+    "1026",
+    "3114",
+    "3114"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Auronúcleo"
+  },
+  "663039": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1250,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Acerto de Contas de Atma"
+  },
+  "663056": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Coroa do Rei Demoníaco"
+  },
+  "663058": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Escudo de Rocha Fundida"
+  },
+  "663059": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Manto da Noite Estrelada"
+  },
+  "663060": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Espada do Divino"
+  },
+  "663064": {
+   "from": [],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 0,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Talismã da Ascensão de Veigar"
+  },
+  "6631": {
+   "from": [
+    "3077",
+    "3044",
+    "1042"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Quebrapassos"
+  },
+  "663146": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1250,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Pistola Laminar Hextec"
+  },
+  "663172": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1250,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Zéfiro"
+  },
+  "663193": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Placa Gargolítica"
+  },
+  "664011": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1250,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Espada da Alvorada Florescente"
+  },
+  "664403": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": false,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Espátula Dourada"
+  },
+  "664644": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Coroa da Rainha Despedaçada"
+  },
+  "6653": {
+   "from": [
+    "3147",
+    "2508"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Tormento de Liandry"
+  },
+  "6655": {
+   "from": [
+    "3802",
+    "3145"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1925,
+    "total": 2750
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Eco de Luden"
+  },
+  "6657": {
+   "from": [
+    "1026",
+    "3803"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Bastão das Eras"
+  },
+  "6660": {
+   "from": [
+    "1028",
+    "2022"
+   ],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Brasa de Bami"
+  },
+  "6662": {
+   "from": [
+    "3057",
+    "1028",
+    "1031"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Manopla dos Glacinatas"
+  },
+  "6664": {
+   "from": [
+    "6660",
+    "3211"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Resplendor Vazio"
+  },
+  "6665": {
+   "from": [
+    "1011",
+    "1031",
+    "1057"
+   ],
+   "gold": {
+    "base": 650,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Jak'Sho, o Inconstante"
+  },
+  "6670": {
+   "from": [
+    "1036",
+    "1018"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 910,
+    "total": 1300
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Aljava Vespertina"
+  },
+  "667101": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 0,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Lâmina do Apostador"
+  },
+  "667109": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Crueldade"
+  },
+  "667112": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1000,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Comecarne"
+  },
+  "6672": {
+   "from": [
+    "6690",
+    "3051",
+    "1043"
+   ],
+   "gold": {
+    "base": 325,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Mata-Cráquens"
+  },
+  "6673": {
+   "from": [
+    "1037",
+    "6670"
+   ],
+   "gold": {
+    "base": 825,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Arco-escudo Imortal"
+  },
+  "6675": {
+   "from": [
+    "1042",
+    "3086",
+    "1042"
+   ],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Adaga Oscilante Navori"
+  },
+  "6676": {
+   "from": [
+    "1037",
+    "3134",
+    "1018"
+   ],
+   "gold": {
+    "base": 525,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "A Coletora"
+  },
+  "667666": {
+   "from": [
+    "1037",
+    "3134",
+    "1018"
+   ],
+   "gold": {
+    "base": 525,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "A Coletora"
+  },
+  "6690": {
+   "from": [
+    "1036"
+   ],
+   "gold": {
+    "base": 425,
+    "purchasable": true,
+    "sell": 543,
+    "total": 775
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Retriz"
+  },
+  "6692": {
+   "from": [
+    "3133",
+    "1037",
+    "1036"
+   ],
+   "gold": {
+    "base": 625,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Eclipse"
+  },
+  "6693": {
+   "from": [
+    "3134",
+    "3133"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": false,
+    "sell": 1995,
+    "total": 2850
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Garra do Espreitador"
+  },
+  "6694": {
+   "from": [
+    "3133",
+    "3035"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Rancor de Serylda"
+  },
+  "6695": {
+   "from": [
+    "3134",
+    "1037"
+   ],
+   "gold": {
+    "base": 625,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Presa da Serpente"
+  },
+  "6696": {
+   "from": [
+    "2020",
+    "3133"
+   ],
+   "gold": {
+    "base": 363,
+    "purchasable": true,
+    "sell": 1925,
+    "total": 2750
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Arco do Axioma"
+  },
+  "6697": {
+   "from": [
+    "3134",
+    "3133"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": true,
+    "12": false
+   },
+   "name": "Húbris"
+  },
+  "6698": {
+   "from": [
+    "3077",
+    "2020"
+   ],
+   "gold": {
+    "base": 313,
+    "purchasable": true,
+    "sell": 1995,
+    "total": 2850
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Hidra Profana"
+  },
+  "6699": {
+   "from": [
+    "2020",
+    "1036",
+    "1036"
+   ],
+   "gold": {
+    "base": 963,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Cicloespada Voltaica"
+  },
+  "6701": {
+   "from": [
+    "1037",
+    "3134",
+    "1036"
+   ],
+   "gold": {
+    "base": 475,
+    "purchasable": false,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Oportunidade"
+  },
+  "7050": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Gangplank Placeholder"
+  },
+  "771001": {
+   "from": [],
+   "gold": {
+    "base": 325,
+    "purchasable": true,
+    "sell": 228,
+    "total": 325
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Botas da Velocidade"
+  },
+  "771004": {
+   "from": [],
+   "gold": {
+    "base": 180,
+    "purchasable": true,
+    "sell": 126,
+    "total": 180
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Amuleto da Fada"
+  },
+  "771006": {
+   "from": [],
+   "gold": {
+    "base": 180,
+    "purchasable": true,
+    "sell": 126,
+    "total": 180
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Pérola do Rejuvenescimento"
+  },
+  "771011": {
+   "from": [],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cinto do Gigante"
+  },
+  "771018": {
+   "from": [],
+   "gold": {
+    "base": 730,
+    "purchasable": true,
+    "sell": 511,
+    "total": 730
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Capa da Agilidade"
+  },
+  "771026": {
+   "from": [],
+   "gold": {
+    "base": 860,
+    "purchasable": true,
+    "sell": 602,
+    "total": 860
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Varinha Explosiva"
+  },
+  "771027": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cristal de Safira"
+  },
+  "771028": {
+   "from": [],
+   "gold": {
+    "base": 475,
+    "purchasable": true,
+    "sell": 333,
+    "total": 475
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cristal de Rubi"
+  },
+  "771029": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 210,
+    "total": 300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Couraça de Pano"
+  },
+  "771031": {
+   "from": [],
+   "gold": {
+    "base": 720,
+    "purchasable": true,
+    "sell": 504,
+    "total": 720
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cota de Malha"
+  },
+  "771033": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Manto Anula-Magia"
+  },
+  "771036": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada Longa"
+  },
+  "771037": {
+   "from": [],
+   "gold": {
+    "base": 875,
+    "purchasable": true,
+    "sell": 613,
+    "total": 875
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Picareta"
+  },
+  "771038": {
+   "from": [],
+   "gold": {
+    "base": 1550,
+    "purchasable": true,
+    "sell": 1085,
+    "total": 1550
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada G. p. C."
+  },
+  "771039": {
+   "from": [],
+   "gold": {
+    "base": 300,
+    "purchasable": true,
+    "sell": 120,
+    "total": 300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Machete do Caçador"
+  },
+  "771042": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Adaga"
+  },
+  "771043": {
+   "from": [],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Arco Recurvo"
+  },
+  "771051": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 280,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Luvas da Pancadaria"
+  },
+  "771052": {
+   "from": [],
+   "gold": {
+    "base": 435,
+    "purchasable": true,
+    "sell": 305,
+    "total": 435
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Tomo Amplificador"
+  },
+  "771053": {
+   "from": [
+    "771036"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 560,
+    "total": 800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cetro Vampírico"
+  },
+  "771054": {
+   "from": [],
+   "gold": {
+    "base": 440,
+    "purchasable": true,
+    "sell": 176,
+    "total": 440
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Escudo de Doran"
+  },
+  "771055": {
+   "from": [],
+   "gold": {
+    "base": 475,
+    "purchasable": true,
+    "sell": 190,
+    "total": 475
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Lâmina de Doran"
+  },
+  "771056": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Anel de Doran"
+  },
+  "771057": {
+   "from": [],
+   "gold": {
+    "base": 720,
+    "purchasable": true,
+    "sell": 504,
+    "total": 720
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Capa Negatron"
+  },
+  "771058": {
+   "from": [],
+   "gold": {
+    "base": 1600,
+    "purchasable": true,
+    "sell": 1120,
+    "total": 1600
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Bastão Desnecessariamente Grande"
+  },
+  "771080": {
+   "from": [
+    "771039",
+    "771006",
+    "771004"
+   ],
+   "gold": {
+    "base": 40,
+    "purchasable": true,
+    "sell": 490,
+    "total": 700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Pedra Espiritual"
+  },
+  "771500": {
+   "from": [],
+   "gold": {
+    "base": 0,
+    "purchasable": false,
+    "sell": 0,
+    "total": 0
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Projétil Perfurante"
+  },
+  "772001": {
+   "from": [],
+   "gold": {
+    "base": 60,
+    "purchasable": false,
+    "sell": 42,
+    "total": 60
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Retorno"
+  },
+  "772004": {
+   "from": [],
+   "gold": {
+    "base": 35,
+    "purchasable": true,
+    "sell": 14,
+    "total": 35
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Poção de Mana"
+  },
+  "772009": {
+   "from": [],
+   "gold": {
+    "base": 35,
+    "purchasable": false,
+    "sell": 2,
+    "total": 35
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Biscoito do Rejuvenescimento Total"
+  },
+  "772037": {
+   "from": [],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 140,
+    "total": 350
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Elixir da Fortitude"
+  },
+  "772038": {
+   "from": [],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 100,
+    "total": 250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Elixir da Agilidade"
+  },
+  "772039": {
+   "from": [],
+   "gold": {
+    "base": 250,
+    "purchasable": true,
+    "sell": 100,
+    "total": 250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Elixir do Brilhantismo"
+  },
+  "772041": {
+   "from": [],
+   "gold": {
+    "base": 345,
+    "purchasable": true,
+    "sell": 138,
+    "total": 345
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Frasco Cristalino"
+  },
+  "772042": {
+   "from": [],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 160,
+    "total": 400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Elixir do Oráculo"
+  },
+  "773001": {
+   "from": [
+    "771026",
+    "771057"
+   ],
+   "gold": {
+    "base": 980,
+    "purchasable": true,
+    "sell": 1792,
+    "total": 2560
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cetro Abissal"
+  },
+  "773003": {
+   "from": [
+    "773070",
+    "771026"
+   ],
+   "gold": {
+    "base": 1140,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cajado do Arcanjo"
+  },
+  "773004": {
+   "from": [
+    "773070",
+    "771036"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 1470,
+    "total": 2100
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Manamune"
+  },
+  "773005": {
+   "from": [
+    "771031",
+    "773093"
+   ],
+   "gold": {
+    "base": 780,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Empalador de Atma"
+  },
+  "773006": {
+   "from": [
+    "771001",
+    "771042"
+   ],
+   "gold": {
+    "base": 175,
+    "purchasable": true,
+    "sell": 630,
+    "total": 900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Grevas do Berserker"
+  },
+  "773009": {
+   "from": [
+    "771001"
+   ],
+   "gold": {
+    "base": 675,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Botas da Rapidez"
+  },
+  "773010": {
+   "from": [
+    "771028",
+    "771027"
+   ],
+   "gold": {
+    "base": 325,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Catalisador da Proteção"
+  },
+  "773020": {
+   "from": [
+    "771001"
+   ],
+   "gold": {
+    "base": 775,
+    "purchasable": true,
+    "sell": 770,
+    "total": 1100
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Sapatos do Feiticeiro"
+  },
+  "773022": {
+   "from": [
+    "771028",
+    "771011",
+    "771037"
+   ],
+   "gold": {
+    "base": 950,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Malho Congelado"
+  },
+  "773023": {
+   "from": [
+    "773098",
+    "771033"
+   ],
+   "gold": {
+    "base": 735,
+    "purchasable": true,
+    "sell": 1330,
+    "total": 1900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Sombras Gêmeas"
+  },
+  "773024": {
+   "from": [
+    "771031",
+    "771027"
+   ],
+   "gold": {
+    "base": 230,
+    "purchasable": true,
+    "sell": 945,
+    "total": 1350
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Proteção Glacial"
+  },
+  "773025": {
+   "from": [
+    "773057",
+    "773024"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 2275,
+    "total": 3250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Manopla dos Glacinatas"
+  },
+  "773026": {
+   "from": [
+    "771057",
+    "771031"
+   ],
+   "gold": {
+    "base": 1310,
+    "purchasable": true,
+    "sell": 1100,
+    "total": 2750
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Anjo Guardião"
+  },
+  "773027": {
+   "from": [
+    "773010",
+    "771026"
+   ],
+   "gold": {
+    "base": 740,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Bastão das Eras"
+  },
+  "773028": {
+   "from": [
+    "771004",
+    "771033",
+    "771004"
+   ],
+   "gold": {
+    "base": 120,
+    "purchasable": true,
+    "sell": 616,
+    "total": 880
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cálice da Harmonia"
+  },
+  "773031": {
+   "from": [
+    "771038",
+    "771037",
+    "771018"
+   ],
+   "gold": {
+    "base": 645,
+    "purchasable": true,
+    "sell": 2660,
+    "total": 3800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Gume do Infinito"
+  },
+  "773035": {
+   "from": [
+    "771036",
+    "771037"
+   ],
+   "gold": {
+    "base": 1025,
+    "purchasable": true,
+    "sell": 1610,
+    "total": 2300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Último Sussurro"
+  },
+  "773037": {
+   "from": [
+    "771004"
+   ],
+   "gold": {
+    "base": 120,
+    "purchasable": true,
+    "sell": 210,
+    "total": 300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Manipulador de Mana"
+  },
+  "773040": {
+   "from": [],
+   "gold": {
+    "base": 2700,
+    "purchasable": false,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Abraço de Seraph"
+  },
+  "773041": {
+   "from": [
+    "771052"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 865,
+    "total": 1235
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Ladrão de Almas de Mejai"
+  },
+  "773042": {
+   "from": [],
+   "gold": {
+    "base": 2100,
+    "purchasable": false,
+    "sell": 1470,
+    "total": 2100
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Muramana"
+  },
+  "773044": {
+   "from": [
+    "771028",
+    "771036"
+   ],
+   "gold": {
+    "base": 375,
+    "purchasable": true,
+    "sell": 875,
+    "total": 1250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Fago"
+  },
+  "773046": {
+   "from": [
+    "771018",
+    "773086",
+    "771042"
+   ],
+   "gold": {
+    "base": 495,
+    "purchasable": true,
+    "sell": 1960,
+    "total": 2800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Dançarina Fantasma"
+  },
+  "773047": {
+   "from": [
+    "771001",
+    "771029"
+   ],
+   "gold": {
+    "base": 375,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Tabi Ninja"
+  },
+  "773050": {
+   "from": [
+    "773067",
+    "771053"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 1785,
+    "total": 2550
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Fervor de Stark"
+  },
+  "773052": {
+   "from": [
+    "771029",
+    "771006"
+   ],
+   "gold": {
+    "base": 170,
+    "purchasable": true,
+    "sell": 455,
+    "total": 650
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Emblema de Bravura"
+  },
+  "773056": {
+   "from": [
+    "771028",
+    "773096",
+    "771026"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1985,
+    "total": 2835
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Mergulhadora"
+  },
+  "773057": {
+   "from": [
+    "771052",
+    "771027"
+   ],
+   "gold": {
+    "base": 365,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Fulgor"
+  },
+  "773060": {
+   "from": [
+    "773108",
+    "773052"
+   ],
+   "gold": {
+    "base": 890,
+    "purchasable": true,
+    "sell": 1652,
+    "total": 2360
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Flâmula de Comando"
+  },
+  "773063": {
+   "from": [
+    "773037",
+    "773067",
+    "771028"
+   ],
+   "gold": {
+    "base": 660,
+    "purchasable": true,
+    "sell": 1600,
+    "total": 2285
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Proteção da Alma"
+  },
+  "773064": {
+   "from": [
+    "771006",
+    "771006",
+    "771033",
+    "771057"
+   ],
+   "gold": {
+    "base": 1130,
+    "purchasable": true,
+    "sell": 1827,
+    "total": 2610
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Força da Natureza"
+  },
+  "773065": {
+   "from": [
+    "773211",
+    "773067"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 1925,
+    "total": 2750
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Semblante Espiritual"
+  },
+  "773067": {
+   "from": [
+    "771028"
+   ],
+   "gold": {
+    "base": 375,
+    "purchasable": true,
+    "sell": 595,
+    "total": 850
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Gema Ardente"
+  },
+  "773068": {
+   "from": [
+    "771031",
+    "771011"
+   ],
+   "gold": {
+    "base": 930,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Capa de Fogo Solar"
+  },
+  "773069": {
+   "from": [
+    "773067",
+    "773096"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 1470,
+    "total": 2100
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Devaneio de Shurelya"
+  },
+  "773070": {
+   "from": [
+    "771027",
+    "771004"
+   ],
+   "gold": {
+    "base": 120,
+    "purchasable": true,
+    "sell": 490,
+    "total": 700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Lágrima da Deusa"
+  },
+  "773071": {
+   "from": [
+    "773134",
+    "771028"
+   ],
+   "gold": {
+    "base": 1188,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "O Cutelo Negro"
+  },
+  "773072": {
+   "from": [
+    "771038",
+    "771053"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "A Sedenta por Sangue"
+  },
+  "773074": {
+   "from": [
+    "773077",
+    "771053"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Hidra Raivosa"
+  },
+  "773075": {
+   "from": [
+    "771029",
+    "771031"
+   ],
+   "gold": {
+    "base": 1180,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Armadura de Espinhos"
+  },
+  "773077": {
+   "from": [
+    "771037",
+    "771036",
+    "771006",
+    "771006"
+   ],
+   "gold": {
+    "base": 265,
+    "purchasable": true,
+    "sell": 1330,
+    "total": 1900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Tiamat"
+  },
+  "773078": {
+   "from": [
+    "773086",
+    "773057",
+    "773044"
+   ],
+   "gold": {
+    "base": 3,
+    "purchasable": true,
+    "sell": 2540,
+    "total": 3628
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Força da Trindade"
+  },
+  "773082": {
+   "from": [
+    "771029",
+    "771029"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Carapaça do Vigia"
+  },
+  "773083": {
+   "from": [
+    "771011",
+    "773132",
+    "771006"
+   ],
+   "gold": {
+    "base": 995,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Armadura de Warmog"
+  },
+  "773084": {
+   "from": [
+    "773096",
+    "773010"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 1575,
+    "total": 2250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Medalhão Enervante"
+  },
+  "773085": {
+   "from": [
+    "771042",
+    "771043",
+    "771042"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1680,
+    "total": 2400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Furacão de Runaan"
+  },
+  "773086": {
+   "from": [
+    "771051",
+    "771042"
+   ],
+   "gold": {
+    "base": 375,
+    "purchasable": true,
+    "sell": 823,
+    "total": 1175
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Zelo"
+  },
+  "773087": {
+   "from": [
+    "773086",
+    "773093"
+   ],
+   "gold": {
+    "base": 525,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Faca de Statikk"
+  },
+  "773089": {
+   "from": [
+    "771058",
+    "771026"
+   ],
+   "gold": {
+    "base": 840,
+    "purchasable": true,
+    "sell": 2310,
+    "total": 3300
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Capuz da Morte de Rabadon"
+  },
+  "773091": {
+   "from": [
+    "771043",
+    "771033"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1505,
+    "total": 2150
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Limite da Razão"
+  },
+  "773092": {
+   "from": [
+    "773098",
+    "773037"
+   ],
+   "gold": {
+    "base": 535,
+    "purchasable": true,
+    "sell": 640,
+    "total": 1600
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Estilhaço de Gelo Verdadeiro"
+  },
+  "773093": {
+   "from": [
+    "771051"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 320,
+    "total": 800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada Avarenta"
+  },
+  "773096": {
+   "from": [
+    "771004",
+    "771006"
+   ],
+   "gold": {
+    "base": 340,
+    "purchasable": true,
+    "sell": 280,
+    "total": 700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Pedra Filosofal"
+  },
+  "773098": {
+   "from": [
+    "771052"
+   ],
+   "gold": {
+    "base": 330,
+    "purchasable": true,
+    "sell": 536,
+    "total": 765
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Adaga da Sorte"
+  },
+  "773100": {
+   "from": [
+    "773057",
+    "771026"
+   ],
+   "gold": {
+    "base": 940,
+    "purchasable": true,
+    "sell": 2100,
+    "total": 3000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Perdição de Lich"
+  },
+  "773101": {
+   "from": [
+    "771042",
+    "771042"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 875,
+    "total": 1250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Ferrão"
+  },
+  "773102": {
+   "from": [
+    "773211",
+    "771028"
+   ],
+   "gold": {
+    "base": 875,
+    "purchasable": true,
+    "sell": 1925,
+    "total": 2750
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Véu da Banshee"
+  },
+  "773105": {
+   "from": [
+    "773132",
+    "771029",
+    "771033"
+   ],
+   "gold": {
+    "base": 625,
+    "purchasable": true,
+    "sell": 1505,
+    "total": 2150
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Égide da Legião"
+  },
+  "773106": {
+   "from": [
+    "771039",
+    "771029"
+   ],
+   "gold": {
+    "base": 100,
+    "purchasable": true,
+    "sell": 490,
+    "total": 700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Navalhas de Madred"
+  },
+  "773107": {
+   "from": [
+    "771033",
+    "773105"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 2065,
+    "total": 2950
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Baluarte Rúnico"
+  },
+  "773108": {
+   "from": [
+    "771052"
+   ],
+   "gold": {
+    "base": 385,
+    "purchasable": true,
+    "sell": 574,
+    "total": 820
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Códex Demoníaco"
+  },
+  "773109": {
+   "from": [
+    "773106",
+    "771037",
+    "771043"
+   ],
+   "gold": {
+    "base": 1325,
+    "purchasable": true,
+    "sell": 2660,
+    "total": 3800
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Navalha Sangrenta de Madred"
+  },
+  "773110": {
+   "from": [
+    "773024",
+    "773082"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Coração Congelado"
+  },
+  "773111": {
+   "from": [
+    "771001",
+    "771033"
+   ],
+   "gold": {
+    "base": 475,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Passos de Mercúrio"
+  },
+  "773114": {
+   "from": [
+    "771042",
+    "771042",
+    "771052"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 1425,
+    "total": 2035
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Doença"
+  },
+  "773115": {
+   "from": [
+    "773101",
+    "773108"
+   ],
+   "gold": {
+    "base": 430,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Dente de Na'Shor"
+  },
+  "773116": {
+   "from": [
+    "771026",
+    "771052",
+    "771011"
+   ],
+   "gold": {
+    "base": 605,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cetro de Cristal de Rylai"
+  },
+  "773117": {
+   "from": [
+    "771001"
+   ],
+   "gold": {
+    "base": 675,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Botas da Mobilidade"
+  },
+  "773123": {
+   "from": [
+    "773093",
+    "771036"
+   ],
+   "gold": {
+    "base": 700,
+    "purchasable": true,
+    "sell": 1330,
+    "total": 1900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Chamado do Carrasco"
+  },
+  "773124": {
+   "from": [
+    "771026",
+    "771037"
+   ],
+   "gold": {
+    "base": 865,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Lâmina da Fúria de Guinsoo"
+  },
+  "773128": {
+   "from": [
+    "771058",
+    "773108"
+   ],
+   "gold": {
+    "base": 680,
+    "purchasable": true,
+    "sell": 2170,
+    "total": 3100
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Sufocamento Ígneo"
+  },
+  "773131": {
+   "from": [
+    "771043",
+    "771042"
+   ],
+   "gold": {
+    "base": 850,
+    "purchasable": true,
+    "sell": 1505,
+    "total": 2150
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada do Divino"
+  },
+  "773132": {
+   "from": [
+    "771028"
+   ],
+   "gold": {
+    "base": 350,
+    "purchasable": true,
+    "sell": 413,
+    "total": 825
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Coração de Ouro"
+  },
+  "773134": {
+   "from": [
+    "771036",
+    "771036"
+   ],
+   "gold": {
+    "base": 537,
+    "purchasable": true,
+    "sell": 936,
+    "total": 1337
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Brutalizador"
+  },
+  "773135": {
+   "from": [
+    "771026",
+    "771052"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 1607,
+    "total": 2295
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cajado do Vazio"
+  },
+  "773136": {
+   "from": [
+    "771028",
+    "771052"
+   ],
+   "gold": {
+    "base": 575,
+    "purchasable": true,
+    "sell": 1040,
+    "total": 1485
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Máscara Assustadora"
+  },
+  "773138": {
+   "from": [
+    "771028"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 893,
+    "total": 1275
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Leviatã"
+  },
+  "773139": {
+   "from": [
+    "773140",
+    "771038"
+   ],
+   "gold": {
+    "base": 600,
+    "purchasable": true,
+    "sell": 2590,
+    "total": 3700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cimitarra Mercurial"
+  },
+  "773140": {
+   "from": [
+    "771057"
+   ],
+   "gold": {
+    "base": 830,
+    "purchasable": true,
+    "sell": 1085,
+    "total": 1550
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Bandana de Mercúrio"
+  },
+  "773141": {
+   "from": [
+    "771036"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada do Oculto"
+  },
+  "773142": {
+   "from": [
+    "773093",
+    "773134"
+   ],
+   "gold": {
+    "base": 563,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Lâmina Fantasma de Youmuu"
+  },
+  "773143": {
+   "from": [
+    "773132",
+    "773082",
+    "771029"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 2188,
+    "total": 3125
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Presságio de Randuin"
+  },
+  "773144": {
+   "from": [
+    "771053",
+    "771036"
+   ],
+   "gold": {
+    "base": 200,
+    "purchasable": true,
+    "sell": 980,
+    "total": 1400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Alfanje das Águas de Sentina"
+  },
+  "773145": {
+   "from": [
+    "771052",
+    "771052"
+   ],
+   "gold": {
+    "base": 330,
+    "purchasable": true,
+    "sell": 840,
+    "total": 1200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Revólver Hextec"
+  },
+  "773146": {
+   "from": [
+    "773145",
+    "773144"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": true,
+    "sell": 2380,
+    "total": 3400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Pistola Laminar Hextec"
+  },
+  "773151": {
+   "from": [
+    "773136",
+    "771052"
+   ],
+   "gold": {
+    "base": 980,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Tormento de Liandry"
+  },
+  "773152": {
+   "from": [
+    "773098",
+    "773145"
+   ],
+   "gold": {
+    "base": 585,
+    "purchasable": true,
+    "sell": 1785,
+    "total": 2550
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Vontade dos Anciões"
+  },
+  "773153": {
+   "from": [
+    "771042",
+    "773144",
+    "771042"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espada do Rei Destruído"
+  },
+  "773154": {
+   "from": [
+    "773106",
+    "771043"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 1400,
+    "total": 2000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Lanterna de Wriggle"
+  },
+  "773155": {
+   "from": [
+    "771036",
+    "771033"
+   ],
+   "gold": {
+    "base": 550,
+    "purchasable": true,
+    "sell": 945,
+    "total": 1350
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Hexdrinker"
+  },
+  "773156": {
+   "from": [
+    "773155",
+    "771037"
+   ],
+   "gold": {
+    "base": 975,
+    "purchasable": true,
+    "sell": 2240,
+    "total": 3200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Mandíbula de Malmortius"
+  },
+  "773157": {
+   "from": [
+    "773191",
+    "771058"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 2282,
+    "total": 3260
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Ampulheta de Zhonya"
+  },
+  "773158": {
+   "from": [
+    "771001"
+   ],
+   "gold": {
+    "base": 675,
+    "purchasable": true,
+    "sell": 700,
+    "total": 1000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Botas Ionianas da Lucidez"
+  },
+  "773160": {
+   "from": [],
+   "gold": {
+    "base": 2000,
+    "purchasable": false,
+    "sell": 1400,
+    "total": 2000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Labareda Selvagem"
+  },
+  "773165": {
+   "from": [
+    "773098",
+    "771004",
+    "773108"
+   ],
+   "gold": {
+    "base": 435,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Morellonomicon"
+  },
+  "773172": {
+   "from": [
+    "773101",
+    "771037"
+   ],
+   "gold": {
+    "base": 725,
+    "purchasable": true,
+    "sell": 1995,
+    "total": 2850
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Zéfiro"
+  },
+  "773173": {
+   "from": [
+    "773096"
+   ],
+   "gold": {
+    "base": 400,
+    "purchasable": true,
+    "sell": 440,
+    "total": 1100
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Milagre de Eleisa"
+  },
+  "773174": {
+   "from": [
+    "773108",
+    "773028"
+   ],
+   "gold": {
+    "base": 900,
+    "purchasable": true,
+    "sell": 1820,
+    "total": 2600
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Jarro de Mana de Shushei"
+  },
+  "773178": {
+   "from": [
+    "771043",
+    "771028"
+   ],
+   "gold": {
+    "base": 575,
+    "purchasable": true,
+    "sell": 1365,
+    "total": 1950
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Centelha Iônica"
+  },
+  "773190": {
+   "from": [
+    "773052",
+    "773132"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1558,
+    "total": 2225
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Medalhão dos Solari de Ferro"
+  },
+  "773191": {
+   "from": [
+    "771029",
+    "771052",
+    "771029"
+   ],
+   "gold": {
+    "base": 125,
+    "purchasable": true,
+    "sell": 812,
+    "total": 1160
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Armaguarda da Caçadora"
+  },
+  "773206": {
+   "from": [
+    "771080",
+    "773145"
+   ],
+   "gold": {
+    "base": 100,
+    "purchasable": true,
+    "sell": 1400,
+    "total": 2000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espírito da Aparição Espectral"
+  },
+  "773207": {
+   "from": [
+    "771080",
+    "773067"
+   ],
+   "gold": {
+    "base": 450,
+    "purchasable": true,
+    "sell": 1400,
+    "total": 2000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espírito do Golem Ancião"
+  },
+  "773209": {
+   "from": [
+    "771080",
+    "771036",
+    "771036"
+   ],
+   "gold": {
+    "base": 500,
+    "purchasable": true,
+    "sell": 1400,
+    "total": 2000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espírito do Lagarto Ancião"
+  },
+  "773211": {
+   "from": [
+    "771028",
+    "771057"
+   ],
+   "gold": {
+    "base": 205,
+    "purchasable": true,
+    "sell": 980,
+    "total": 1400
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Capuz do Espectro"
+  },
+  "773222": {
+   "from": [
+    "773096",
+    "773028"
+   ],
+   "gold": {
+    "base": 920,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Cadinho de Mikael"
+  },
+  "773504": {
+   "from": [
+    "771004",
+    "771004",
+    "771004",
+    "773098"
+   ],
+   "gold": {
+    "base": 895,
+    "purchasable": true,
+    "sell": 1540,
+    "total": 2200
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Turíbulo Ardente"
+  },
+  "773512": {
+   "from": [
+    "771057",
+    "771031",
+    "771006"
+   ],
+   "gold": {
+    "base": 1080,
+    "purchasable": true,
+    "sell": 1890,
+    "total": 2700
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Portal de Zz'Rot"
+  },
+  "773513": {
+   "from": [],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 300,
+    "total": 750
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Núcleo Hex Protótipo"
+  },
+  "773514": {
+   "from": [
+    "773513"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 600,
+    "total": 1500
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Núcleo Hex MK-1"
+  },
+  "773515": {
+   "from": [
+    "773514"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 900,
+    "total": 2250
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Núcleo Hex MK-2"
+  },
+  "773516": {
+   "from": [
+    "773515"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 1200,
+    "total": 3000
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Núcleo Hex Perfeito"
+  },
+  "773517": {
+   "from": [],
+   "gold": {
+    "base": 35,
+    "purchasable": false,
+    "sell": 14,
+    "total": 35
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Gemada"
+  },
+  "773518": {
+   "from": [],
+   "gold": {
+    "base": 35,
+    "purchasable": false,
+    "sell": 14,
+    "total": 35
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Saquinho de chá"
+  },
+  "773519": {
+   "from": [],
+   "gold": {
+    "base": 35,
+    "purchasable": false,
+    "sell": 14,
+    "total": 35
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Docinho"
+  },
+  "773521": {
+   "from": [],
+   "gold": {
+    "base": 35,
+    "purchasable": true,
+    "sell": 4,
+    "total": 35
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Poção de Vida"
+  },
+  "8001": {
+   "from": [
+    "3067",
+    "1011"
+   ],
+   "gold": {
+    "base": 800,
+    "purchasable": false,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Correntes de Anátema"
+  },
+  "8010": {
+   "from": [
+    "3147",
+    "3108"
+   ],
+   "gold": {
+    "base": 750,
+    "purchasable": true,
+    "sell": 2030,
+    "total": 2900
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Maldição Sanguinária"
+  },
+  "8020": {
+   "from": [
+    "3067",
+    "1057"
+   ],
+   "gold": {
+    "base": 1000,
+    "purchasable": true,
+    "sell": 1855,
+    "total": 2650
+   },
+   "maps": {
+    "11": true,
+    "12": true
+   },
+   "name": "Máscara Abissal"
+  },
+  "994403": {
+   "from": [],
+   "gold": {
+    "base": 2500,
+    "purchasable": true,
+    "sell": 1750,
+    "total": 2500
+   },
+   "maps": {
+    "11": false,
+    "12": true
+   },
+   "name": "Espátula Dourada"
+  }
+ },
+ "version": "16.20.1"
+}

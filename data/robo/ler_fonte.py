@@ -30,13 +30,16 @@ import urllib.request
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(os.path.dirname(AQUI))
 sys.path.insert(0, AQUI)
-from lua_tabela import ler_modulo  # noqa: E402
+from lua_tabela import ErroLua, ler_modulo  # noqa: E402
 
 UA = "MontadorDeItens-robo/0.1 (https://brelgo.github.io/montador_de_itens_lol/)"
 URL_VERSOES = "https://ddragon.leagueoflegends.com/api/versions.json"
 URL_WIKI = ("https://wiki.leagueoflegends.com/en-us/api.php?action=query&prop=revisions"
             "&titles=Module:ItemData/data&rvprop=content|ids|timestamp&rvslots=main&format=json&formatversion=2")
 URL_ITEM = "https://ddragon.leagueoflegends.com/cdn/{patch}/data/pt_BR/item.json"
+URL_WIKI_REVISAO = ("https://wiki.leagueoflegends.com/en-us/api.php?action=query&prop=revisions"
+                    "&revids={revid}&rvprop=content|ids|timestamp&rvslots=main&format=json&formatversion=2")
+CATALOGO_MD = os.path.join(RAIZ, "data", "Catalogo_Itens_LoL.md")
 BAIXADO = os.path.join(AQUI, "fonte", "_baixado")
 
 # O nome de cada atributo da wiki no catálogo, com a unidade — é o esquema do
@@ -59,31 +62,40 @@ EFEITOS_COM_NOME = ("pass", "pass2", "pass3", "pass4", "act")
 
 # ---------------------------------------------------------------- baixar
 def baixar(url, nome, offline):
-    caminho = os.path.join(BAIXADO, nome)
+    """Lê do que já foi baixado (--offline) ou da internet — sem gravar nada ainda:
+    quem grava é ler_fontes, depois que as três fontes chegaram (revisão da T74: um
+    item.json que ainda não saiu deixava _baixado com o versions.json novo e o item.json velho)."""
     if offline:
-        with open(caminho, "rb") as f:
+        with open(os.path.join(BAIXADO, nome), "rb") as f:
             return f.read()
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        dado = r.read()
-    os.makedirs(BAIXADO, exist_ok=True)
-    with open(caminho, "wb") as f:
-        f.write(dado)
-    return dado
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.read()
+    except OSError as e:          # HTTPError e URLError são OSError
+        sys.exit("não deu para baixar %s (%s): %s — nada foi gravado" % (nome, url, e))
 
 
 def ler_fontes(offline):
-    versoes = json.loads(baixar(URL_VERSOES, "versions.json", offline))
-    patch = versoes[0]
-    api = json.loads(baixar(URL_WIKI, "itemdata_api.json", offline))
+    brutos = {}
+    brutos["versions.json"] = baixar(URL_VERSOES, "versions.json", offline)
+    patch = json.loads(brutos["versions.json"])[0]
+    brutos["itemdata_api.json"] = baixar(URL_WIKI, "itemdata_api.json", offline)
+    brutos["item_pt_BR.json"] = baixar(URL_ITEM.format(patch=patch), "item_pt_BR.json", offline)
+    api = json.loads(brutos["itemdata_api.json"])
     pagina = api["query"]["pages"][0]
     rev = pagina["revisions"][0]
     lua = rev["slots"]["main"]["content"]
     avisos = []
     wiki = ler_modulo(lua, avisos)
-    ddragon = json.loads(baixar(URL_ITEM.format(patch=patch), "item_pt_BR.json", offline))
-    if offline and ddragon.get("version") != patch:
-        avisos.append("o item.json guardado é do %s, não do %s" % (ddragon.get("version"), patch))
+    ddragon = json.loads(brutos["item_pt_BR.json"])
+    if ddragon.get("version") != patch:
+        sys.exit("o item.json é do %s, e o patch do dia é o %s: nada foi gravado" % (ddragon.get("version"), patch))
+    if not offline:
+        os.makedirs(BAIXADO, exist_ok=True)
+        for nome, dado in brutos.items():
+            with open(os.path.join(BAIXADO, nome), "wb") as f:
+                f.write(dado)
     meta = {
         "patch": patch,
         "lido_em": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -115,8 +127,44 @@ def ler_foto(patch):
 
 
 def contar_por_fora(lua):
-    """Quantas entradas de 1º nível o texto tem, sem o leitor: a conta tem de bater."""
-    return len(re.findall(r'^    \["[^"]+"\]\s*=\s*\{', lua, re.M))
+    """Quantas entradas de 1º nível o texto tem, sem o leitor: a conta tem de bater.
+    Revisão da T74: era uma regex de 4 espaços, e um tab ou um espaço dentro do colchete
+    travava o robô com "leitura pela metade" falso. Agora varre o texto pelas chaves
+    (pulando texto entre aspas, texto longo e comentários) e conta as entradas
+    `[ "Nome" ] = {` na profundidade 1 — a formatação não importa."""
+    i, n, prof, nomes = 0, len(lua), 0, set()
+    while i < n:
+        if lua.startswith("--", i):
+            m = re.match(r"--\[(=*)\[", lua[i:i + 40])
+            if m:
+                fim = lua.find("]" + m.group(1) + "]", i + len(m.group(0)))
+                i = n if fim < 0 else fim + len(m.group(1)) + 2
+            else:
+                fim = lua.find("\n", i)
+                i = n if fim < 0 else fim + 1
+            continue
+        c = lua[i]
+        if c in "\"'":
+            j = i + 1
+            while j < n and lua[j] != c:
+                j += 2 if lua[j] == "\\" else 1
+            i = j + 1
+            continue
+        if c == "[":
+            m = re.match(r"\[(=*)\[", lua[i:i + 40])
+            if m:
+                fim = lua.find("]" + m.group(1) + "]", i + len(m.group(0)))
+                i = n if fim < 0 else fim + len(m.group(1)) + 2
+                continue
+        if c == "{":
+            m = re.search(r'\[\s*"([^"]*)"\s*\]\s*=\s*$', lua[max(0, i - 300):i]) if prof == 1 else None
+            if m:
+                nomes.add(m.group(1))   # 3ª rodada: nomes distintos — uma entrada colada duas vezes é Lua válido (vale a última, e o leitor avisa)
+            prof += 1
+        elif c == "}":
+            prof -= 1
+        i += 1
+    return len(nomes)
 
 
 # ---------------------------------------------------------------- resolver "=>"
@@ -344,7 +392,7 @@ def relatorio(meta, catalogo, wiki, dif, conta, so_no_catalogo, sem_par, faltou,
         L.append("")
     L.append("## O que o robô não compara (e por quê)")
     L.append("")
-    L.append("- **Atributos que só o catálogo tem** (%d): vêm do texto do efeito, não da tabela `stats` da wiki — o robô vê a mudança pelo texto do efeito, na parte 2." % len(so_no_catalogo))
+    L.append("- **Atributos que só o catálogo tem** (%d): não estão nos números da tabela `stats` da wiki — vêm do texto do efeito ou do texto livre `stats.spec` (a Vida ao contato da Abatedora); o robô vê a mudança pelo texto (do efeito ou do `spec`) e a manda para a conferir, na parte 2." % len(so_no_catalogo))
     L.extend("  - %s" % x for x in so_no_catalogo)
     L.append("- **Texto curado** (Mecânica, Ápice, Passiva do Ornn, notas, interações): é de pessoa; o robô só marca \"a conferir\".")
     L.append("- **%d itens da wiki fora do catálogo** (Arena, Nexus Blitz, torres, tropas, os removidos…): o escopo são os 225 do Capítulo 1." % len(fora))
@@ -358,23 +406,208 @@ def relatorio(meta, catalogo, wiki, dif, conta, so_no_catalogo, sem_par, faltou,
     return "\n".join(L)
 
 
+def acao_da_base(existe, rev_da_base, declarada, offline):
+    """O que fazer com a foto base (a do patch do catálogo): "ok", "criar", "refazer" ou
+    "avisar". Ela tem de ser a revisão que o Capítulo 1 registrou no catálogo (3ª rodada da
+    revisão: o robô fotografa o patch novo todo dia, e quando o catálogo subia a foto do dia
+    virava base — de outra revisão; e o catálogo num patch nunca fotografado ficava sem base)."""
+    if not declarada:
+        return "avisar" if existe else "ok"      # 5ª rodada: sem a revisão registrada, a base não se confere — avisa
+    if existe and rev_da_base == declarada:
+        return "ok"
+    if offline:
+        return "avisar" if existe else "ok"
+    return "refazer" if existe else "criar"
+
+
+def base_confere(pagina, wiki, lua, catalogo):
+    """A revisão que vai virar base é mesmo o módulo, lido inteiro, com os itens do catálogo?
+    ("" = é). 4ª rodada: um número trocado no .md (o Capítulo 1 cita revisões de várias
+    páginas lado a lado) virava base de outra página — ou derrubava o robô todo dia."""
+    if (pagina or {}).get("title") != "Module:ItemData/data":
+        return "é da página %r, não do Module:ItemData/data" % (pagina or {}).get("title")
+    if contar_por_fora(lua) != len(wiki):
+        return "foi lida pela metade (%d de %d entradas)" % (len(wiki), contar_por_fora(lua))
+    nomes = {i.get("wikiName") or i.get("nameEn") for i in catalogo["items"]}
+    if len(nomes & set(wiki)) < 0.95 * len(nomes):
+        return "casa só %d dos %d itens do catálogo" % (len(nomes & set(wiki)), len(nomes))
+    return ""
+
+
+def garantir_base(catalogo, offline):
+    """A foto base fica certa — ou o robô avisa e segue: a foto do patch novo ainda se faz, e o
+    aplicar_patch se recusa a aplicar com a base errada (4ª rodada: antes, parava tudo)."""
+    patch = catalogo["meta"]["patch"]
+    pasta = os.path.join(AQUI, "fonte", patch)
+    caminho = os.path.join(pasta, "meta.json")
+    existe = os.path.exists(caminho)
+    rev = json.load(open(caminho, encoding="utf-8"))["wiki"]["revid"] if existe else None
+    declarada = revisao_do_capitulo1(patch=patch)
+    acao = acao_da_base(existe, rev, declarada, offline)
+    if acao == "avisar" and not declarada:
+        print("atenção: o Catalogo_Itens_LoL.md não registra (ou registra mais de uma) a revisão do Module:ItemData/data na reconciliação do %s — "
+              "a base (revisão %s) não se confere, e o aplicar_patch não aplica nada até isso se resolver" % (patch, rev))
+    elif acao == "avisar":
+        print("atenção: a foto base do %s é da revisão %s, e o Capítulo 1 registrou a %s (sem rede, não refaço)" % (patch, rev, declarada))
+    if acao not in ("criar", "refazer"):
+        return
+    try:
+        pagina, revisao, lua, wiki, avisos = ler_revisao(declarada)
+    except (ErroLua, KeyError, IndexError, TypeError, ValueError) as e:
+        print("atenção: a revisão %s que o Capítulo 1 registrou para o %s não se lê como o módulo (%s: %s) — a base não foi %s"
+              % (declarada, patch, type(e).__name__, e, "refeita" if existe else "feita"))
+        return
+    problema = base_confere(pagina, wiki, lua, catalogo)
+    if problema:
+        print("atenção: a revisão %s que o Capítulo 1 registrou para o %s %s — a base não foi %s (confira o número no Catalogo_Itens_LoL.md)"
+              % (declarada, patch, problema, "refeita" if existe else "feita"))
+        return
+    ddragon = json.loads(baixar(URL_ITEM.format(patch=patch), "item_pt_BR.json", False))
+    if ddragon.get("version") != patch:
+        print("atenção: o item.json do %s não veio (veio o %s) — a base não foi %s" % (patch, ddragon.get("version"), "refeita" if existe else "feita"))
+        return
+    agora = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    meta = {"patch": patch, "lido_em": agora, "primeira_foto": agora,
+            "wiki": {"pagina": pagina["title"], "revid": revisao["revid"], "revisao_de": revisao["timestamp"],
+                     "sha256": hashlib.sha256(lua.encode("utf-8")).hexdigest(), "itens": len(wiki)},
+            "ddragon": {"versao": ddragon.get("version"), "itens": len(ddragon.get("data", {}))},
+            "avisos_do_leitor": avisos + ["a base é a revisão %s, a que o Capítulo 1 registrou no catálogo" % declarada]}
+    gravar_foto(pasta, wiki, ddragon, meta, base=True)
+    print("a foto base do %s foi %s da revisão %s, a que o Capítulo 1 registrou" % (patch, "refeita" if acao == "refazer" else "feita", declarada))
+
+
+def escrever_relatorio(patch, meta, wiki, catalogo, extrato, por_fora):
+    wiki_r, faltou = resolver(wiki)
+    dif, conta, so_no_catalogo, sem_par, dividida = comparar(catalogo, wiki_r, extrato)
+    texto = relatorio(meta, catalogo, wiki, dif, conta, so_no_catalogo, sem_par, faltou, por_fora, dividida)
+    with open(os.path.join(AQUI, "relatorio_%s.md" % patch), "w", encoding="utf-8", newline="\n") as f:
+        f.write(texto + "\n")
+    total = sum(len(v) for v in dif.values())
+    print("patch %s · wiki rev %s · %d itens lidos · %d a conferir · %d com a fonte dividida · relatório em data/robo/relatorio_%s.md"
+          % (patch, meta["wiki"]["revid"], len(wiki), total, len(dividida), patch))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--offline", action="store_true", help="usa os arquivos já baixados em data/robo/fonte/_baixado")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
+    catalogo = ler_catalogo()
 
+    # 1. a base: a foto do patch do catálogo, da revisão que o Capítulo 1 registrou
+    garantir_base(catalogo, a.offline)
+
+    # 2. a fonte de hoje
     patch, wiki, ddragon, meta, lua = ler_fontes(a.offline)
     por_fora = contar_por_fora(lua)
     if por_fora != len(wiki):
         sys.exit("o leitor leu %d itens e o texto tem %d entradas: leitura pela metade, nada gravado" % (len(wiki), por_fora))
-    wiki_r, faltou = resolver(wiki)
-    catalogo = ler_catalogo()
-    # a conta usa o extrato, o mesmo que fica na foto: o QA a refaz sem rede e tem de dar igual
-    dif, conta, so_no_catalogo, sem_par, dividida = comparar(catalogo, wiki_r, extrato_ddragon(ddragon))
-
     pasta = os.path.join(AQUI, "fonte", patch)
+
+    if patch == catalogo["meta"]["patch"]:
+        # A foto do patch do catálogo é a BASE da regra e não se regrava (revisão da T74: uma
+        # wiki que mudasse antes do Data Dragon trocar o patch apagava a mudança). O relatório
+        # dele sai da própria base: diz o que a foto diz, contra o catálogo de agora.
+        aviso = foto_e_base(pasta, patch, patch, meta)
+        if aviso:
+            print(aviso)
+        if os.path.exists(os.path.join(pasta, "meta.json")):
+            w0, dd0, m0 = ler_foto(patch)
+            escrever_relatorio(patch, m0, w0, catalogo, dd0, m0["wiki"]["itens"])
+            return
+        gravar_foto(pasta, wiki, ddragon, meta, base=True)   # sem a revisão do Capítulo 1 registrada (ou sem rede)
+        escrever_relatorio(patch, meta, wiki, catalogo, extrato_ddragon(ddragon), por_fora)
+        return
+
+    # 3. um patch mais novo: a foto se refaz enquanto a wiki se completa (nem se regrava se nada mudou)
+    if foto_igual(pasta, meta):
+        print("a foto do %s já é desta revisão da wiki e deste Data Dragon: nada a regravar" % patch)
+    else:
+        gravar_foto(pasta, wiki, ddragon, meta)
+    escrever_relatorio(patch, meta, wiki, catalogo, extrato_ddragon(ddragon), por_fora)
+    if not a.offline:
+        gravar_conferido(meta)      # a leitura de hoje viu a wiki nesta revisão (a espera de 24 h conta até aqui)
+
+
+def gravar_conferido(meta):
+    """A última leitura boa que achou a wiki nesta revisão (fica em _baixado, fora do git): a
+    espera de 24 h do aplicar_patch conta até ela, e não até a hora em que ele roda (4ª rodada)."""
+    os.makedirs(BAIXADO, exist_ok=True)
+    with open(os.path.join(BAIXADO, "conferido.json"), "w", encoding="utf-8", newline="\n") as f:
+        json.dump({"patch": meta["patch"], "revid": meta["wiki"]["revid"], "revisao_de": meta["wiki"]["revisao_de"],
+                   "sha256": meta["wiki"]["sha256"], "em": meta["lido_em"]}, f, ensure_ascii=False, indent=1)
+        f.write("\n")
+
+
+def revisao_do_capitulo1(caminho=CATALOGO_MD, patch=None):
+    """A revisão do Module:ItemData/data que o Capítulo 1 usou para pôr o catálogo no `patch`
+    (padrão: o do catálogo): a da seção "# Ajustes — reconciliação do patch 16.21.1 (…)" — a
+    última, se houver duas. 4ª rodada: era a última citação do arquivo inteiro (um Ajuste fora
+    de patch virava a base). 5ª rodada: o parágrafo com "`versions.json` = P" também não serve —
+    a frase aparece nos Ajustes de sessão ("Patch conferido no início da sessão"), e a Fonte pode
+    ficar noutro parágrafo da seção. Nenhuma revisão na seção, ou duas diferentes: None (o robô
+    avisa e não aplica)."""
+    if patch is None:
+        patch = ler_catalogo()["meta"]["patch"]
+    try:
+        texto = open(caminho, encoding="utf-8").read()
+    except OSError:
+        return None
+    secao, dentro = None, False
+    for linha in texto.splitlines():
+        if linha.startswith("# "):
+            dentro = bool(re.match(r"# Ajustes\s*[—–-]\s*reconciliação do patch %s(?!\.?\d)" % re.escape(patch), linha))
+            if dentro:
+                secao = []
+            continue
+        if dentro:
+            secao.append(linha)
+    if secao is None:
+        return None
+    achadas = {int(x) for x in re.findall(r"`Module:ItemData/data` \(revisão (\d+)\)", "\n".join(secao))}
+    return achadas.pop() if len(achadas) == 1 else None
+
+
+def ler_revisao(revid):
+    """Uma revisão antiga do módulo (a que o Capítulo 1 usou), para a foto base nascer dela."""
+    api = json.loads(baixar(URL_WIKI_REVISAO.format(revid=revid), "itemdata_rev_%s.json" % revid, False))
+    pagina = api["query"]["pages"][0]
+    rev = pagina["revisions"][0]
+    lua = rev["slots"]["main"]["content"]
+    avisos = []
+    return pagina, rev, lua, ler_modulo(lua, avisos), avisos
+
+
+def foto_e_base(pasta, patch, patch_do_catalogo, meta):
+    """Devolve o aviso (texto) quando a foto existente é a base e não pode ser regravada; senão ""."""
+    caminho = os.path.join(pasta, "meta.json")
+    if patch != patch_do_catalogo or not os.path.exists(caminho):
+        return ""
+    velha = json.load(open(caminho, encoding="utf-8"))
+    if velha["wiki"]["revid"] == meta["wiki"]["revid"]:
+        return ""
+    return ("a foto do %s é a base da regra (wiki revisão %s) e não foi regravada; a wiki já está na revisão %s — "
+            "o que mudou entra quando o Data Dragon trocar o patch" % (patch, velha["wiki"]["revid"], meta["wiki"]["revid"]))
+
+
+def foto_igual(pasta, meta):
+    """A foto guardada já é desta revisão da wiki e deste Data Dragon (regravar só mudaria a data)."""
+    caminho = os.path.join(pasta, "meta.json")
+    if not os.path.exists(caminho):
+        return False
+    velha = json.load(open(caminho, encoding="utf-8"))
+    return velha["wiki"]["sha256"] == meta["wiki"]["sha256"] and velha["ddragon"]["versao"] == meta["ddragon"]["versao"]
+
+
+def gravar_foto(pasta, wiki, ddragon, meta, base=False):
+    """Grava a foto. A data da primeira foto do patch fica (a espera de 24 h do
+    aplicar_patch conta dela); a base refeita começa de novo."""
     os.makedirs(pasta, exist_ok=True)
+    caminho = os.path.join(pasta, "meta.json")
+    if not base and os.path.exists(caminho):
+        meta["primeira_foto"] = json.load(open(caminho, encoding="utf-8")).get("primeira_foto") or meta.get("lido_em")
+    else:
+        meta.setdefault("primeira_foto", meta.get("lido_em"))
     with open(os.path.join(pasta, "wiki_itemdata.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump(wiki, f, ensure_ascii=False, indent=1, sort_keys=True)
         f.write("\n")
@@ -385,12 +618,6 @@ def main():
     with open(os.path.join(pasta, "ddragon_itens.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump(extrato_ddragon(ddragon), f, ensure_ascii=False, indent=1, sort_keys=True)
         f.write("\n")
-    texto = relatorio(meta, catalogo, wiki, dif, conta, so_no_catalogo, sem_par, faltou, por_fora, dividida)
-    with open(os.path.join(AQUI, "relatorio_%s.md" % patch), "w", encoding="utf-8", newline="\n") as f:
-        f.write(texto + "\n")
-    total = sum(len(v) for v in dif.values())
-    print("patch %s · wiki rev %s · %d itens lidos · %d a conferir · %d com a fonte dividida · relatório em data/robo/relatorio_%s.md"
-          % (patch, meta["wiki"]["revid"], len(wiki), total, len(dividida), patch))
 
 
 if __name__ == "__main__":

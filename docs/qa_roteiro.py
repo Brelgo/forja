@@ -4552,7 +4552,8 @@ def checar_robo(p):
 
     prova = ('-- comentário\nreturn {\n'
              '  ["A"] = { ["id"] = 1, ["n"] = -2.5, ["t"] = "aspas \\"dentro\\" e\\nquebra", ["ok"] = true, ["nada"] = nil,\n'
-             '    ["lista"] = {"x", "y",}, ["sub"] = { k = 3 }, --[[ comentário longo ]] ["id"] = 7 },\n'
+             '    ["lista"] = {"x", "y",}, ["sub"] = { k = 3 }, --[[ comentário longo ]] ["id"] = 7,\n'
+             '    --[=[ com nível: ["fantasma"] = 1, ]] ainda dentro ]=] ["sumiu"] = 1, ["sumiu"] = nil },\n'
              '  ["B"] = { ["stats"] = { ["hp"] = "=>A" }, ["type"] = "=>C" },\n'
              '  ["C"] = { ["type"] = {"Epic"} },\n'
              '  ["X"] = { ["type"] = "=>Y" }, ["Y"] = { ["type"] = "=>X" },\n}\n')
@@ -4567,9 +4568,9 @@ def checar_robo(p):
         return None
     # cortado dentro da tabela e logo depois de um "=": cada um pega uma guarda diferente
     cortado = [corta(prova[:-6]), corta('return { ["a"] = ')]
-    p.conta("robô", "o leitor de Lua lê o que um módulo de dados usa, avisa a chave repetida e para no texto cortado",
-            a == {"id": 7, "n": -2.5, "t": 'aspas "dentro" e\nquebra', "ok": True, "nada": None, "lista": ["x", "y"], "sub": {"k": 3}}
-            and len(avisos) == 1 and "'id'" in avisos[0] and all(cortado),
+    p.conta("robô", "o leitor de Lua lê o que um módulo de dados usa (o comentário com nível, o \"= nil\" que não cria chave), avisa a chave repetida e para no texto cortado",
+            a == {"id": 7, "n": -2.5, "t": 'aspas "dentro" e\nquebra', "ok": True, "lista": ["x", "y"], "sub": {"k": 3}}
+            and len(avisos) == 2 and "'id'" in avisos[0] and "'sumiu'" in avisos[1] and all(cortado),
             "A %s · avisos %s · cortado %r" % (a, avisos, cortado))
 
     r, faltou = lf.resolver(d)
@@ -4577,6 +4578,31 @@ def checar_robo(p):
             r["B"]["type"] == ["Epic"] and r["B"]["stats"]["hp"] == "=>A" and len(faltou) == 3
             and any("B: stats.hp" in x for x in faltou) and sum(1 for x in faltou if x.startswith(("X:", "Y:"))) == 2,
             "B %s · faltou %s" % (r["B"], faltou))
+
+    # a foto do patch do catálogo é a base: com a wiki numa revisão nova, não se regrava
+    import tempfile
+    tmp = tempfile.mkdtemp()
+    json.dump({"wiki": {"revid": 1, "sha256": "a"}, "ddragon": {"versao": "9.9.1"}}, open(os.path.join(tmp, "meta.json"), "w"))
+    nova = {"wiki": {"revid": 2, "sha256": "b"}, "ddragon": {"versao": "9.9.1"}}
+    base = {"do catálogo": bool(lf.foto_e_base(tmp, "9.9.1", "9.9.1", nova)), "de outro patch": bool(lf.foto_e_base(tmp, "9.9.1", "9.8.1", nova)),
+            "mesma revisão": lf.foto_igual(tmp, {"wiki": {"revid": 1, "sha256": "a"}, "ddragon": {"versao": "9.9.1"}})}
+    p.conta("robô", "a foto do patch do catálogo é a base e não se regrava com a wiki numa revisão nova; a de outro patch se refaz; a mesma revisão nem se regrava",
+            base == {"do catálogo": True, "de outro patch": False, "mesma revisão": True}, "%s" % base)
+
+    # a contagem por fora não depende da formatação, e a base é a revisão que o Capítulo 1 registrou
+    com_tab = prova.replace('  ["B"] = {', '\t[ "B" ] = {')
+    contagem = {"prova": lf.contar_por_fora(prova), "com tab": lf.contar_por_fora(com_tab), "lido": len(lua.ler_modulo(com_tab, []))}
+    rev_cap1 = lf.revisao_do_capitulo1()
+    # 3ª rodada: entrada de 1º nível repetida (Lua válido) não trava a contagem; e a base é a revisão do Capítulo 1
+    repetida = prova.replace('  ["C"] = { ["type"] = {"Epic"} },', '  ["C"] = { ["type"] = {"Epic"} },\n  ["C"] = { ["type"] = {"Epic"} },')
+    contagem["repetida"] = (lf.contar_por_fora(repetida), len(lua.ler_modulo(repetida, [])))
+    acoes = [lf.acao_da_base(True, 1, 1, False), lf.acao_da_base(True, 1, 2, False), lf.acao_da_base(False, None, 2, False),
+             lf.acao_da_base(True, 1, 2, True), lf.acao_da_base(False, None, None, False), lf.acao_da_base(True, 1, None, False)]
+    p.conta("robô", "a contagem por fora não depende da formatação (tab, espaço no colchete, entrada repetida); a foto base é a revisão que o Capítulo 1 registrou no catálogo (e se refaz quando não é)",
+            contagem["prova"] == contagem["com tab"] == contagem["lido"] == 5 and contagem["repetida"] == (5, 5) and rev_cap1 is not None
+            and acoes == ["ok", "refazer", "criar", "avisar", "ok", "avisar"]
+            and rev_cap1 == lf.ler_foto(lf.ler_catalogo()["meta"]["patch"])[2]["wiki"]["revid"],
+            "%s · revisão do Capítulo 1 %s · ações da base %s" % (contagem, rev_cap1, acoes))
 
     # as regras, num catálogo de mentira: cada linha é um caso que o catálogo de verdade tem
     cat = {"meta": {"patch": "0.0.1"}, "items": [
@@ -4625,6 +4651,420 @@ def checar_robo(p):
             len(w) == meta["wiki"]["itens"] and meta["patch"] == patch and no_rel == (total, len(cat_real["items"]) - len(sem_par), len(sem_par), len(dividida)),
             "%d itens na foto (meta %s) · conta %s · relatório %s" % (len(w), meta["wiki"]["itens"], (total, len(cat_real["items"]) - len(sem_par), len(sem_par), len(dividida)), no_rel))
 
+
+def checar_robo_regra(p):
+    """F13-T74: a regra de segurança do robô (data/robo/aplicar_patch.py). Sem rede:
+    patches simulados a partir da foto do patch do catálogo, com um caso de cada —
+    o robô aplica só o que mudou na fonte que o catálogo seguia, refaz o que tem
+    fórmula no dado (preço de componente, custo de combinação conferido contra o
+    "base" do Data Dragon, Reembolso) e manda o resto para "a conferir". A revisão
+    adversarial da T74 (24/10/2026) achou casos em que o robô APLICAVA dado errado
+    (a fonte sem o dado virava valor; referência "=>" sem destino; item que saía):
+    cada um tem um caso aqui. E a camada do repositório bate com o catálogo."""
+    print("\n%sROBÔ: A REGRA%s" % (AMARELO, FIM))
+    import importlib, copy
+    pasta = os.path.join(RAIZ, "data", "robo")
+    if pasta not in sys.path:
+        sys.path.insert(0, pasta)
+    lf = importlib.import_module("ler_fonte")
+    ap = importlib.import_module("aplicar_patch")
+    cat = lf.ler_catalogo()
+    w0, dd0, m0 = lf.ler_foto(cat["meta"]["patch"])
+    idc = {i["nameEn"]: str(i["id"]).split(" ")[0] for i in cat["items"]}
+    por_en = {i["nameEn"]: i for i in cat["items"]}
+    def novo():
+        return copy.deepcopy(w0), copy.deepcopy(dd0), copy.deepcopy(m0)
+    def roda(w1, dd1, m1):
+        c = ap.regra(cat, (w0, dd0, m0), (w1, dd1, m1))
+        return c, c["itens"], {(x["slug"], x["campo"]): x["porque"] for x in c["aConferir"]}
+    def soma(slug, delta, w1, dd1, base=True):   # o preço de um item nas duas fontes
+        # base=True: o item ficou mais caro por ele mesmo (o custo de combinação sobe junto,
+        # como no Data Dragon); base=False: ficou mais caro porque um componente subiu
+        it = next(i for i in cat["items"] if i["slug"] == slug)
+        if isinstance(w1[it.get("wikiName") or it["nameEn"]].get("buy"), (int, float)):   # "=>Outro": vem do outro
+            w1[it.get("wikiName") or it["nameEn"]]["buy"] += delta
+        dd1["data"][idc[it["nameEn"]]]["gold"]["total"] += delta
+        if base:
+            dd1["data"][idc[it["nameEn"]]]["gold"]["base"] += delta
+
+    # o patch principal: um caso de cada linha da tabela do docs/robo_de_patch.md
+    w1, dd1, m1 = novo()
+    # os preços sobem como no jogo: o do Quebra-Bastião por ele mesmo (o custo de
+    # combinação sobe junto) e o da Espada Longa, que leva junto toda a árvore acima dela
+    proprio = {"Bastionbreaker": 100, "Long Sword": 25}
+    memo = {}
+    def alta(en):
+        if en not in memo:
+            memo[en] = proprio.get(en, 0) + sum(alta(x["nameEn"]) * int(x.get("qty") or 1)
+                                                for x in (por_en[en].get("components") or []) if x["nameEn"] in por_en)
+        return memo[en]
+    for i in cat["items"]:
+        if alta(i["nameEn"]):
+            soma(i["slug"], alta(i["nameEn"]), w1, dd1, base=False)
+            dd1["data"][idc[i["nameEn"]]]["gold"]["base"] += proprio.get(i["nameEn"], 0)
+    w1["Bastionbreaker"]["stats"]["lethality"] = 20                       # atributo muda
+    w1["Bastionbreaker"]["effects"]["pass"]["description"] += " (texto novo)"   # texto: a conferir
+    w1["Atma's Reckoning"]["buy"] = 2600                                  # só a wiki; o catálogo segue o Data Dragon: nada
+    w1["Atma's Reckoning"].setdefault("stats", {})["ah"] = 15             # o catálogo não seguia a fonte (10 × nada): a conferir
+    dd1["data"][idc["Redemption"]]["gold"]["total"] += 50; dd1["data"][idc["Redemption"]]["gold"]["base"] += 50   # só o Data Dragon, que o catálogo segue: aplica
+    w1["Abyssal Mask"]["stats"]["mana"] = 300                             # atributo que entra
+    w1["Abyssal Mask"]["buy"] = 2700                                      # só a wiki, e o catálogo seguia as duas: a conferir
+    w1["Test Blade"] = {"id": 999999, "tier": 3, "type": ["Legendary"], "modes": {"classic sr 5v5": True, "aram": True}, "buy": 3000}
+    del w1["Kindlegem"]                                                   # o item sai da wiki
+    c, it, conf = roda(w1, dd1, m1)
+    bb = it.get("bastionbreaker", {}).get("campos", {})
+    preco_bb = por_en["Bastionbreaker"]["priceGold"] + alta("Bastionbreaker")
+    reemb = round(preco_bb * 7.5 / 100, 2)
+    p.conta("robô", "a regra aplica o que mudou na fonte que o catálogo seguia, e refaz Reembolso e custo de combinação pela fórmula do dado",
+            bb.get("priceGold") == preco_bb and bb.get("combineCost") == por_en["Bastionbreaker"]["combineCost"] + 100
+            and (bb.get("cashback") or {}).get("raw") == "7,5%% de %sg = %sg (líquido: %sg)" % (ap.fmt_num(preco_bb), ap.fmt_num(reemb), ap.fmt_num(preco_bb - reemb))
+            and "+20 de Letalidade" in [x["raw"] for x in bb.get("attributes", [])]
+            and set(it["bastionbreaker"]["contaVelha"]) >= {"costAnalysis", "itemClass"}
+            and it.get("redemption", {}).get("campos", {}).get("priceGold") == 2350 and not it.get("atma-s-reckoning", {}).get("campos")
+            and ("atma-s-reckoning", "preço") not in conf and "não seguia" in conf.get(("atma-s-reckoning", "Aceleração de Habilidade"), ""),
+            "Quebra-Bastião %s · Redenção %s · campos do Atma %s" % ({k: bb.get(k) for k in ("priceGold", "combineCost")}, it.get("redemption", {}).get("campos"), it.get("atma-s-reckoning", {}).get("campos")))
+    tiamat = it.get("tiamat", {}).get("campos", {})
+    ls = [x for x in tiamat.get("components", []) if x["nameEn"] == "Long Sword"]
+    p.conta("robô", "o preço novo de um componente chega aos itens que o usam; o custo de combinação refeito bate com o \"base\" do Data Dragon",
+            ls and all(x["priceGold"] == 375 for x in ls) and tiamat.get("priceGold") == por_en["Tiamat"]["priceGold"] + 50
+            and tiamat.get("combineCost") == por_en["Tiamat"]["combineCost"]
+            and len([s for s, e in it.items() if any(m["campo"] == "preço de componente" for m in e["mudou"])]) >= 10
+            and not any(campo == "custo de combinação" for _, campo in conf),
+            "Tiamat %s" % {k: tiamat.get(k) for k in ("priceGold", "combineCost")})
+    am = it.get("abyssal-mask", {}).get("campos", {})
+    p.conta("robô", "o atributo que entra é aplicado (e marca a categoria); o resto vai para a conferir (fontes divergindo, texto de efeito, item que sai) e o item novo é listado",
+            "+300 de Mana" in [x["raw"] for x in am.get("attributes", [])] and "priceGold" not in am and "attributeCategory" in it.get("abyssal-mask", {}).get("contaVelha", [])
+            and "divergem" in conf.get(("abyssal-mask", "preço"), "") and "texto" in conf.get(("bastionbreaker", "efeito Shaped Charge"), "")
+            and "saiu" in conf.get(("kindlegem", "item"), "") and [x["nome"] for x in c["novos"]] == ["Test Blade"],
+            "Máscara %s · a conferir %s · novos %s" % (am.get("attributes") and [x["raw"] for x in am["attributes"]], sorted(conf), [x["nome"] for x in c["novos"]]))
+
+    # os achados da revisão: nada disso pode virar "aplica"
+    casos = {}
+    w1, dd1, m1 = novo()                    # o item sai do jogo: some do Data Dragon da SR/ARAM e a wiki desliga os modos
+    del dd1["data"][idc["Bastionbreaker"]]
+    w1["Bastionbreaker"]["modes"] = {k: False for k in w1["Bastionbreaker"]["modes"]}
+    c, it, conf = roda(w1, dd1, m1)
+    casos["saiu do jogo"] = "bastionbreaker" not in it and "Data Dragon" in conf.get(("bastionbreaker", "item"), "")
+    w1, dd1, m1 = novo()                    # só a wiki desliga os modos
+    w1["Hextech Gunblade"]["modes"] = {k: False for k in w1["Hextech Gunblade"]["modes"]}
+    c, it, conf = roda(w1, dd1, m1)
+    casos["sem modos"] = "hextech-gunblade" not in it and "modos" in conf.get(("hextech-gunblade", "item"), "")
+    w1, dd1, m1 = novo()                    # "=>" sem destino: a wiki renomeia a Manamune; a Muramana aponta para ela
+    w1["Manamune (nova)"] = w1.pop("Manamune")
+    c, it, conf = roda(w1, dd1, m1)
+    casos["=> sem destino"] = "muramana" not in it and "sem destino" in conf.get(("muramana", "item"), "")
+    w1, dd1, m1 = novo()                    # a Espada Longa deixa de ser comprável: as duas fontes perdem o preço
+    del w1["Long Sword"]["buy"]; dd1["data"][idc["Long Sword"]]["gold"]["purchasable"] = False
+    c, it, conf = roda(w1, dd1, m1)
+    casos["preço que some"] = "long-sword" not in it and "não tem mais" in conf.get(("long-sword", "preço"), "") and not it
+    w1, dd1, m1 = novo()                    # receita esvaziada nas duas fontes: é do Capítulo 1
+    w1["Tiamat"]["recipe"] = []; dd1["data"][idc["Tiamat"]]["from"] = []
+    c, it, conf = roda(w1, dd1, m1)
+    casos["receita"] = "tiamat" not in it and "Capítulo 1" in conf.get(("tiamat", "receita"), "")
+    w1, dd1, m1 = novo()                    # item não comprável: a wiki passa a dar preço
+    nome_slm = next(i.get("wikiName") or i["nameEn"] for i in cat["items"] if i["slug"] == "slightly-magical-footwear")
+    w1[nome_slm]["buy"] = 300
+    c, it, conf = roda(w1, dd1, m1)
+    casos["não comprável"] = "slightly-magical-footwear" not in it and "não se compra" in conf.get(("slightly-magical-footwear", "preço"), "")
+    w1, dd1, m1 = novo()                    # o nome em português muda: o texto do Capítulo 1 cita nomes
+    dd1["data"][idc["Whispering Circlet"]]["name"] = "Diadema Sussurrante"
+    c, it, conf = roda(w1, dd1, m1)
+    casos["nome"] = "whispering-circlet" not in it and "Limitado a 1" in conf.get(("whispering-circlet", "nome"), "")
+    w1, dd1, m1 = novo()                    # atributo que o robô não lê: não vira "a fonte não tem"
+    w1["Doran's Shield"]["stats"]["hpregen"] = w1["Doran's Shield"]["stats"].pop("hp5flat")
+    c, it, conf = roda(w1, dd1, m1)
+    casos["atributo ilegível"] = "doran-s-shield" not in it and "não lê" in conf.get(("doran-s-shield", "atributos"), "")
+    w1, dd1, m1 = novo()                    # o componente sobe, mas o preço do pai fica dividido: o custo de combinação não se refaz
+    soma("long-sword", 25, w1, dd1); dd1["data"][idc["Tiamat"]]["gold"]["total"] += 50   # o Data Dragon sobe a Tiamat, a wiki não
+    c, it, conf = roda(w1, dd1, m1)
+    ti = it.get("tiamat", {})
+    casos["pai em aberto"] = "combineCost" not in ti.get("campos", {}) and "combineCost" in ti.get("contaVelha", []) and "divergem" in conf.get(("tiamat", "preço"), "")
+    w1, dd1, m1 = novo()                    # o componente sobe e o pai não sobe em fonte nenhuma: a conta não fecha com o "base"
+    soma("long-sword", 25, w1, dd1)
+    c, it, conf = roda(w1, dd1, m1)
+    ti = it.get("tiamat", {})
+    casos["base do Data Dragon"] = "combineCost" not in ti.get("campos", {}) and "Data Dragon diz" in conf.get(("tiamat", "custo de combinação"), "")
+    w1, dd1, m1 = novo()                    # a Manamune sobe; a Muramana (transformação, sem compra, preço "=>Manamune") fica
+    soma("manamune", 100, w1, dd1)          # com o preço em aberto — e sem o Data Dragon para conferir (o catálogo dá 0 de combinação)
+    c, it, conf = roda(w1, dd1, m1)
+    mu = it.get("muramana", {})
+    casos["transformação"] = "combineCost" not in mu.get("campos", {}) and "combineCost" in mu.get("contaVelha", []) and "não se compra" in conf.get(("muramana", "preço"), "")
+    # 2ª rodada da revisão (24/10/2026)
+    w1, dd1, m1 = novo()                    # item inteiro na conferência não ganha conta: a Espada Longa sobe e a Tiamat some do Data Dragon
+    soma("long-sword", 25, w1, dd1); del dd1["data"][idc["Tiamat"]]
+    c, it, conf = roda(w1, dd1, m1)
+    casos["inteiro sem conta"] = "combineCost" not in it.get("tiamat", {}).get("campos", {}) and "components" not in it.get("tiamat", {}).get("campos", {}) and ("tiamat", "item") in conf
+    casos["valor em ouro velho"] = (c.get("statPricesVelhos") == ["Espada Longa"] and {"costAnalysis", "itemClass"} <= set(it.get("infinity-edge", {}).get("contaVelha", []))
+                                     and "costAnalysis" in it.get("elixir-of-iron", {}).get("contaVelha", []))   # 3ª rodada: o Elixir não tem atributo, mas a conta é pelo valor em ouro
+    w1, dd1, m1 = novo()                    # preço com nota do Capítulo 1 ("gratuito", "valor de venda…"): a conferir
+    gr = next(i for i in cat["items"] if "gratuito" in (i.get("priceNote") or "") and isinstance(w0.get(i.get("wikiName") or i["nameEn"], {}).get("buy"), int))
+    soma(gr["slug"], 75, w1, dd1)
+    c, it, conf = roda(w1, dd1, m1)
+    casos["nota no preço"] = "priceGold" not in it.get(gr["slug"], {}).get("campos", {}) and "nota no preço" in conf.get((gr["slug"], "preço"), "")
+    w1, dd1, m1 = novo()                    # a wiki renomeia a chave de modo em todo item: ninguém "sai da Summoner's Rift"
+    for v in w1.values():
+        if isinstance(v.get("modes"), dict) and "classic sr 5v5" in v["modes"]:
+            v["modes"]["classic sr"] = v["modes"].pop("classic sr 5v5")
+    c, it, conf = roda(w1, dd1, m1)
+    casos["chave de modo"] = not any("gameModes" in e["campos"] for e in it.values()) and sum(1 for (_, campo), x in conf.items() if campo == "modos" and "chaves" in x) > 100
+    w1, dd1, m1 = novo()                    # dia de patch: um número no meio da edição (Letalidade 18 → 1038)
+    w1["Bastionbreaker"]["stats"]["lethality"] = 1038
+    c, it, conf = roda(w1, dd1, m1)
+    casos["salto"] = "bastionbreaker" not in it and "salto" in conf.get(("bastionbreaker", "Letalidade"), "")
+    # a foto do patch novo, tirada meia hora depois de uma edição. 3ª rodada: a revisão velha
+    # (editada antes de o Data Dragon trocar o patch) não basta — conta também a 1ª foto do patch.
+    # 4ª rodada: a idade conta até a última leitura que VIU a revisão, não até agora
+    # (datas de janeiro: longe de "agora", a conta que medisse até agora seria pega)
+    m = {"patch": "16.22.1", "lido_em": "2026-01-14T10:30:00Z", "primeira_foto": "2026-01-14T10:30:00Z",
+         "wiki": {"revid": 5, "sha256": "x", "revisao_de": "2026-01-14T10:00:00Z"}}
+    m_antiga = dict(m, wiki=dict(m["wiki"], revisao_de="2026-01-10T10:00:00Z"))
+    # 5ª rodada: a leitura casa com a foto pelo conteúdo (sha256), e a idade conta da revisão que ela viu
+    visto = lambda em, sha="x", rev_de=None: dict({"patch": "16.22.1", "revid": 6, "sha256": sha, "em": em}, **({"revisao_de": rev_de} if rev_de else {}))
+    casos["wiki assentada"] = (not ap.assentada(m) and not ap.assentada(m, visto("2026-01-14T20:00:00Z")) and ap.assentada(m, visto("2026-01-15T11:00:00Z"))
+                               and not ap.assentada(m, visto("2026-01-17T11:00:00Z", sha="y"))      # a leitura viu outro texto: a foto não envelhece sozinha
+                               and not ap.assentada(m, visto("2026-01-16T11:00:00Z", rev_de="2026-01-15T12:00:00Z"))   # o mesmo texto numa revisão nova (desfeita): conta dela
+                               and ap.assentada(m, visto("2026-01-16T13:00:00Z", rev_de="2026-01-15T12:00:00Z"))
+                               and not ap.assentada(m_antiga, visto("2026-01-14T20:00:00Z")) and ap.assentada(m_antiga, visto("2026-01-15T11:00:00Z"))
+                               and not ap.assentada({"wiki": {}}))
+    # 3ª rodada: o zero é o salto maior; o atributo que entra tem teto; o item com salto espera inteiro
+    w1, dd1, m1 = novo()
+    w1["Bastionbreaker"]["stats"]["lethality"] = 0
+    c, it, conf = roda(w1, dd1, m1)
+    zero_attr = "bastionbreaker" not in it and "salto" in conf.get(("bastionbreaker", "Letalidade"), "")
+    w1, dd1, m1 = novo()
+    dd1["data"][idc["Redemption"]]["gold"]["total"] = 0
+    c, it, conf = roda(w1, dd1, m1)
+    zero_preco = "priceGold" not in it.get("redemption", {}).get("campos", {}) and "salto" in conf.get(("redemption", "preço"), "")
+    casos["zero"] = zero_attr and zero_preco
+    w1, dd1, m1 = novo()
+    w1["Bastionbreaker"]["stats"]["hp"] = 1038
+    c, it, conf = roda(w1, dd1, m1)
+    casos["teto do que entra"] = "bastionbreaker" not in it and "acima do maior" in conf.get(("bastionbreaker", "Vida"), "")
+    w1, dd1, m1 = novo()
+    w1["Bastionbreaker"]["stats"]["lethality"] = 1038; w1["Bastionbreaker"]["stats"]["ad"] = 60
+    c, it, conf = roda(w1, dd1, m1)
+    casos["item espera inteiro"] = "bastionbreaker" not in it and "espera inteiro" in conf.get(("bastionbreaker", "item"), "")
+    w1, dd1, m1 = novo()                    # 3ª rodada: os modos seguem também os mapas do Data Dragon
+    w1["Tiamat"]["modes"]["aram"] = False
+    c, it, conf = roda(w1, dd1, m1)
+    casos["modos com o Data Dragon"] = "gameModes" not in it.get("tiamat", {}).get("campos", {}) and "divergem" in conf.get(("tiamat", "modos"), "")
+    w1, dd1, m1 = novo()                    # 3ª rodada: plano que vira percentual com o mesmo número
+    w1["Boots"]["stats"]["ms"] = w1["Boots"]["stats"].pop("msflat")
+    c, it, conf = roda(w1, dd1, m1)
+    casos["unidade"] = "attributes" not in it.get("boots", {}).get("campos", {}) and "unidade" in conf.get(("boots", "atributos"), "")
+    casos["Elixires na conta velha"] = True     # conferido no patch principal, abaixo
+    w1, dd1, m1 = novo()                    # o Ápice divide pelo preço: fica marcado como conta do patch anterior
+    alvo = next(i for i in cat["items"] if i.get("apexNumeric") and i.get("priceGold") and (i.get("wikiName") or i["nameEn"]) in w0
+                and isinstance(w0[i.get("wikiName") or i["nameEn"]].get("buy"), int) and not i.get("components"))
+    soma(alvo["slug"], 50, w1, dd1)
+    c, it, conf = roda(w1, dd1, m1)
+    casos["Ápice"] = "apexNumeric" in it.get(alvo["slug"], {}).get("contaVelha", [])
+    p.conta("robô", "o que as três rodadas da revisão acharam não vira \"aplica\": item que sai, sem modos, \"=>\" sem destino, preço que some, receita, não comprável, nome, atributo ilegível, nota no preço, chave de modo, salto (e o zero), teto do que entra, unidade, modos contra o Data Dragon, wiki não assentada; contas velhas marcadas",
+            all(casos.values()), "%s" % casos)
+
+    # 4ª rodada da revisão (24/10/2026): cada achado confirmado tem um caso
+    rev_cap1 = lf.revisao_do_capitulo1()
+    c4 = {}
+    def com(mexe):
+        w1, dd1, m1 = novo()
+        mexe(w1, dd1)
+        return roda(w1, dd1, m1)
+    def pos(d, k, v):
+        d[k] = v
+    c, it, conf = com(lambda w, d: pos(w["Bastionbreaker"]["stats"], "hp", 0))
+    zero = "bastionbreaker" not in it and "entra com 0" in conf.get(("bastionbreaker", "Vida"), "")
+    c, it, conf = com(lambda w, d: pos(w["Bastionbreaker"]["stats"], "hp", -1038))
+    negativo = "bastionbreaker" not in it
+    c, it, conf = com(lambda w, d: pos(w["Bastionbreaker"]["stats"], "as", 0.45))
+    fracao = "bastionbreaker" not in it and "abaixo do menor" in conf.get(("bastionbreaker", "Velocidade de Ataque (percent)"), "")
+    c, it, conf = com(lambda w, d: pos(w["Bastionbreaker"]["stats"], "ad", True))
+    verdadeiro = "bastionbreaker" not in it and "não lê" in conf.get(("bastionbreaker", "atributos"), "")
+    c4["o que entra com 0, negativo, fração ou true"] = zero and negativo and fracao and verdadeiro
+    c, it, conf = com(lambda w, d: pos(w["Guardian's Horn"]["stats"], "hp5", w["Guardian's Horn"]["stats"].pop("hp5flat")))
+    berrante = "attributes" not in it.get("guardian-s-horn", {}).get("campos", {}) and "unidade" in conf.get(("guardian-s-horn", "atributos"), "")
+    c, it, conf = com(lambda w, d: pos(w["Bastionbreaker"]["stats"], "armpen", w["Bastionbreaker"]["stats"].pop("lethality")))
+    c4["a unidade pela família (Regeneração, Letalidade)"] = berrante and "bastionbreaker" not in it and "unidade" in conf.get(("bastionbreaker", "atributos"), "")
+    def porta_preco(w, d):
+        w["Bastionbreaker"]["buy"] *= 10; w["Bastionbreaker"]["stats"]["lethality"] = 15
+    c, it, conf = com(porta_preco)
+    porta1 = "bastionbreaker" not in it and "espera inteiro" in conf.get(("bastionbreaker", "item"), "")
+    def porta_ilegivel(w, d):
+        soma("bastionbreaker", 100, w, d); w["Bastionbreaker"]["stats"]["lethality"] = "18?"
+    c, it, conf = com(porta_ilegivel)
+    c4["o salto por outra porta segura o item"] = porta1 and "bastionbreaker" not in it and "espera inteiro" in conf.get(("bastionbreaker", "item"), "")
+    def tiamat_espera(w, d):
+        soma("long-sword", 25, w, d); d["data"][idc["Tiamat"]]["gold"]["base"] -= 50; w["Tiamat"]["stats"]["ad"] = 200
+    c, it, conf = com(tiamat_espera)
+    ti = it.get("tiamat", {})
+    c4["o item que espera leva a marca da conta que outro deixou velha"] = (not ti.get("campos") and {"components", "combineCost", "costAnalysis", "itemClass"} <= set(ti.get("contaVelha", []))
+                                                                        and "espera inteiro" in conf.get(("tiamat", "item"), "")
+                                                                        and "fragments" in it.get("stat-bonus", {}).get("contaVelha", []))
+    def sem_nb(w, d):
+        for v in w.values():
+            if isinstance(v, dict) and isinstance(v.get("modes"), dict):
+                v["modes"].pop("nb", None)
+        d["data"][idc["Tiamat"]]["maps"]["12"] = False
+    c, it, conf = com(sem_nb)
+    c4["a chave de modo que o robô não lê não desliga o Data Dragon"] = "gameModes" not in it.get("tiamat", {}).get("campos", {}) and "divergem" in conf.get(("tiamat", "modos"), "")
+    def chave_mayhem(w, d):   # chave nova que o robô lê, com os modos iguais: o Data Dragon ainda conta
+        w["Tiamat"]["modes"]["mayhem"] = w["Tiamat"]["modes"]["aram"]; d["data"][idc["Tiamat"]]["maps"]["12"] = False
+    c, it, conf = com(chave_mayhem)
+    c4["a chave nova com os modos iguais ainda olha o Data Dragon"] = "gameModes" not in it.get("tiamat", {}).get("campos", {}) and "chaves" in conf.get(("tiamat", "modos"), "")
+    c, it, conf = com(lambda w, d: pos(w["Overlord's Bloodmail"]["stats"], "hp", 600))
+    c4["a conta escrita na Mecânica fica marcada"] = "abilities" in it.get("overlord-s-bloodmail", {}).get("contaVelha", [])
+    c, it, conf = com(lambda w, d: pos(w["Cull"]["stats"], "spec", "+5 [[health]] [[on-hit]]"))
+    c4["o atributo em texto livre (spec)"] = "cull" not in it and "spec" in conf.get(("cull", "atributos"), "")
+    def voltam(w, d):
+        w["Galeforce"]["modes"]["classic sr 5v5"] = True
+        d["data"]["999998"] = {"name": "Lâmina de Teste", "gold": {"base": 3000, "total": 3000, "purchasable": True, "sell": 2100}, "from": [], "maps": {"11": True, "12": False}}
+    c, it, conf = com(voltam)
+    nv = {x["nome"]: x for x in c["novos"]}
+    c4["o item que volta e o que só o Data Dragon traz são novos"] = nv.get("Galeforce", {}).get("volta") is True and nv.get("Lâmina de Teste", {}).get("fonte") == "só o Data Dragon"
+    def req_e_tier(w, d):
+        w["Elixir of Iron"]["req"] = "[[Experience (champion)|Level 11]] required to purchase."; w["Tiamat"]["tier"] = 3
+    c, it, conf = com(req_e_tier)
+    c4["a condição (req) e o tier da wiki"] = "condição" in conf.get(("elixir-of-iron", "req"), "") and "tier" in conf.get(("tiamat", "tier"), "")
+    c, it, conf = com(lambda w, d: soma("bastionbreaker", 100, w, d))
+    bb = it.get("bastionbreaker", {})
+    c4["cada campo da camada leva o valor do catálogo de que nasceu"] = (set(bb.get("base", {})) == set(bb.get("campos", {})) and bb["base"].get("priceGold") == por_en["Bastionbreaker"]["priceGold"]
+                                                                       and bb["base"].get("cashback") == por_en["Bastionbreaker"].get("cashback"))
+    c4["a camada de outro catálogo não vale"] = (ap.camada_ainda_vale({"de": "16.21.1", "catalogo": {"sha256": "x"}}, "16.21.1", "x")
+                                                 and not ap.camada_ainda_vale({"de": "16.20.1", "catalogo": {"sha256": "x"}}, "16.21.1", "x")
+                                                 and not ap.camada_ainda_vale({"de": "16.21.1", "catalogo": {"sha256": "y"}}, "16.21.1", "x")
+                                                 and not ap.camada_ainda_vale({"de": "16.21.1"}, "16.21.1", "x") and not ap.camada_ainda_vale(None, "16.21.1", "x"))
+    import tempfile
+    md = open(lf.CATALOGO_MD, encoding="utf-8").read()
+    with tempfile.TemporaryDirectory() as tmp:
+        def rev_com(paragrafo):
+            caminho = os.path.join(tmp, "cat.md")
+            open(caminho, "w", encoding="utf-8").write(md + "\n\n" + paragrafo + "\n")
+            return lf.revisao_do_capitulo1(caminho, patch=cat["meta"]["patch"])
+        ajuste = rev_com("# Ajustes — correção de 25/10/2026 (fora de patch)\n\nO catálogo continua em %s. Fontes: `Module:ItemData/data` (revisão 4095000)." % cat["meta"]["patch"])
+    c4["a revisão da base é a da reconciliação do patch do catálogo"] = ajuste == rev_cap1 and lf.revisao_do_capitulo1(patch="16.20.1") not in (None, rev_cap1)
+    nomes = [i.get("wikiName") or i["nameEn"] for i in cat["items"]]
+    lua_ok = "return {\n" + "".join('  ["%s"] = { },\n' % n for n in nomes) + "}\n"
+    pg = {"title": "Module:ItemData/data"}
+    c4["a base que não é o módulo não vira base"] = (lf.base_confere(pg, {n: {} for n in nomes}, lua_ok, cat) == ""
+                                                     and "página" in lf.base_confere({"title": "Bastionbreaker"}, {n: {} for n in nomes}, lua_ok, cat)
+                                                     and "casa só" in lf.base_confere(pg, {"Outro": {}}, 'return {\n  ["Outro"] = { },\n}', cat)
+                                                     and "metade" in lf.base_confere(pg, {nomes[0]: {}}, lua_ok, cat))
+    # 5ª rodada da revisão (24/10/2026): cada achado confirmado tem um caso
+    c5 = {}
+    c, it, conf = com(lambda w, d: pos(w["Bastionbreaker"]["stats"], "ad", 155))
+    longe = "bastionbreaker" not in it and "bem acima" in conf.get(("bastionbreaker", "Dano de Ataque"), "")
+    c, it, conf = com(lambda w, d: pos(w["Bloodthirster"]["stats"], "ad", 85))    # o maior do catálogo ganha 5: passa
+    c5["o atributo que muda para longe da faixa (55 → 155)"] = longe and "attributes" in it.get("bloodthirster", {}).get("campos", {})
+    def redencao(w, d):
+        d["data"][idc["Redemption"]]["gold"]["total"] += 50; d["data"][idc["Redemption"]]["gold"]["base"] += 50
+    c, it, conf = com(redencao)
+    # a Redenção não é referência do valor em ouro: a marca da análise de custo vem do preço dela
+    nota_rd = ({"notes", "costAnalysis"} <= set(it.get("redemption", {}).get("contaVelha", [])) and not c.get("statPricesVelhos")
+               and "redemption" not in ap.referencias_de_preco(cat))
+    c, it, conf = com(lambda w, d: soma("cull", 25, w, d))
+    c5["o preço aplicado marca o texto que faz conta com ele"] = nota_rd and "apex" in it.get("cull", {}).get("contaVelha", [])
+    c, it, conf = com(lambda w, d: pos(w["Hubris"]["stats"], "ad", 60))
+    hub = "apex" in it.get("hubris", {}).get("contaVelha", [])
+    c, it, conf = com(lambda w, d: pos(w["Atma's Reckoning"]["stats"], "hp", 750))
+    c5["o número antigo citado sem \"de\" e o \"do próprio item\""] = hub and "abilities" in it.get("atma-s-reckoning", {}).get("contaVelha", [])
+    def anjo(w, d):
+        w["Guardian Angel"]["modes"]["aram"] = True; d["data"][idc["Guardian Angel"]]["maps"]["12"] = True
+    c, it, conf = com(anjo)
+    ga = it.get("guardian-angel", {})
+    c5["o modo aplicado marca a nota de ARAM"] = "gameModes" in ga.get("campos", {}) and "aramNotes" in ga.get("contaVelha", [])
+    c, it, conf = com(lambda w, d: soma("long-sword", 25, w, d))
+    c5["o valor em ouro velho marca a conta de ouro no texto"] = "abilities" in it.get("stat-bonus", {}).get("contaVelha", []) and "notes" in it.get("redemption", {}).get("contaVelha", [])
+    def variante(w, d):
+        d["data"]["221001"] = {"name": "Botas", "gold": {"base": 300, "total": 300, "purchasable": True, "sell": 210}, "from": [], "maps": {"11": False, "12": True}}
+        d["data"]["999998"] = {"name": "Lâmina de Teste", "gold": {"base": 3000, "total": 3000, "purchasable": True, "sell": 2100}, "from": [], "maps": {"11": True, "12": False}}
+    c, it, conf = com(variante)
+    nv = [x["nome"] for x in c["novos"]]
+    c5["a variante de um item do catálogo não é item novo"] = "Botas" not in nv and "Lâmina de Teste" in nv
+    c5["o catálogo pelo conteúdo (CRLF = LF)"] = ap.sha_do_texto(b"a\r\nb\r\n") == ap.sha_do_texto(b"a\nb\n") and ap.sha_do_texto(b"a\nb\n") != ap.sha_do_texto(b"a\nc\n")
+    with tempfile.TemporaryDirectory() as tmp:
+        def rev_em(texto_md):
+            caminho = os.path.join(tmp, "cat.md")
+            open(caminho, "w", encoding="utf-8", newline="\r\n").write(texto_md)    # em CRLF, como no disco do Leo
+            return lf.revisao_do_capitulo1(caminho, patch=cat["meta"]["patch"])
+        P = cat["meta"]["patch"]
+        sessao = rev_em(md + "\n\n# Ajustes — sessão de correção de 25/10/2026\n\nOrigem: pendências. Patch conferido no início da sessão: `versions.json` = %s (inalterado). Fontes: `Module:ItemData/data` (revisão 4095000).\n" % P)
+        cab = md.index("# Ajustes — reconciliação do patch %s" % P)
+        fim = md.index("\n", cab)
+        dentro = rev_em(md[:fim] + "\n\nFontes à parte: `Module:ItemData/data` (revisão 4095000).\n" + md[fim:])
+        refeita = rev_em(md + "\n\n# Ajustes — reconciliação do patch %s (refeita em 26/10/2026)\n\nFontes: `Module:ItemData/data` (revisão 4095000).\n" % P)
+    c5["a revisão vem da seção da reconciliação do patch (não do Ajuste de sessão)"] = sessao == rev_cap1 and dentro is None and refeita == 4095000
+    # cada porta da marca de texto, isolada: uma nota escrita de propósito numa cópia do catálogo
+    def nota(slug, texto, mexe):
+        cat2 = copy.deepcopy(cat)
+        alvo = next(i for i in cat2["items"] if i["slug"] == slug)
+        alvo["notes"] = texto; alvo["apex"] = None; alvo["abilities"] = []
+        w1, dd1, m1 = novo()
+        mexe(w1, dd1)
+        return "notes" in ap.regra(cat2, (w0, dd0, m0), (w1, dd1, m1))["itens"].get(slug, {}).get("contaVelha", [])
+    bb = por_en["Bastionbreaker"]
+    reemb_velho = ap.fmt_num(bb["cashback"]["refundGold"])
+    # "de ouro", e não "g": a Adaga Serrilhada e a Espada Longa são referência do valor em ouro, e
+    # a marca de toda conta de ouro ("1.000g") esconderia a porta que o caso quer ver
+    portas = {
+        "combinação": nota("bastionbreaker", "Combinação de %s de ouro." % ap.fmt_num(bb["combineCost"]), lambda w, d: soma("bastionbreaker", 100, w, d)),
+        "Reembolso": nota("bastionbreaker", "Reembolso de %s de ouro." % reemb_velho, lambda w, d: soma("bastionbreaker", 100, w, d)),
+        "componente": nota("bastionbreaker", "a Adaga Serrilhada a %s de ouro." % ap.fmt_num(por_en["Serrated Dirk"]["priceGold"]), lambda w, d: soma("serrated-dirk", 50, w, d)),
+        "componente do que espera": nota("tiamat", "Espada Longa a %s de ouro, duas vezes." % ap.fmt_num(por_en["Long Sword"]["priceGold"]),
+                                         lambda w, d: (soma("long-sword", 25, w, d), pos(w["Tiamat"]["stats"], "ad", 200))),
+        "o atributo e o \"do próprio item\"": nota("overlord-s-bloodmail", "Tirania cresce com a Vida do próprio item.", lambda w, d: pos(w["Overlord's Bloodmail"]["stats"], "hp", 600)),
+        "controle: nota que não cita nada": not nota("bastionbreaker", "Sem número aqui.", lambda w, d: soma("bastionbreaker", 100, w, d)),
+    }
+    c5["o texto que cita a combinação, o Reembolso e o componente fica marcado"] = all(portas.values())
+    p.conta("robô", "o que a 4ª rodada achou não vira \"aplica\": o que entra com 0/negativo/fração/true, a unidade pela família, o salto por outra porta, a conta que outro item deixa velha (componente, fragmentos, Mecânica), a chave de modo que o robô não lê, o spec, req e tier; os novos que voltam; a camada presa ao catálogo; a base ligada ao patch",
+            all(c4.values()), "%s" % ([k for k, v in c4.items() if not v] or "todos"))
+    p.conta("robô", "o que a 5ª rodada achou não vira \"aplica\": o atributo que muda para longe da faixa; o texto que faz conta com o preço, o atributo, o modo e o valor em ouro fica marcado; a variante não é item novo; o catálogo pelo conteúdo; a revisão da seção da reconciliação; a espera pelo conteúdo",
+            all(c5.values()), "%s · portas da marca de texto %s" % ([k for k, v in c5.items() if not v] or "todos", [k for k, v in portas.items() if not v] or "todas"))
+
+    # O teste com dado real (24/10/2026): a regra do catálogo 16.20.1 (o do commit da
+    # reconciliação, lido do git) e da foto do 16.20.1 (a revisão que o Capítulo 1 registrou)
+    # para a foto do 16.21.1 — contra o que o Capítulo 1 de fato pôs no catálogo 16.21.1. Todo
+    # valor aplicado tem de ser o dele, e toda mudança de dado dele tem de estar aplicada,
+    # marcada ou com o item a conferir (a data citada num texto, "pt_BR 16.20.1", não é dado)
+    import subprocess
+    bruto = subprocess.run(["git", "-C", RAIZ, "show", "3c9c754:data/catalog.js"], capture_output=True).stdout.decode("utf-8")
+    velho = json.loads(bruto[bruto.index("{"): bruto.rindex("}") + 1]) if bruto else None
+    if velho is None or not os.path.isdir(os.path.join(RAIZ, "data", "robo", "fonte", "16.20.1")):
+        p.conta("robô", "o teste com dado real (16.20.1 → 16.21.1)", False, "sem o catálogo 16.20.1 no git ou sem a foto do 16.20.1")
+    else:
+        hist = ap.regra(velho, lf.ler_foto("16.20.1"), lf.ler_foto(cat["meta"]["patch"]))
+        V, N_ = {i["slug"]: i for i in velho["items"]}, {i["slug"]: i for i in cat["items"]}
+        attrs = lambda l: sorted((a.get("stat"), a.get("unit"), a.get("value")) for a in (l or []) if isinstance(a, dict))
+        def igual(campo, x, y):
+            if campo == "attributes":
+                return attrs(x) == attrs(y)
+            if campo == "components":
+                return sorted((c.get("nameEn"), c.get("priceGold"), c.get("qty")) for c in x or []) == sorted((c.get("nameEn"), c.get("priceGold"), c.get("qty")) for c in y or [])
+            if campo == "cashback":
+                return (x or {}).get("refundGold") == (y or {}).get("refundGold") and (x or {}).get("netGold") == (y or {}).get("netGold")
+            return x == y
+        aplicados = [(s, k) for s, e in hist["itens"].items() for k in e["campos"]]
+        errados = [(s, k) for s, k in aplicados if not igual(k, hist["itens"][s]["campos"][k], N_.get(s, {}).get(k))]
+        a_conferir = {x["slug"] for x in hist["aConferir"]}
+        sem_data = lambda x: json.dumps(x, ensure_ascii=False, sort_keys=True).replace("16.20.1", "16.21.1")
+        silencio = []
+        for s, n in N_.items():
+            v = V.get(s)
+            e = hist["itens"].get(s, {"campos": {}, "contaVelha": []})
+            for k in ("priceGold", "attributes", "gameModes", "combineCost", "components", "cashback", "abilities", "apex", "apexNumeric",
+                      "notes", "aramNotes", "mayhemNotes", "costAnalysis", "itemClass", "masterwork", "attributeCategory", "condition", "tier", "fragments"):
+                if v is None or igual(k, v.get(k), n.get(k)) or sem_data(v.get(k)) == sem_data(n.get(k)):
+                    continue
+                if k not in e["campos"] and k not in e["contaVelha"] and s not in a_conferir:
+                    silencio.append((s, k))
+        p.conta("robô", "o teste com dado real: do 16.20.1 ao 16.21.1, o que o robô aplicaria é o que o Capítulo 1 fez, e toda mudança dele está aplicada, marcada ou a conferir",
+                bool(aplicados) and not errados and not silencio,
+                "%d campos aplicados, %d errados %s · %d itens a conferir · em silêncio %s" % (len(aplicados), len(errados), errados[:5], len(a_conferir), silencio[:8] or "nada"))
+
+    # a camada do repositório: a do patch do catálogo, vazia — e um JS que se lê
+    txt = open(os.path.join(RAIZ, "data", "atualizacao_patch.js"), encoding="utf-8").read()
+    corpo = json.loads(txt[txt.index("{"): txt.rindex("}") + 1])
+    p.conta("robô", "a camada do repositório é do patch do catálogo (sem nada a aplicar enquanto não há patch novo)",
+            corpo["de"] == cat["meta"]["patch"] and (corpo["para"] != corpo["de"] or (not corpo["itens"] and not corpo["aConferir"])),
+            "de %s para %s · %d itens · %d a conferir" % (corpo["de"], corpo["para"], len(corpo["itens"]), len(corpo["aConferir"])))
 
 # ---------------------------------------------------------------- principal
 GRUPOS = [
@@ -4694,6 +5134,10 @@ def main():
             checar_robo(p)
         except Exception as e:
             p.conta("robô", "o grupo rodou até o fim", False, "%s: %s" % (type(e).__name__, str(e)[:110]))
+        try:
+            checar_robo_regra(p)
+        except Exception as e:
+            p.conta("robô", "a regra rodou até o fim", False, "%s: %s" % (type(e).__name__, str(e)[:110]))
 
     s = Sessao(url)
     try:
