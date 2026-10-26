@@ -385,6 +385,47 @@ def checar_arquivos(p):
             os.remove(tmp)
     p.conta("arquivos", "o registro de mudanças está em dia com o catálogo", igual, det)
 
+    # F13-T87: o supabase.sql é o banco inteiro na forma de hoje — colar de novo não
+    # pode derrubar as Públicas (antes: view sem runas/habilidades/rota, grant por
+    # coluna faltando, um segundo publicar_build). Confere o arquivo contra a página.
+    sql = open(os.path.join(RAIZ, "docs", "servidor", "supabase.sql"), encoding="utf-8").read()
+    furos = sql_cobre_a_pagina(sql, idx)
+    p.conta("arquivos", "o supabase.sql cobre o que a página manda e lê", not furos, "; ".join(furos[:4]) or "funções, view e grant")
+
+
+def sql_cobre_a_pagina(sql, idx):
+    """O que falta no SQL para a página funcionar: cada função chamada criada uma vez
+    só e com todos os parâmetros que a página manda; a builds_publicas com todas as
+    colunas da tabela menos o hash; e o grant por coluna com as mesmas."""
+    furos = []
+    sem_coment = re.sub(r"--[^\n]*", "", sql)
+    chamadas = {"publicar_build": set(re.findall(r"\b(p_\w+):", (re.search(r"const params = \{(.*?)\n    \};", idx, re.S) or [None, ""])[1]))}
+    for f, corpo in re.findall(r'Servidor\.rpc\("(\w+)", \{([^}]*)\}', idx):
+        chamadas.setdefault(f, set()).update(re.findall(r"\b(p_\w+):", corpo))
+    for f, pars in sorted(chamadas.items()):
+        criadas = re.findall(r"create or replace function public\.%s\((.*?)\)\s*returns" % f, sem_coment, re.S)
+        if len(criadas) != 1:
+            furos.append("%s criada %d vezes" % (f, len(criadas)))
+            continue
+        falta = sorted(pars - set(re.findall(r"\b(p_\w+)\s", criadas[0])))
+        if falta:
+            furos.append("%s sem %s" % (f, ", ".join(falta)))
+    tab = re.search(r"create table if not exists public\.builds \((.*?)\n\);", sem_coment, re.S)
+    colunas = set(re.findall(r"^\s+(\w+)\s+(?:text|jsonb|integer|timestamptz)\b", tab.group(1), re.M)) if tab else set()
+    colunas |= set(re.findall(r"alter table public\.builds add column if not exists (\w+)", sem_coment))
+    publicas = colunas - {"segredo_hash"}
+    view = re.search(r"create view public\.builds_publicas.*?from public\.builds b;", sem_coment, re.S)
+    na_view = set(re.findall(r"\bb\.(\w+)", view.group(0))) if view else set()
+    # o que a página publica tem de voltar pela view (p_runas → runas, p_rota → rota…)
+    publicas |= {x[2:] for x in chamadas.get("publicar_build", set())} - {"segredo", "id"}
+    if not view or publicas - na_view or "segredo_hash" in na_view:
+        furos.append("builds_publicas sem %s" % (", ".join(sorted(publicas - na_view)) or "a view"))
+    grant = re.search(r"grant select \(([^)]*)\)\s+on public\.builds to anon", sem_coment)
+    no_grant = {c.strip() for c in grant.group(1).split(",")} if grant else set()
+    if na_view - no_grant or "segredo_hash" in no_grant:
+        furos.append("grant por coluna sem %s" % ", ".join(sorted(na_view - no_grant)))
+    return furos
+
 
 def _existe_exato(rel):
     """os.path.exists mente no Windows: 'Assets/X.PNG' passa. Aqui cada pedaço do

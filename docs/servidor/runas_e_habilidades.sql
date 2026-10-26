@@ -1,3 +1,11 @@
+-- HISTÓRICO — NÃO RODE ESTE ARQUIVO (F13-T87, 26/10/2026).
+-- Ele já foi rodado no projeto em 20/09/2026 e está dentro do supabase.sql, que é o
+-- banco inteiro na forma de hoje. Rodá-lo de novo recriaria uma versão velha
+-- do publicar_build ao lado da atual ("function is not unique") e uma view
+-- sem as colunas mais novas. A linha abaixo para o Run antes de qualquer coisa;
+-- o resto fica como registro do que foi feito e por quê.
+do $trava$ begin raise exception 'Arquivo histórico: já está no supabase.sql. Não rode este arquivo.'; end $trava$;
+
 -- =====================================================================
 -- Build publicada leva também a página de runas e a ordem de habilidades
 -- (Leo, 20/09/2026: "no card de builds publicadas não aparecem as runas

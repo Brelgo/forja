@@ -1,15 +1,32 @@
 -- =====================================================================
--- Montador de Itens de LoL — servidor das builds publicadas (Fase 8)
+-- Montador de Itens de LoL — servidor das builds publicadas
+-- O banco INTEIRO, na forma de hoje, num arquivo só (F13-T87, 26/10/2026).
+--
 -- Cole este arquivo inteiro no SQL Editor do Supabase e clique em Run.
--- Pode rodar de novo sem medo: tudo é "if not exists" / "or replace".
+-- Serve para as duas coisas:
+--   • projeto novo: cria tudo do zero;
+--   • projeto que já está no ar: pode colar de novo sem medo. Nenhuma build e
+--     nenhum evento é apagado; as views e as funções são recriadas iguais.
+--
+-- Antes da T87 o banco era este arquivo MAIS runas_e_habilidades.sql e
+-- rota.sql, rodados por cima. Colar só o antigo (como o README mandava)
+-- derrubava as Públicas: a view voltava sem runas, habilidades e rota, o
+-- "revoke" tirava o grant dessas colunas ("permission denied for table builds",
+-- o bug de 20/09/2026) e nascia um segundo publicar_build ("function is not
+-- unique"). Agora tudo está aqui; os dois arquivos ficam só como histórico.
+--
+-- REGRA para mudar o banco: a mudança entra AQUI (tabela, view, grant e
+-- função), na forma final. Coluna nova na builds_publicas = coluna no grant
+-- por coluna da seção 4 (senão a view inteira cai com "permission denied").
+-- A limpeza diária dos eventos (pg_cron) mora em limpeza.sql — é opcional.
 -- =====================================================================
 
 create extension if not exists pgcrypto with schema extensions;   -- digest() e gen_random_bytes() vivem em "extensions" no Supabase
 
 -- ---------------------------------------------------------------------
--- Tabela das builds publicadas. O segredo de quem publicou fica só como
--- hash: quem tem o segredo (guardado no navegador do autor) pode atualizar
--- e apagar; todo o resto só lê.
+-- 1. As builds publicadas. O segredo de quem publicou fica só como hash:
+-- quem tem o segredo (guardado no navegador do autor) pode atualizar e
+-- apagar; todo o resto só lê.
 -- ---------------------------------------------------------------------
 create table if not exists public.builds (
   id             text primary key,                       -- id curto (6 caracteres), gerado aqui
@@ -21,33 +38,41 @@ create table if not exists public.builds (
   caixas         jsonb not null,                          -- categorias com itens (formato do Montador)
   patch          text not null,                           -- versão do catálogo na publicação (≠ atual → "desatualizada")
   versao         integer not null default 1,              -- soma 1 a cada publicação da mesma build
-  autor          text not null default '',
+  autor          text not null default '',                -- F13-T83: o apelido opcional de quem publicou
   segredo_hash   text not null,
   criado_em      timestamptz not null default now(),
   atualizado_em  timestamptz not null default now(),
   visualizacoes  integer not null default 0,
-  copias         integer not null default 0
+  copias         integer not null default 0,
+  layout         text not null default 'tabuleiro',       -- Fase 9: tabuleiro | nucleo | trilha | grade
+  runas          jsonb not null default '{}'::jsonb,      -- F12 (20/09/2026): a página de runas
+  habilidades    jsonb not null default '[]'::jsonb,      -- F12 (20/09/2026): a ordem de habilidades
+  rota           text not null default ''                 -- F13-T69 (24/10/2026): '' (qualquer), top, selva, meio, atirador, suporte
 );
--- Fase 9: layout de leitura da build (tabuleiro | nucleo | trilha | grade). Pode rodar de novo.
+-- Projeto criado antes de cada coluna: elas entram aqui, vazias. Nenhuma
+-- build existente muda; ganha o valor na próxima vez que for publicada.
 alter table public.builds add column if not exists layout text not null default 'tabuleiro';
+alter table public.builds add column if not exists runas jsonb not null default '{}'::jsonb;
+alter table public.builds add column if not exists habilidades jsonb not null default '[]'::jsonb;
+alter table public.builds add column if not exists rota text not null default '';
 
--- Eventos de visualização e cópia, para o "popular hoje / da semana".
-create table if not exists public.eventos (
-  id        bigserial primary key,
-  build_id  text not null references public.builds(id) on delete cascade,
-  tipo      text not null check (tipo in ('visualizacao', 'copia')),
-  quando    timestamptz not null default now()
-);
-create index if not exists eventos_build_quando on public.eventos (build_id, quando desc);
-
--- Fase 10, T15: quatro medidas em vez de duas (Leo, 16/09/2026).
+-- ---------------------------------------------------------------------
+-- 2. Os eventos, para o "popular hoje / da semana" (Fase 10, T15; Leo, 16/09/2026):
 --   impressao   — a build apareceu na lista
 --   detalhe     — alguém abriu os detalhes  (era "visualizacao"; o nome antigo continua valendo)
 --   engajamento — qualquer interação: clique, favorito, filtro pela build
 --   copia       — alguém copiou a build
+-- ---------------------------------------------------------------------
+create table if not exists public.eventos (
+  id        bigserial primary key,
+  build_id  text not null references public.builds(id) on delete cascade,
+  tipo      text not null,
+  quando    timestamptz not null default now()
+);
 alter table public.eventos drop constraint if exists eventos_tipo_check;
 alter table public.eventos add constraint eventos_tipo_check
   check (tipo in ('impressao', 'detalhe', 'engajamento', 'copia', 'visualizacao'));
+create index if not exists eventos_build_quando on public.eventos (build_id, quando desc);
 create index if not exists eventos_quando on public.eventos (quando desc);
 
 -- Quanto cada medida vale na popularidade. Cópia pesa mais porque custa mais
@@ -57,7 +82,7 @@ language sql immutable set search_path = public, extensions as $$
   select case p_tipo
     when 'impressao'   then 1
     when 'detalhe'     then 3
-    when 'visualizacao' then 3   -- nome antigo de "detalhe"
+    when 'visualizacao' then 3
     when 'engajamento' then 4
     when 'copia'       then 8
     else 0 end;
@@ -69,33 +94,36 @@ language plpgsql stable set search_path = public, extensions as $$
 declare t timestamp; d int; base timestamp;
 begin
   t := now() at time zone 'America/Sao_Paulo';
-  d := extract(dow from t)::int;                 -- 0 = domingo
+  d := extract(dow from t)::int;
   base := date_trunc('day', t) - make_interval(days => d) + interval '9 hours';
-  if base > t then base := base - interval '7 days'; end if;   -- domingo antes das 09:00
+  if base > t then base := base - interval '7 days'; end if;
   return base at time zone 'America/Sao_Paulo';
 end $$;
 
--- Ninguém mexe nas tabelas direto: só pelas funções abaixo e pela view.
+-- ---------------------------------------------------------------------
+-- 3. Ninguém mexe nas tabelas direto: só pelas funções e pelas views.
+-- ---------------------------------------------------------------------
 alter table public.builds  enable row level security;
 alter table public.eventos enable row level security;
+-- ATENÇÃO: o "revoke all" tira também os grants POR COLUNA. Por isso a lista
+-- inteira de colunas é dada de novo logo abaixo, no mesmo arquivo.
 revoke all on public.builds  from anon, authenticated;
 revoke all on public.eventos from anon, authenticated;
 
 -- ---------------------------------------------------------------------
--- View pública: tudo menos o hash, com popularidade do dia e da semana.
--- Roda com a permissão de quem lê (security_invoker), como o verificador do
--- Supabase pede; por isso o público ganha SELECT só nas colunas públicas da
--- tabela (o hash do segredo fica de fora) e nos eventos.
+-- 4. O que o público lê. As views rodam com a permissão de quem lê
+-- (security_invoker), como o verificador do Supabase pede; por isso o público
+-- ganha SELECT só nas colunas públicas da tabela (o hash do segredo fica de
+-- fora) e nos eventos.
 -- ---------------------------------------------------------------------
 drop policy if exists "leitura publica das builds" on public.builds;
 create policy "leitura publica das builds" on public.builds for select to anon, authenticated using (true);
 drop policy if exists "leitura publica dos eventos" on public.eventos;
 create policy "leitura publica dos eventos" on public.eventos for select to anon, authenticated using (true);
--- ATENÇÃO: este grant é POR COLUNA. Coluna nova que entre na builds_publicas
--- precisa entrar nesta lista (ou num grant próprio, como o de runas e
--- habilidades em runas_e_habilidades.sql), senão a view inteira responde
--- "permission denied for table builds" — foi o que aconteceu em 20/09/2026.
-grant select (id, nome, descricao, campeao, modo, marcadores, caixas, patch, versao, autor, criado_em, atualizado_em, visualizacoes, copias, layout)
+-- Grant POR COLUNA: toda coluna que a builds_publicas mostra tem de estar aqui,
+-- senão a view inteira responde "permission denied for table builds".
+grant select (id, nome, descricao, campeao, modo, marcadores, caixas, patch, versao, autor, criado_em, atualizado_em,
+              visualizacoes, copias, layout, runas, habilidades, rota)
   on public.builds to anon, authenticated;
 grant select on public.eventos to anon, authenticated;
 
@@ -130,11 +158,14 @@ select build_id, max(n) as dias_seguidos
 from (select build_id, grupo, count(*)::int as n from seq group by 1, 2) t
 group by build_id;
 
+-- A view que a página lê: tudo menos o hash. Recriada inteira a cada Run (o
+-- Postgres não deixa acrescentar coluna no meio de uma view); não guarda dado.
 drop view if exists public.builds_publicas;
 create view public.builds_publicas with (security_invoker = true) as
 select
   b.id, b.nome, b.descricao, b.campeao, b.modo, b.marcadores, b.caixas, b.patch, b.versao, b.autor,
   b.criado_em, b.atualizado_em, b.visualizacoes, b.copias, b.layout,
+  b.runas, b.habilidades, b.rota,
   -- o único número que aparece na tela (Leo, 16/09/2026): interações de verdade
   coalesce((select count(*) from public.eventos e
              where e.build_id = b.id and e.tipo = 'engajamento'), 0)::int as engajamentos,
@@ -152,17 +183,26 @@ grant select on public.builds_publicas to anon, authenticated;
 grant select on public.pontos_por_dia, public.top_do_dia, public.destaques_semana to anon, authenticated;
 
 -- ---------------------------------------------------------------------
--- Publicar (nova) ou atualizar (com o segredo). Regras do Leo: itens,
+-- 5. Publicar (nova) ou atualizar (com o segredo). Regras do Leo: itens,
 -- nome, descrição e 3 marcadores; senão, erro.
 -- ---------------------------------------------------------------------
+-- Só pode existir UM publicar_build: com duas versões no banco, uma chamada
+-- casaria com as duas (os parâmetros novos têm default) e o PostgREST
+-- responderia "function is not unique". Saem as de antes: 10 parâmetros
+-- (Fase 8), 11 (o layout, Fase 9) e 13 (runas e habilidades, 20/09/2026).
 drop function if exists public.publicar_build(text, text, jsonb, text, jsonb, jsonb, text, text, text, text);
+drop function if exists public.publicar_build(text, text, jsonb, text, jsonb, jsonb, text, text, text, text, text);
+drop function if exists public.publicar_build(text, text, jsonb, text, jsonb, jsonb, text, text, text, text, text, jsonb, jsonb);
+-- Os parâmetros novos têm default: um navegador com a página antiga continua
+-- publicando, só que sem eles.
 create or replace function public.publicar_build(
   p_nome text, p_descricao text, p_campeao jsonb, p_modo text, p_marcadores jsonb, p_caixas jsonb,
-  p_patch text, p_autor text, p_segredo text, p_id text default null, p_layout text default 'tabuleiro'
+  p_patch text, p_autor text, p_segredo text, p_id text default null, p_layout text default 'tabuleiro',
+  p_runas jsonb default '{}'::jsonb, p_habilidades jsonb default '[]'::jsonb, p_rota text default ''
 ) returns jsonb
 language plpgsql security definer set search_path = public, extensions as $$
 declare
-  v_id text; v_hash text; v_versao int; v_itens int;
+  v_id text; v_hash text; v_versao int; v_itens int; v_rota text;
 begin
   if coalesce(trim(p_nome), '') = '' then raise exception 'A build precisa de nome.'; end if;
   if coalesce(trim(p_descricao), '') = '' then raise exception 'A build precisa de descrição.'; end if;
@@ -173,19 +213,29 @@ begin
   if coalesce(p_segredo, '') = '' then raise exception 'Segredo ausente.'; end if;
   v_hash := encode(digest(p_segredo, 'sha256'), 'hex');
 
+  -- runas e habilidades são opcionais: build sem elas publica igual
+  if jsonb_typeof(coalesce(p_runas, '{}'::jsonb)) <> 'object' then raise exception 'Runas inválidas.'; end if;
+  if jsonb_typeof(coalesce(p_habilidades, '[]'::jsonb)) <> 'array' then raise exception 'Ordem de habilidades inválida.'; end if;
+  -- a rota: uma das cinco, ou vazia (qualquer)
+  v_rota := coalesce(p_rota, '');
+  if v_rota not in ('', 'top', 'selva', 'meio', 'atirador', 'suporte') then raise exception 'Rota inválida.'; end if;
+
   if p_id is null then
     loop
       v_id := lower(substr(encode(gen_random_bytes(6), 'hex'), 1, 6));
       exit when not exists (select 1 from public.builds where id = v_id);
     end loop;
-    insert into public.builds (id, nome, descricao, campeao, modo, marcadores, caixas, patch, autor, segredo_hash, layout)
-    values (v_id, trim(p_nome), trim(p_descricao), p_campeao, coalesce(p_modo, ''), p_marcadores, p_caixas, p_patch, coalesce(p_autor, ''), v_hash, coalesce(p_layout, 'tabuleiro'));
+    insert into public.builds (id, nome, descricao, campeao, modo, marcadores, caixas, patch, autor, segredo_hash, layout, runas, habilidades, rota)
+    values (v_id, trim(p_nome), trim(p_descricao), p_campeao, coalesce(p_modo, ''), p_marcadores, p_caixas, p_patch, coalesce(p_autor, ''), v_hash,
+            coalesce(p_layout, 'tabuleiro'), coalesce(p_runas, '{}'::jsonb), coalesce(p_habilidades, '[]'::jsonb), v_rota);
     v_versao := 1;
   else
     update public.builds
        set nome = trim(p_nome), descricao = trim(p_descricao), campeao = p_campeao, modo = coalesce(p_modo, ''),
            marcadores = p_marcadores, caixas = p_caixas, patch = p_patch, autor = coalesce(p_autor, ''),
-           layout = coalesce(p_layout, 'tabuleiro'), versao = versao + 1, atualizado_em = now()
+           layout = coalesce(p_layout, 'tabuleiro'), runas = coalesce(p_runas, '{}'::jsonb),
+           habilidades = coalesce(p_habilidades, '[]'::jsonb), rota = v_rota,
+           versao = versao + 1, atualizado_em = now()
      where id = p_id and segredo_hash = v_hash
      returning id, versao into v_id, v_versao;
     if v_id is null then raise exception 'Build não encontrada ou o segredo não confere.'; end if;
@@ -218,7 +268,14 @@ begin
   end if;
 end $$;
 
-grant execute on function public.publicar_build(text, text, jsonb, text, jsonb, jsonb, text, text, text, text, text) to anon, authenticated;
+grant execute on function public.publicar_build(text, text, jsonb, text, jsonb, jsonb, text, text, text, text, text, jsonb, jsonb, text) to anon, authenticated;
 grant execute on function public.apagar_build(text, text) to anon, authenticated;
 grant execute on function public.registrar_evento(text, text) to anon, authenticated;
 grant execute on function public.peso_evento(text), public.inicio_semana() to anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- 6. Confere (rode à parte, se quiser):
+-- select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+--  where n.nspname = 'public' and p.proname = 'publicar_build';            -- tem de ser 1
+-- select id, nome, runas, habilidades, rota, engajamentos from public.builds_publicas limit 5;
+-- ---------------------------------------------------------------------

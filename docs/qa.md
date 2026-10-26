@@ -42,6 +42,10 @@ quebrados.
   o Pages é case-sensitive e o Windows não é, então `Assets/X.PNG` passa aqui e
   quebra lá.
 - Todo MP3 do mapa de som existe em `assets/audio`.
+- O `docs/servidor/supabase.sql` cobre o que a página manda e lê (F13-T87): cada função que a página chama
+  (`publicar_build`, `apagar_build`, `registrar_evento`) criada uma vez só e com todos os parâmetros que ela manda; a
+  `builds_publicas` com todas as colunas da tabela e tudo o que a página publica (`p_rota` → `rota`…), sem o hash; e o
+  grant por coluna com as mesmas. O arquivo de antes da T87 reprova (sem runas, habilidades e rota).
 - Todo card de região que o `data/regioes.js` aponta existe na pasta.
 
 **Fundação** — 225 itens; as runas contadas pela estrutura batem com o número
