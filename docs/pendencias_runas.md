@@ -28,7 +28,7 @@ python data/gerar_runas_json.py
 | A3 | Bug nº 19: "Copiar como texto" do lote não leva runas | Forjador | ✔ resolvido em 01/10/2026 (F13-T37, aprovada em 17/10/2026): o lote usa o mesmo escritor da build |
 | A4 | Bug nº 29: build publicada aberta "só para ver" tem as runas editáveis | Forjador | ✔ resolvido em 23/10/2026 (F13-T59): sem o Editar, a build só se lê — as runas também |
 | A5 | O app não aplica nenhuma troca automática, só avisa, e a tela não dizia isso | Forjador | ✔ resolvido em 23/09/2026 (F13-T18) |
-| A6 | Documentos desatualizados (o SQL do servidor é o que tem risco) | Forjador | aberto (média) |
+| A6 | Documentos desatualizados (o SQL do servidor é o que tem risco) | Forjador | parcial: ✔ o SQL e o README do servidor (F13-T87, 26/10/2026); o resto, aberto (baixa) |
 
 ---
 
@@ -144,7 +144,7 @@ O registro original:
 O app **não aplica nenhuma** das 24 trocas: todas são só um aviso na ficha ("Vira X quando..."). Não existe lógica por campeão nem por modo. O sufixo "(ainda não vale no app)" dependia de um comentário do MD e ficou sem uso quando a troca da Cassiopeia saiu. Proposta: tirar o código do sufixo e dizer uma vez, na tela de Runas, que as trocas são informativas.
 
 ### A6. Documentos desatualizados
-- **`docs/servidor/supabase.sql` e o README do servidor** não conhecem runas e habilidades. O README manda "colar o supabase.sql inteiro de novo" quando o SQL muda. Seguindo isso hoje, a view pública perde as colunas `runas` e `habilidades`, e as Públicas deixam de mostrar runas, caladas. Ainda ficariam duas versões de `publicar_build`. O `runas_e_habilidades.sql` precisa entrar no `supabase.sql`, ou o README precisa mandar rodá-lo depois. **É o único destes com risco real.**
+- ✔ **Resolvido na F13-T87 (26/10/2026):** o `supabase.sql` virou o banco inteiro (runas, habilidades e rota dentro), ensaiado no projeto no ar; o README manda mudança nova entrar nele; os arquivos antigos têm trava. Como era: **`docs/servidor/supabase.sql` e o README do servidor** não conhecem runas e habilidades. O README manda "colar o supabase.sql inteiro de novo" quando o SQL muda. Seguindo isso hoje, a view pública perde as colunas `runas` e `habilidades`, e as Públicas deixam de mostrar runas, caladas. Ainda ficariam duas versões de `publicar_build`. O `runas_e_habilidades.sql` precisa entrar no `supabase.sql`, ou o README precisa mandar rodá-lo depois. **É o único destes com risco real.**
 - **`docs/formato_de_importacao.md`**: ~~a linha 86 diz "Runas ficam de fora", e as linhas 49–54 documentam `RUNAS:`, `RUNAS 2:` e `FRAGMENTOS:`~~ — a frase saiu em 30/09/2026 (F13-T36b). Continua aberto: o prompt pronto para IA não pede runas, e os nomes válidos de runas não estão em nenhuma lista como a de `marcadores.md`.
 - **`docs/qa.md`**: não lista as checagens de runa que o roteiro ganhou nas F13-T8, T12, T13 e T17 (controle de grupo na ficha; resoluções medindo as runas no Completo, nas cinco trilhas, com a Leitura calma). O roteiro está em dia, o documento não.
 - **`docs/direcao_de_arte.md`**: não tem a tela de Runas (cores das trilhas lidas do ícone, a lombada da ficha, a faixa na forja).
