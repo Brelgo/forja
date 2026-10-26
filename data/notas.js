@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "26/10/2026",
+   "add": [],
+   "aj": [
+    "A plaqueta da build aberta fica sempre logo abaixo da aba Builds, em qualquer aba."
+   ],
+   "rem": []
+  },
+  {
    "data": "25/10/2026",
    "add": [
     "Num patch novo, o Montador decide sozinho o que é seguro atualizar; o resto fica a conferir.",
