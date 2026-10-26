@@ -6,7 +6,8 @@ window.NOTAS = {
    "add": [],
    "aj": [
     "A plaqueta da build aberta fica sempre logo abaixo da aba Builds, em qualquer aba.",
-    "Bastidores: o servidor das builds publicadas ficou descrito num arquivo só, mais seguro de manter."
+    "Bastidores: o servidor das builds publicadas ficou descrito num arquivo só, mais seguro de manter.",
+    "A popularidade das builds publicadas ficou mais justa: o servidor deixa de contar quem repete a mesma build muitas vezes no dia."
    ],
    "rem": []
   },
