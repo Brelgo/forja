@@ -392,6 +392,17 @@ def checar_arquivos(p):
     furos = sql_cobre_a_pagina(sql, idx)
     p.conta("arquivos", "o supabase.sql cobre o que a página manda e lê", not furos, "; ".join(furos[:4]) or "funções, view e grant")
 
+    # F13-T88: o limite de 5 por IP mora no registrar_evento do supabase.sql — some se
+    # alguém recriar a função sem ele (e as duas tabelas não podem abrir para o público)
+    reg = re.search(r"create or replace function public\.registrar_evento\(.*?end \$\$;", sql, re.S)
+    corpo = reg.group(0) if reg else ""
+    faltam = [x for x, ok in (("cf-connecting-ip", "cf-connecting-ip" in corpo), ("eventos_por_ip", "eventos_por_ip" in corpo),
+                              ("o teto 5", re.search(r"if v_n > 5 then return;", corpo) is not None),
+                              ("o sal do dia", "sal_do_dia" in corpo),
+                              ("o revoke das tabelas", re.search(r"revoke all on public\.sal_do_dia, public\.eventos_por_ip from anon, authenticated;", sql) is not None))
+              if not ok]
+    p.conta("arquivos", "o supabase.sql tem o limite de 5 por IP no registrar_evento", not faltam, "falta: " + ", ".join(faltam) if faltam else "cf-connecting-ip, teto 5, sal do dia, tabelas fechadas")
+
 
 def sql_cobre_a_pagina(sql, idx):
     """O que falta no SQL para a página funcionar: cada função chamada criada uma vez

@@ -46,6 +46,9 @@ quebrados.
   (`publicar_build`, `apagar_build`, `registrar_evento`) criada uma vez só e com todos os parâmetros que ela manda; a
   `builds_publicas` com todas as colunas da tabela e tudo o que a página publica (`p_rota` → `rota`…), sem o hash; e o
   grant por coluna com as mesmas. O arquivo de antes da T87 reprova (sem runas, habilidades e rota).
+- E o limite de 5 por IP (F13-T88) continua no `registrar_evento` do `supabase.sql`: o IP pelo `cf-connecting-ip`, o
+  teto 5, o sal do dia e as duas tabelas fechadas ao público. (O comportamento foi provado no banco, no ensaio que
+  aborta; o roteiro não registra evento no servidor de verdade.)
 - Todo card de região que o `data/regioes.js` aponta existe na pasta.
 
 **Fundação** — 225 itens; as runas contadas pela estrutura batem com o número

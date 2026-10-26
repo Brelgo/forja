@@ -64,6 +64,7 @@ O Supabase tem um verificador (Security Advisor). O SQL já segue o que ele pede
   **hash** do segredo de quem publicou.
 - `eventos`: cada medida com data — **impressão** (apareceu na lista), **detalhe** (abriram o resumo),
   **engajamento** (clique, favorito) e **cópia**. O nome antigo `visualizacao` continua valendo como detalhe.
+- `eventos_por_ip` e `sal_do_dia` (F13-T88): o limite de 5 por IP, sem guardar IP (ver "Como a popularidade é contada").
 - `builds_publicas`: a view que a página lê (tudo menos o hash), com `engajamentos` (o único número que
   aparece na tela), `pop_dia`, `dias_no_top` e `popular_semana`.
 - `pontos_por_dia`, `top_do_dia`, `destaques_semana`: as views que fazem a conta da popularidade.
@@ -87,6 +88,19 @@ Cada medida tem um peso, porque uma cópia custa muito mais ao usuário do que u
 - **Popular da semana**: quem ficar **três dias seguidos** no top 10 do dia ganha o selo, que vale até o
   **domingo às 09:00**. A semana começa e termina nesse horário.
 - Na tela só aparece o número de **engajamentos**. Impressões, detalhes e cópias alimentam a conta em silêncio.
+- **Até 5 por IP** (F13-T88; Leo, 26/10/2026): o mesmo IP conta a mesma build, no mesmo tipo, no máximo 5 vezes por
+  dia — da 6ª em diante o `registrar_evento` aceita a chamada e não registra nada. (O navegador já conta cada medida uma
+  vez por dia, mas essa trava some quando o navegador é limpo ou quando alguém chama o servidor direto.) O 5, e não 1,
+  é para quem divide a rede: a mesma casa, o mesmo 4G (as operadoras põem muitos celulares num IP só).
+  - O IP vem do cabeçalho `cf-connecting-ip`, que o Cloudflare preenche e quem chama não consegue forjar nem tirar
+    (nos logs de 26/10/2026 ele veio em 192 de 192 chamadas); o `x-forwarded-for` (forjável) só se ele faltar.
+  - **O IP nunca é gravado.** Fica um código (sha256 do IP com um sal aleatório do dia) em `eventos_por_ip`; o sal mora
+    em `sal_do_dia`. No primeiro evento de cada dia, o sal e as contagens dos dias anteriores são apagados — sem o sal,
+    os códigos velhos não voltam a ser IP. As duas tabelas não têm grant nem política: o público não lê nem escreve
+    (o verificador do Supabase mostra isso como INFO "RLS Enabled No Policy", e é de propósito).
+  - Rodado em 26/10/2026 (migração `limite_por_ip`, o `supabase.sql` inteiro), com o OK do Leo, depois de um ensaio no
+    projeto num bloco que aborta no fim: 7 chamadas do mesmo IP contaram 5; forjar o `x-forwarded-for` com o mesmo
+    `cf-connecting-ip` contou 0; outro IP, só `x-forwarded-for` e sem IP contaram 1 cada; nenhum IP em claro.
 
 ## Manutenção (futuro)
 - A única coisa que cresce é a tabela `eventos` (uma linha por impressão, detalhe, engajamento ou cópia — com

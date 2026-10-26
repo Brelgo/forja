@@ -1,6 +1,7 @@
 -- =====================================================================
 -- Montador de Itens de LoL — servidor das builds publicadas
--- O banco INTEIRO, na forma de hoje, num arquivo só (F13-T87, 26/10/2026).
+-- O banco INTEIRO, na forma de hoje, num arquivo só (F13-T87, 26/10/2026;
+-- o limite por IP desde a F13-T88).
 --
 -- Cole este arquivo inteiro no SQL Editor do Supabase e clique em Run.
 -- Serve para as duas coisas:
@@ -75,6 +76,26 @@ alter table public.eventos add constraint eventos_tipo_check
 create index if not exists eventos_build_quando on public.eventos (build_id, quando desc);
 create index if not exists eventos_quando on public.eventos (quando desc);
 
+-- ---------------------------------------------------------------------
+-- 2b. O limite por IP (F13-T88; Leo, 26/10/2026: "até 5 por IP"). O mesmo IP
+-- conta a mesma build, no mesmo tipo, no máximo 5 vezes por dia. O IP nunca é
+-- gravado: fica um código (sha256 do IP com o sal do dia, aleatório). O sal e
+-- as contagens somem no primeiro evento do dia seguinte — sem o sal, o código
+-- não volta a ser IP. Ninguém de fora lê nem escreve nestas duas tabelas.
+-- ---------------------------------------------------------------------
+create table if not exists public.sal_do_dia (
+  dia  date primary key,
+  sal  text not null
+);
+create table if not exists public.eventos_por_ip (
+  dia       date not null,
+  ip_hash   text not null,
+  build_id  text not null references public.builds(id) on delete cascade,
+  tipo      text not null,
+  n         integer not null default 0,
+  primary key (dia, ip_hash, build_id, tipo)
+);
+
 -- Quanto cada medida vale na popularidade. Cópia pesa mais porque custa mais
 -- ao usuário; impressão pesa pouco porque acontece sozinha ao rolar a lista.
 create or replace function public.peso_evento(p_tipo text) returns int
@@ -109,6 +130,10 @@ alter table public.eventos enable row level security;
 -- inteira de colunas é dada de novo logo abaixo, no mesmo arquivo.
 revoke all on public.builds  from anon, authenticated;
 revoke all on public.eventos from anon, authenticated;
+-- o limite por IP: sem política nenhuma e sem grant — só o registrar_evento mexe
+alter table public.sal_do_dia     enable row level security;
+alter table public.eventos_por_ip enable row level security;
+revoke all on public.sal_do_dia, public.eventos_por_ip from anon, authenticated;
 
 -- ---------------------------------------------------------------------
 -- 4. O que o público lê. As views rodam com a permissão de quem lê
@@ -254,11 +279,38 @@ end $$;
 
 -- Registra o evento e mantém os dois contadores antigos (visualizacoes e copias),
 -- que continuam existindo na tabela mas não aparecem mais na tela (F10-T15).
+-- F13-T88: até 5 por IP, por build, por tipo, por dia (seção 2b); da 6ª em
+-- diante a chamada é aceita e nada é registrado. O IP vem do cabeçalho do
+-- Cloudflare (cf-connecting-ip: quem chama não consegue forjar nem tirar; chega
+-- em todas as chamadas, conferido nos logs em 26/10/2026); o x-forwarded-for só
+-- se ele faltar. Sem IP nenhum (chamada de dentro do banco), conta como antes.
 create or replace function public.registrar_evento(p_id text, p_tipo text) returns void
 language plpgsql security definer set search_path = public, extensions as $$
+declare
+  v_cab json; v_ip text; v_dia date; v_sal text; v_n int;
 begin
   if p_tipo not in ('impressao', 'detalhe', 'engajamento', 'copia', 'visualizacao') then
     raise exception 'Tipo inválido.';
+  end if;
+  v_cab := coalesce(nullif(current_setting('request.headers', true), ''), '{}')::json;
+  v_ip := coalesce(nullif(trim(v_cab->>'cf-connecting-ip'), ''),
+                   nullif(trim(split_part(coalesce(v_cab->>'x-forwarded-for', ''), ',', 1)), ''));
+  if v_ip is not null then
+    v_dia := (now() at time zone 'America/Sao_Paulo')::date;
+    -- o sal do dia nasce no primeiro evento do dia; nessa hora o de antes e as
+    -- contagens de antes vão embora (os códigos antigos não voltam mais a IP)
+    insert into public.sal_do_dia (dia, sal) values (v_dia, encode(gen_random_bytes(16), 'hex'))
+      on conflict (dia) do nothing;
+    if found then
+      delete from public.eventos_por_ip where dia < v_dia;
+      delete from public.sal_do_dia where dia < v_dia;
+    end if;
+    select sal into v_sal from public.sal_do_dia where dia = v_dia;
+    insert into public.eventos_por_ip as c (dia, ip_hash, build_id, tipo, n)
+      values (v_dia, encode(digest(v_ip || '|' || v_sal, 'sha256'), 'hex'), p_id, p_tipo, 1)
+      on conflict (dia, ip_hash, build_id, tipo) do update set n = c.n + 1
+      returning c.n into v_n;
+    if v_n > 5 then return; end if;
   end if;
   insert into public.eventos (build_id, tipo) values (p_id, p_tipo);
   if p_tipo in ('detalhe', 'visualizacao') then

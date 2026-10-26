@@ -6320,7 +6320,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.87";
+const ATUALIZACAO = "13.88";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -10981,6 +10981,9 @@ function revisaoDaCopia(cats, pubPatch, removidos) {
 // navegador por dia. Antes bastava favoritar, desfavoritar e favoritar de novo
 // para somar três engajamentos. O dia é o de Brasília, o mesmo em que a
 // popularidade do dia zera no servidor (view builds_publicas).
+// F13-T88: e o servidor segura até 5 por IP, por build, por tipo e por dia
+// (registrar_evento, docs/servidor/supabase.sql) — a trava daqui some quando o
+// navegador é limpo; a de lá, não.
 const EVENTOS_CHAVE = "popularidade.contados";
 function diaDeBrasilia() {
   try { return new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" }); }
