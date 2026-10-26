@@ -6320,7 +6320,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.85";
+const ATUALIZACAO = "13.86";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -7070,6 +7070,9 @@ function initSalvar() {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(posicionarBigorna);
   // F13-T85: a OpenDyslexic só baixa quando o interruptor liga — a aba anda depois
   if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", posicionarBigorna);
+  // F13-T86: a aba ativa é ~2 px mais larga — trocar de aba movia a aba Builds (com
+  // transição) e a plaqueta ficava 2 px atrás dela; agora acompanha o tamanho das abas
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => posicionarBigorna()); document.querySelectorAll(".tabs .tab-btn").forEach(b => ro.observe(b)); }
   document.getElementById("discard-btn").addEventListener("click", () => confirmarSaida(() => {}));
   const dlg = document.getElementById("save-dialog");
   dlg.addEventListener("click", (e) => {

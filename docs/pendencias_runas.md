@@ -8,7 +8,7 @@ Arquivo único de tudo o que falta nas runas. Estão aqui:
 
 A fonte é sua. Em 23/09/2026 você autorizou corrigir o que a conferência achou (F13-T16). Fora isso, eu leio, aponto e sigo.
 
-Última revisão: 23/09/2026 (patch do app: 16.18.1).
+Última revisão: 26/10/2026 (F13-T86: o A4 e o bug nº 13 dados como resolvidos; patch do app: 16.21.1).
 
 Para ver o que o leitor aponta hoje:
 
@@ -26,7 +26,7 @@ python data/gerar_runas_json.py
 | A1 | O leitor jogava fora o bloco "Controle de grupo válido" de 5 runas, calado | Forjador | ✔ resolvido em 23/09/2026 (F13-T17) |
 | A2 | Bug nº 35: o texto perde a primária e a secundária quando a primária está sem runa | Forjador | ✔ resolvido em 17/10/2026 (F13-T38); resta o aviso para `RUNAS 2:` escrito à mão sem `RUNAS:` |
 | A3 | Bug nº 19: "Copiar como texto" do lote não leva runas | Forjador | ✔ resolvido em 01/10/2026 (F13-T37, aprovada em 17/10/2026): o lote usa o mesmo escritor da build |
-| A4 | Bug nº 29: build publicada aberta "só para ver" tem as runas editáveis | Forjador | aberto (baixa) |
+| A4 | Bug nº 29: build publicada aberta "só para ver" tem as runas editáveis | Forjador | ✔ resolvido em 23/10/2026 (F13-T59): sem o Editar, a build só se lê — as runas também |
 | A5 | O app não aplica nenhuma troca automática, só avisa, e a tela não dizia isso | Forjador | ✔ resolvido em 23/09/2026 (F13-T18) |
 | A6 | Documentos desatualizados (o SQL do servidor é o que tem risco) | Forjador | aberto (média) |
 
@@ -128,8 +128,10 @@ A linha `RUNAS:` só sai quando alguma runa da primária está escolhida. Com a 
 ### A3. ✔ Bug nº 19 (a parte das runas; consertado na F13-T37): "Copiar como texto" do lote
 `loteParaTexto` não chama `linhasDeRunas`. Quem usa o lote como cópia de segurança perde a página de runas, a ordem de habilidades e o Mestre Forjador. A outra metade do nº 19 (várias builds reimportadas viram uma só) não é de runa.
 
-### A4. Bug nº 29: build publicada aberta "só para ver" tem as runas editáveis
-A aba Runas não confere se a build é só para ver: `escolherRuna`, a troca de trilha e o Limpar gravam na hora. A grade de habilidades confere. De quebra: abrir uma publicada com o Editar já ligado deixa a build temporária em modo edição (`activateBuild`).
+### A4. ✔ Bug nº 29: build publicada aberta "só para ver" tem as runas editáveis — resolvido na F13-T59 (23/10/2026)
+**Como ficou:** sem o Editar, a build só se lê — a aba Runas também (o roteiro: "visualização só lê", com clique de verdade); e a pública aberta para ver não liga o Editar (o roteiro: "vendo uma pública: só visualização, sem Editar"; o nº 40, na F13-T51).
+
+**Como era:** a aba Runas não conferia se a build é só para ver: `escolherRuna`, a troca de trilha e o Limpar gravam na hora. A grade de habilidades confere. De quebra: abrir uma publicada com o Editar já ligado deixa a build temporária em modo edição (`activateBuild`).
 
 ### A5. ✔ O app só avisa as trocas automáticas, e agora diz isso — resolvido na F13-T18
 **Como ficou:**
@@ -149,7 +151,7 @@ O app **não aplica nenhuma** das 24 trocas: todas são só um aviso na ficha ("
 - **`index.html`**, comentário do `vagaHtml`: ainda fala de "Absorvição Vital" e de fragmento sem arte. O código está certo, só o comentário é velho.
 - **`docs/prompts_claude_design.md`**: o Prompt C (tela de Runas) nunca foi usado e ainda diz "Domínio".
 
-Relacionado, mas não é de runa: no bug nº 13 ("Última atualização" pula ao trocar de build), uma das causas é comparar runas cruas com runas normalizadas. Quando ele for consertado, a parte das runas se resolve junto.
+Relacionado, mas não é de runa: ✔ o bug nº 13 ("Última atualização" pula ao trocar de build) foi consertado na F13-T33 (27/09/2026), e a parte das runas (comparar runas cruas com runas normalizadas) junto.
 
 ---
 

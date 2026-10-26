@@ -3886,6 +3886,13 @@ def checar_bigorna(s, p):
         if not r or not r["visivel"] or r["nome"] != longo or longo not in (r["titulo"] or ""):
             ruins.append(aba + (":" + tela if tela else ""))
     p.conta("bigorna", "a plaqueta nomeia a build em todas as telas", not ruins, "sem a plaqueta: " + ", ".join(ruins) if ruins else "5 telas")
+    # F13-T86: a aba ativa é ~2 px mais larga; trocar de aba com clique de verdade (sem chamar o
+    # posicionarBigorna) não pode deixar a plaqueta fora do lugar — 4 px depois da aba Builds
+    passos = {}
+    for aba in ("build", "runas", "calc", "catalog"):
+        s.clicar('.tab-btn[data-tab="%s"]' % aba, 0.6)
+        passos[aba] = s.js("(() => { const p = document.getElementById('bigorna'); return p.hidden ? null : p.offsetLeft - document.querySelector('.tab-btn[data-tab=build]').offsetLeft; })()")
+    p.conta("bigorna", "trocar de aba não tira a plaqueta de baixo da aba Builds", all(v == 4 for v in passos.values()), "%s" % passos)
     # o nº 39: com o Editar ligado e um item por salvar, a loja, as Runas e a
     # Calculadora dizem "não salva" — na tela, não só no DOM
     s.js("switchTab('build'); showBuildScreen('forja'); window.scrollTo(0, 0); 'ok'")
@@ -5468,9 +5475,7 @@ def checar_dislexia(s, p):
     garantir_build_editavel(s)
     s.js("(() => { switchTab('catalog'); window.scrollTo(0, 0); return 1; })()"); time.sleep(0.3)
     PLAQUETA = "(() => { const p = document.getElementById('bigorna'); return p.hidden ? null : p.offsetLeft - document.querySelector('.tab-btn[data-tab=\"build\"]').offsetLeft; })()"
-    s.tela(1280, 800); time.sleep(0.3)   # o redimensionar refaz a posição (no carregamento ela fica 2 px atrás — antigo)
-    antes = s.js(PLAQUETA)
-    s.tela_normal(); time.sleep(0.3)
+    antes = s.js(PLAQUETA)   # F13-T86: sem a deriva de 2 px ao trocar de aba, mede direto
     s.clicar("#acess-btn", 0.4)
     s.clicar('label.som-opt:has(#ac-dislexia)', 0.6)
     fonte = s.js("""(async () => { await document.fonts.ready; await document.fonts.load('16px OpenDyslexic');

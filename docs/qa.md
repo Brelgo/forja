@@ -414,7 +414,9 @@ build em todas as telas (loja, lista, forja, Runas, Calculadora); fora da forja 
 no pior estado (nome de 63 letras, editando, não salva, caixa escolhida) nada estoura e o cabeçalho não muda de
 altura em nenhuma resolução; o Ctrl+S salva da loja; "parar de editar" pergunta com rascunho e devolve o foco;
 o nome leva à forja; renomear pelo campo muda a plaqueta e a faixa na hora; a faixa fica presa no topo ao rolar;
-a gravação recusada aparece na hora; e uma pública aberta para ver não fica com o Editar ligado (o nº 40).
+a gravação recusada aparece na hora; e uma pública aberta para ver não fica com o Editar ligado (o nº 40). E trocar
+de aba com clique de verdade deixa a plaqueta 4 px depois da aba Builds em todas (F13-T86: a aba ativa é ~2 px mais
+larga, e a plaqueta ficava atrás).
 
 **Fechar a build** (F13-T52; Leo, 19/10/2026: "deveria ter uma opção de fechar") — o × da plaqueta fecha a
 build (a plaqueta some, a build continua na lista, o disco não guarda build aberta, a aba Builds fica na lista,
