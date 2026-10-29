@@ -5,7 +5,8 @@ window.NOTAS = {
    "data": "29/10/2026",
    "add": [],
    "aj": [
-    "No catálogo, marcar duas tags do mesmo grupo mostra só os itens que têm as duas."
+    "No catálogo, marcar duas tags do mesmo grupo mostra só os itens que têm as duas.",
+    "As classes dos itens foram revistas: um item pode ter várias (o Bandocanos agora é Suporte e Tanque, e itens de Poder de Habilidade entram em Assassino)."
    ],
    "rem": []
   },
