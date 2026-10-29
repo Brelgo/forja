@@ -406,7 +406,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Cura",
@@ -606,7 +608,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Ionia",
@@ -995,7 +999,11 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador",
+    "Mago",
+    "Tanque"
    ],
    "specialEffects": [
     "Cura"
@@ -1085,7 +1093,10 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Targon",
@@ -1173,7 +1184,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -1268,7 +1281,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Lutador",
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [
     "Redução de Dano"
@@ -1360,7 +1375,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Mago",
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -1442,7 +1459,11 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador",
+    "Mago",
+    "Tanque"
    ],
    "specialEffects": [
     "Missão/Evolução",
@@ -1533,7 +1554,11 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador",
+    "Mago",
+    "Tanque"
    ],
    "specialEffects": [
     "Missão/Evolução",
@@ -1624,7 +1649,11 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador",
+    "Mago",
+    "Tanque"
    ],
    "specialEffects": [
     "Missão/Evolução",
@@ -1763,7 +1792,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Atirador",
+    "Mago"
    ],
    "specialEffects": [
     "Acúmulos",
@@ -4600,6 +4630,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [],
@@ -4881,7 +4912,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Demacia",
@@ -5406,7 +5439,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Ionia",
@@ -5492,7 +5527,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Mago",
+    "Suporte"
    ],
    "specialEffects": [],
    "region": "Shadow Isles",
@@ -5826,7 +5862,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Noxus",
@@ -6234,7 +6272,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -6612,7 +6652,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Mago",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -7496,7 +7537,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -7619,7 +7662,10 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -7726,8 +7772,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -7828,7 +7874,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Anti-Cura"
@@ -8344,7 +8392,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Lutador",
+    "Mago",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -8459,8 +8509,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Freljord",
@@ -8824,7 +8874,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Gatilho de Vida Baixa",
@@ -9264,7 +9316,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Runeterra",
@@ -9643,7 +9697,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Lutador",
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [],
    "region": "Demacia",
@@ -10093,7 +10149,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Ativa",
@@ -10337,8 +10395,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Dano Físico"
@@ -10855,7 +10913,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Atirador",
+    "Lutador",
+    "Mago"
    ],
    "specialEffects": [
     "Ataque Fortalecido",
@@ -11621,7 +11681,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [],
    "region": "Noxus",
@@ -12197,8 +12259,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [
     "Aura",
@@ -13133,6 +13195,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Suporte",
     "Tanque"
    ],
    "specialEffects": [
@@ -13906,8 +13969,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Dano Físico",
@@ -14609,8 +14672,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Assassino"
+    "Assassino",
+    "Lutador"
    ],
    "specialEffects": [
     "Anti-Cura"
@@ -14926,7 +14989,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Mago"
+    "Mago",
+    "Suporte"
    ],
    "specialEffects": [
     "Cura",
@@ -15693,6 +15757,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [
@@ -17099,8 +17164,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [
     "Aura",
@@ -17226,7 +17291,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Ressurreição",
@@ -17400,8 +17467,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Acúmulos",
@@ -17986,6 +18053,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [
@@ -19626,8 +19694,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [
     "Ativa",
@@ -20070,6 +20138,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [
@@ -20229,8 +20298,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [
     "Ativa",
@@ -20863,7 +20932,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Acúmulos",
@@ -21000,7 +21071,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Gatilho de Vida Baixa",
@@ -21276,8 +21349,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Ativa",
@@ -24459,6 +24532,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [
@@ -25981,6 +26055,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [
@@ -26632,8 +26707,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Acúmulos",
@@ -26783,8 +26858,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Atirador",
-    "Assassino"
+    "Assassino",
+    "Atirador"
    ],
    "specialEffects": [
     "Execução",
@@ -27237,8 +27312,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Ataque Fortalecido",
@@ -28509,8 +28584,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Lutador",
-    "Atirador"
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Dano Mágico",
@@ -29147,8 +29222,8 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Tanque",
-    "Suporte"
+    "Suporte",
+    "Tanque"
    ],
    "specialEffects": [
     "Aura",
@@ -30463,7 +30538,9 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
-    "Universal"
+    "Assassino",
+    "Atirador",
+    "Lutador"
    ],
    "specialEffects": [
     "Dano Físico",
@@ -30878,6 +30955,7 @@
     "tiebreak": null
    },
    "recommendedArchetype": [
+    "Assassino",
     "Mago"
    ],
    "specialEffects": [],

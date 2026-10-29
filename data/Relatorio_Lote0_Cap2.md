@@ -39,7 +39,7 @@ Acerto Crítico (condicional pela Vida bônus) (1), Acúmulos (46), Alcance de A
 
 ## Arquétipo Recomendado
 
-Assassino (17), Atirador (32), Lutador (31), Mago (47), Suporte (32), Tanque (35), Universal (60)
+Assassino (47), Atirador (57), Lutador (58), Mago (57), Suporte (38), Tanque (46), Universal (29)
 
 ## Região — 14 valores
 

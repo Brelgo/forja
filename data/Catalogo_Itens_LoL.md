@@ -102,7 +102,7 @@ Abatedora: Cull[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 245g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Cura, Geração de Ouro
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Cull") · https://wiki.leagueoflegends.com/en-us/Cull · Data Dragon pt_BR 16.21.1
@@ -181,7 +181,7 @@ Lâmina de Doran: Doran's Blade[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Vida, Vampirismo
     Classe: AD (AD 350g · Vitalidade 213,33g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Ionia
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Doran's Blade") · https://wiki.leagueoflegends.com/en-us/Doran's_Blade · Data Dragon pt_BR 16.21.1
@@ -342,7 +342,7 @@ Escudo de Doran: Doran's Shield[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Regeneração de Vida, Dano a Tropas
     Classe: Vitalidade (AD 0g · Vitalidade 437,33g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador, Mago, Tanque
     Efeitos Especiais: Cura
     Região: Ionia
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Doran's Shield") · https://wiki.leagueoflegends.com/en-us/Doran's_Shield · Data Dragon pt_BR 16.21.1
@@ -379,7 +379,7 @@ Lâmina do Guardião: Guardian's Blade[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Vida
     Classe: AD (AD 1.050g · Vitalidade 400g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador, Tanque
     Efeitos Especiais: none
     Região: Targon
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Guardian's Blade") · https://wiki.leagueoflegends.com/en-us/Guardian's_Blade · Data Dragon pt_BR 16.21.1
@@ -416,7 +416,7 @@ Martelo do Guardião: Guardian's Hammer[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Vida, Roubo de Vida
     Classe: AD (AD 1.142,75g · Vitalidade 400g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Guardian's Hammer") · https://wiki.leagueoflegends.com/en-us/Guardian's_Hammer · Data Dragon pt_BR 16.21.1
@@ -455,7 +455,7 @@ Berrante do Guardião: Guardian's Horn[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 1.120g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Lutador, Suporte, Tanque
     Efeitos Especiais: Redução de Dano
     Região: Freljord
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Guardian's Horn") · https://wiki.leagueoflegends.com/en-us/Guardian's_Horn · Data Dragon pt_BR 16.21.1
@@ -492,7 +492,7 @@ Orbe do Guardião: Guardian's Orb[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Poder de Habilidade, Vida, Regeneração de Mana, Regeneração de Vida
     Classe: AP (AD 0g · Vitalidade 400g · AP 1.000g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Mago, Suporte, Tanque
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Guardian's Orb") · https://wiki.leagueoflegends.com/en-us/Guardian's_Orb · Data Dragon pt_BR 16.21.1
@@ -534,7 +534,7 @@ Cria de Andabrisas: Gustwalker Hatchling[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: none
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 2: dano verdadeiro → desempate 3: efeito de utilidade)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador, Mago, Tanque
     Efeitos Especiais: Missão/Evolução, Acúmulos, Dano Verdadeiro, Dano em Área, Dano a Monstros, Cura, Restauração de Mana, Movimento
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Gustwalker Hatchling") · https://wiki.leagueoflegends.com/en-us/Gustwalker_Hatchling · Data Dragon pt_BR 16.21.1
@@ -576,7 +576,7 @@ Broto de Esmagamusgo: Mosstomper Seedling[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: none
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 2: dano verdadeiro → desempate 3: efeito de sobrevivência)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador, Mago, Tanque
     Efeitos Especiais: Missão/Evolução, Acúmulos, Dano Verdadeiro, Dano em Área, Dano a Monstros, Cura, Restauração de Mana, Escudo
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Mosstomper Seedling") · https://wiki.leagueoflegends.com/en-us/Mosstomper_Seedling · Data Dragon pt_BR 16.21.1
@@ -618,7 +618,7 @@ Filhote de Garrabrasa: Scorchclaw Pup[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: none
     Classe: AD e AP (AD 0g · Vitalidade 0g · AP 0g; decisão do usuário de 11/09/2026: item usado por assassinos AD e AP — exceção única aprovada em CLASSES_DE_ITENS_v2)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador, Mago, Tanque
     Efeitos Especiais: Missão/Evolução, Acúmulos, Dano Verdadeiro, Dano em Área, Dano a Monstros, Cura, Restauração de Mana, Dano ao Longo do Tempo, Dano Percentual, Lentidão
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Scorchclaw Pup") · https://wiki.leagueoflegends.com/en-us/Scorchclaw_Pup · Data Dragon pt_BR 16.21.1
@@ -661,7 +661,7 @@ Lágrima da Deusa: Tear of the Goddess[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Mana, Dano a Tropas
     Classe: AP (AD 0g · Vitalidade 0g · AP 240g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Atirador, Mago
     Efeitos Especiais: Acúmulos, Missão/Evolução
     Região: Shurima
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Tear of the Goddess") · https://wiki.leagueoflegends.com/en-us/Tear_of_the_Goddess · Data Dragon pt_BR 16.21.1
@@ -1639,7 +1639,7 @@ Sapatos do Feiticeiro: Sorcerer's Shoes[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Penetração Mágica, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 560g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: none
     Região: Ixtal
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Sorcerer's Shoes") · https://wiki.leagueoflegends.com/en-us/Sorcerer's_Shoes · Data Dragon pt_BR 16.21.1
@@ -1713,7 +1713,7 @@ Espada G. p. C.: B. F. Sword[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 1.400g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Demacia
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "B. F. Sword") · https://wiki.leagueoflegends.com/en-us/B._F._Sword · Data Dragon pt_BR 16.21.1
@@ -1853,7 +1853,7 @@ Adaga: Dagger[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Velocidade de Ataque
     Classe: AD (AD 250g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Ionia
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Dagger") · https://wiki.leagueoflegends.com/en-us/Dagger · Data Dragon pt_BR 16.21.1
@@ -1888,7 +1888,7 @@ Amuleto da Fada: Faerie Charm[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 200g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Mago, Suporte
     Efeitos Especiais: none
     Região: Shadow Isles
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Faerie Charm") · https://wiki.leagueoflegends.com/en-us/Faerie_Charm · Data Dragon pt_BR 16.21.1
@@ -1958,7 +1958,7 @@ Espada Longa: Long Sword[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 350g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Noxus
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Long Sword") · https://wiki.leagueoflegends.com/en-us/Long_Sword · Data Dragon pt_BR 16.21.1
@@ -2063,7 +2063,7 @@ Picareta: Pickaxe[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 875g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Pickaxe") · https://wiki.leagueoflegends.com/en-us/Pickaxe · Data Dragon pt_BR 16.21.1
@@ -2168,7 +2168,7 @@ Cristal de Safira: Sapphire Crystal[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 300g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Mago, Tanque
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Sapphire Crystal") · https://wiki.leagueoflegends.com/en-us/Sapphire_Crystal · Data Dragon pt_BR 16.21.1
@@ -2427,7 +2427,7 @@ Martelo de Guerra de Caulfield: Caulfield's Warhammer[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade
     Classe: AD (AD 700g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Caulfield's Warhammer") · https://wiki.leagueoflegends.com/en-us/Caulfield's_Warhammer · Data Dragon pt_BR 16.21.1
@@ -2462,7 +2462,7 @@ Cota de Malha: Chain Vest[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Armadura
     Classe: Vitalidade (AD 0g · Vitalidade 800g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador, Tanque
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Chain Vest") · https://wiki.leagueoflegends.com/en-us/Chain_Vest · Data Dragon pt_BR 16.21.1
@@ -2498,7 +2498,7 @@ Braçadeira Cristalina: Crystalline Bracer[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 833,33g · AP 0g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Crystalline Bracer") · https://wiki.leagueoflegends.com/en-us/Crystalline_Bracer · Data Dragon pt_BR 16.21.1
@@ -2534,7 +2534,7 @@ Chamado do Carrasco: Executioner's Calling[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 525g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Anti-Cura
     Região: Zaun
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Executioner's Calling") · https://wiki.leagueoflegends.com/en-us/Executioner's_Calling · Data Dragon pt_BR 16.21.1
@@ -2677,7 +2677,7 @@ Cinto do Gigante: Giant's Belt[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida
     Classe: Vitalidade (AD 0g · Vitalidade 933,33g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Lutador, Mago, Tanque
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Giant's Belt") · https://wiki.leagueoflegends.com/en-us/Giant's_Belt · Data Dragon pt_BR 16.21.1
@@ -2714,7 +2714,7 @@ Broquel Glacial: Glacial Buckler[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Armadura, Mana, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 500g · AP 300g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: none
     Região: Freljord
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Glacial Buckler") · https://wiki.leagueoflegends.com/en-us/Glacial_Buckler · Data Dragon pt_BR 16.21.1
@@ -2832,7 +2832,7 @@ Hexdrinker: Hexdrinker[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Resistência Mágica
     Classe: AD (AD 875g · Vitalidade 500g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Gatilho de Vida Baixa, Escudo
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Hexdrinker") · https://wiki.leagueoflegends.com/en-us/Hexdrinker · Data Dragon pt_BR 16.21.1
@@ -2940,7 +2940,7 @@ Gema Ardente: Kindlegem[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Penetração de Armadura
     Classe: AD (AD 1.450g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Last Whisper") · https://wiki.leagueoflegends.com/en-us/Last_Whisper · Data Dragon pt_BR 16.21.1
@@ -3051,7 +3051,7 @@ Capa Negatron: Negatron Cloak[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 900g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Lutador, Suporte, Tanque
     Efeitos Especiais: none
     Região: Demacia
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Negatron Cloak") · https://wiki.leagueoflegends.com/en-us/Negatron_Cloak · Data Dragon pt_BR 16.21.1
@@ -3201,7 +3201,7 @@ Bandana de Mercúrio: Quicksilver Sash[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 600g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Ativa, Remoção de Controle
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Quicksilver Sash") · https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash · Data Dragon pt_BR 16.21.1
@@ -3274,7 +3274,7 @@ Arco Recurvo: Recurve Bow[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Velocidade de Ataque, Efeitos ao Contato
     Classe: AD (AD 375g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Dano Físico
     Região: Runeterra (sem brasão na página)
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Recurve Bow") · https://wiki.leagueoflegends.com/en-us/Recurve_Bow · Data Dragon pt_BR 16.21.1
@@ -3423,7 +3423,7 @@ Fulgor: Sheen[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Aceleração de Habilidade
     Classe: AD (AD 0g · Vitalidade 0g · AP 0g; desempate 2: dano físico)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Atirador, Lutador, Mago
     Efeitos Especiais: Ataque Fortalecido, Dano Físico, Efeitos ao Contato, Dano a Estruturas
     Região: Freljord
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Sheen") · https://wiki.leagueoflegends.com/en-us/Sheen · Data Dragon pt_BR 16.21.1
@@ -3643,7 +3643,7 @@ Cetro Vampírico: Vampiric Scepter[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Roubo de Vida
     Classe: AD (AD 899,85g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: none
     Região: Noxus
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Vampiric Scepter") · https://wiki.leagueoflegends.com/en-us/Vampiric_Scepter · Data Dragon pt_BR 16.21.1
@@ -3831,7 +3831,7 @@ Máscara Abissal: Abyssal Mask[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Resistência Mágica, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.833,33g · AP 0g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: Aura, Vulnerabilidade Mágica
     Região: Shadow Isles
     Mestre Forjador: Elegível — 3 categorias upgradáveis (333,33g cada): Vida 350(+125)=475; Resistência Mágica 45(+18,52)=63,52; Aceleração de Habilidade 15(+10,67)=25,67
@@ -4110,7 +4110,7 @@ Bandocanos: Bandlepipes[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Aceleração de Habilidade, Armadura, Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 1.333,33g · AP 0g)
-    Arquétipo Recomendado: Tanque
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: Aura, Movimento, Velocidade de Ataque
     Região: Bandle City
     Mestre Forjador: Elegível — 4 categorias upgradáveis (250g cada): Vida 200(+90)=290; Aceleração de Habilidade 15(+8)=23; Armadura 20(+12,5)=32,5; Resistência Mágica 20(+13,89)=33,89
@@ -4341,7 +4341,7 @@ Espada do Rei Destruído: Blade of The Ruined King[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Roubo de Vida
     Classe: AD (AD 2.560,5g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Dano Físico, Dano Percentual, Efeitos ao Contato, Acúmulos, Lentidão
     Região: Shadow Isles
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Roubo de Vida não conta): Dano de Ataque 40(+14,29)=54,29; Velocidade de Ataque 25%(+16,67%)=41,67%
@@ -4571,7 +4571,7 @@ Serrespada Quimiopunk: Chempunk Chainsword[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Vida, Aceleração de Habilidade
     Classe: AD (AD 1.575g · Vitalidade 1.200g · AP 0g)
-    Arquétipo Recomendado: Lutador, Assassino
+    Arquétipo Recomendado: Assassino, Lutador
     Efeitos Especiais: Anti-Cura
     Região: Zaun (nome: Quimiopunk)
     Mestre Forjador: Elegível — 3 categorias upgradáveis (333,33g cada): Dano de Ataque 45(+9,52)=54,52; Vida 450(+125)=575; Aceleração de Habilidade 15(+10,67)=25,67
@@ -4659,7 +4659,7 @@ Criptoflora: Cryptbloom[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica Percentual, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.884,5g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Mago, Suporte
     Efeitos Especiais: Cura, Dano em Área
     Região: Shadow Isles
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Penetração Mágica não conta): Poder de Habilidade 75(+25)=100; Aceleração de Habilidade 20(+16)=36
@@ -4886,7 +4886,7 @@ Aurora e Crepúsculo: Dusk and Dawn[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Poder de Habilidade, Aceleração de Habilidade, Velocidade de Ataque
     Classe: AP (AD 500g · Vitalidade 800g · AP 1.200g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: Ataque Fortalecido, Dano Mágico, Cura, Efeitos ao Contato, Dano a Estruturas
     Região: Targon
     Mestre Forjador: Elegível — 4 categorias upgradáveis (250g cada): Vida 300(+90)=390; Poder de Habilidade 60(+12,5)=72,5; Aceleração de Habilidade 20(+8)=28; Velocidade de Ataque 20%(+8,33%)=28,33%
@@ -5302,7 +5302,7 @@ Coração Congelado: Frozen Heart[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Armadura, Mana, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.500g · AP 400g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: Aura, Redução de Velocidade de Ataque
     Região: Freljord (tema: inverno)
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Mana não conta): Armadura 75(+25)=100; Aceleração de Habilidade 20(+16)=36
@@ -5342,7 +5342,7 @@ Anjo Guardião: Guardian Angel[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Armadura
     Classe: AD (AD 1.925g · Vitalidade 900g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Ressurreição, Invulnerabilidade, Inalvejável, Cura, Restauração de Mana
     Região: Targon
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada): Dano de Ataque 55(+14,29)=69,29; Armadura 45(+25)=70
@@ -5391,7 +5391,7 @@ Lâmina da Fúria de Guinsoo: Guinsoo's Rageblade[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Poder de Habilidade, Velocidade de Ataque, Efeitos ao Contato
     Classe: AD (AD 1.675g · Vitalidade 0g · AP 600g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Acúmulos, Velocidade de Ataque, Dano Mágico, Efeitos ao Contato
     Região: Runeterra (sem brasão na página)
     Mestre Forjador: Elegível — 3 categorias upgradáveis (333,33g cada): Dano de Ataque 30(+9,52)=39,52; Poder de Habilidade 30(+16,67)=46,67; Velocidade de Ataque 25%(+11,11%)=36,11%
@@ -5566,7 +5566,7 @@ Explocinturão Hextec: Hextech Rocketbelt[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 933,33g · AP 1.200g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: Ativa, Investida, Dano Mágico, Dano em Área
     Região: Piltover (nome: Hextec)
     Mestre Forjador: Elegível — 3 categorias upgradáveis (333,33g cada): Poder de Habilidade 60(+16,67)=76,67; Vida 350(+125)=475; Aceleração de Habilidade 10(+10,67)=20,67
@@ -6056,7 +6056,7 @@ Juramento do Cavaleiro: Knight's Vow[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Armadura, Aceleração de Habilidade, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 1.633,33g · AP 0g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: Ativa, Redirecionamento de Dano, Cura
     Região: Demacia (nome: cavaleiro / juramento)
     Mestre Forjador: Elegível — 3 categorias upgradáveis (333,33g cada; Regeneração de Vida não conta): Vida 200(+125)=325; Armadura 40(+16,67)=56,67; Aceleração de Habilidade 10(+10,67)=20,67
@@ -6188,7 +6188,7 @@ Perdição de Lich: Lich Bane[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Poder de Habilidade, Movimento, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.000g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: Ataque Fortalecido, Dano Mágico, Efeitos ao Contato, Velocidade de Ataque, Dano a Estruturas
     Região: Demacia (Trivia: lâmina de petricita)
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Velocidade de Movimento não conta): Poder de Habilidade 100(+25)=125; Aceleração de Habilidade 10(+16)=26
@@ -6234,7 +6234,7 @@ Medalhão dos Solari de Ferro: Locket of the Iron Solari[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Armadura, Resistência Mágica, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.733,33g · AP 0g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: Ativa, Escudo
     Região: Targon (nome: Solari)
     Mestre Forjador: Elegível — 4 categorias upgradáveis (250g cada): Vida 200(+90)=290; Armadura 30(+12,5)=42,5; Resistência Mágica 30(+13,89)=43,89; Aceleração de Habilidade 10(+8)=18
@@ -6423,7 +6423,7 @@ Manamune: Manamune[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Mana, Aceleração de Habilidade
     Classe: AD (AD 1.225g · Vitalidade 0g · AP 500g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Acúmulos, Missão/Evolução
     Região: Ionia (Trivia: referência a Masamune)
     Mestre Forjador: Não elegível (linha da Lágrima da Deusa)
@@ -6469,7 +6469,7 @@ Mandíbula de Malmortius: Maw of Malmortius[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Resistência Mágica
     Classe: AD (AD 2.100g · Vitalidade 800g · AP 0g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Gatilho de Vida Baixa, Escudo
     Região: Runeterra (sem brasão na página)
     Mestre Forjador: Elegível — 3 categorias upgradáveis (333,33g cada): Dano de Ataque 60(+9,52)=69,52; Aceleração de Habilidade 15(+10,67)=25,67; Resistência Mágica 40(+18,52)=58,52
@@ -6560,7 +6560,7 @@ Cimitarra Mercurial: Mercurial Scimitar[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Resistência Mágica, Roubo de Vida
     Classe: AD (AD 2.285,5g · Vitalidade 700g · AP 0g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Ativa, Remoção de Controle, Movimento, Atravessar Unidades
     Região: Shadow Isles
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Roubo de Vida não conta): Dano de Ataque 50(+14,29)=64,29; Resistência Mágica 35(+27,78)=62,78
@@ -7519,7 +7519,7 @@ Chama Sombria: Shadowflame[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.900g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: Dano Crítico, Amplificação de Dano
     Região: Runeterra (sem brasão na página)
     Mestre Forjador: Elegível — 1 categoria upgradável (1.000g; Penetração Mágica não conta): Poder de Habilidade 110(+50)=160
@@ -7981,7 +7981,7 @@ Chuva de Canivete: Stormrazor[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.500g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: Dano Mágico, Dano em Área
     Região: Freljord
     Mestre Forjador: Elegível — 1 categoria upgradável (1.000g; Penetração Mágica e Velocidade de Movimento não contam): Poder de Habilidade 90(+50)=140
@@ -8166,7 +8166,7 @@ Terminus: Terminus[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Efeitos ao Contato
     Classe: AD (AD 1.925g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Acúmulos, Dano Mágico, Efeitos ao Contato
     Região: Shadow Isles
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada): Dano de Ataque 30(+14,29)=44,29; Velocidade de Ataque 35%(+16,67%)=51,67%
@@ -8209,7 +8209,7 @@ A Coletora: The Collector[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Letalidade, Acerto Crítico
     Classe: AD (AD 3.050g · Vitalidade 0g · AP 0g)
-    Arquétipo Recomendado: Atirador, Assassino
+    Arquétipo Recomendado: Assassino, Atirador
     Efeitos Especiais: Execução, Geração de Ouro
     Região: Bilgewater
     Mestre Forjador: Elegível — 1 categoria upgradável (1.000g; Letalidade e Acerto Crítico não contam): Dano de Ataque 50(+28,57)=78,57
@@ -8344,7 +8344,7 @@ Força da Trindade: Trinity Force[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Vida, Aceleração de Habilidade
     Classe: AD (AD 2.010g · Vitalidade 888g · AP 0g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Ataque Fortalecido, Dano Físico, Efeitos ao Contato, Movimento, Dano a Estruturas
     Região: Ionia
     Mestre Forjador: Elegível — 4 categorias upgradáveis (250g cada): Dano de Ataque 36(+7,14)=43,14; Velocidade de Ataque 30%(+8,33%)=38,33%; Vida 333(+90)=423; Aceleração de Habilidade 15(+8)=23
@@ -8720,7 +8720,7 @@ Limite da Razão: Wit's End[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Velocidade de Ataque, Resistência Mágica, Tenacidade, Efeitos ao Contato
     Classe: AD (AD 1.250g · Vitalidade 1.106,67g · AP 0g)
-    Arquétipo Recomendado: Lutador, Atirador
+    Arquétipo Recomendado: Atirador, Lutador
     Efeitos Especiais: Dano Mágico, Efeitos ao Contato
     Região: The Void
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Tenacidade não conta): Velocidade de Ataque 50%(+16,67%)=66,67%; Resistência Mágica 45(+27,78)=72,78
@@ -8911,7 +8911,7 @@ Convergência de Zeke: Zeke's Convergence[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Vida, Armadura, Resistência Mágica, Aceleração de Habilidade, Aceleração de Ultimate
     Classe: Vitalidade (AD 0g · Vitalidade 1.800g · AP 0g)
-    Arquétipo Recomendado: Tanque, Suporte
+    Arquétipo Recomendado: Suporte, Tanque
     Efeitos Especiais: Aura, Dano Mágico, Dano em Área, Dano ao Longo do Tempo, Lentidão, Dano a Monstros
     Região: Piltover
     Mestre Forjador: Elegível — 4 categorias upgradáveis (250g cada): Vida 300(+90)=390; Armadura 25(+12,5)=37,5; Resistência Mágica 25(+13,89)=38,89; Aceleração de Habilidade 10(+8)=18
@@ -9359,7 +9359,7 @@ Muramana: Muramana[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Dano de Ataque, Mana, Aceleração de Habilidade, Efeitos ao Contato
     Classe: AD (AD 1.225g · Vitalidade 0g · AP 1.000g)
-    Arquétipo Recomendado: Universal
+    Arquétipo Recomendado: Assassino, Atirador, Lutador
     Efeitos Especiais: Dano Físico, Efeitos ao Contato
     Região: Ionia (Trivia: Masamune)
     Mestre Forjador: Elegível — 2 categorias upgradáveis (500g cada; Mana não conta): Dano de Ataque 35(+14,29)=49,29; Aceleração de Habilidade 15(+16)=31 (infobox da wiki; confirmado em jogo pelo usuário, 12/09/2026)
@@ -9497,7 +9497,7 @@ Sapatos Enfeitiçados: Spellslinger's Shoes[
     Notas de ARAM: Mayhem: none
     Categoria de Atributo: Penetração Mágica, Penetração Mágica Percentual, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.302,53g)
-    Arquétipo Recomendado: Mago
+    Arquétipo Recomendado: Assassino, Mago
     Efeitos Especiais: none
     Região: Noxus
     Fontes: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data (entrada "Spellslinger's Shoes") · https://wiki.leagueoflegends.com/en-us/Spellslinger's_Shoes · Data Dragon pt_BR 16.21.1
@@ -9988,3 +9988,78 @@ Sem mudança: Mestre Forjador e Reembolso do Quebra-Bastião, do Auronúcleo e d
 ## Divergências da sessão
 - Nenhuma em aberto. Os conflitos de 21/10 (Quebra-Bastião com 1038 de Letalidade; Cost Analysis do Auronúcleo com 10 de PdH) eram da wiki em atualização: o usuário confirmou o erro, e a wiki corrigida em 22/10 concorda com o V26.21 e com o Data Dragon.
 - Informativo: a wiki mantém o Vampirismo Universal em 46g por 1% com as Grevas a 1.100g. Pela conta antiga, (1.100g − 540g) ÷ 10% daria 56g. O catálogo segue a wiki (Cost Analysis e tabela "Gold efficiency").
+
+# Ajustes — Arquétipo Recomendado com várias classes (29/10/2026)
+
+Origem: pedido do usuário em 29/10/2026. Um item pode ter mais de uma classe (o Montador lê o campo como lista); Universal fica sozinho, só para o item que serve a todas as classes; as classes seguem a ordem Assassino, Atirador, Lutador, Mago, Suporte, Tanque. Só a linha `Arquétipo Recomendado` muda: nenhum preço, atributo ou efeito. Critério e decisões em `docs/DECISOES_Capitulo1.md` §10; relatório em `lotes/Arquetipo_multiclasse_2026-10-29.md`; papéis da wiki em `fontes/2026-10-29/menu_papeis_wiki.txt` (`Module:ItemData/data`, revisão 4088750). Modelo: Claude Opus 5.5.
+
+Critério: (1) todas as funções do menu de papéis da wiki (filtros por função da loja do cliente), sem a regra antiga "3 papéis ou mais → Universal"; (2) Universal só com as 6 funções no menu, ou para o item sem papel e sem núcleo ofensivo; (3) evoluções sem papel herdam o item de origem; (4) +Suporte quando o efeito beneficia aliados (Bandocanos, Criptoflora); +Assassino para item de Poder de Habilidade com Penetração Mágica fixa, Investida ou Ataque Fortalecido; (5) exceção: Atlas Mundial só Suporte (Vinculação de Função).
+
+## Classes alteradas (40 itens)
+
+| Item | Antes | Depois | Por quê |
+|---|---|---|---|
+| Abatedora | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Lâmina de Doran | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Escudo de Doran | Universal | Assassino, Atirador, Lutador, Mago, Tanque | menu da wiki: Assassino, Atirador, Lutador, Mago, Tanque |
+| Lâmina do Guardião | Universal | Assassino, Atirador, Lutador, Tanque | menu da wiki: Assassino, Atirador, Lutador, Tanque |
+| Martelo do Guardião | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Berrante do Guardião | Universal | Lutador, Suporte, Tanque | menu da wiki: Lutador, Suporte, Tanque |
+| Orbe do Guardião | Universal | Mago, Suporte, Tanque | menu da wiki: Mago, Suporte, Tanque |
+| Cria de Andabrisas | Universal | Assassino, Atirador, Lutador, Mago, Tanque | menu da wiki: Assassino, Atirador, Lutador, Mago, Tanque |
+| Broto de Esmagamusgo | Universal | Assassino, Atirador, Lutador, Mago, Tanque | menu da wiki: Assassino, Atirador, Lutador, Mago, Tanque |
+| Filhote de Garrabrasa | Universal | Assassino, Atirador, Lutador, Mago, Tanque | menu da wiki: Assassino, Atirador, Lutador, Mago, Tanque |
+| Lágrima da Deusa | Universal | Atirador, Mago | menu da wiki: Atirador, Mago |
+| Sapatos do Feiticeiro | Mago | Assassino, Mago | sem papel no menu da wiki: mantém o critério do lote (núcleo ofensivo → papel; neutro → Universal); +Assassino: item de PdH com Penetração Mágica fixa (paralelo da Letalidade nos itens de AD) |
+| Espada G. p. C. | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Adaga | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Amuleto da Fada | Universal | Mago, Suporte | menu da wiki: Mago, Suporte |
+| Espada Longa | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Picareta | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Cristal de Safira | Universal | Mago, Tanque | menu da wiki: Mago, Tanque |
+| Martelo de Guerra de Caulfield | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Cota de Malha | Universal | Assassino, Atirador, Lutador, Tanque | menu da wiki: Assassino, Atirador, Lutador, Tanque |
+| Chamado do Carrasco | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Cinto do Gigante | Universal | Lutador, Mago, Tanque | menu da wiki: Lutador, Mago, Tanque |
+| Hexdrinker | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Último Sussurro | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Capa Negatron | Universal | Lutador, Suporte, Tanque | menu da wiki: Lutador, Suporte, Tanque |
+| Bandana de Mercúrio | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Fulgor | Universal | Atirador, Lutador, Mago | menu da wiki: Atirador, Lutador, Mago |
+| Cetro Vampírico | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Bandocanos | Tanque | Suporte, Tanque | menu da wiki: Tanque; +Suporte: a Fanfarra dá Velocidade de Ataque e de Movimento aos aliados próximos |
+| Criptoflora | Mago | Mago, Suporte | menu da wiki: Mago; +Suporte: cura os campeões aliados atingidos ao participar de um abate |
+| Aurora e Crepúsculo | Mago | Assassino, Mago | menu da wiki: Mago; +Assassino: item de PdH com Ataque Fortalecido (paralelo da Letalidade nos itens de AD) |
+| Anjo Guardião | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Explocinturão Hextec | Mago | Assassino, Mago | menu da wiki: Mago; +Assassino: item de PdH com Investida (paralelo da Letalidade nos itens de AD) |
+| Perdição de Lich | Mago | Assassino, Mago | menu da wiki: Mago; +Assassino: item de PdH com Ataque Fortalecido (paralelo da Letalidade nos itens de AD) |
+| Manamune | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Mandíbula de Malmortius | Universal | Assassino, Atirador, Lutador | menu da wiki: Assassino, Atirador, Lutador |
+| Chama Sombria | Mago | Assassino, Mago | menu da wiki: Mago; +Assassino: item de PdH com Penetração Mágica fixa (paralelo da Letalidade nos itens de AD) |
+| Ápice da Tempestade | Mago | Assassino, Mago | menu da wiki: Mago; +Assassino: item de PdH com Penetração Mágica fixa (paralelo da Letalidade nos itens de AD) |
+| Muramana | Universal | Assassino, Atirador, Lutador | evolução de Manamune (menu da wiki: Assassino, Atirador, Lutador) |
+| Sapatos Enfeitiçados | Mago | Assassino, Mago | evolução de Sapatos do Feiticeiro: mesma classe da origem; +Assassino: item de PdH com Penetração Mágica fixa (paralelo da Letalidade nos itens de AD) |
+
+## Só a ordem (16 itens)
+
+| Item | Antes | Depois |
+|---|---|---|
+| Braçadeira Cristalina | Tanque, Suporte | Suporte, Tanque |
+| Broquel Glacial | Tanque, Suporte | Suporte, Tanque |
+| Arco Recurvo | Lutador, Atirador | Atirador, Lutador |
+| Máscara Abissal | Tanque, Suporte | Suporte, Tanque |
+| Espada do Rei Destruído | Lutador, Atirador | Atirador, Lutador |
+| Serrespada Quimiopunk | Lutador, Assassino | Assassino, Lutador |
+| Coração Congelado | Tanque, Suporte | Suporte, Tanque |
+| Lâmina da Fúria de Guinsoo | Lutador, Atirador | Atirador, Lutador |
+| Juramento do Cavaleiro | Tanque, Suporte | Suporte, Tanque |
+| Medalhão dos Solari de Ferro | Tanque, Suporte | Suporte, Tanque |
+| Cimitarra Mercurial | Lutador, Atirador | Atirador, Lutador |
+| Terminus | Lutador, Atirador | Atirador, Lutador |
+| A Coletora | Atirador, Assassino | Assassino, Atirador |
+| Força da Trindade | Lutador, Atirador | Atirador, Lutador |
+| Limite da Razão | Lutador, Atirador | Atirador, Lutador |
+| Convergência de Zeke | Tanque, Suporte | Suporte, Tanque |
+
+## Divergências da sessão
+- Nenhuma de dado. Informativo: o menu da wiki marca os Bandocanos só como "tank" e não põe "assassin" em item de Poder de Habilidade; os acréscimos de Suporte e Assassino são critério aprovado pelo usuário em 29/10/2026, fora do menu.
