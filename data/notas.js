@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "29/10/2026",
+   "add": [],
+   "aj": [
+    "No catálogo, marcar duas tags do mesmo grupo mostra só os itens que têm as duas."
+   ],
+   "rem": []
+  },
+  {
    "data": "26/10/2026",
    "add": [],
    "aj": [
