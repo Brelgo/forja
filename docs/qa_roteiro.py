@@ -5561,6 +5561,60 @@ def checar_dislexia(s, p):
             "ligada %s · lados %s · cards cortados %s · desligada %s · plaqueta antes %s" % (fonte, lados, cortes, volta, antes))
 
 
+def checar_tags_somam(s, p):
+    """F13-T89 (Leo, 29/10/2026: "o que eu quero é que sejam exibidos os itens que tem a tag A+B"):
+    com clique de verdade nos chips da loja, marcar A e B num grupo de várias tags mostra só quem
+    tem as duas (Efeitos Especiais e Atributo); num grupo de valor único (Tier), dois chips somam.
+    O par é escolhido no catálogo de modo que "A e B" seja menor que "A ou B" e não zere, e o
+    esperado é contado por fora, direto do CATALOG."""
+    print("\n%sTAGS SOMAM%s" % (AMARELO, FIM))
+    s.js("(() => { switchTab('catalog'); clearAllFilters(); window.scrollTo(0, 0); return 1; })()"); time.sleep(0.4)
+    pares = s.js("""(() => {
+      const base = CATALOG.items.filter(it => itemInClass(it, state.classe));
+      const tags = { effects: it => it.specialEffects || [], stats: it => (it.attributes || []).map(a => a.stat) };
+      const opcoes = { effects: CATALOG.meta.specialEffects.filter(v => !DAMAGE_OPTIONS.includes(v)), stats: ALL_STATS.map(([st]) => st) };
+      const out = {};
+      for (const g of ['effects', 'stats']) {
+        const conta = v => base.filter(it => tags[g](it).includes(v)).length;
+        let melhor = null;
+        for (const a of opcoes[g]) for (const b of opcoes[g]) {
+          if (a >= b) continue;
+          const na = conta(a), nb = conta(b), ambos = base.filter(it => tags[g](it).includes(a) && tags[g](it).includes(b)).length;
+          const ou = na + nb - ambos;
+          if (ambos > 0 && ambos < Math.min(na, nb) && (!melhor || ou - ambos > melhor.ou - melhor.ambos)) melhor = { a, b, na, nb, ambos, ou };
+        }
+        out[g] = melhor;
+      }
+      const tiers = ['Épico', 'Lendário'].filter(x => TIER_ORDER.includes(x));
+      out.tiers = { a: tiers[0], b: tiers[1], soma: base.filter(it => tiers.includes(it.tier)).length };
+      return out;
+    })()""")
+    cards = "document.querySelectorAll('#grid .card').length"
+    abre = lambda g: s.js("(() => { const w = document.querySelector('.filter-group[data-group=\"%s\"]'); if (w.classList.contains('collapsed')) w.querySelector('.filter-group-title').click(); return 1; })()" % g)
+    chip = lambda g, v: '.chip[data-group="%s"][data-value=%s]' % (g, json.dumps(v, ensure_ascii=False))
+    medidas = {}
+    for g in ("effects", "stats", "tiers"):
+        par = pares.get(g)
+        if not par:
+            medidas[g] = None
+            continue
+        s.js("(() => { clearAllFilters(); return 1; })()"); time.sleep(0.3)
+        abre(g); time.sleep(0.3)
+        s.clicar(chip(g, par["a"]), 0.4)
+        so_a = s.js(cards)
+        s.clicar(chip(g, par["b"]), 0.5)
+        medidas[g] = {"par": [par["a"], par["b"]], "so_a": so_a, "a_e_b": s.js(cards),
+                      "esperado": par["ambos"] if g != "tiers" else par["soma"],
+                      "marcados": s.js("[...state['%s']]" % g)}
+    s.js("(() => { clearAllFilters(); return 1; })()")
+    ok = all(m and len(m["marcados"]) == 2 and m["a_e_b"] == m["esperado"] for m in medidas.values())
+    ok = ok and medidas["effects"]["a_e_b"] < medidas["effects"]["so_a"] and medidas["stats"]["a_e_b"] < medidas["stats"]["so_a"]
+    ok = ok and medidas["tiers"]["a_e_b"] > medidas["tiers"]["so_a"]
+    p.conta("tags somam", "duas tags no mesmo grupo mostram só quem tem as duas (Efeitos, Atributo); no Tier, dois chips somam",
+            ok, "; ".join("%s %s: só A %s, A+B %s (esperado %s)" % (g, m["par"], m["so_a"], m["a_e_b"], m["esperado"]) if m else "%s: sem par" % g
+                          for g, m in medidas.items()))
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5572,6 +5626,7 @@ GRUPOS = [
     ("endereço por tela", checar_enderecos),
     ("autor", checar_autor),
     ("dislexia", checar_dislexia),
+    ("tags somam", checar_tags_somam),
     ("visualização", checar_visualizacao),
     ("passiva do Ornn", checar_passiva_do_ornn),
     ("teclado", checar_teclado),

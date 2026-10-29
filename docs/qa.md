@@ -211,6 +211,11 @@ em 1600 e 1280, na loja e na forja (a plaqueta da bigorna passava 57 px em 1280 
 atributo nem nome com "…" (eram 225 em 1600: a linha quebra e o card cresce); desligada, volta à Alegreya, e a plaqueta, à aba
 Builds (o caminho antigo).
 
+**Tags somam** (F13-T89; Leo, 29/10/2026: "o que eu quero é que sejam exibidos os itens que tem a tag A+B") — com clique de
+verdade nos chips da loja: num grupo de várias tags, marcar A e depois B estreita a grade para quem tem as duas (Efeitos
+Especiais e Atributo; o par é escolhido no catálogo para que "A e B" fique menor que "A ou B" sem zerar, e o esperado é contado
+por fora); num grupo de valor único (Tier), dois chips somam. Com o "ou" de antes, Acúmulos + Ativa davam 68 itens em vez de 9.
+
 **Cadeado** (F13-T70; Leo, 15/10 e 24/10/2026: o cadeado impede nas caixas que contam — Comum, Prioridade e o
 padrão da Escolha 1; a Opcional e as alternativas aceitam) — o que o cadeado lê do catálogo bate (3 itens de Selva, 7
 botas da Missão do Meio, 8 da linha do Atlas, 5 itens que pedem runa, 24 grupos, as Botas Levemente Mágicas no lugar

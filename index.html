@@ -6320,7 +6320,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.88";
+const ATUALIZACAO = "13.89";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -12887,16 +12887,25 @@ function aplicarNucleo() {
   if (nome) nome.textContent = NUCLEO_ESTANDARTE[state.classe] || "";
 }
 
+// F13-T89 (Leo, 29/10/2026: "o que eu quero é que sejam exibidos os itens que tem a tag A+B"):
+// nos grupos em que o item tem várias tags (Modo de jogo, Tipo de dano, Atributo, Arquétipo,
+// Categoria, Efeitos), marcar A e B mostra só quem tem A E B — antes era A ou B. Tier, Região,
+// Custo e Eficiência seguem "qualquer um": o item tem um valor só neles, e "todos" daria vazio.
+function temTodas(valores, marcadas) {
+  for (const v of marcadas) if (!valores.includes(v)) return false;
+  return true;
+}
+
 function itemMatchesFilters(item) {
   if (!itemInClass(item, state.classe)) return false;
-  if (state.modes.size && !(item.gameModes || []).some(m => state.modes.has(m))) return false;
+  if (state.modes.size && !temTodas(item.gameModes || [], state.modes)) return false;
   if (state.tiers.size && !state.tiers.has(item.tier)) return false;
   if (state.regions.size && !state.regions.has(item.region)) return false;
-  if (state.archetypes.size && !(item.recommendedArchetype || []).some(v => state.archetypes.has(v))) return false;
-  if (state.categories.size && !(item.attributeCategory || []).some(v => state.categories.has(v))) return false;
-  if (state.effects.size && !(item.specialEffects || []).some(v => state.effects.has(v))) return false;
+  if (state.archetypes.size && !temTodas(item.recommendedArchetype || [], state.archetypes)) return false;
+  if (state.categories.size && !temTodas(item.attributeCategory || [], state.categories)) return false;
+  if (state.effects.size && !temTodas(item.specialEffects || [], state.effects)) return false;
   if (state.runes.has("mf-yes") && masterworkState(item) !== "yes") return false;
-  if (state.damage.size && !(item.specialEffects || []).some(v => state.damage.has(v))) return false;
+  if (state.damage.size && !temTodas(item.specialEffects || [], state.damage)) return false;
   if (state.prices.size) {
     const p = effectivePrice(item) ?? 0;
     if (!PRICE_BANDS.some(b => state.prices.has(b.value) && b.test(p))) return false;
@@ -12905,7 +12914,7 @@ function itemMatchesFilters(item) {
     const e = itemEfficiency(item);
     if (!EFF_BANDS.some(b => state.efficiency.has(b.value) && b.test(e))) return false;
   }
-  if (state.stats.size && !(item.attributes || []).some(a => state.stats.has(a.stat))) return false;
+  if (state.stats.size && !temTodas((item.attributes || []).map(a => a.stat), state.stats)) return false;
   return true;
 }
 
