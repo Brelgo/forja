@@ -3113,16 +3113,17 @@ def checar_abas(s, p):
             time.sleep(0.4)
             avisos.append(b.js("document.getElementById('remota-texto').textContent.includes('Edite na outra aba')"))
         perguntas = len(b.dialogos)
-        tenta(lambda: b.clicar("#edit-switch", 0.2))                 # o Editar da forja
+        # (o Editar e o clique no item da loja vão para a dona desde a F13-T94 — checagens logo abaixo)
+        tenta(lambda: b.clicar("#dup-build", 0.2))                   # o Duplicar da forja
         tenta(lambda: b.clicar("#del-build", 0.2))                   # o Excluir: nem chega a perguntar (o confirm)
         tenta(lambda: b.clicar("#bg-fechar", 0.2))                   # o × da plaqueta
         tenta(lambda: b.clicar("#build-back", 0.6) or b.clicar("#bi-new", 0.2))   # "Builds" (navega) e "+ Nova build"
-        tenta(lambda: (b.clicar('.tab-btn[data-tab="catalog"]', 0.6), b.clicar('#grid .card[data-slug="doran-s-blade"] .card-name', 0.2)))   # um item da loja
+        tenta(lambda: (b.clicar('.tab-btn[data-tab="catalog"]', 0.6), b.clicar("#cff-fechar", 0.2)))   # o × da faixa da loja
         salvar = {}
         tenta(lambda: salvar.update(r=b.js("!document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 's', ctrlKey: true, bubbles: true, cancelable: true }))")))
         ge = b.js("({ editando: build.editing, toggle: document.getElementById('edit-toggle').checked, n: library.builds.length, dialogo: !document.getElementById('save-dialog').hidden })")
-        p.conta("duas abas", "controle remoto: ligar o Editar, o Excluir, o ×, a Nova build, o clique no item da loja e o Ctrl+S avisam \"edite na outra aba\" e não mexem em nada (nem no disco, nem perguntam)",
-                all(avisos) and len(avisos) == 6 and b.js("JSON.stringify(snapshotActive())") == antes and not ge["editando"] and not ge["toggle"]
+        p.conta("duas abas", "controle remoto: o Duplicar, o Excluir, o ×, a Nova build, o × da loja e o Ctrl+S avisam \"edite na outra aba\" e não mexem em nada (nem no disco, nem perguntam)",
+                all(avisos) and len(avisos) == 6 and b.js("JSON.stringify(snapshotActive())") == antes and not ge["editando"]
                 and not ge["dialogo"] and len(b.dialogos) == perguntas and salvar.get("r") is True
                 and s.js("localStorage.getItem('lol-builds-v3')") == disco0 and s.js("build.cats[0].items.length") >= 1,
                 "avisos %s · perguntas %s · Ctrl+S anulado %s · aba 2 %s · mudou a build: %s"
@@ -3135,6 +3136,159 @@ def checar_abas(s, p):
         p.conta("duas abas", "controle remoto: o que escapar dos avisos e tentar gravar não fica — a memória volta ao disco e à build da dona, e a faixa avisa",
                 sn["nome"] == "Da aba 1" and sn["caixas"] == s.js("build.cats.length") and sn["aviso"] and "Escapou" not in sn["nomes"]
                 and s.js("localStorage.getItem('lol-builds-v3')") == disco0, "aba 2: %s" % sn)
+
+        # ---- F13-T94: o clique no item da loja, a caixa e o Editar da remota vão para a dona ----
+        # Os sons ficam anotados nas duas abas: o som é da aba do clique, não da dona
+        espia_som = "(() => { window.__sons = []; if (!Som.__orig) { Som.__orig = Som.play; Som.play = (ev, c) => { window.__sons.push(ev); return Som.__orig(ev, c); }; } return 1; })()"
+        b.js(espia_som); s.js(espia_som)
+        cats = s.js("build.cats.map(c => c.id)")
+        botas = s.js("CATALOG.items.filter(i => i.tier === 'Bota').slice(0, 2).map(i => i.slug)")
+        lend = s.js("CATALOG.items.filter(i => i.tier === 'Lendário' && !findInBuild(i.slug)).slice(0, 2).map(i => i.slug)")
+        carta = lambda slug: '#grid .card[data-slug="%s"] .card-name' % slug
+        b.clicar('.tab-btn[data-tab="catalog"]', 0.6)
+        # (a) sem caixa, o clique pergunta a caixa AQUI; a escolha vai para a dona, que põe no rascunho dela
+        b.clicar(carta(botas[0]), 0.5)
+        pergunta = b.js("!document.getElementById('escolher-caixa').hidden")
+        if pergunta:
+            b.clicar('#ec-lista .ec-caixa[data-cat="%s"]' % cats[1], 0.3)
+        espera(s, "getCat(%r) && getCat(%r).items.some(i => i.itemId === %r)" % (cats[1], cats[1], botas[0]), 4)
+        espera(b, "!!findInBuild(%r)" % botas[0], 4); time.sleep(0.3)
+        a1 = s.js("({ na: getCat(%r).items.some(i => i.itemId === %r), caixa: build.selectedCatId, sujo: rascunho.sujo, sons: window.__sons.slice() })" % (cats[1], botas[0]))
+        a2 = b.js("({ carta: document.querySelector('#grid .card[data-slug=\"%s\"]').classList.contains('in-build'), faixa: !document.getElementById('cff-caixa').hidden, sons: window.__sons.slice() })" % botas[0])
+        p.conta("duas abas", "controle remoto (T94): sem caixa, o clique no item pergunta a caixa aqui; a escolha vai para a dona, que põe o item no rascunho dela — o som toca aqui, não lá",
+                pergunta and a1["na"] and a1["caixa"] == cats[1] and a1["sujo"] and a2["carta"] and a2["faixa"]
+                and "build:item_add" in a2["sons"] and "build:item_add" not in a1["sons"] and s.js("localStorage.getItem('lol-builds-v3')") == disco0,
+                "pergunta %s · dona %s · aqui %s" % (pergunta, a1, a2))
+        # (b) com a caixa escolhida (a da dona), o clique vai direto; o cadeado da dona vale; clicar de novo tira
+        b.clicar(carta(lend[0]), 0.2)
+        espera(s, "!!findInBuild(%r)" % lend[0], 4); time.sleep(0.3)
+        b.js("(() => { document.getElementById('catalog-mode-hint').classList.remove('show'); return 1; })()")
+        tranc_aqui = b.js("document.querySelector('#grid .card[data-slug=\"%s\"]').classList.contains('trancado')" % botas[1])   # o cadeado desenhado aqui, com o Editar e a caixa da dona
+        b.clicar(carta(botas[1]), 0.2); time.sleep(0.6)   # duas botas na mesma caixa: o cadeado
+        trava = b.js("({ hint: document.getElementById('catalog-mode-hint').classList.contains('show') ? document.getElementById('catalog-mode-hint').textContent : '' })")
+        b.clicar(carta(lend[0]), 0.2)
+        espera(s, "!findInBuild(%r)" % lend[0], 4); time.sleep(0.3)
+        b1 = s.js("({ bota2: !!findInBuild(%r), lend: !!findInBuild(%r) })" % (botas[1], lend[0]))
+        p.conta("duas abas", "controle remoto (T94): com a caixa da dona escolhida, o clique põe direto; a segunda bota já vem com o cadeado aqui e cai nele (o recado aparece aqui); clicar de novo tira",
+                tranc_aqui and "trancado" in trava["hint"] and not b1["bota2"] and not b1["lend"] and "catalog:click" in b.js("window.__sons"),
+                "cadeado na carta %s · recado %r · dona %s" % (tranc_aqui, trava["hint"][:70], b1))
+        # (c) o "Marcar em", o "soltar" e o Esc daqui mudam a caixa da dona
+        b.js("(() => { const s = document.getElementById('catalog-cat-select'); s.value = %r; s.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % cats[2])
+        espera(s, "build.selectedCatId === %r" % cats[2], 3)
+        c1 = s.js("build.selectedCatId")
+        espera(b, "!document.getElementById('cff-soltar').hidden", 3)
+        b.clicar("#cff-soltar", 0.2)
+        espera(s, "build.selectedCatId === null", 3)
+        c2 = s.js("build.selectedCatId")
+        b.js("(() => { const s = document.getElementById('catalog-cat-select'); s.value = %r; s.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % cats[2])
+        espera(b, "build.selectedCatId === %r" % cats[2], 3)
+        for tipo in ("rawKeyDown", "keyUp"):
+            b.envia("Input.dispatchKeyEvent", {"type": tipo, "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27, "nativeVirtualKeyCode": 27})
+        espera(s, "build.selectedCatId === null", 3)
+        c3 = s.js("build.selectedCatId")
+        # o clique numa caixa da forja daqui também escolhe a da dona
+        b.clicar("#bg-nome", 0.6)
+        b.clicar('.build-cat[data-cat-id="%s"]' % cats[3], 0.2)
+        espera(s, "build.selectedCatId === %r" % cats[3], 3)
+        c4 = s.js("build.selectedCatId")
+        b.clicar('.tab-btn[data-tab="catalog"]', 0.6)
+        p.conta("duas abas", "controle remoto (T94): o \"Marcar em\", o \"soltar\", o Esc e o clique numa caixa da forja daqui escolhem e soltam a caixa da dona",
+                c1 == cats[2] and c2 is None and c3 is None and c4 == cats[3], "marcar %s · soltar %s · Esc %s · forja %s" % (c1, c2, c3, c4))
+        # (d) o Editar daqui: com o rascunho na dona, desligar é recusado (o recado diz por quê); sem rascunho, desliga e liga
+        b.clicar("#bg-nome", 0.6)
+        b.js("(() => { remota.aviso = null; return 1; })()")
+        b.clicar("#edit-switch", 0.2); time.sleep(0.6)
+        d1 = {"dona": s.js("build.editing"), "faixa": texto_rem(b)}
+        s.js("(() => { descartarAlteracoes(); return 'ok'; })()"); time.sleep(0.4)
+        b.clicar("#edit-switch", 0.2)
+        espera(s, "!build.editing", 3); espera(b, "!document.getElementById('edit-toggle').checked", 3)
+        d2 = {"dona": s.js("build.editing"), "aqui": b.js("document.getElementById('edit-toggle').checked")}
+        b.clicar("#edit-switch", 0.2)
+        espera(s, "build.editing", 3); espera(b, "document.getElementById('edit-toggle').checked", 3)
+        d3 = {"dona": s.js("build.editing"), "aqui": b.js("({ toggle: document.getElementById('edit-toggle').checked, local: build.editing })")}
+        p.conta("duas abas", "controle remoto (T94): o Editar daqui é o da dona — com rascunho lá, desligar é recusado e o recado diz por quê; sem rascunho, desliga e liga; o interruptor daqui mostra o dela",
+                d1["dona"] and "alterações não salvas" in d1["faixa"] and d2["dona"] is False and d2["aqui"] is False
+                and d3["dona"] is True and d3["aqui"]["toggle"] and not d3["aqui"]["local"], "recusado %s · desligou %s · ligou %s" % (d1, d2, d3))
+        # (e) sem o Editar na dona, o clique no item daqui avisa "ligue o Editar"; o botão do aviso liga o da dona
+        s.js("(() => { window.ligarEdicao(false); return 'ok'; })()"); espera(b, "!document.getElementById('edit-toggle').checked", 3)
+        b.clicar('.tab-btn[data-tab="catalog"]', 0.6)
+        b.clicar(carta(lend[1]), 0.6)
+        e1 = b.js("({ hint: document.getElementById('catalog-mode-hint').classList.contains('show') ? document.getElementById('catalog-mode-hint').textContent : '', faixa: document.getElementById('remota-texto').textContent })")
+        if "outra aba" in e1["hint"]:
+            b.clicar("#catalog-mode-hint [data-ligar-editar]", 0.2)
+        espera(s, "build.editing", 3)
+        e2 = {"dona": s.js("build.editing"), "item": s.js("!!findInBuild(%r)" % lend[1])}
+        p.conta("duas abas", "controle remoto (T94): sem o Editar na dona, o clique no item daqui avisa \"ligue o Editar\" e não põe nada; o botão do aviso liga o Editar da dona",
+                "outra aba" in e1["hint"] and "Editar" in e1["hint"] and "Ligue o Editar" in e1["faixa"] and e2["dona"] and not e2["item"],
+                "aviso %r · faixa %r · dona %s" % (e1["hint"][:80], e1["faixa"][:40], e2))
+        # (f) a dona com uma pergunta aberta (o "Salvar e sair?"): o pedido espera — o recado diz por quê
+        s.js("(() => { build.selectedCatId = %r; build.cats[1].items.push({ itemId: %r, note: '' }); saveBuild(); renderBuild(); confirmarSaida(() => {}); return 'ok'; })()" % (cats[1], lend[0]))
+        time.sleep(0.4)
+        b.js("(() => { remota.aviso = null; return 1; })()")
+        b.clicar(carta(lend[1]), 0.6)
+        f1 = {"faixa": texto_rem(b), "item": s.js("!!findInBuild(%r)" % lend[1]), "dialogo": s.js("!document.getElementById('save-dialog').hidden")}
+        s.js("(() => { fecharPerguntaDeSaida(); descartarAlteracoes(); return 'ok'; })()")
+        # (g) a build trocou na dona entre o espelho e o clique: o pedido não vale para a outra build
+        b.js("(() => { remota.aviso = null; canalRemoto.postMessage({ tipo: 'pedido', de: remota.id, build: 'outra-build', em: Date.now(), acao: 'editar', on: false }); return 1; })()")
+        time.sleep(0.6)
+        g1 = {"faixa": texto_rem(b), "dona": s.js("build.editing")}
+        # (h) a dona não responde (uma versão velha da página, por exemplo): o recado diz depois de 3 s
+        s.js("(() => { window.__onm = canalRemoto.onmessage; canalRemoto.onmessage = (e) => { if (e.data && e.data.tipo !== 'pedido') window.__onm(e); }; return 'ok'; })()")
+        b.js("(() => { remota.aviso = null; const s = document.getElementById('catalog-cat-select'); s.value = %r; s.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % cats[2])
+        time.sleep(3.5)
+        h1 = texto_rem(b)
+        s.js("(() => { canalRemoto.onmessage = window.__onm; return 'ok'; })()")
+        p.conta("duas abas", "controle remoto (T94): o pedido não passa por cima de uma pergunta aberta na dona, nem vale para outra build; sem resposta da dona, o recado diz em 3 s",
+                "pergunta aberta" in f1["faixa"] and not f1["item"] and f1["dialogo"] and "build mudou" in g1["faixa"] and g1["dona"] and "não respondeu" in h1,
+                "pergunta %s · outra build %s · sem resposta %r" % (f1, g1, h1[:60]))
+        # Revisão do cético da T94:
+        # (i) a pergunta da caixa aberta aqui acompanha a dona: o item que entrou lá a fecha (e não sai de lá);
+        # "pôr" um item que já está e uma caixa que saiu são recusados com o recado
+        b.js("(() => { remota.aviso = null; return 1; })()")
+        b.clicar(carta(lend[1]), 0.6)
+        i0 = b.js("!document.getElementById('escolher-caixa').hidden")
+        s.js("(() => { build.selectedCatId = %r; toggleItemInBuild(%r); return 'ok'; })()" % (cats[0], lend[1]))
+        espera(b, "document.getElementById('escolher-caixa').hidden", 3)
+        i1 = {"fechou": b.js("document.getElementById('escolher-caixa').hidden"), "faixa": texto_rem(b), "na_dona": s.js("!!findInBuild(%r)" % lend[1])}
+        pede = "(() => { remota.aviso = null; canalRemoto.postMessage(Object.assign({ tipo: 'pedido', de: remota.id, build: build.id, em: Date.now(), acao: 'item' }, %s)); return 1; })()"
+        b.js(pede % json.dumps({"slug": lend[1], "so": "por"})); time.sleep(0.5)
+        i2 = texto_rem(b)
+        b.js(pede % json.dumps({"slug": lend[0], "caixa": "cat-que-saiu"})); time.sleep(0.5)
+        i3 = {"faixa": texto_rem(b), "na_dona": s.js("!!findInBuild(%r)" % lend[0])}
+        p.conta("duas abas", "controle remoto (T94, cético): a pergunta da caixa aberta aqui fecha quando o item entra lá (e ele não sai); \"pôr\" um item que já está e uma caixa que saiu são recusados com o recado",
+                i0 and i1["fechou"] and "pergunta da caixa fechou" in i1["faixa"] and i1["na_dona"] and "já está na build" in i2
+                and "não existe mais" in i3["faixa"] and not i3["na_dona"], "pergunta %s → %s · já está %r · caixa que saiu %s" % (i0, i1, i2[:50], i3))
+        # (j) a escolha do fragmento aberta na dona (ela guarda a posição do item na caixa): o pedido espera;
+        # (k) o pedido que chega depois do "não respondeu" (a dona parada num confirm) não vale mais
+        s.js("(() => { document.getElementById('escolher-fragmento').hidden = false; return 'ok'; })()")
+        b.js("(() => { remota.aviso = null; return 1; })()")
+        b.clicar(carta(lend[0]), 0.6)
+        j1 = {"faixa": texto_rem(b), "na_dona": s.js("!!findInBuild(%r)" % lend[0])}
+        s.js("(() => { document.getElementById('escolher-fragmento').hidden = true; return 'ok'; })()")
+        b.js(pede.replace("em: Date.now()", "em: Date.now() - 3000") % json.dumps({"slug": lend[0]})); time.sleep(0.5)
+        k1 = {"faixa": texto_rem(b), "na_dona": s.js("!!findInBuild(%r)" % lend[0])}
+        p.conta("duas abas", "controle remoto (T94, cético): com a escolha do fragmento aberta na dona, o pedido espera; o que chega atrasado (a dona parada num confirm) não é aplicado",
+                "pergunta aberta" in j1["faixa"] and not j1["na_dona"] and "atrasado" in k1["faixa"] and not k1["na_dona"], "fragmento %s · atrasado %s" % (j1, k1))
+        # (l) o cadeado dos cards daqui sobrevive à grade que nasce de novo (a busca, o filtro, a ordem)
+        s.js("(() => { build.selectedCatId = %r; build.cats[1].items.push({ itemId: %r, note: '' }); saveBuild(); renderBuild(); return 'ok'; })()" % (cats[1], botas[0]))
+        espera(b, "build.selectedCatId === %r && !!findInBuild(%r)" % (cats[1], botas[0]), 3); time.sleep(0.3)
+        l1 = b.js("(() => { render(); const c = document.querySelector('#grid .card[data-slug=\"%s\"]'); return { trancado: !!c && c.classList.contains('trancado'), n: document.querySelectorAll('#grid .card.trancado').length }; })()" % botas[1])
+        n_dona = s.js("(() => { render(); return document.querySelectorAll('#grid .card.trancado').length; })()")
+        p.conta("duas abas", "controle remoto (T94, cético): o cadeado dos cards daqui sobrevive à grade que nasce de novo (busca, filtro, ordem) — os mesmos da dona",
+                l1["trancado"] and n_dona > 0 and l1["n"] == n_dona, "aqui %s · na dona %s trancados" % (l1, n_dona))
+        # (m) o duplo clique rápido num card daqui: entra e sai, com os dois sons (o de tirar vem com a resposta)
+        b.js("(() => { window.__sons = []; return 1; })()")
+        xy = b.js("(() => { const e = document.querySelector('#grid .card[data-slug=\"%s\"] .card-name'); e.scrollIntoView({ block: 'center' }); const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; })()" % lend[0])
+        time.sleep(0.3)
+        for n in (1, 2):
+            for tipo in ("mousePressed", "mouseReleased"):
+                b.envia("Input.dispatchMouseEvent", {"type": tipo, "x": xy[0], "y": xy[1], "button": "left", "clickCount": n})
+        time.sleep(1.2)
+        m1 = {"sons": b.js("window.__sons"), "na_dona": s.js("!!findInBuild(%r)" % lend[0])}
+        p.conta("duas abas", "controle remoto (T94, cético): o duplo clique rápido num card daqui põe e tira, com os dois sons — o de tirar vem com a resposta",
+                "build:item_add" in m1["sons"] and "catalog:click" in m1["sons"] and not m1["na_dona"], "%s" % m1)
+        s.js("(() => { descartarAlteracoes(); window.ligarEdicao(false); build.selectedCatId = null; renderBuild(); return 'ok'; })()")
+        espera(b, "!document.getElementById('edit-toggle').checked", 3)
         # navegar é livre: as abas da página e o endereço de cada tela
         rotas = []
         for aba in ("runas", "calc", "catalog", "build"):

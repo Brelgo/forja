@@ -6341,7 +6341,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.93";
+const ATUALIZACAO = "13.94";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -6947,7 +6947,9 @@ function atualizarVeu(motivo) {
 // da dona ao vivo — a dona manda o estado pelo BroadcastChannel a cada mudança, o rascunho também,
 // e a biblioteca chega pelo disco (o evento "storage"). Continua uma aba gravando por vez: mexer
 // na build aqui avisa "edite na outra aba" e nada muda. A faixa no pé da tela tem o "Usar esta
-// aba" da T35. (A T94 manda o clique no item, a caixa e o Editar daqui para a dona.)
+// aba" da T35. F13-T94: o clique no item da loja, a caixa escolhida e o Editar daqui viram pedidos
+// para a dona, que aplica pelo mesmo caminho dela (o cadeado, o Editar, a caixa) e grava; o som e o
+// recado voltam para cá, a aba do clique.
 function abrirCanalRemoto() {
   if (canalRemoto || typeof BroadcastChannel !== "function") return canalRemoto;
   canalRemoto = new BroadcastChannel("montador.remoto");
@@ -6955,8 +6957,85 @@ function abrirCanalRemoto() {
     const m = e.data || {};
     if (m.tipo === "pedir" && souDona) anunciarEstado();
     if (m.tipo === "estado" && remota.ativa) aplicarEspelho(m);
+    if (m.tipo === "pedido" && souDona) atenderRemota(m);
+    if (m.tipo === "resposta" && remota.ativa && m.para === remota.id) receberResposta(m);
   };
   return canalRemoto;
+}
+// ---- F13-T94: os pedidos da aba de controle remoto ----
+function editandoNaDona() { return !!(remota.ativa && remota.estado && remota.estado.editando); }
+// A remota pede; a resposta vem só para ela (pode haver mais de uma). Sem resposta, a dona pode estar
+// numa versão antiga da página
+function pedirNaDona(pedido) {
+  if (!canalRemoto) return;
+  canalRemoto.postMessage({ tipo: "pedido", de: remota.id, build: build.id || null, em: Date.now(), ...pedido });
+  clearTimeout(remota.esperando);
+  remota.esperando = setTimeout(() => avisarRemota("<b>A outra aba não respondeu.</b> Recarregue a outra aba — ou use esta."), 3000);
+}
+// O clique num item da loja daqui. O que dá para saber pelo estado espelhado responde já (o Editar
+// desligado, a pergunta da caixa); o resto a dona decide — e ela confere de novo
+function cliqueNaLojaRemota(item) {
+  if (build.temp || !editandoNaDona()) { pedirNaDona({ acao: "item", slug: item.slug, caixa: build.selectedCatId || null }); return; }
+  if (!getCat(build.selectedCatId) && !findInBuild(item.slug)) { perguntarCaixa(item.slug); return; }
+  // o som de tirar vem com a resposta: o espelho pode estar um clique atrás (o duplo clique, cético)
+  pedirNaDona({ acao: "item", slug: item.slug, caixa: build.selectedCatId || null });
+}
+// "Ligue o Editar": o mesmo aviso da dona (T76), com o botão que pede o Editar dela
+function chamarEditarNaRemota() {
+  const html = `A build <b>${esc(build.name)}</b> está em <b>visualização</b> na outra aba: para mexer nela daqui, ligue o <b>Editar</b>. <button type="button" class="cmh-ligar" data-ligar-editar>Ligar Editar</button>`;
+  if (!document.getElementById("view-catalog").classList.contains("hidden")) {
+    showCatalogModeHint(html);
+    pulsar(document.querySelector("#catalog-mode-hint [data-ligar-editar]"));
+  } else { mostrarAvisoDaBuild(html.replace(/ <button[\s\S]*$/, "")); pulsar(document.getElementById("edit-switch")); }
+  // o recado da loja mora no topo da grade (fora da tela quando o card clicado está lá embaixo): a faixa diz também
+  avisarRemota("<b>Ligue o Editar.</b> A build está em visualização na outra aba — o Editar daqui liga o de lá.", false);
+}
+function receberResposta(m) {
+  clearTimeout(remota.esperando);
+  if (m.aviso) avisarRemota(m.aviso);
+  if (m.editar) chamarEditarNaRemota();
+  if (m.pergunta && byId[m.pergunta]) perguntarCaixa(m.pergunta);
+  if (m.item) efeitosDoItem(m.item, m.r || {}, true);
+}
+// Na dona: o pedido passa pelas mesmas travas de um clique aqui. Uma pergunta aberta aqui (salvar e
+// sair, em qual caixa) é desta aba — o pedido espera ela ser respondida
+const PERGUNTAS_DA_DONA = "#save-dialog:not([hidden]), #escolher-caixa:not([hidden]), #escolher-fragmento:not([hidden]), "
+  + "#marker-dialog:not([hidden]), #pub-falta:not([hidden]), #kind-menu.show";
+function atenderRemota(m) {
+  const responder = (r) => { if (canalRemoto) canalRemoto.postMessage({ tipo: "resposta", para: m.de, ...r }); };
+  // parada num confirm() (o diálogo do navegador), esta aba só lê o pedido depois — e lá ele já foi dado
+  // como "não respondeu": não vale mais (entrava atrasado, e um segundo clique o desfazia) (cético)
+  if (Date.now() - (m.em || 0) > 2500) { responder({ aviso: "<b>O pedido chegou atrasado à outra aba</b> (ela estava ocupada) e não foi aplicado. Clique de novo." }); return; }
+  // a escolha do fragmento guarda a posição do item na caixa (cético: o pedido tirava um item e o
+  // fragmento caía no vizinho); o marcador, o "Falta pouco" e o tipo da caixa, a build da hora
+  if (document.querySelector(PERGUNTAS_DA_DONA)) { responder({ aviso: "<b>A outra aba está com uma pergunta aberta.</b> Responda lá antes." }); return; }
+  if (!build.id) { responder({ aviso: "<b>A outra aba está sem build na bigorna.</b> Abra uma lá." }); return; }
+  if (m.build !== build.id) { responder({ aviso: "<b>A build mudou na outra aba.</b> Confira e clique de novo." }); return; }
+  if (build.temp) { responder({ aviso: "<b>A outra aba está vendo uma pública</b> — só visualização. Para mexer, use \"Copiar e editar\" lá." }); return; }
+  if (m.acao === "editar") {
+    if (!m.on && rascunho.sujo) { responder({ aviso: "<b>A outra aba tem alterações não salvas.</b> Salve ou descarte lá antes de desligar o Editar." }); return; }
+    window.ligarEdicao(!!m.on);
+    responder({});
+    return;
+  }
+  if (!build.editing) { responder({ editar: true }); return; }
+  if (m.acao === "caixa") {
+    build.selectedCatId = m.id && getCat(m.id) ? m.id : null;
+    renderBuild();
+    responder({});
+    return;
+  }
+  if (m.acao !== "item" || !byId[m.slug]) { responder({}); return; }
+  // a pergunta da caixa (lá) só põe: o item que entrou nesse meio-tempo não sai; e a caixa escolhida lá
+  // pode ter saído daqui — não cai calado em outra (cético)
+  if (m.so === "por" && findInBuild(m.slug)) { responder({ aviso: `<b>${esc(byId[m.slug].namePt)}</b> já está na build da outra aba.` }); return; }
+  if (m.caixa && !m.nova && !getCat(m.caixa)) { responder({ aviso: "<b>A caixa escolhida não existe mais na outra aba.</b> Escolha de novo." }); return; }
+  if (m.nova) addCategory();   // a caixa nova já vem escolhida
+  else if (m.caixa) build.selectedCatId = m.caixa;
+  if (!getCat(build.selectedCatId) && !findInBuild(m.slug)) { responder({ pergunta: m.slug }); return; }
+  const r = porOuTirarItem(m.slug);
+  if (r.feito === "pos" || r.feito === "tirou") { saveBuild(); renderBuild(); }
+  responder({ item: m.slug, r });
 }
 // Fechado na saída: a página guardada para o Voltar não fica com o canal aberto (reabre na volta)
 function fecharCanalRemoto() { if (canalRemoto) { canalRemoto.close(); canalRemoto = null; } }
@@ -6986,9 +7065,10 @@ function entrarNoRemoto() {
   }
   if (build.editing && window.ligarEdicao) window.ligarEdicao(false);
   const ml = document.querySelector("#modo-leitura span");
-  if (ml) ml.innerHTML = "<b>Controle remoto.</b> Esta aba acompanha a build da outra; para mexer nela, edite lá — ou use esta aba.";
+  if (ml) ml.innerHTML = "<b>Controle remoto.</b> Daqui, os itens da loja, a caixa escolhida e o Editar vão para a outra aba; o resto se edita lá — ou use esta aba.";
   mostrarFaixaRemota();
   if (!primeira) return;
+  remota.id = Math.random().toString(36).slice(2);   // F13-T94: para a resposta da dona achar esta aba
   // a pública de um link curto que chegou antes de a trava decidir (o servidor respondeu rápido) abriu
   // na forja como numa dona — aqui ela vai para as Públicas, como a que chega depois (cético)
   const linkAberto = linkCurto.aberto;
@@ -7026,7 +7106,9 @@ function aplicarNaBigorna(m) {
   if (b.temp) library.builds.push(JSON.parse(JSON.stringify(b)));   // a pública que a dona abriu para ver
   copiarParaBigorna(b);
   library.activeId = b.id;
-  build.selectedCatId = null; rascunho.sujo = false; erroGravacao = false;
+  rascunho.sujo = false; erroGravacao = false;
+  // F13-T94: a caixa escolhida é a da dona — a faixa "Forjando em", o "Marcar em" e o cadeado da loja seguem ela
+  build.selectedCatId = m.caixa && getCat(m.caixa) ? m.caixa : null;
 }
 function aplicarEspelho(m) {
   remota.estado = m; remota.recado = Date.now();
@@ -7052,6 +7134,8 @@ function redesenharRemota() {
   const linhaFoco = foco && foco.classList.contains("bi-row") ? foco.dataset.id : null;
   const cursor = foco && typeof foco.selectionStart === "number" ? foco.selectionStart : null;
   renderBuildAll(); renderRunasDaForja(); renderHabilidades(); refletirSalvar();
+  const et = document.getElementById("edit-toggle");
+  if (et) et.checked = editandoNaDona();   // F13-T94: o interruptor daqui mostra o Editar da dona
   if (buildScreen === "forja" && !build.id) {   // a dona fechou a build: a forja daqui fica sem o que mostrar
     aplicandoRota = true;
     try { showBuildScreen("lista"); } finally { aplicandoRota = false; }
@@ -7063,6 +7147,14 @@ function redesenharRemota() {
   if (foco && !foco.isConnected) {
     const el = foco.id ? document.getElementById(foco.id) : linhaFoco ? document.querySelector(`.bi-row[data-id="${CSS.escape(linhaFoco)}"]`) : null;
     if (el) focarComCursor(el, cursor);
+  }
+  // F13-T94: a pergunta "Em qual caixa?" aberta aqui acompanha a dona — outra build, o item que já entrou
+  // ou o Editar desligado a fecham; senão as caixas são as de agora (cético)
+  if (caixaPergunta && !document.getElementById("escolher-caixa").hidden) {
+    if (build.id !== remota.perguntaBuild || findInBuild(caixaPergunta) || !editandoNaDona()) {
+      fecharPerguntarCaixa();
+      avisarRemota("<b>A build mudou na outra aba</b> — a pergunta da caixa fechou.", false);
+    } else perguntarCaixa(caixaPergunta, true);
   }
   atualizarFaixaRemota();
 }
@@ -7085,7 +7177,7 @@ function atualizarFaixaRemota(conferirTrava) {
   if (!f || !t) return;
   const saiu = !!(lerDona() || {}).fora;
   let texto = remota.aviso || (saiu ? "<b>A outra aba saiu do Montador.</b> Esta pode assumir: ela recarrega com tudo o que foi gravado."
-    : "<b>Controle remoto.</b> A build é editada na outra aba; esta acompanha ao vivo.");
+    : "<b>Controle remoto.</b> Os itens da loja, a caixa e o Editar daqui vão para a outra aba; o resto se edita lá.");
   if (linkPendente && !remota.aviso) texto += ` A build “${esc(linkPendente)}”, deste link, só entra na biblioteca se você usar esta aba.`;
   t.innerHTML = texto;
   f.classList.toggle("saiu", saiu);
@@ -7109,13 +7201,13 @@ function esquecerDona() {
   setTimeout(ressincronizar, 0);
 }
 // "Edite na outra aba": a faixa diz por 4 s e o "Usar esta aba" pulsa
-function avisarRemota(texto) {
+function avisarRemota(texto, pulsa = true) {
   if (!remota.ativa) return;
   remota.aviso = texto || "<b>Edite na outra aba.</b> Esta só acompanha a build — para editar aqui, use esta aba.";
   clearTimeout(avisarRemota._t);
   avisarRemota._t = setTimeout(() => { remota.aviso = null; atualizarFaixaRemota(); }, 4000);
   atualizarFaixaRemota();
-  pulsar(document.getElementById("remota-usar"));
+  if (pulsa) pulsar(document.getElementById("remota-usar"));
 }
 // Nos gestos que mudam a build ou a biblioteca: no controle remoto, avisa e não faz
 function bloqueioRemoto() {
@@ -7792,6 +7884,7 @@ function removeCategory(id) {
 }
 
 function selectCategory(id) {
+  if (remota.ativa) { pedirNaDona({ acao: "caixa", id: build.selectedCatId === id ? null : id }); return; }   // F13-T94
   build.selectedCatId = build.selectedCatId === id ? null : id;
   renderBuild();
 }
@@ -10416,10 +10509,12 @@ function initFaltaPublicar() {
 // aparece e os próximos cliques já vão direto — a pergunta ensina e some.
 let caixaPergunta = null;
 
-function perguntarCaixa(slug) {
+// `quieto`: refeita no controle remoto quando a build da dona muda, sem tocar o pergaminho de novo (F13-T94)
+function perguntarCaixa(slug, quieto) {
   const item = byId[slug];
   if (!item) return;
   caixaPergunta = slug;
+  if (remota.ativa) remota.perguntaBuild = build.id;   // F13-T94: a pergunta é desta build
   const dlg = document.getElementById("escolher-caixa");
   document.getElementById("ec-sub").innerHTML =
     `<img src="${item.iconUrl}" alt=""> Colocar <b>${esc(item.namePt)}</b> em…`;
@@ -10430,7 +10525,7 @@ function perguntarCaixa(slug) {
   document.getElementById("ec-lista").innerHTML = lista
     + `<button type="button" class="ec-caixa ec-nova" data-nova="1">${build.cats.length ? "Criar uma caixa nova e colocar aqui" : "Esta build ainda não tem caixa — criar uma e colocar aqui"}</button>`;
   dlg.hidden = false;
-  Som.play("catalog:pergaminho");
+  if (!quieto) Som.play("catalog:pergaminho");
 }
 
 function fecharPerguntarCaixa() {
@@ -10443,6 +10538,11 @@ function initPerguntarCaixa() {
     const b = e.target.closest("[data-cat], [data-nova]");
     if (!b || !caixaPergunta) return;
     const slug = caixaPergunta;
+    if (remota.ativa) {   // F13-T94: a escolha vai para a dona, junto com o item
+      fecharPerguntarCaixa();
+      pedirNaDona({ acao: "item", slug, caixa: b.dataset.cat || null, nova: !!b.dataset.nova, so: "por", build: remota.perguntaBuild });
+      return;
+    }
     if (b.dataset.nova) {
       // Criar caixa exige o modo Editar; ligá-lo aqui é o que o usuário quis dizer.
       if (!build.editing) ligarEdicao(true);
@@ -12260,10 +12360,12 @@ function initBuildBuilder() {
   // F12-T2: a pergunta "em qual caixa" precisa poder ligar a edição para criar
   // uma caixa nova; sem isto ela chamaria addCategory() com o Editar desligado.
   const applyEditing = (on) => {
+    // F13-T94: no controle remoto o Editar é o da dona — o pedido vai para lá (o "Ligar Editar" da
+    // loja, o da pergunta da caixa); o interruptor daqui mostra o dela quando o estado voltar
+    if (on && remota.ativa && !espelhando) { editToggle.checked = editandoNaDona(); pedirNaDona({ acao: "editar", on: true }); return; }
     // F13-T51 (revisão): ninguém liga o Editar numa pública aberta para ver — nem
     // o "Ligar Editar" da faixa Modo leitura, nem o "criar uma caixa" da loja
     if (on && build.temp) { editToggle.checked = false; chamarEditarTemp(); return; }
-    if (on && bloqueioRemoto()) { editToggle.checked = false; return; }   // F13-T93: o Editar é da dona
     build.editing = !!on;
     editToggle.checked = build.editing;
     document.body.classList.toggle("editando", build.editing);
@@ -12271,6 +12373,8 @@ function initBuildBuilder() {
     renderBuildAll();
   };
   editToggle.addEventListener("change", () => {
+    // F13-T94: ligar e desligar daqui é pedir à dona
+    if (remota.ativa) { const on = editToggle.checked; editToggle.checked = editandoNaDona(); pedirNaDona({ acao: "editar", on }); return; }
     if (editToggle.checked && build.temp) { editToggle.checked = false; chamarEditarTemp(); return; }
     if (!editToggle.checked && rascunho.sujo) { editToggle.checked = true; confirmarSaida(() => applyEditing(false)); return; }
     applyEditing(editToggle.checked);
@@ -12370,6 +12474,7 @@ function initBuildBuilder() {
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape" || !build.selectedCatId) return;
     if (document.querySelector(DIALOGOS_ABERTOS)) return;
+    if (remota.ativa) { pedirNaDona({ acao: "caixa", id: null }); return; }   // F13-T94: solta a caixa da dona
     build.selectedCatId = null;
     renderBuild();
   }, true);
@@ -13667,6 +13772,8 @@ function renderCard(item, attrSorting) {
     // F13-T52 (Leo, 19/10/2026): sem build na bigorna, o clique só abre a ficha
     // do item — não pergunta em qual build pôr, nem cria uma
     if (!build.id) { Som.play("catalog:click", { item }); openModal(item.slug); return; }
+    // F13-T94: no controle remoto o clique vai para a dona — o Editar e a caixa são os dela
+    if (remota.ativa) { cliqueNaLojaRemota(item); return; }
     // F13-T76: sem o Editar, o clique não põe nem tira — avisa e faz o Editar pulsar
     if (!build.editing) { chamarEditar(); return; }
     // F12-T2: sem caixa escolhida o clique PERGUNTA em qual caixa, em vez de
@@ -13696,7 +13803,7 @@ function renderCard(item, attrSorting) {
   }
 
   if (findInBuild(item.slug)) card.classList.add("in-build");
-  else if (build.id && build.editing) {   // F13-T70: o cadeado também no card que nasce (a busca e os filtros redesenham a grade); F13-T76: só com o Editar
+  else if (build.id && (build.editing || editandoNaDona())) {   // F13-T70: o cadeado também no card que nasce (a busca e os filtros redesenham a grade); F13-T76: só com o Editar
     const ctx = contextoDoCadeado();
     const trava = motivoNaCaixaEscolhida(item, ctx);
     if (trava) { card.classList.add("trancado"); card.dataset.cadeado = trava; }
@@ -13882,30 +13989,42 @@ function findInBuild(slug) {
 }
 
 function toggleItemInBuild(slug) {
-  const found = findInBuild(slug);
-  if (found) {
-    found.cat.items.splice(found.index, 1);
-  } else {
-    // Nada automático (Leo, 13/09/2026): só entra na categoria escolhida à mão.
-    const cat = getCat(build.selectedCatId);
-    if (!cat) return;
-    const novo = { itemId: slug, note: "" };
-    cat.items.push(novo);
-    // F13-T70: o mesmo cadeado da forja, no clique da loja
-    const trava = cadeadoDepoisDePor(cat, novo);
-    if (trava) { cat.items.pop(); avisarCadeado(byId[slug], trava); return; }
-    const it = byId[slug];
-    Som.play("build:item_add", { item: it });   // mesmos sons e falas da forja (F10-T4)
-    // F13-T72: o efeito que não acumula vai no mesmo recado
-    const naoSoma = avisoDepoisDePor(cat, novo);
-    // Aviso por modo de jogo (Fase 5, T3): a build tem modo e o item não existe nele.
-    if (build.mode && it && !itemAvailableIn(it, build.mode)) {
-      showCatalogModeHint(`<b>${esc(it.namePt)}</b> não existe em <b>${esc(build.mode)}</b>, o modo da build "${esc(build.name)}". Foi marcado mesmo assim; na forja ele aparece apagado.`
-        + (naoSoma ? ` Aviso: ${esc(naoSoma)}.` : ""));
-    } else if (naoSoma) showCatalogModeHint(htmlDoAviso(it, naoSoma));
-  }
+  const r = porOuTirarItem(slug);
+  efeitosDoItem(slug, r);
+  if (r.feito !== "pos" && r.feito !== "tirou") return;
   saveBuild();
   renderBuild();          // já chama refreshInBuildMarks()
+}
+// Põe ou tira o item na build e diz o que aconteceu, sem som nem recado. F13-T94: a dona aplica por
+// aqui o clique da aba de controle remoto, e quem toca o som e mostra o recado é a aba do clique.
+function porOuTirarItem(slug) {
+  const found = findInBuild(slug);
+  if (found) { found.cat.items.splice(found.index, 1); return { feito: "tirou" }; }
+  // Nada automático (Leo, 13/09/2026): só entra na categoria escolhida à mão.
+  const cat = getCat(build.selectedCatId);
+  if (!cat) return { feito: "semCaixa" };
+  const novo = { itemId: slug, note: "" };
+  cat.items.push(novo);
+  // F13-T70: o mesmo cadeado da forja, no clique da loja
+  const trava = cadeadoDepoisDePor(cat, novo);
+  if (trava) { cat.items.pop(); return { feito: "trava", trava }; }
+  const it = byId[slug];
+  // F13-T72: o efeito que não acumula vai no mesmo recado; e o aviso por modo de jogo (Fase 5, T3)
+  return { feito: "pos", naoSoma: avisoDepoisDePor(cat, novo) || "", modo: build.mode && it && !itemAvailableIn(it, build.mode) ? build.mode : "", nome: build.name };
+}
+// `somDeTirar`: no controle remoto o som de tirar vem com a resposta (na dona, o clique já o tocou antes)
+function efeitosDoItem(slug, r, somDeTirar) {
+  const it = byId[slug];
+  if (!it) return;
+  if (r.feito === "tirou" && somDeTirar) { Som.play("catalog:click", { item: it }); return; }
+  if (r.feito === "trava") { avisarCadeado(it, r.trava); return; }
+  if (r.feito !== "pos") return;
+  Som.play("build:item_add", { item: it });   // mesmos sons e falas da forja (F10-T4)
+  // a build tem modo e o item não existe nele
+  if (r.modo) {
+    showCatalogModeHint(`<b>${esc(it.namePt)}</b> não existe em <b>${esc(r.modo)}</b>, o modo da build "${esc(r.nome)}". Foi marcado mesmo assim; na forja ele aparece apagado.`
+      + (r.naoSoma ? ` Aviso: ${esc(r.naoSoma)}.` : ""));
+  } else if (r.naoSoma) showCatalogModeHint(htmlDoAviso(it, r.naoSoma));
 }
 
 let catalogModeHintTimer = null;
@@ -13943,7 +14062,8 @@ function refreshCatalogCatSelect() {
     document.getElementById("cff-caixa").hidden = !cat;
     document.getElementById("cff-soltar").hidden = !cat;
     document.getElementById("cff-dica").textContent = cat ? "os itens clicados vão para esta caixa"
-      : remota.ativa ? "controle remoto — a build se edita na outra aba"   // F13-T93
+      : remota.ativa && build.temp ? "a outra aba está vendo uma pública — só visualização"   // F13-T93/T94
+      : remota.ativa ? (editandoNaDona() ? "controle remoto — o clique no item pergunta a caixa e vai para a outra aba" : "controle remoto — o Editar daqui liga o da outra aba")
       : build.temp ? "só visualização" : !build.editing ? "visualização — ligue o Editar para mexer" : "o clique no item pergunta a caixa";
     if (cat) {
       document.getElementById("cff-nome").textContent = cat.name || "(sem nome)";
@@ -13962,10 +14082,11 @@ function refreshInBuildMarks() {
   document.querySelectorAll("#grid .card").forEach(card => {
     const naBuild = !!findInBuild(card.dataset.slug);
     card.classList.toggle("in-build", naBuild);
-    const trava = build.id && build.editing && !naBuild && byId[card.dataset.slug] ? motivoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T76: só com o Editar
+    const editando = build.editing || editandoNaDona();   // F13-T94: no controle remoto, o Editar da dona
+    const trava = build.id && editando && !naBuild && byId[card.dataset.slug] ? motivoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T76: só com o Editar
     card.classList.toggle("trancado", !!trava);
     if (trava) card.dataset.cadeado = trava; else delete card.dataset.cadeado;
-    const naoSoma = build.id && build.editing && !naBuild && !trava && byId[card.dataset.slug] ? avisoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T72
+    const naoSoma = build.id && editando && !naBuild && !trava && byId[card.dataset.slug] ? avisoNaCaixaEscolhida(byId[card.dataset.slug], ctxCadeado) : "";   // F13-T72
     card.classList.toggle("nao-soma", !!naoSoma);
     if (naoSoma) card.dataset.aviso = naoSoma; else delete card.dataset.aviso;
   });
@@ -14530,6 +14651,8 @@ function init() {
   mostrarAvisoDoRobo();   // F13-T77
   initMural();            // F13-T80
   document.getElementById("catalog-cat-select").addEventListener("change", (e) => {
+    // F13-T94: no controle remoto a caixa é a da dona — o seletor volta ao dela até o estado chegar
+    if (remota.ativa) { const id = e.target.value || null; e.target.value = build.selectedCatId || ""; pedirNaDona({ acao: "caixa", id }); return; }
     if (!build.editing) { e.target.value = ""; chamarEditar(); return; }   // F13-T76
     build.selectedCatId = e.target.value || null;
     renderBuild();
@@ -14540,7 +14663,10 @@ function init() {
     ligarEdicao(true);
     document.getElementById("catalog-mode-hint").classList.remove("show");
   });
-  document.getElementById("cff-soltar").addEventListener("click", () => { build.selectedCatId = null; renderBuild(); });
+  document.getElementById("cff-soltar").addEventListener("click", () => {
+    if (remota.ativa) { pedirNaDona({ acao: "caixa", id: null }); return; }   // F13-T94
+    build.selectedCatId = null; renderBuild();
+  });
 
   // Modo de exibição (cards | ícones), lembrado no navegador.
   const applyView = (view) => {

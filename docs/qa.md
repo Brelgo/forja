@@ -439,6 +439,29 @@ um defeito antigo da calculadora: cada tecla a redesenha, e o focus() punha o
 cursor no começo do campo de número — "12" digitado tecla a tecla virava "21";
 agora fica no fim (grupo "calculadora"). Vista falhando cada conserto num
 mutante: M15 a M23.
+A remota manda os itens para a dona (F13-T94, 31/10/2026), com cliques e teclas de
+verdade e os sons anotados nas duas abas: sem caixa, o clique no item pergunta a
+caixa NA remota e a escolha vai para a dona, que põe o item no rascunho dela (o
+som toca na remota, não lá; o disco não muda); com a caixa da dona, o clique põe
+direto, a segunda bota já vem com o cadeado na carta e cai nele (o recado aparece
+na remota), e clicar de novo tira; o "Marcar em", o "soltar", o Esc e o clique numa
+caixa da forja da remota escolhem e soltam a caixa da dona; o Editar da remota é
+o da dona (com rascunho lá, desligar é recusado e o recado diz por quê; o
+interruptor mostra o dela); sem o Editar na dona, o clique avisa "ligue o Editar",
+e o botão do aviso liga o de lá; o pedido não passa por cima de uma pergunta aberta
+na dona, nem vale para outra build; sem resposta, a faixa diz em 3 s. O resto da
+forja segue "Edite na outra aba" (o Duplicar, o Excluir, o ×, a Nova build, o × da
+loja, o Ctrl+S). Vista falhando cada peça num mutante (N1 a N18) — 18 de 18. A
+revisão do cético (Opus xhigh) achou seis casos, cinco consertados com checagem: a
+pergunta da caixa velha (fecha quando a build da dona muda; "pôr" não vira "tirar";
+a caixa que saiu não cai noutra), a escolha do fragmento aberta na dona (o pedido
+tirava um item e o fragmento caía no vizinho — o único que era regressão; agora o
+pedido espera), o cadeado que sumia da grade nova da remota, o pedido que chegava
+depois do "não respondeu" (a dona num confirm: agora não vale mais) e o som de
+tirar no duplo clique; e o "ligue o Editar" também na faixa (o recado da loja mora
+no topo da grade). O sexto — trocar de dona no meio de um pedido deixa o item no
+rascunho de quem perdeu a vez — é a mesma corrida da T35 com um rascunho da própria
+dona, de gravidade baixa, e fica anotado. Vista falhando cada conserto: O1 a O9.
 
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
