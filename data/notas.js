@@ -3,9 +3,12 @@ window.NOTAS = {
  "datas": [
   {
    "data": "31/10/2026",
-   "add": [],
+   "add": [
+    "Duas abas ao mesmo tempo: a segunda vira controle remoto — navega à vontade e acompanha a build da primeira ao vivo; editar continua na primeira"
+   ],
    "aj": [
-    "O voltar do navegador no link curto: com o \"Salvar e sair?\" aberto ele vale \"Continuar editando\", e durante a espera devolve a tela de antes"
+    "O voltar do navegador no link curto: com o \"Salvar e sair?\" aberto ele vale \"Continuar editando\", e durante a espera devolve a tela de antes",
+    "Calculadora: digitar a vida tecla a tecla não inverte mais os números (\"12\" virava \"21\")"
    ],
    "rem": []
   },
