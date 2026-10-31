@@ -108,10 +108,6 @@ window.NOTAS = {
  ],
  "embreve": [
   [
-   "Catálogo e Builds em abas",
-   "cada tela com o seu link, para abrir as duas lado a lado e mandar o endereço direto"
-  ],
-  [
    "A entrada da loja e o tour",
    "a fachada de uma região a cada visita, e um passeio guiado pelo Montador"
   ],
