@@ -406,6 +406,39 @@ editor; F5 da dona com outra aba na fila continua dona; outra aba que toma a
 trava enquanto esta confere não deixa duas donas; o "saiu" que a dona regrava
 logo depois não faz a aba nova tomar a vez; a trava negada pelo navegador não
 prende a aba.
+O controle remoto (F13-T93, 31/10/2026): a segunda aba não fica mais sob o véu —
+abre sem nada inerte, com a faixa no pé da tela, e entra na loja; não grava por
+cima; a build que a dona cria aparece na bigorna e na lista dela; o rascunho da
+dona aparece ao vivo (o item na caixa, a plaqueta "não salva"), sem Editar nem
+rascunho na remota e nada novo no disco; o Editar, o Excluir (sem chegar ao
+confirm), o ×, a Nova build, o clique no item da loja e o Ctrl+S avisam "Edite
+na outra aba" e não mexem em nada; o que escapar e tentar gravar volta ao disco
+e à build da dona; navegar é livre (Runas, Calculadora, Catálogo, Builds, cada
+uma com o seu #); a dona fecha a build e a forja da remota vira a lista
+(`#builds`); "Usar esta aba" é o da faixa; um `#b=` numa remota avisa na faixa e
+não entra na memória; a dona que quebra é percebida também pela faixa; e a dona
+que vai a outra página volta inteira mesmo com um recado do controle remoto
+chegando na espera (o canal fecha na saída — sem isso o navegador a tirava do
+cache do Voltar, visto). O véu continua para o conferindo, o recusado e o
+perdeu. Vista falhando, cada peça num mutante: sem o controle remoto, sem a dona
+anunciar, sem a remota aplicar, sem reler o disco, sem parar os gestos da dona,
+com o Editar ligando, sem o aviso do chamarEditar, com o Ctrl+S livre, sem a
+rede de baixo, com a plaqueta sem o estado da dona, com a build do `#b=` na
+memória, sem a faixa conferir a trava, com o canal aberto na saída e com a forja
+sem build parada — 14 de 14 mortos. A revisão do cético (Opus xhigh, na janela;
+211 controles e 27 gestos na remota sem nenhuma violação) achou seis casos, todos
+consertados e com checagem: o `#b=` que saía do endereço ao navegar e se perdia
+no "Usar esta aba" (o único que era regressão); o link curto respondido antes da
+trava decidir, que abria na forja e sumia (agora vai para as Públicas, achado pela
+busca por ID — a lista só mostra as N primeiras); o foco que cada mudança da dona
+tirava da calculadora e da lista; o rascunho morto da dona que saiu ou quebrou
+(a remota volta ao disco; um recado recente prova que ela está viva); a plaqueta
+com o erro e o título da dona ("não deu para salvar"; o Salvar é na outra aba); e
+o coração de uma pública na dona, que não redesenhava a lista daqui. De quebra,
+um defeito antigo da calculadora: cada tecla a redesenha, e o focus() punha o
+cursor no começo do campo de número — "12" digitado tecla a tecla virava "21";
+agora fica no fim (grupo "calculadora"). Vista falhando cada conserto num
+mutante: M15 a M23.
 
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar

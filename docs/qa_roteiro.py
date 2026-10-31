@@ -865,6 +865,18 @@ def checar_calculadora(s, p):
     veio = s.js(puxa)
     p.conta("calculadora", "Puxar da build ativa: itens sem vida não apagam a vida digitada",
             veio["hp"] == 2000 and veio["armor"] > 0, "vida %s (era 2000) · armadura %s" % (veio["hp"], veio["armor"]))
+    # F13-T93 (achado no roteiro do controle remoto): cada tecla redesenha a calculadora, e o focus() punha
+    # o cursor no começo do campo de número — "12" digitado tecla a tecla virava "21"
+    s.clicar("#calc-hp", 0.2)
+    s.js("(() => { document.getElementById('calc-hp').select(); return 1; })()")
+    for ch in "125":
+        for tipo in ("keyDown", "keyUp"):
+            s.envia("Input.dispatchKeyEvent", {"type": tipo, "key": ch, "code": "Digit" + ch, "text": ch if tipo == "keyDown" else "",
+                                               "windowsVirtualKeyCode": ord(ch), "nativeVirtualKeyCode": ord(ch)})
+        time.sleep(0.12)
+    dig = s.js("({ valor: document.getElementById('calc-hp').value, hp: calc.hp, foco: document.activeElement && document.activeElement.id })")
+    p.conta("calculadora", "digitar a vida tecla a tecla: \"125\" fica 125 (o redesenho de cada tecla deixa o cursor no fim)",
+            dig["valor"] == "125" and dig["hp"] == 125 and dig["foco"] == "calc-hp", "%s" % dig)
     s.js("switchTab('build')")
     s.nova_build()
 
@@ -2996,7 +3008,10 @@ def checar_abas(s, p):
     um véu; "Usar esta aba" recarrega do disco e assume, e é recusado enquanto a
     dona tem alteração não gravada ou espera resposta da internet. Várias abas
     de verdade no mesmo Chrome — mesmo localStorage, mesma trava (Web Locks);
-    cliques e teclas de verdade."""
+    cliques e teclas de verdade. F13-T93: a aba que abre depois não fica mais
+    parada — vira controle remoto (navega, acompanha a build da dona ao vivo,
+    e mexer na build avisa "edite na outra aba"); o véu fica para o conferindo,
+    o recusado e o perdeu."""
     print(chr(10) + "%sDUAS ABAS%s" % (AMARELO, FIM))
     s.limpar_memoria(); s.entrar()
     s.js("switchTab('build'); showBuildScreen('lista'); 'ok'"); time.sleep(0.6)
@@ -3008,6 +3023,13 @@ def checar_abas(s, p):
         emCima: !!(e && e.closest('#aba-dona')), parado: [...document.body.children].filter(x => x !== v).every(x => x.inert),
         leitor: v.getAttribute('aria-describedby') === 'aba-dona-texto' && document.getElementById('aba-dona-texto').getAttribute('aria-live') === 'polite' }; })()""")
     texto_veu = lambda q: q.js("(document.getElementById('aba-dona-texto') || {}).textContent || ''")
+    # F13-T93: a aba que não é a dona vira controle remoto — a faixa no pé da tela e o que ela mostra
+    rem = lambda q: q.js("""(() => { const f = document.getElementById('remota'); if (!f) return null; const r = f.getBoundingClientRect();
+      return { texto: document.getElementById('remota-texto').textContent, ativa: remota.ativa, dona: souDona, veu: !!document.getElementById('aba-dona'),
+        solta: ![...document.body.children].some(x => x.inert), noPe: Math.round(innerHeight - r.bottom), dentro: r.left >= 0 && r.right <= innerWidth,
+        leitor: f.getAttribute('role') === 'status', nome: build.name, id: build.id, sujo: rascunho.sujo, editando: build.editing,
+        plaqueta: (document.getElementById('bg-estado') || {}).textContent || '', nomes: library.builds.map(x => x.name) }; })()""")
+    texto_rem = lambda q: q.js("(document.getElementById('remota-texto') || {}).textContent || ''")
 
     def espera(q, expr, limite=8.0):
         fim = time.time() + limite
@@ -3037,7 +3059,7 @@ def checar_abas(s, p):
         q.clicar("#aba-dona-usar", 0.8)
         return q.js("({ fica: window.__fica === 1, dona: souDona, texto: document.getElementById('aba-dona-texto').textContent })")
 
-    b = s.nova_aba(); c = d = e = f = g = h = v = w = None
+    b = s.nova_aba(); c = d = e = f = g = h = v = w = x = y = None
     try:
         # enquanto a trava não responde, a aba nova já nasce parada: um clique em
         # "Entrar na loja" não abre nada (antes, por 2 s, a loja abria e o que se
@@ -3048,21 +3070,158 @@ def checar_abas(s, p):
         p.conta("duas abas", "enquanto confere a trava, a aba nova já nasce parada", cf["conferindo"] and not cf["entrou"] and not cf["decidido"],
                 "enquanto confere: %s" % cf)
         decidiu(b)
-        vb = veu(b)
-        p.conta("duas abas", "a segunda aba abre parada, sob o véu, com a página por baixo sem resposta",
-                bool(vb) and vb["emCima"] and vb["parado"] and vb["leitor"] and vb["titulo"] == "Aberto em outra aba" and "já está aberto em outra aba" in vb["texto"], "véu: %s" % vb)
+        # F13-T93: a segunda aba não fica mais parada sob o véu — vira controle remoto
+        rb = rem(b)
+        p.conta("duas abas", "a segunda aba abre como controle remoto: sem véu, a página responde, e a faixa no pé da tela diz que a build se edita na outra aba",
+                bool(rb) and rb["ativa"] and not rb["dona"] and not rb["veu"] and rb["solta"] and "Controle remoto" in rb["texto"]
+                and 0 <= rb["noPe"] <= 30 and rb["dentro"] and rb["leitor"], "faixa: %s" % rb)
+        if rb:
+            b.entrar()   # a entrada da loja abre normalmente (antes o véu a segurava)
         # a aba 1 cria uma build DEPOIS que a 2 abriu; a 2 grava o que tem na memória
         s.clicar("#bi-new", 1.0); s.js("build.name = 'Da aba 1'; gravarBuild(); showBuildScreen('lista'); 'ok'"); time.sleep(0.4)
         gravou = b.js("gravarBiblioteca()")
         disco = no_disco()
-        p.conta("duas abas", "a aba parada não grava por cima da build criada na outra", "Da aba 1" in disco and gravou is False,
+        p.conta("duas abas", "a aba de controle remoto não grava por cima da build criada na outra", "Da aba 1" in disco and gravou is False,
                 "gravarBiblioteca na aba 2: %s · no disco: %s" % (gravou, disco))
-        if not vb:
+        if not rb:
             return
+        # F13-T93: a 2 acompanha ao vivo — a build nova da 1 na bigorna e na lista daqui
+        espera(b, "build.name === 'Da aba 1' && library.builds.some(x => x.name === 'Da aba 1')", 4)
+        m1 = rem(b)
+        p.conta("duas abas", "controle remoto: a build que a dona cria aparece na bigorna e na lista desta aba",
+                m1["nome"] == "Da aba 1" and m1["id"] == s.js("build.id") and "Da aba 1" in m1["nomes"], "aba 2: %s" % m1)
+        # uma segunda build na dona (com uma só, o Excluir fica desligado e nem pergunta)
+        s.js("(() => { library.builds.push({ id: newBuildId(), name: 'Segunda da 1', seq: 1, cats: [], updatedAt: Date.now() }); gravarBiblioteca(); renderLibrary(); return 'ok'; })()")
+        espera(b, "library.builds.length === 2", 4)
+        # o rascunho também: a 1 liga o Editar e põe um item sem salvar
+        disco0 = s.js("localStorage.getItem('lol-builds-v3')")
+        s.js("(() => { showBuildScreen('forja'); window.ligarEdicao(true); build.cats[0].items.push({ itemId: 'long-sword', note: '' }); saveBuild(); renderBuildAll(); return 'ok'; })()")
+        espera(b, "!!build.cats[0] && build.cats[0].items.some(i => i.itemId === 'long-sword')", 4)
+        b.clicar("#bg-nome", 0.6)   # o nome na plaqueta leva à forja (navegar é livre)
+        m2 = rem(b)
+        m2["forja"] = b.js("!document.getElementById('build-editor').hidden && !!document.querySelector('#build-canvas .item-tile')")
+        p.conta("duas abas", "controle remoto: o rascunho da dona aparece ao vivo (o item na caixa, a plaqueta \"não salva\"), sem Editar nem rascunho nesta e sem nada novo no disco",
+                m2["forja"] and "não salva" in m2["plaqueta"] and not m2["sujo"] and not m2["editando"] and s.js("localStorage.getItem('lol-builds-v3')") == disco0,
+                "aba 2: %s" % m2)
+        # mexer na build aqui avisa "edite na outra aba" e nada muda — cliques e teclas de verdade
+        antes = b.js("JSON.stringify(snapshotActive())")
+        avisos = []
+
+        def tenta(acao):
+            b.js("(() => { remota.aviso = null; atualizarFaixaRemota(); return 1; })()")
+            acao()
+            time.sleep(0.4)
+            avisos.append(b.js("document.getElementById('remota-texto').textContent.includes('Edite na outra aba')"))
+        perguntas = len(b.dialogos)
+        tenta(lambda: b.clicar("#edit-switch", 0.2))                 # o Editar da forja
+        tenta(lambda: b.clicar("#del-build", 0.2))                   # o Excluir: nem chega a perguntar (o confirm)
+        tenta(lambda: b.clicar("#bg-fechar", 0.2))                   # o × da plaqueta
+        tenta(lambda: b.clicar("#build-back", 0.6) or b.clicar("#bi-new", 0.2))   # "Builds" (navega) e "+ Nova build"
+        tenta(lambda: (b.clicar('.tab-btn[data-tab="catalog"]', 0.6), b.clicar('#grid .card[data-slug="doran-s-blade"] .card-name', 0.2)))   # um item da loja
+        salvar = {}
+        tenta(lambda: salvar.update(r=b.js("!document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 's', ctrlKey: true, bubbles: true, cancelable: true }))")))
+        ge = b.js("({ editando: build.editing, toggle: document.getElementById('edit-toggle').checked, n: library.builds.length, dialogo: !document.getElementById('save-dialog').hidden })")
+        p.conta("duas abas", "controle remoto: ligar o Editar, o Excluir, o ×, a Nova build, o clique no item da loja e o Ctrl+S avisam \"edite na outra aba\" e não mexem em nada (nem no disco, nem perguntam)",
+                all(avisos) and len(avisos) == 6 and b.js("JSON.stringify(snapshotActive())") == antes and not ge["editando"] and not ge["toggle"]
+                and not ge["dialogo"] and len(b.dialogos) == perguntas and salvar.get("r") is True
+                and s.js("localStorage.getItem('lol-builds-v3')") == disco0 and s.js("build.cats[0].items.length") >= 1,
+                "avisos %s · perguntas %s · Ctrl+S anulado %s · aba 2 %s · mudou a build: %s"
+                % (avisos, b.dialogos[perguntas:], salvar.get("r"), ge, b.js("JSON.stringify(snapshotActive())") != antes))
+        # a rede de baixo: o que escapar dos avisos e tentar gravar não fica — a memória daqui volta ao
+        # disco e à build da dona, e a faixa avisa
+        b.js("(() => { remota.aviso = null; build.name = 'Escapou'; build.cats = []; gravarBuild(); return 1; })()")
+        time.sleep(0.5)
+        sn = b.js("({ nome: build.name, caixas: build.cats.length, aviso: document.getElementById('remota-texto').textContent.includes('Edite na outra aba'), nomes: library.builds.map(x => x.name) })")
+        p.conta("duas abas", "controle remoto: o que escapar dos avisos e tentar gravar não fica — a memória volta ao disco e à build da dona, e a faixa avisa",
+                sn["nome"] == "Da aba 1" and sn["caixas"] == s.js("build.cats.length") and sn["aviso"] and "Escapou" not in sn["nomes"]
+                and s.js("localStorage.getItem('lol-builds-v3')") == disco0, "aba 2: %s" % sn)
+        # navegar é livre: as abas da página e o endereço de cada tela
+        rotas = []
+        for aba in ("runas", "calc", "catalog", "build"):
+            b.clicar('.tab-btn[data-tab="%s"]' % aba, 0.5)
+            rotas.append(b.js("location.hash + '/' + document.querySelector('.tab-btn.active').dataset.tab"))
+        p.conta("duas abas", "controle remoto: navegar é livre — Runas, Calculadora, Catálogo e Builds abrem com o endereço de cada uma",
+                rotas[0] == "#runas/runas" and rotas[1] == "#calculadora/calc" and rotas[2] == "#catalogo/catalog" and rotas[3].endswith("/build"), "%s" % rotas)
+        # a dona fecha a build (o ×, com o rascunho descartado): a bigorna daqui fica vazia e a forja vira a lista
+        b.clicar("#bg-nome", 0.6)   # esta na forja
+        s.js("(() => { descartarAlteracoes(); window.ligarEdicao(false); fecharBuild(); return 'ok'; })()")
+        espera(b, "!build.id", 4)
+        fe = b.js("({ id: build.id, lista: buildScreen, hash: location.hash, plaqueta: !document.getElementById('bigorna').hidden })")
+        s.js("(() => { activateBuild(library.builds.find(x => x.name === 'Da aba 1').id); return 'ok'; })()")
+        espera(b, "build.name === 'Da aba 1'", 4)
+        p.conta("duas abas", "controle remoto: a dona fecha a build — a bigorna daqui fica vazia, a forja vira a lista (#builds); ela abre de novo e volta",
+                fe["id"] is None and fe["lista"] == "lista" and fe["hash"] == "#builds" and not fe["plaqueta"] and b.js("build.name") == "Da aba 1", "fechada: %s" % fe)
+        # Revisão do cético da T93: (1) o redesenho do espelho não tira o foco — a tecla seguinte entra
+        # no mesmo campo da calculadora, e a linha da lista continua com o foco
+        b.clicar('.tab-btn[data-tab="calc"]', 0.6)
+        b.clicar("#calc-hp", 0.2)
+        b.js("(() => { document.getElementById('calc-hp').select(); return 1; })()")
+        b.envia("Input.insertText", {"text": "12"}); time.sleep(0.3)
+        s.js("(() => { window.ligarEdicao(true); build.cats[0].items.push({ itemId: 'long-sword', note: '' }); saveBuild(); renderBuildAll(); return 'ok'; })()")
+        espera(b, "!!build.cats[0] && build.cats[0].items.some(i => i.itemId === 'long-sword')", 4); time.sleep(0.3)
+        b.envia("Input.insertText", {"text": "3"}); time.sleep(0.3)
+        fc = b.js("({ valor: document.getElementById('calc-hp').value, foco: document.activeElement && document.activeElement.id })")
+        b.clicar('.tab-btn[data-tab="build"]', 0.5)
+        b.js("(() => { showBuildScreen('lista'); mostrarListaDe('minhas'); document.querySelector('#bi-rows .bi-row, .bi-row').focus(); return 1; })()")
+        linha = b.js("document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.id || null : null")
+        s.js("(() => { build.cats[0].items.push({ itemId: 'long-sword', note: '' }); saveBuild(); renderBuildAll(); return 'ok'; })()")
+        espera(b, "build.cats[0].items.filter(i => i.itemId === 'long-sword').length === 2", 4); time.sleep(0.3)
+        fl = b.js("document.activeElement && document.activeElement.classList.contains('bi-row') ? document.activeElement.dataset.id : (document.activeElement || {}).tagName")
+        p.conta("duas abas", "controle remoto: a mudança da dona não tira o foco daqui — a tecla seguinte entra no mesmo campo da calculadora, e a linha da lista segue focada",
+                fc["valor"] == "123" and fc["foco"] == "calc-hp" and bool(linha) and fl == linha, "calculadora %s · linha %s → %s" % (fc, linha, fl))
+        # (2) a dona sai (fecha, quebra) com rascunho: a bigorna daqui volta ao disco, sem o rascunho morto; ela volta e ele aparece de novo
+        time.sleep(3.2)   # o último recado da dona já tem mais de 3 s
+        s.js("(() => { localStorage.setItem('montador.dona', JSON.stringify({ ...lerDona(), fora: 1 })); return 'ok'; })()")
+        espera(b, "!build.cats[0].items.some(i => i.itemId === 'long-sword')", 5)
+        fora = b.js("({ item: build.cats[0].items.some(i => i.itemId === 'long-sword'), plaqueta: document.getElementById('bg-estado').textContent, faixa: document.getElementById('remota-texto').textContent })")
+        s.js("(() => { marcarDona(); refletirBigorna(); return 'ok'; })()")
+        espera(b, "build.cats[0].items.some(i => i.itemId === 'long-sword')", 4)
+        volta = b.js("({ item: build.cats[0].items.some(i => i.itemId === 'long-sword'), plaqueta: document.getElementById('bg-estado').textContent })")
+        p.conta("duas abas", "controle remoto: a dona sai com rascunho — a bigorna daqui volta ao disco (sem o rascunho morto, sem \"não salva\"); ela volta e o rascunho reaparece",
+                not fora["item"] and "não salva" not in fora["plaqueta"] and "saiu" in fora["faixa"] and volta["item"] and "não salva" in volta["plaqueta"],
+                "dona fora: %s · de volta: %s" % (fora, volta))
+        # (3) a plaqueta diz o que a dona diz: com rascunho, o Salvar é lá (não o Ctrl+S daqui); "não deu para salvar" com o mesmo título
+        tt = b.js("document.getElementById('bg-estado').title")
+        s.js("""(() => { window.__setOrig = Storage.prototype.setItem;
+          Storage.prototype.setItem = function (k, v) { if (k === 'lol-builds-v3') throw new DOMException('cheio', 'QuotaExceededError'); return window.__setOrig.call(this, k, v); };
+          salvarAgora(); fecharPub(); return 'ok'; })()""")
+        espera(b, "document.getElementById('bg-estado').textContent.includes('não deu')", 4)
+        pl = lambda q: q.js("({ texto: document.getElementById('bg-estado').textContent, titulo: document.getElementById('bg-estado').title })")
+        pe, dn = pl(b), pl(s)
+        s.js("(() => { Storage.prototype.setItem = window.__setOrig; descartarAlteracoes(); window.ligarEdicao(false); gravarBiblioteca(); return 'ok'; })()")
+        p.conta("duas abas", "controle remoto: a plaqueta diz o que a dona diz — \"não deu para salvar\", com o mesmo título — e, com rascunho, que o Salvar é na outra aba",
+                "na outra aba" in tt and "Ctrl+S" not in tt and "não deu para salvar" in pe["texto"] and pe == dn, "rascunho: %r · daqui %s · dona %s" % (tt, pe, dn))
+        # (4) o coração de uma pública na dona redesenha a lista daqui (ID que o servidor "não tem": nada sai pela rede)
+        b.js("""(() => { showBuildScreen('lista'); publicas.naoExistem.add('qa93fv'); window.__rbi = 0; const o = renderBuildIndex;
+          renderBuildIndex = function () { window.__rbi++; return o.apply(this, arguments); }; return 1; })()""")
+        s.js("(() => { publicas.naoExistem.add('qa93fv'); toggleFavorito('qa93fv'); return 'ok'; })()")
+        espera(b, "window.__rbi > 0", 3)
+        fv = b.js("({ n: window.__rbi, favs: favoritosIds() })")
+        s.js("(() => { toggleFavorito('qa93fv'); return 'ok'; })()")
+        p.conta("duas abas", "controle remoto: o coração de uma pública na dona redesenha a lista daqui", fv["n"] > 0 and "qa93fv" in fv["favs"], "%s" % fv)
+        # (5) um link curto aberto numa aba que vira controle remoto, com o servidor (simulado) respondendo antes de
+        # a trava decidir: a pública fica escolhida nas Públicas e a faixa avisa — antes abria na forja e sumia
+        falso = r"""(() => { const f = window.fetch; window.fetch = function (u, ...a) { const t = String(u && u.url || u);
+          if (!t.includes('supabase.co')) return f.call(this, u, ...a);
+          const ok = (c) => new Response(JSON.stringify(c), { status: 200, headers: { 'Content-Type': 'application/json' } });
+          if (!t.includes('/rest/v1/builds_publicas') || !t.includes('id=eq.c93c93')) return Promise.resolve(ok([]));
+          const C = window.CATALOG;
+          return Promise.resolve(ok([{ id: 'c93c93', nome: 'Pública do link QA', descricao: 'servidor simulado', campeao: null, modo: '', marcadores: [],
+            caixas: [{ name: 'Núcleo', kind: 'comum', items: C.items.filter(i => i.tier === 'Lendário').slice(0, 2).map(i => ({ itemId: i.slug })) }],
+            versao: 1, atualizado_em: new Date().toISOString(), patch: C.meta.patch, autor: 'roteiro', engajamentos: 0, pop_dia: 0, popular_semana: false,
+            dias_no_top: 0, layout: null, runas: null, habilidades: null }])); }; })();"""
+        y = s.nova_aba()
+        y.envia("Page.addScriptToEvaluateOnNewDocument", {"source": falso})
+        y.abrir("#build/c93c93"); decidiu(y); time.sleep(0.6)
+        ly = y.js("({ remota: remota.ativa, sel: biSelected, tela: buildScreen, lista: biView, hash: location.hash, temp: !!build.temp, id: build.id, aviso: document.getElementById('remota-texto').textContent })")
+        p.conta("duas abas", "um link curto numa aba que vira controle remoto, com a resposta antes da trava decidir: a pública fica escolhida nas Públicas e a faixa avisa (não abre na forja)",
+                ly["remota"] and ly["sel"] == "pub:c93c93" and ly["tela"] == "lista" and ly["lista"] == "publicas" and ly["hash"] == "#builds"
+                and not ly["temp"] and ly["id"] == s.js("build.id") and "escolhida nas Públicas" in ly["aviso"], "aba: %s" % ly)
+        y.fechar_aba(); y = None
         # a aba 1 na forja com uma caixa escolhida (o Esc solta a caixa — atalho da página inteira)
         s.js("(() => { showBuildScreen('forja'); build.selectedCatId = build.cats[0] && build.cats[0].id; renderBuild(); return 'ok'; })()")
-        # a aba 2 assume: recarrega do disco, com a build da aba 1
-        ok = recarregou(b, "#aba-dona-usar")
+        # a aba 2 assume pelo "Usar esta aba" da faixa: recarrega do disco, com a build da aba 1
+        ok = recarregou(b, "#remota-usar")
         if ok:
             b.entrar()
         espera(s, "!souDona", 3)
@@ -3149,13 +3308,16 @@ def checar_abas(s, p):
         # a parada não a tira de lá (a consulta da trava a despejava) — e retoma a marca
         b.envia("Page.bringToFront"); b.js("window.__fica = 1; 'ok'")
         b.envia("Page.navigate", {"url": b.url + "docs/qa.md"}); time.sleep(4.5)
+        # F13-T93: um recado do controle remoto chega enquanto a dona está guardada — com o canal
+        # aberto, o navegador a tiraria do cache do Voltar (visto: ela recarregava); fechado na saída, não
+        s.js("(() => { const c = new BroadcastChannel('montador.remoto'); c.postMessage({ tipo: 'pedir' }); c.close(); return 1; })()"); time.sleep(0.8)
         fora = texto_veu(s)
         hist = b.envia("Page.getNavigationHistory")
         b.envia("Page.navigateToHistoryEntry", {"entryId": hist["entries"][hist["currentIndex"] - 1]["id"]}); time.sleep(2)
         vt = b.js("({ fica: window.__fica === 1, dona: souDona })")
         espera(s, "(document.getElementById('aba-dona-texto') || {}).textContent.includes('já está aberto')", 4)
         volta = texto_veu(s)
-        p.conta("duas abas", "a dona vai a outra página e volta inteira (Voltar); a parada acompanha",
+        p.conta("duas abas", "a dona vai a outra página e volta inteira (Voltar), mesmo com um recado do controle remoto na espera; a parada acompanha",
                 "saiu do Montador" in fora and vt["fica"] and vt["dona"] and "já está aberto" in volta,
                 "véu com a dona fora: %s · a dona voltou: %s · véu depois: %s" % (fora[:45], vt, volta[:45]))
         # a dona fecha: a parada avisa (pela marca) e assume com um clique; a entrada da loja volta a ter o foco
@@ -3174,9 +3336,9 @@ def checar_abas(s, p):
         s.js("switchTab('build'); showBuildScreen('lista'); 'ok'"); time.sleep(0.4)
         hash_ = s.js("(() => { const x = library.builds.find(y => y.name === 'Da aba 2'); const l = buildParaLink({ ...x, id: 'qa-link-35', name: 'Do link' }); return l.slice(l.indexOf('#')); })()")
         e = s.nova_aba(); e.abrir(hash_); decidiu(e)
-        lk = e.js("({ texto: (document.getElementById('aba-dona-texto') || {}).textContent || '', sair: !window.dispatchEvent(new Event('beforeunload', { cancelable: true })) })")
-        p.conta("duas abas", "um link de build aberto numa aba parada: o véu avisa, e fechar pergunta",
-                "ainda não foi guardada" in lk["texto"] and lk["sair"] is True, "véu: %s · aviso de saída %s" % (lk["texto"], lk["sair"]))
+        lk = e.js("({ texto: (document.getElementById('remota-texto') || {}).textContent || '', sair: !window.dispatchEvent(new Event('beforeunload', { cancelable: true })), na: library.builds.some(x => x.name === 'Do link') })")
+        p.conta("duas abas", "um link de build aberto numa aba de controle remoto: a faixa avisa que ela só entra usando esta aba, e fechar pergunta",
+                "só entra na biblioteca se você usar esta aba" in lk["texto"] and lk["sair"] is True and not lk["na"], "faixa: %s · aviso de saída %s · na memória %s" % (lk["texto"], lk["sair"], lk["na"]))
         e.fechar_aba(); e = None
         # a dona presa num confirm() (o Excluir) enquanto outra aba assume e cria uma build:
         # o OK de lá não pode gravar a biblioteca velha por cima. O confirm é trocado por
@@ -3232,20 +3394,28 @@ def checar_abas(s, p):
             " d.push(tipo + ':' + ((e.target && (e.target.id || e.target.className || e.target.nodeName)) || '?') + '@' + Math.round(e.clientX) + ',' + Math.round(e.clientY));"
             " sessionStorage.setItem('qa.diario', JSON.stringify(d)); }, true)); })()"})
         f.abrir(hash2); decidiu(f)
+        # F13-T93 (cético): no controle remoto ela navega — o #b= sai do endereço, e o "Usar esta aba" ainda recebe a build
+        f.clicar('.tab-btn[data-tab="catalog"]', 0.6)
         f.dialogos.clear()
-        na_hora = f.js("(() => { const b = document.getElementById('aba-dona-usar'); const r = b.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);"
+        na_hora = f.js("(() => { const b = document.getElementById('remota-usar'); const r = b.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);"
                        " return document.visibilityState + '/' + document.hasFocus() + ' · no ponto ' + (e && (e.id || e.className || e.nodeName)) + ' @' + Math.round(r.left + r.width / 2) + ',' + Math.round(r.top + r.height / 2); })()")
-        assumiu = recarregou(f, "#aba-dona-usar")
+        assumiu = recarregou(f, "#remota-usar")
         rf = f.js("({ dona: souDona, link: library.builds.some(x => x.name === 'Do link 2') })") if assumiu else \
-            f.js("({ veu: (document.getElementById('aba-dona-texto') || {}).textContent, marca: JSON.stringify(lerDona()), diario: sessionStorage.getItem('qa.diario'), decidido })")
+            f.js("({ faixa: (document.getElementById('remota-texto') || {}).textContent, marca: JSON.stringify(lerDona()), diario: sessionStorage.getItem('qa.diario'), decidido })")
         avisos = [x for x in f.dialogos if x.startswith("beforeunload")]
         p.conta("duas abas", "\"Usar esta aba\" numa aba de link assume sem o aviso falso de saída, com a build do link",
                 assumiu and rf["dona"] and rf["link"] and not avisos, "assumiu %s · %s · avisos: %s · na hora do clique: %s" % (assumiu, rf, avisos or "nenhum", na_hora))
         # a dona que quebra sem avisar (sem pagehide, a marca não diz "saiu"): a parada percebe pela trava
+        # — e a faixa do controle remoto também (F13-T93)
+        x = s.nova_aba(); x.abrir(); decidiu(x)
+        tx0 = texto_rem(x)
         f.ws.send(json.dumps({"id": 99999, "method": "Page.crash"}))
         espera(s, "(document.getElementById('aba-dona-texto') || {}).textContent.includes('não responde mais')", 6)
-        tq = texto_veu(s)
-        p.conta("duas abas", "a dona que quebra sem avisar: a parada percebe", "não responde mais" in tq, "véu: %s" % tq[:90])
+        espera(x, "(document.getElementById('remota-texto') || {}).textContent.includes('não responde mais')", 6)
+        tq, tx = texto_veu(s), texto_rem(x)
+        p.conta("duas abas", "a dona que quebra sem avisar: a parada e o controle remoto percebem",
+                "não responde mais" in tq and "Controle remoto" in tx0 and "não responde mais" in tx, "véu: %s · faixa antes: %s · depois: %s" % (tq[:60], tx0[:40], tx[:60]))
+        x.fechar_aba(); x = None
         # a página de captura da observação (#build-observacao): o foco volta ao editor depois do "conferindo"
         s.js("""(() => { const d = JSON.parse(localStorage.getItem('lol-builds-v3')); const b = d.builds.find(x => x.id === d.activeId) || d.builds[0];
           d.activeId = b.id; if (!b.cats.length) b.cats.push({ id: 'cat-qa', name: 'QA', desc: '', kind: 'comum', span: 2, items: [] });
@@ -3257,9 +3427,11 @@ def checar_abas(s, p):
         # F5 da dona com outra aba ainda conferindo (na fila da trava): a dona continua dona
         h = s.nova_aba(); h.abrir()
         g.abrir(); decidiu(g); decidiu(h); time.sleep(1.5)
-        f5 = {"dona": g.js("souDona"), "outra": h.js("({ dona: souDona, veu: !!document.getElementById('aba-dona') })")}
+        # a outra pode ter pego a trava no instante do F5 e perdido de volta: fica no véu "perdeu" (que
+        # segue como era, F13-T93); senão, controle remoto
+        f5 = {"dona": g.js("souDona"), "outra": h.js("({ dona: souDona, remota: remota.ativa, veu: !!document.getElementById('aba-dona') })")}
         p.conta("duas abas", "F5 da dona com outra aba na fila da trava: a dona continua dona",
-                f5["dona"] and not f5["outra"]["dona"] and f5["outra"]["veu"], "%s" % f5)
+                f5["dona"] and not f5["outra"]["dona"] and (f5["outra"]["remota"] or f5["outra"]["veu"]), "%s" % f5)
         # outra aba toma a trava bem na hora em que esta confere se ela é sua (entre a
         # concessão e a consulta): esta não assume — senão ficavam duas donas.
         # A conferência desta aba é atrasada de propósito, para a corrida ser certa.
@@ -3270,8 +3442,8 @@ def checar_abas(s, p):
         v.abrir()
         h.js("navigator.locks.request('montador.dona', { steal: true }, () => new Promise(() => {})); 'ok'")
         time.sleep(3.5)
-        rv = v.js("({ dona: souDona, veu: !!document.getElementById('aba-dona') })")
-        p.conta("duas abas", "outra aba toma a trava enquanto esta confere: esta não assume", not rv["dona"] and rv["veu"], "aba: %s" % rv)
+        rv = v.js("({ dona: souDona, veu: !!document.getElementById('aba-dona'), remota: remota.ativa })")
+        p.conta("duas abas", "outra aba toma a trava enquanto esta confere: esta não assume", not rv["dona"] and (rv["veu"] or rv["remota"]), "aba: %s" % rv)
         v.fechar_aba(); v = None
         # a aba nova que desiste da espera (2 s) justo quando a marca diz "saiu" — a
         # dona recarregando, que regrava a marca logo depois — não toma a vez: confere
@@ -3281,8 +3453,8 @@ def checar_abas(s, p):
         w = s.nova_aba(); w.abrir(); time.sleep(2.3)
         s.js("localStorage.setItem('montador.dona', JSON.stringify({ cliente: 'qa', sujo: 0, ocupada: 0 })); 'ok'")
         time.sleep(2.0)
-        rw = w.js("({ dona: souDona, veu: !!document.getElementById('aba-dona') })")
-        p.conta("duas abas", "o \"saiu\" que a dona regrava logo depois (F5) não faz a aba nova tomar a vez", not rw["dona"] and rw["veu"], "aba: %s" % rw)
+        rw = w.js("({ dona: souDona, veu: !!document.getElementById('aba-dona'), remota: remota.ativa })")
+        p.conta("duas abas", "o \"saiu\" que a dona regrava logo depois (F5) não faz a aba nova tomar a vez", not rw["dona"] and (rw["veu"] or rw["remota"]), "aba: %s" % rw)
         w.fechar_aba(); w = None
         # a trava negada pelo navegador (dados do site bloqueados): a aba sozinha
         # funciona, como antes — não fica presa no véu
@@ -3292,7 +3464,7 @@ def checar_abas(s, p):
         ng = e.js("({ dona: souDona, veu: !!document.getElementById('aba-dona') })")
         p.conta("duas abas", "com a trava negada pelo navegador, a aba não fica presa no véu", ng["dona"] and not ng["veu"], "aba: %s" % ng)
     finally:
-        for q in (b, c, d, e, f, g, h, v, w):
+        for q in (b, c, d, e, f, g, h, v, w, x, y):
             if q:
                 q.fechar_aba()
 

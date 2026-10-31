@@ -4971,6 +4971,19 @@ body.editando .save-wrap { display: inline-flex; }
 #aba-dona.conferindo .md-panel > * { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* fica para o leitor de tela */
 #aba-dona.conferindo .md-panel::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--forja-placa-borda); border-top-color: var(--forja-brasa); animation: aba-girando .9s linear infinite; }
 @keyframes aba-girando { to { transform: rotate(360deg); } }
+/* F13-T93: o controle remoto — a aba que não é a dona navega e acompanha a build da outra. Uma
+   faixa de ferro no pé da tela diz isso e guarda o "Usar esta aba"; abaixo dos diálogos (95). */
+#remota { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 90; display: flex; align-items: center; gap: 12px;
+  width: max-content; max-width: calc(100vw - 32px); padding: 6px 6px 6px 0; border: 1px solid var(--forja-placa-borda); border-radius: 3px;
+  background: linear-gradient(180deg, var(--forja-placa-1), var(--forja-placa-2)); color: var(--forja-texto); font-family: var(--loja-texto); font-size: 13.5px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 6px 18px rgba(0,0,0,.6), 0 0 14px rgba(255,120,30,.18); }
+#remota .rf-brasa { align-self: stretch; width: 5px; border-radius: 3px 0 0 3px; background: var(--forja-brasa); box-shadow: 0 0 10px 2px var(--forja-brasa-glow); animation: cff-pulsa 1.8s ease-in-out infinite; }
+#remota .rf-texto b { color: var(--forja-brasa-clara); font-weight: 600; }
+#remota.saiu .rf-brasa { background: var(--forja-texto-suave); box-shadow: none; animation: none; }
+#remota.aviso { border-color: var(--forja-brasa); }
+#remota-usar { flex: none; padding: 5px 12px; font-size: 12.5px; }
+#remota-usar.chamar { animation: chamar-editar 1.1s ease-out 3; }
+body.remota #ml-ligar, body.remota #rd-ligar { display: none; }   /* o Editar daqui não liga: a faixa tem o "Usar esta aba" */
 #pub-dialog .md-panel:focus { outline: none; }
 #pub-dialog .pub-demora { display: block; margin-top: 10px; font-size: .92em; opacity: .85; }
 #pub-dialog.aguardando .md-title::after { content: "…"; animation: pub-pontos 1.2s steps(4) infinite; display: inline-block; width: 1.2em; text-align: left; }
@@ -6328,7 +6341,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.92";
+const ATUALIZACAO = "13.93";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -6687,6 +6700,9 @@ let bibliotecaNaoGravada = false;
 let importandoLote = false;   // F13-T37: a importação de várias builds grava e redesenha uma vez, no fim
 function gravarBiblioteca() {
   if (!souDona) {   // F13-T35: só a aba dona grava (a outra está parada, sob o véu)
+    // F13-T93: no controle remoto, o gesto que chegou até aqui escapou dos avisos — avisa e volta
+    // ao disco e à build da dona (o que ele mexeu na memória daqui não fica)
+    if (remota.ativa) { if (!espelhando) { avisarRemota(); setTimeout(ressincronizar, 0); } return false; }
     if (decidido) return false;
     gravarAoDecidir = true; return true;   // a trava responde em milissegundos; grava quando vier
   }
@@ -6735,7 +6751,12 @@ let esperandoInternet = 0;  // esperas fora do noServidor: o campeão de uma imp
 let meuCliente = null;      // o id que o navegador dá a esta aba na trava
 let discoLido = null;       // a biblioteca como a carga a leu
 let linkPendente = null;    // build recebida por link (#b=) numa aba parada: só na memória
+let linkPendenteHash = null;   // F13-T93: o # dela, para o "Usar esta aba" mesmo depois de navegar
 const veuInertes = new Set();
+// F13-T93: a aba que não é a dona vira controle remoto (seção logo abaixo do véu)
+const remota = { ativa: false, estado: null, recado: 0, aviso: null };
+let espelhando = false;     // a build da dona chegando: o que ela mexe aqui não é gesto de ninguém
+let canalRemoto = null;
 function lerDona() { try { return JSON.parse(localStorage.getItem(DONA_KEY) || "null"); } catch (e) { return null; } }
 // A marca: de qual aba (cliente), se há o que perder (sujo: 1 rascunho, 2
 // gravação recusada), se espera a internet, e se saiu. Números de um dígito:
@@ -6840,10 +6861,18 @@ function assumirVez() {
   }
   marcarDona();
   if (gravarAoDecidir) { gravarAoDecidir = false; gravarBiblioteca(); }
+  if (abrirCanalRemoto()) anunciarEstado();   // F13-T93: as abas de controle remoto passam a acompanhar esta
 }
 async function usarEstaAba() {
-  if (navigator.locks && await donaOcupada()) { atualizarVeu("recusado"); return; }
+  if (navigator.locks && await donaOcupada()) {
+    // F13-T93: recusado, o controle remoto dá lugar ao véu de sempre, que diz o porquê
+    if (remota.ativa) { sairDoRemoto(); virarEspectadora("recusado"); } else atualizarVeu("recusado");
+    return;
+  }
   try { sessionStorage.setItem(ASSUMIR_KEY, String(Date.now())); } catch (e) { /* idem */ }
+  // F13-T93 (cético): no controle remoto a aba navega e o # do link saiu do endereço — volta antes da
+  // recarga, que é quem recebe a build (senão ela se perdia, e a faixa tinha prometido que entrava)
+  if (linkPendente && linkPendenteHash && location.hash !== linkPendenteHash) history.replaceState(null, "", linkPendenteHash);
   linkPendente = null;   // o #b= fica na URL: a recarga recebe a build de novo (sem isso, o aviso de saída perguntava à toa)
   location.reload();   // do disco, com tudo o que a outra gravou; a carga toma a trava
 }
@@ -6858,6 +6887,9 @@ async function usarEstaAba() {
   e.stopImmediatePropagation();
 }, true));
 function virarEspectadora(motivo) {
+  // F13-T93: a outra aba é a dona e está viva — esta não fica parada sob o véu: vira controle remoto.
+  // Os outros motivos (conferindo, recusado, perdeu) seguem com o véu.
+  if (!motivo && typeof BroadcastChannel === "function") { entrarNoRemoto(); return; }
   let v = document.getElementById("aba-dona");
   if (!v) {
     v = document.createElement("div");
@@ -6908,6 +6940,210 @@ function atualizarVeu(motivo) {
     }, () => {});
   }
 }
+// ---------------- F13-T93: o controle remoto ----------------
+// Item 7 do roteiro (Leo, 30/09/2026: "utilizar o catálogo em uma aba e o builds em outra… tela
+// dividida ou 2 monitores"; 25/10/2026: escolheu o controle remoto). A aba que não é a dona deixa
+// de ficar parada sob o véu: navega à vontade (loja, builds, runas, calculadora) e mostra a build
+// da dona ao vivo — a dona manda o estado pelo BroadcastChannel a cada mudança, o rascunho também,
+// e a biblioteca chega pelo disco (o evento "storage"). Continua uma aba gravando por vez: mexer
+// na build aqui avisa "edite na outra aba" e nada muda. A faixa no pé da tela tem o "Usar esta
+// aba" da T35. (A T94 manda o clique no item, a caixa e o Editar daqui para a dona.)
+function abrirCanalRemoto() {
+  if (canalRemoto || typeof BroadcastChannel !== "function") return canalRemoto;
+  canalRemoto = new BroadcastChannel("montador.remoto");
+  canalRemoto.onmessage = (e) => {
+    const m = e.data || {};
+    if (m.tipo === "pedir" && souDona) anunciarEstado();
+    if (m.tipo === "estado" && remota.ativa) aplicarEspelho(m);
+  };
+  return canalRemoto;
+}
+// Fechado na saída: a página guardada para o Voltar não fica com o canal aberto (reabre na volta)
+function fecharCanalRemoto() { if (canalRemoto) { canalRemoto.close(); canalRemoto = null; } }
+let anuncioAgendado = false;
+function anunciarEstado() {
+  if (!souDona || !canalRemoto || anuncioAgendado) return;
+  // junta as mudanças de um mesmo gesto (um clique redesenha a plaqueta várias vezes). Sem
+  // setTimeout: com a dona em segundo plano, o navegador atrasaria o recado em até 1 s
+  anuncioAgendado = true;
+  queueMicrotask(() => {
+    anuncioAgendado = false;
+    if (!souDona || !canalRemoto) return;
+    canalRemoto.postMessage({ tipo: "estado", build: build.id ? snapshotActive() : null, editando: !!build.editing,
+      sujo: rascunho.sujo, erro: erroGravacao ? 1 : bibliotecaNaoGravada ? 2 : 0, caixa: build.selectedCatId || null });
+  });
+}
+function entrarNoRemoto() {
+  const primeira = !remota.ativa;
+  remota.ativa = true; decidido = true; veuMotivo = "";
+  document.body.classList.add("remota");
+  const v = document.getElementById("aba-dona");
+  if (v) {   // o véu do "conferindo" sai, e a página volta a responder (como no assumirVez)
+    v.remove();
+    veuInertes.forEach(e => { e.inert = false; }); veuInertes.clear();
+    const en = document.getElementById("entrar"), entrada = document.getElementById("entrada");
+    if ((!document.activeElement || document.activeElement === document.body) && en && entrada && !entrada.classList.contains("fechada")) en.focus();
+  }
+  if (build.editing && window.ligarEdicao) window.ligarEdicao(false);
+  const ml = document.querySelector("#modo-leitura span");
+  if (ml) ml.innerHTML = "<b>Controle remoto.</b> Esta aba acompanha a build da outra; para mexer nela, edite lá — ou use esta aba.";
+  mostrarFaixaRemota();
+  if (!primeira) return;
+  // a pública de um link curto que chegou antes de a trava decidir (o servidor respondeu rápido) abriu
+  // na forja como numa dona — aqui ela vai para as Públicas, como a que chega depois (cético)
+  const linkAberto = linkCurto.aberto;
+  linkCurto.aberto = null;
+  // a memória daqui passa a ser a do disco: o que a carga pôs nela (a build de um #b=) sai — o
+  // aviso dela fica na faixa, e o "Usar esta aba" a recebe de novo pelo endereço
+  ressincronizar();
+  if (linkAberto) mostrarLinkNaRemota(linkAberto);
+  if (abrirCanalRemoto()) canalRemoto.postMessage({ tipo: "pedir" });
+}
+// O link curto numa aba de controle remoto: a forja daqui acompanha a da outra, então a pública fica
+// escolhida na lista das Públicas, e a faixa diz onde abri-la
+function mostrarLinkNaRemota(id) {
+  aplicandoRota = true;
+  try { switchTab("build"); showBuildScreen("lista"); if (biView !== "publicas") mostrarListaDe("publicas"); } finally { aplicandoRota = false; }
+  // pela busca por ID: a lista mostra só as N primeiras, e a do link pode não estar entre elas
+  const busca = document.getElementById("bi-search");
+  if (busca) busca.value = id;
+  biSelected = "pub:" + id;
+  renderBuildIndex();
+  history.replaceState(null, "", "#" + rotaDaTela());
+  avisarRemota(`<b>A build ${esc(id)} está escolhida nas Públicas.</b> Para abri-la na forja, abra na outra aba — ou use esta.`);
+}
+function sairDoRemoto() {
+  remota.ativa = false;
+  document.body.classList.remove("remota");
+  const f = document.getElementById("remota");
+  if (f) f.remove();
+}
+// A build da dona na bigorna daqui: sem Editar, sem rascunho (o estado dela aparece na plaqueta)
+function aplicarNaBigorna(m) {
+  library.builds = library.builds.filter(b => !b.temp);
+  const b = m && m.build;
+  if (!b) { zerarBuild(); return; }
+  if (b.temp) library.builds.push(JSON.parse(JSON.stringify(b)));   // a pública que a dona abriu para ver
+  copiarParaBigorna(b);
+  library.activeId = b.id;
+  build.selectedCatId = null; rascunho.sujo = false; erroGravacao = false;
+}
+function aplicarEspelho(m) {
+  remota.estado = m; remota.recado = Date.now();
+  espelhando = true;
+  try { aplicarNaBigorna(m); redesenharRemota(); } finally { espelhando = false; }
+}
+// A biblioteca do disco (a dona gravou), com a build dela por cima
+function ressincronizar() {
+  if (!remota.ativa) return;
+  espelhando = true;
+  try {
+    library.builds = []; library.activeId = null;
+    zerarBuild();
+    loadBuild();
+    if (remota.estado) aplicarNaBigorna(remota.estado);
+    redesenharRemota();
+  } finally { espelhando = false; }
+}
+function redesenharRemota() {
+  // o redesenho refaz o HTML da lista e da calculadora: o foco (e o cursor do campo) voltam ao mesmo
+  // lugar, como no próprio input da calculadora — senão cada mudança da dona tirava a tecla (cético)
+  const foco = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+  const linhaFoco = foco && foco.classList.contains("bi-row") ? foco.dataset.id : null;
+  const cursor = foco && typeof foco.selectionStart === "number" ? foco.selectionStart : null;
+  renderBuildAll(); renderRunasDaForja(); renderHabilidades(); refletirSalvar();
+  if (buildScreen === "forja" && !build.id) {   // a dona fechou a build: a forja daqui fica sem o que mostrar
+    aplicandoRota = true;
+    try { showBuildScreen("lista"); } finally { aplicandoRota = false; }
+    if (rotaPronta) history.replaceState(null, "", "#" + rotaDaTela());
+  }
+  if (buildScreen === "lista") renderBuildIndex();
+  if (!document.getElementById("view-runas").classList.contains("hidden")) renderRunas();
+  if (!document.getElementById("view-calc").classList.contains("hidden")) renderCalc();
+  if (foco && !foco.isConnected) {
+    const el = foco.id ? document.getElementById(foco.id) : linhaFoco ? document.querySelector(`.bi-row[data-id="${CSS.escape(linhaFoco)}"]`) : null;
+    if (el) focarComCursor(el, cursor);
+  }
+  atualizarFaixaRemota();
+}
+function mostrarFaixaRemota() {
+  let f = document.getElementById("remota");
+  if (!f) {
+    f = document.createElement("div");
+    f.id = "remota"; f.setAttribute("role", "status");
+    f.innerHTML = `<span class="rf-brasa" aria-hidden="true"></span><span class="rf-texto" id="remota-texto"></span>
+      <button type="button" class="btn primary" id="remota-usar">Usar esta aba</button>`;
+    document.body.appendChild(f);
+    f.querySelector("#remota-usar").addEventListener("click", usarEstaAba);
+  }
+  atualizarFaixaRemota();
+}
+// `conferirTrava`: a dona que quebrou sem avisar não escreve "saiu" na marca — a trava diz (como
+// no véu, só quando a marca não diz "saiu": a consulta tirava a dona do cache do Voltar)
+function atualizarFaixaRemota(conferirTrava) {
+  const f = document.getElementById("remota"), t = document.getElementById("remota-texto");
+  if (!f || !t) return;
+  const saiu = !!(lerDona() || {}).fora;
+  let texto = remota.aviso || (saiu ? "<b>A outra aba saiu do Montador.</b> Esta pode assumir: ela recarrega com tudo o que foi gravado."
+    : "<b>Controle remoto.</b> A build é editada na outra aba; esta acompanha ao vivo.");
+  if (linkPendente && !remota.aviso) texto += ` A build “${esc(linkPendente)}”, deste link, só entra na biblioteca se você usar esta aba.`;
+  t.innerHTML = texto;
+  f.classList.toggle("saiu", saiu);
+  f.classList.toggle("aviso", !!remota.aviso);
+  if (saiu) esquecerDona();
+  if (conferirTrava && !saiu && navigator.locks) {
+    navigator.locks.query().then(q => {
+      if (!remota.ativa || remota.aviso || q.held.some(l => l.name === DONA_TRAVA) || (lerDona() || {}).fora) return;
+      f.classList.add("saiu");
+      t.innerHTML = "<b>A outra aba não responde mais</b> (fechou sem avisar). Esta pode assumir: ela recarrega com tudo o que foi gravado.";
+      esquecerDona();
+    }, () => {});
+  }
+}
+// A dona saiu ou quebrou: o rascunho dela morreu com ela — a bigorna daqui volta ao que está no disco
+// (antes ficava o rascunho morto, "editando · não salva"). Se ela voltar, o estado chega de novo (cético)
+function esquecerDona() {
+  // um recado recente prova que ela está viva: a marca "voltou" (o Voltar, o F5) pode chegar depois dele
+  if (!remota.estado || Date.now() - remota.recado < 3000) return;
+  remota.estado = null;
+  setTimeout(ressincronizar, 0);
+}
+// "Edite na outra aba": a faixa diz por 4 s e o "Usar esta aba" pulsa
+function avisarRemota(texto) {
+  if (!remota.ativa) return;
+  remota.aviso = texto || "<b>Edite na outra aba.</b> Esta só acompanha a build — para editar aqui, use esta aba.";
+  clearTimeout(avisarRemota._t);
+  avisarRemota._t = setTimeout(() => { remota.aviso = null; atualizarFaixaRemota(); }, 4000);
+  atualizarFaixaRemota();
+  pulsar(document.getElementById("remota-usar"));
+}
+// Nos gestos que mudam a build ou a biblioteca: no controle remoto, avisa e não faz
+function bloqueioRemoto() {
+  if (!remota.ativa || espelhando) return false;
+  avisarRemota();
+  return true;
+}
+// Os botões que são da dona (criar, excluir, fechar, publicar, favoritar, importar, salvar…) param
+// aqui, antes de qualquer pergunta — o confirm() do Excluir não chega a abrir
+const GESTOS_DA_DONA = "#bi-new, #new-build, #dup-build, #del-build, #clear-build, #import-btn, #bl-importar, #bl-excluir, #bg-fechar, #cff-fechar, "
+  + "#temp-copiar, #save-btn, #discard-btn, #add-cat, [data-fav], #bi-detail [data-act]:not([data-act=\"link\"])";
+window.addEventListener("click", (e) => {
+  if (!remota.ativa || !(e.target instanceof Element) || !e.target.closest(GESTOS_DA_DONA)) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  avisarRemota();
+}, true);
+window.addEventListener("storage", (e) => {
+  if (!remota.ativa) return;
+  if (e.key === STORAGE_KEY || e.key === null) ressincronizar();
+  // o coração de uma pública na dona: a lista daqui acende junto (cético)
+  else if (e.key === "publicacao.favoritos" && buildScreen === "lista") renderBuildIndex();
+});
+window.addEventListener("pagehide", fecharCanalRemoto);
+window.addEventListener("pageshow", (e) => {
+  if (!e.persisted || !abrirCanalRemoto()) return;
+  if (souDona) anunciarEstado();
+  else if (remota.ativa) { canalRemoto.postMessage({ tipo: "pedir" }); ressincronizar(); }
+});
 // F13-T51 (Leo, 18/10/2026: "tecnicamente eu sempre estou em uma build ativa…
 // precisa ter alguma forma de demonstrar que tem uma build ativa ou se é para
 // sair da edição da build atual"): a plaqueta pendurada sob a aba Builds diz, de
@@ -6919,8 +7155,13 @@ function refletirBigorna() {
   const p = document.getElementById("bigorna");
   if (!p) return;
   const aberta = !!build.id;
-  const erro = erroGravacao || bibliotecaNaoGravada;
-  const estado = build.temp ? "vendo" : erro ? "erro" : rascunho.sujo ? "sujo" : build.editing ? "editando" : "aberta";
+  // F13-T93: no controle remoto, o estado é o da dona (aqui não há Editar nem rascunho)
+  const r = remota.ativa && remota.estado ? remota.estado : null;
+  const erro = r ? !!r.erro : erroGravacao || bibliotecaNaoGravada;
+  const naoSalvou = r ? r.erro === 1 : erroGravacao;   // "não deu para salvar" (o Salvar recusado), senão "gravação recusada"
+  const sujo = r ? !!r.sujo : rascunho.sujo, editando = r ? !!r.editando : build.editing;
+  const estado = build.temp ? "vendo" : erro ? "erro" : sujo ? "sujo" : editando ? "editando" : "aberta";
+  anunciarEstado();   // F13-T93: a dona conta a mudança às abas de controle remoto
   // F13-T52 (Leo, 19/10/2026: "se a forja está vazia, então não mostra nada"):
   // a plaqueta só existe com uma build na bigorna
   p.hidden = !aberta;
@@ -6934,11 +7175,11 @@ function refletirBigorna() {
   st.innerHTML = {
     editando: "· editando",
     sujo: '· editando · <span class="bg-sujo"><span aria-hidden="true">●</span> não salva</span>',
-    erro: `· <span class="bg-erro">${erroGravacao ? "não deu para salvar" : "gravação recusada"}</span>`,
+    erro: `· <span class="bg-erro">${naoSalvou ? "não deu para salvar" : "gravação recusada"}</span>`,
     vendo: "· só visualização",
   }[estado] || "";
-  st.title = estado === "sujo" ? "Alterações não salvas — Ctrl+S salva de qualquer tela"
-    : estado === "erro" ? (erroGravacao ? NAO_SALVOU : NAO_GRAVOU) : "";
+  st.title = estado === "sujo" ? (r ? "Alterações não salvas na outra aba — o Salvar é lá" : "Alterações não salvas — Ctrl+S salva de qualquer tela")
+    : estado === "erro" ? (naoSalvou ? NAO_SALVOU : NAO_GRAVOU) : "";
   document.getElementById("bg-parar").hidden = !(aberta && !build.temp && build.editing);
   // F13-T52: o × fecha a build; numa pública aberta para ver, fecha a visualização
   const fechaTitulo = build.temp ? "Fechar a visualização — volta para a build de antes" : "Fechar a build — ela continua salva na lista";
@@ -6955,7 +7196,7 @@ function refletirBigorna() {
     fb.textContent = nomeBuild;
     fb.title = nomeBuild;
     document.getElementById("cff-rot").firstChild.textContent = build.temp ? "Vendo " : "Na bigorna ";
-    document.getElementById("cff-sujo").hidden = !rascunho.sujo;
+    document.getElementById("cff-sujo").hidden = !sujo;
   }
   posicionarBigorna();
 }
@@ -7035,7 +7276,7 @@ let saidaPendente = null;
 // Trocar de build fora da forja (lista, "Falta pouco para publicar", uma
 // pública) pergunta como a forja pergunta (F13-T25); a própria build aberta
 // não é troca (F13-T24).
-function confirmarTroca(id, depois, aoVoltar) { if (id === build.id) depois(); else confirmarSaida(depois, aoVoltar); }
+function confirmarTroca(id, depois, aoVoltar) { if (id === build.id) depois(); else if (!bloqueioRemoto()) confirmarSaida(depois, aoVoltar); }   // F13-T93: trocar é com a dona
 // F13-T91: `aoVoltar` (opcional) roda quando o jogador fica no rascunho ("Continuar editando", Esc,
 // ou o "Salvar e sair" que não salvou) — o link curto desfaz o que mexeu na tela antes de perguntar.
 let saidaVoltar = null;
@@ -7068,7 +7309,7 @@ function confirmarSaida(depois, aoVoltar) {
 // build que estava na bigorna antes dela). Sem build, a forja não tem o que
 // mostrar: a aba Builds fica na lista.
 function fecharBuild() {
-  if (!build.id) return;
+  if (!build.id || bloqueioRemoto()) return;   // F13-T93
   if (build.temp) deleteBuild(build.id);
   else { zerarBuild(); gravarBiblioteca(); renderBuildAll(); }
   if (!build.id && buildScreen === "forja") showBuildScreen("lista");
@@ -7114,6 +7355,8 @@ function initSalvar() {
   document.addEventListener("keydown", (e) => {
     // F13-T51: o Ctrl+S vale de qualquer tela — a plaqueta mostra o "não salva"
     // na loja, nas Runas e na Calculadora, e lá o atalho abria o "Salvar como"
+    // F13-T93: no controle remoto o Ctrl+S não abre o "Salvar como" do navegador — avisa onde salvar
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && remota.ativa) { e.preventDefault(); avisarRemota(); return; }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && build.id && build.editing && !build.temp) { e.preventDefault(); salvarAgora(); }
     if (e.key === "Escape" && !dlg.hidden) fecharPerguntaDeSaida();
     if (e.key === "Tab" && !dlg.hidden) {   // o Tab gira entre os três botões, sem voltar para trás da camada
@@ -7293,8 +7536,16 @@ function activateBuild(id, skipSave) {
   // que sumia calado. Ela já está aberta: só mostra. Recarregar de propósito é
   // o Descartar, que passa skipSave.
   if (!skipSave && id === build.id) { renderBuildAll(); return; }
+  if (bloqueioRemoto()) return;   // F13-T93: trocar a build da bigorna é com a dona
   if (!skipSave && build.id && build.id !== id) gravarBuild();
   if (build.id !== b.id) erroGravacao = false;
+  copiarParaBigorna(b);
+  library.activeId = b.id;
+  if (!b.temp) library.ultimaPropria = b.id;
+  if (!skipSave) { gravarBuild(); renderBuildAll(); }
+}
+// Os campos da build `b` na bigorna (cópias próprias). F13-T93: também a build da dona, no controle remoto.
+function copiarParaBigorna(b) {
   build.id = b.id;
   build.name = b.name;
   build.cats = JSON.parse(JSON.stringify(b.cats || []));   // cópia própria: a da biblioteca só muda ao gravar
@@ -7324,9 +7575,6 @@ function activateBuild(id, skipSave) {
   build.pubOrigem = b.pubOrigem || null;
   build.layout = layoutValido(b.layout);
   build.selectedCatId = null;
-  library.activeId = b.id;
-  if (!b.temp) library.ultimaPropria = b.id;
-  if (!skipSave) { gravarBuild(); renderBuildAll(); }
 }
 
 // F13-T52: a bigorna vazia. Todos os campos que o activateBuild escreve voltam
@@ -7407,6 +7655,7 @@ function buildsProprias() { return library.builds.filter(b => !b.temp); }
 // Só a biblioteca deste navegador. Tirar do site é com excluirBuild, que pede
 // ao servidor ANTES e só apaga aqui quando ele confirma (ou a pessoa decide).
 function deleteBuild(id) {
+  if (bloqueioRemoto()) return;   // F13-T93
   const eraAtiva = id === build.id;
   const eraVisualizacao = eraAtiva && build.temp;
   if (eraAtiva) rascunho.sujo = false;
@@ -7975,7 +8224,7 @@ function receberBuildDoLink(hash) {
     gravarBuild();
     library.builds.push({ id: r.id, name: r.name, seq: r.cats.length + 1, mode: r.mode, rota: r.rota, masterwork: r.masterwork, champion: r.champion, markers: r.markers, desc: r.desc,
       runas: r.runas, habilidades: r.habilidades, layout: r.layout, fav: false, updatedAt: Date.now(), cats: r.cats });
-    if (!souDona) linkPendente = r.name;   // F13-T35: se esta ficar parada, a build do link não chega ao disco
+    if (!souDona) { linkPendente = r.name; linkPendenteHash = hash; }   // F13-T35: se esta ficar parada, a build do link não chega ao disco
   }
   activateBuild(r.id, true);
   gravarBuild();
@@ -8090,6 +8339,7 @@ function caixasParaServidor(cats) {
 // um Enter mandava um segundo publicar_build — duas publicações, e o site
 // ficava com a primeira sem a biblioteca saber dela.
 async function publicarBuild(id) {
+  if (bloqueioRemoto()) return;   // F13-T93: antes de qualquer pedido ao servidor
   if (noServidor.has(id)) {
     // a placa desta mesma publicação aberta: o clique é o mesmo, fica calado
     if (noServidor.get(id) !== "publicando" || document.getElementById("pub-dialog").hidden) avisaSeNoServidor(id);
@@ -8175,6 +8425,7 @@ async function publicarBuild(id) {
 // mantém a build local. Só funciona no navegador que publicou (o segredo mora nele);
 // noutro navegador, o servidor recusa e a placa explica.
 async function despublicarBuild(id) {
+  if (bloqueioRemoto()) return;   // F13-T93
   const b = library.builds.find(x => x.id === id);
   const pubId = b ? b.pubId : null;
   if (!pubId) return;
@@ -8196,6 +8447,7 @@ async function despublicarBuild(id) {
 }
 // Excluir uma publicação vista na aba Públicas (só as suas: o servidor confere o segredo).
 async function excluirPublicacao(pubId) {
+  if (bloqueioRemoto()) return;   // F13-T93
   const local = library.builds.find(x => x.pubId === pubId);
   if (local) { await despublicarBuild(local.id); return; }
   if (!window.confirm(`Excluir a publicação ${pubId} do site? Isso não dá pra desfazer.`)) return;
@@ -8734,6 +8986,7 @@ function revisaoHtml(d) {
   return `<div class="revisao-box"><span class="k">Catálogo mudou${r.de !== r.para ? `: ${esc(r.de)} → ${esc(r.para)}` : ""}.</span>${mudaram} Atributos e preços já são os atuais. ${lista ? `Saíram do catálogo e foram tirados da build: ${lista}.` : "Nenhum item saiu do catálogo."}${d.pubId ? " Confira e clique em <b>Atualizar publicação</b>: isso tira a etiqueta do site." : " O aviso some quando você salvar a build na forja."}</div>`;
 }
 function chamarEditarTemp() {
+  if (bloqueioRemoto()) return;   // F13-T93
   const el = document.getElementById("temp-warning");
   if (el) { el.classList.remove("chamar"); void el.offsetWidth; el.classList.add("chamar"); el.scrollIntoView({ block: "nearest" }); }
 }
@@ -9224,6 +9477,7 @@ function pulsar(el) {
   clearTimeout(el._chamar); el._chamar = setTimeout(() => el.classList.remove("chamar"), 3400);
 }
 function chamarEditar() {
+  if (bloqueioRemoto()) return;   // F13-T93: aqui o Editar não liga — a faixa diz onde editar
   if (build.temp) { chamarEditarTemp(); return; }
   if (!document.getElementById("view-catalog").classList.contains("hidden")) {
     showCatalogModeHint(`A build <b>${esc(build.name)}</b> está em <b>visualização</b>: para mexer nela, ligue o <b>Editar</b>. <button type="button" class="cmh-ligar" data-ligar-editar>Ligar Editar</button>`);
@@ -10652,6 +10906,7 @@ async function abrirLinkCurto(id) {
     return;
   }
   if (!publicaPorId(id)) publicas.favs.push(p);   // como a busca por ID: fica achável na lista
+  if (remota.ativa) { mostrarLinkNaRemota(id); return; }   // F13-T93: a forja daqui acompanha a da outra aba
   // marcada só quando abre de fato: com rascunho sujo, o diálogo pergunta antes
   const marcar = () => { biSelected = "pub:" + id; linkCurto.aberto = id; };
   // "Continuar editando": tudo como antes do link — a tela, o endereço dela, nada marcado
@@ -10904,6 +11159,7 @@ function esquecerFavoritos(ids) {
 // Devolve true quando a build ACABOU de virar favorita — só esse lado conta
 // engajamento (F11-T1: tirar dos favoritos é mudar de ideia, não engajar).
 function toggleFavorito(id) {
+  if (bloqueioRemoto()) return false;   // F13-T93: os favoritos também são da dona
   const ids = favoritosIds();
   const i = ids.indexOf(id);
   if (i >= 0) ids.splice(i, 1); else ids.push(id);
@@ -11115,6 +11371,7 @@ function renderTempWarning() {
 }
 
 function copiarPublica(d) {
+  if (bloqueioRemoto()) return;   // F13-T93
   registrarEvento(d.pubId, "copia");
   const removidos = [];
   const p = publicaPorId(d.pubId);
@@ -11469,7 +11726,7 @@ function renderLibrary() {
 
 function duplicateBuild(id) {
   const b = library.builds.find(x => x.id === id);
-  if (!b) return;
+  if (!b || bloqueioRemoto()) return;   // F13-T93
   const d = buildResumo(b);
   const mestre = !!(d.isActive ? build.masterwork : b.masterwork);   // lido antes: createNewBuild troca a build ativa
   // Cópia profunda: a duplicata não pode compartilhar itens com a original.
@@ -11957,7 +12214,10 @@ function initLibrary() {
 function initBuildBuilder() {
   decidirDona();   // F13-T35: quem é a dona (a gravação da carga espera a resposta)
   // a parada acompanha a dona: o texto do véu diz se ela saiu ou está ocupada
-  const acompanhar = () => { if (!souDona && veuMotivo !== "conferindo" && document.getElementById("aba-dona")) atualizarVeu(); };
+  const acompanhar = () => {
+    if (remota.ativa) { atualizarFaixaRemota(true); return; }   // F13-T93: a faixa do controle remoto acompanha a dona
+    if (!souDona && veuMotivo !== "conferindo" && document.getElementById("aba-dona")) atualizarVeu();
+  };
   setInterval(acompanhar, 2000);
   document.addEventListener("visibilitychange", acompanhar);
   window.addEventListener("storage", (e) => { if (e.key === DONA_KEY || e.key === null) acompanhar(); });
@@ -12003,6 +12263,7 @@ function initBuildBuilder() {
     // F13-T51 (revisão): ninguém liga o Editar numa pública aberta para ver — nem
     // o "Ligar Editar" da faixa Modo leitura, nem o "criar uma caixa" da loja
     if (on && build.temp) { editToggle.checked = false; chamarEditarTemp(); return; }
+    if (on && bloqueioRemoto()) { editToggle.checked = false; return; }   // F13-T93: o Editar é da dona
     build.editing = !!on;
     editToggle.checked = build.editing;
     document.body.classList.toggle("editando", build.editing);
@@ -12077,7 +12338,7 @@ function initBuildBuilder() {
   });
   document.getElementById("ml-ligar").addEventListener("click", () => {
     ligarEdicao(true);
-    document.getElementById("edit-toggle").checked = true;
+    document.getElementById("edit-toggle").checked = build.editing;   // recusado (pública, controle remoto), fica desligado
   });
   document.getElementById("build-runas").addEventListener("click", (e) => {
     if (!e.target.closest("#build-runas-abrir")) return;
@@ -12331,6 +12592,14 @@ function statsFromBuild() {
   return { totals, count };
 }
 
+// Devolve o foco a um campo redesenhado, com o cursor onde estava. O campo de número não diz onde
+// está o cursor (selectionStart é null): vai para o fim, onde se digita. F13-T93 (visto no roteiro):
+// o focus() o punha no começo, e "12" digitado tecla a tecla na Vida total virava "21".
+function focarComCursor(el, pos) {
+  el.focus({ preventScroll: true });
+  if (typeof pos === "number") { try { el.setSelectionRange(pos, pos); } catch (err) { /* idem */ } return; }
+  if (el.type === "number") { const v = el.value; el.value = ""; el.value = v; }
+}
 function initCalc() {
   const root = document.getElementById("calc-body");
   if (!root) return;
@@ -12346,10 +12615,7 @@ function initCalc() {
     const pos = e.target.selectionStart;
     renderCalc();
     const again = document.getElementById(id);
-    if (again) {
-      again.focus();
-      try { again.setSelectionRange(pos, pos); } catch (err) { /* number input pode recusar */ }
-    }
+    if (again) focarComCursor(again, pos);
   });
 
   root.addEventListener("click", (e) => {
@@ -13677,6 +13943,7 @@ function refreshCatalogCatSelect() {
     document.getElementById("cff-caixa").hidden = !cat;
     document.getElementById("cff-soltar").hidden = !cat;
     document.getElementById("cff-dica").textContent = cat ? "os itens clicados vão para esta caixa"
+      : remota.ativa ? "controle remoto — a build se edita na outra aba"   // F13-T93
       : build.temp ? "só visualização" : !build.editing ? "visualização — ligue o Editar para mexer" : "o clique no item pergunta a caixa";
     if (cat) {
       document.getElementById("cff-nome").textContent = cat.name || "(sem nome)";
