@@ -6328,7 +6328,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.91";
+const ATUALIZACAO = "13.92";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -7039,8 +7039,20 @@ function confirmarTroca(id, depois, aoVoltar) { if (id === build.id) depois(); e
 // F13-T91: `aoVoltar` (opcional) roda quando o jogador fica no rascunho ("Continuar editando", Esc,
 // ou o "Salvar e sair" que não salvou) — o link curto desfaz o que mexeu na tela antes de perguntar.
 let saidaVoltar = null;
+// "Continuar editando" sem o clique: o Esc e, desde a F13-T92, o voltar e o avançar do navegador
+function fecharPerguntaDeSaida() {
+  const dlg = document.getElementById("save-dialog");
+  if (!dlg || dlg.hidden) return false;
+  const voltar = saidaVoltar;
+  dlg.hidden = true; saidaPendente = saidaVoltar = null;
+  if (voltar) voltar();
+  return true;
+}
 function confirmarSaida(depois, aoVoltar) {
   if (!rascunho.sujo) { depois(); return; }
+  // F13-T92 (cético): o gesto que pergunta durante a espera do link também a cancela — senão a
+  // resposta chegava com o diálogo aberto e o Descartar abria a pública, não o que se pediu
+  if (cancelarLinkCurto(true) && buildScreen === "lista") renderBuildIndex();
   saidaPendente = depois;
   saidaVoltar = aoVoltar || null;
   const dlg = document.getElementById("save-dialog");
@@ -7103,7 +7115,7 @@ function initSalvar() {
     // F13-T51: o Ctrl+S vale de qualquer tela — a plaqueta mostra o "não salva"
     // na loja, nas Runas e na Calculadora, e lá o atalho abria o "Salvar como"
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && build.id && build.editing && !build.temp) { e.preventDefault(); salvarAgora(); }
-    if (e.key === "Escape" && !dlg.hidden) { const voltar = saidaVoltar; dlg.hidden = true; saidaPendente = saidaVoltar = null; if (voltar) voltar(); }
+    if (e.key === "Escape" && !dlg.hidden) fecharPerguntaDeSaida();
     if (e.key === "Tab" && !dlg.hidden) {   // o Tab gira entre os três botões, sem voltar para trás da camada
       const bs = [...dlg.querySelectorAll("button")];
       const i = bs.indexOf(document.activeElement);
@@ -10574,7 +10586,7 @@ let rotaPronta = false, aplicandoRota = false;
 // build publicada, só visualização. Com # e não /, para seguir abrindo do disco e sem 404 no Pages.
 // Só 6 hexadecimais minúsculos valem; qualquer outra coisa no # é ignorada.
 const ROTA_PUBLICA = /^#build\/([0-9a-f]{6})$/;
-const linkCurto = { pendente: null, aberto: null, vez: 0 };
+const linkCurto = { pendente: null, aberto: null, vez: 0, antes: null };
 function idDoLinkCurto(hash) { const m = ROTA_PUBLICA.exec(hash || ""); return m ? m[1] : null; }
 function rotaDaTela() {
   const ativa = document.querySelector(".tab-btn.active");
@@ -10617,7 +10629,7 @@ async function abrirLinkCurto(id) {
   const ativa = document.querySelector(".tab-btn.active");
   // como estava antes do link: o "Continuar editando" (rascunho sujo) volta para cá
   const antes = { tab: ativa ? ativa.dataset.tab : "catalog", tela: buildScreen, view: biView, sel: biSelected };
-  linkCurto.pendente = id;
+  linkCurto.pendente = id; linkCurto.antes = antes;
   biSelected = null;   // nenhuma linha escolhida enquanto ela vem
   aplicandoRota = true;
   try { showBuildScreen("lista"); switchTab("build"); mostrarListaDe("publicas"); renderBuildIndex(); } finally { aplicandoRota = false; }
@@ -10645,24 +10657,30 @@ async function abrirLinkCurto(id) {
   // "Continuar editando": tudo como antes do link — a tela, o endereço dela, nada marcado
   const voltar = () => {
     linkCurto.aberto = null;
-    aplicandoRota = true;
-    try {
-      if (antes.tela !== buildScreen) showBuildScreen(antes.tela);
-      switchTab(antes.tab);
-      if (antes.view !== biView) mostrarListaDe(antes.view);
-      biSelected = antes.sel;
-      if (buildScreen === "lista") renderBuildIndex();
-    } finally { aplicandoRota = false; }
+    voltarParaAntesDoLink(antes);
     history.replaceState(null, "", "#" + rotaDaTela());
   };
   abrirPublicaTemporaria(publicaResumo(p), voltar, marcar);
+}
+// A tela de antes do link: a aba, a lista ou a forja, Minhas ou Públicas, a linha escolhida. Vale
+// para o "Continuar editando" e, desde a F13-T92, para o voltar do navegador durante a espera (antes
+// ele deixava as Públicas na tela — a aba Minhas, ou o # que não é tela, como o #b=, não voltavam).
+function voltarParaAntesDoLink(antes) {
+  aplicandoRota = true;
+  try {
+    if (antes.tela !== buildScreen) showBuildScreen(antes.tela);
+    switchTab(antes.tab);
+    if (antes.view !== biView) mostrarListaDe(antes.view);
+    biSelected = antes.sel;
+    if (buildScreen === "lista") renderBuildIndex();
+  } finally { aplicandoRota = false; }
 }
 // A espera do link acabou sem abrir (gesto do jogador). `reescrever`: o # ainda é o do link e
 // ninguém vai escrever o da tela (a aba Minhas, uma linha, a busca) — ele passa a ser o da tela.
 function cancelarLinkCurto(reescrever) {
   const id = linkCurto.pendente;
   if (!id) return false;
-  linkCurto.pendente = null; linkCurto.vez++;
+  linkCurto.pendente = linkCurto.antes = null; linkCurto.vez++;
   if (reescrever && rotaPronta && location.hash === "#build/" + id) history.replaceState(null, "", "#" + rotaDaTela());
   renderBuildDetail();
   return true;
@@ -14385,7 +14403,16 @@ function init() {
   if (!aplicarRota(location.hash) && !location.hash) history.replaceState(null, "", "#" + rotaDaTela());
   rotaPronta = true;
   // F13-T91: qualquer voltar/avançar durante a espera do link curto cancela a abertura
-  window.addEventListener("popstate", () => { cancelarLinkCurto(false); aplicarRota(location.hash); });
+  window.addEventListener("popstate", () => {
+    const h = location.hash;
+    // F13-T92: com o "Salvar e sair?" aberto, o voltar vale "Continuar editando" — antes o diálogo
+    // ficava na tela e o Descartar ainda abria a pública que o jogador tinha deixado para trás
+    fecharPerguntaDeSaida();
+    const antes = linkCurto.antes;
+    if (cancelarLinkCurto(false) && antes) voltarParaAntesDoLink(antes);   // F13-T92: a tela de antes do link
+    if (location.hash !== h) history.replaceState(null, "", h);   // quem fechou ou voltou não reescreve o # de destino
+    aplicarRota(h);
+  });
 }
 
 init();

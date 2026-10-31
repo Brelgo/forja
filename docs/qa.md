@@ -223,6 +223,18 @@ a build da forja, não a pública); com rascunho sujo, abrir o link e escolher "
 `#forja`, o rascunho, nada marcado); o "Copiar link" da forja numa publicada sem caixas copia o curto, e a não publicada sem
 caixas segue recusando. Antes, o grupo passava 5/5 com o cancelamento arrancado (nunca havia demora). Vista falhando, cada
 conserto revertido num mutante (index.html servido da memória, o arquivo intacto): sem o cancelamento inteiro caem a espera com clique e o voltar; sem o cancelar no popstate cai o voltar; sem esquecer ao sair cai o Copiar e editar/×; sem o cancelar na aba Minhas, na linha ou na busca cai a espera com clique; sem o "voltar" do diálogo cai o Continuar editando; sem a placa ou com a lista escolhendo sozinha cai a placa; com a recusa de volta cai o link da publicada sem caixas — 10 de 10 mortos.
+Os dois casos raros que a revisão deixou (F13-T92, 31/10/2026), com clique e tecla de verdade e o voltar do navegador: com
+rascunho sujo, o link chega e o "Salvar e sair?" abre; o voltar com ele aberto vale "Continuar editando" — o diálogo fecha, a
+forja fica com a build e o rascunho em `#forja` e a pública não abre (antes o diálogo ficava e o Descartar abria a pública que o
+jogador tinha deixado para trás); voltar duas casas de uma vez com o diálogo aberto leva à tela de destino com o # dela (`#runas`);
+o Esc segue valendo "Continuar editando". Durante a espera, o voltar devolve a tela de antes do link: a aba Minhas com a mesma
+linha escolhida (`#builds`), e, aberto por um `#b=`, a forja com a build dele e o `#b=` no endereço (antes ficava a lista das
+Públicas). O achado do cético da T92 (já vinha da T91): durante a espera, o gesto que pergunta ("Nova build", o × da
+plaqueta, "parar de editar") também cancela o link — antes a resposta chegava com o diálogo aberto e o Descartar ou o "Salvar e
+sair" abria a pública; agora cada um faz o que o gesto pediu, e o "Continuar editando" fica nas Públicas em `#builds`, sem a placa.
+Vista falhando, cada conserto num mutante: sem fechar o diálogo no voltar caem o voltar e as duas casas; sem voltar à tela de
+antes caem Minhas e o `#b=`; sem forçar o # de destino caem as duas casas; com o Esc desligado cai o Esc; sem o cancelar no gesto
+que pergunta cai o gesto na espera — 5 de 5 mortos.
 
 **Fonte para dislexia** (F13-T85; Leo, 18/10/2026, escolheu a OpenDyslexic em 25/10/2026) — com clique de verdade no
 interruptor da Acessibilidade, a OpenDyslexic carrega e vale no texto e nos títulos, e fica lembrada; nada estoura para o lado

@@ -5948,6 +5948,128 @@ def _link_curto_lento(s, p, ID, NOME):
         p.conta("link curto", "Copiar link da forja numa build publicada sem caixas copia o link curto (a recusa \"ainda não tem categorias\" fica só para o #b= da não publicada)",
                 j1["ult"] == j1["base"] + "#build/" + ID and "Link curto copiado" in j1["msg"] and j2["n"] == 0 and "ainda não tem categorias" in j2["msg"],
                 "publicada %r / %r · não publicada %r" % (j1["ult"], j1["msg"][:50], j2))
+
+        # (k) F13-T92, o 1º caso raro do cético: rascunho sujo + link + o VOLTAR do navegador com o
+        # "Salvar e sair?" aberto. Antes o diálogo ficava na tela e o Descartar abria a pública que o
+        # jogador tinha deixado para trás; agora o voltar vale "Continuar editando".
+        def sujo_com_link():
+            r.js("(() => { rascunho.sujo = true; refletirSalvar(); window.__atraso = 300; location.hash = '#build/%s'; return 1; })()" % ID)
+            espera("!document.getElementById('save-dialog').hidden", 6)
+            time.sleep(0.4)
+            return r.js(estado)
+        r.abrir("?lento=6#catalogo"); r.entrar()
+        r.nova_build()
+        r.js("(() => { build.name = 'Suja QA'; build.cats[0].items.push({ itemId: CATALOG.items.find(i => i.tier === 'Épico').slug, note: '' }); gravarBuild(); renderBuildAll(); return 1; })()")
+        time.sleep(0.4)
+        k0 = r.js(estado)
+        k1 = sujo_com_link()
+        r.js("history.back(); 1")
+        time.sleep(0.8)
+        k2 = r.js(estado)
+        if k2["dialogo"]:   # o diálogo que ficou (o defeito): o clique de verdade no Descartar mostra o que ele faz
+            r.clicar('[data-sd="descartar"]', 0.8)
+        k3 = r.js(estado)
+        p.conta("link curto", "rascunho sujo + link: o voltar do navegador com o \"Salvar e sair?\" aberto vale \"Continuar editando\" — o diálogo fecha, a forja fica com a build e o rascunho, o # é #forja e a pública não abre",
+                k0["hash"] == "#forja" and k1["dialogo"] and not k2["dialogo"] and k3["hash"] == "#forja" and k3["forja"] and k3["nome"] == "Suja QA"
+                and k3["sujo"] and not k3["temp"] and k3["aberto"] is None and k3["pend"] is None,
+                "antes %s · diálogo %s · depois do voltar %s (diálogo ainda aberto: %s)" % (curto(k0), k1["dialogo"], curto(k3), k2["dialogo"]))
+        # o # de destino vale mesmo quando não é a tela de antes do link: voltar duas casas de uma vez
+        r.js("(() => { descartarAlteracoes(); return 1; })()")
+        r.clicar('.tab-btn[data-tab="runas"]', 0.6)
+        r.clicar('.tab-btn[data-tab="build"]', 0.6)   # a aba Builds volta à forja, a tela em que se estava
+        k4 = sujo_com_link()
+        r.js("history.go(-2); 1")
+        time.sleep(0.8)
+        k5 = r.js(estado)
+        # o caminho antigo, que agora passa pela mesma função: o Esc com o diálogo aberto
+        r.js("(() => { descartarAlteracoes(); return 1; })()")
+        r.clicar('.tab-btn[data-tab="build"]', 0.6)
+        k6 = sujo_com_link()
+        for tipo in ("rawKeyDown", "keyUp"):
+            r.envia("Input.dispatchKeyEvent", {"type": tipo, "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27, "nativeVirtualKeyCode": 27})
+        time.sleep(0.6)
+        k7 = r.js(estado)
+        p.conta("link curto", "rascunho sujo + link: voltar duas casas com o diálogo aberto fecha o diálogo e abre a tela de destino com o # dela (#runas); o Esc continua valendo \"Continuar editando\"",
+                k4["dialogo"] and not k5["dialogo"] and k5["hash"] == "#runas" and k5["aba"] == "runas" and k5["sujo"] and not k5["temp"] and k5["aberto"] is None
+                and k6["dialogo"] and not k7["dialogo"] and k7["hash"] == "#forja" and k7["forja"] and k7["sujo"] and not k7["temp"] and k7["aberto"] is None,
+                "duas casas %s (diálogo %s) · Esc %s (diálogo %s)" % (curto(k5), k5["dialogo"], curto(k7), k7["dialogo"]))
+        r.js("(() => { descartarAlteracoes(); return 1; })()")
+
+        # (l) F13-T92, o 2º caso raro: o voltar durante a espera devolve a tela de antes do link — a aba
+        # Minhas com a linha que estava escolhida (antes ficavam as Públicas, sem nada escolhido). Página
+        # nova: a pública que (k) abriu fica na memória da página e abriria na hora, sem espera
+        r.abrir("?lento=8#catalogo"); r.entrar()
+        r.js("""(() => { switchTab('build'); showBuildScreen('lista'); mostrarListaDe('minhas');
+          biSelected = library.builds.find(b => b.name === 'Suja QA').id; renderBuildIndex(); return 1; })()""")
+        time.sleep(0.5)
+        l0 = r.js(estado)
+        link_a_caminho()
+        l1 = r.js(estado)
+        r.js("history.back(); 1")
+        time.sleep(3.0)   # a resposta lenta (2,5 s) chega depois do voltar e não pode mexer em nada
+        l2 = r.js(estado)
+        p.conta("link curto", "servidor lento: o voltar durante a espera devolve a aba Minhas com a linha que estava escolhida, e o # #builds",
+                l0["hash"] == "#builds" and l0["view"] == "minhas" and l0["linhaSel"] and l1["pend"] == ID and l1["view"] == "publicas"
+                and l2["hash"] == "#builds" and l2["lista"] and l2["view"] == "minhas" and l2["sel"] == l0["sel"] and l2["linhaSel"] == l0["linhaSel"]
+                and l2["pend"] is None and not l2["temp"] and "Abrindo" not in l2["resumo"],
+                "antes %s · a caminho %s · depois %s (linha %r → %r)" % (curto(l0), curto(l1), curto(l2), l0["linhaSel"], l2["linhaSel"]))
+
+        # (m) o # de antes que não é tela: o #b= de um link de build. O voltar durante a espera devolve
+        # a forja com a build desse link, e o # continua o #b= (antes ficava a lista das Públicas)
+        longo = r.js("buildParaLink(library.builds.find(b => b.name === 'Suja QA'))")
+        r.abrir("?lento=9#" + longo.split("#", 1)[1])
+        espera("typeof build !== 'undefined' && build.name === 'Suja QA' && !document.getElementById('build-editor').hidden", 6)
+        if not r.js("document.getElementById('entrada').classList.contains('fechada')"):
+            r.entrar()
+        time.sleep(0.4)
+        m0 = r.js(estado)
+        link_a_caminho()
+        m1 = r.js(estado)
+        r.js("history.back(); 1")
+        time.sleep(3.0)
+        m2 = r.js(estado)
+        p.conta("link curto", "servidor lento: aberto por um link #b=, o voltar durante a espera devolve a forja com a build do #b= e o # dele",
+                m0["hash"].startswith("#b=") and m0["forja"] and m1["pend"] == ID and not m1["forja"]
+                and m2["hash"] == m0["hash"] and m2["forja"] and m2["aba"] == "build"
+                and m2["nome"] == m0["nome"] == "Suja QA" and not m2["temp"] and m2["pend"] is None and m2["aberto"] is None,
+                "antes %s · depois %s" % (curto(m0), curto(m2)))
+
+        # (n) F13-T92, o achado do cético: durante a espera, o gesto que pergunta ("Nova build", o × da
+        # plaqueta, "parar de editar") também cancela. Antes a resposta chegava com o diálogo aberto,
+        # trocava o "depois" dele, e o Descartar ou o "Salvar e sair" abria a pública do link.
+        def gesto_na_espera(n, sel, botao):
+            r.abrir("?lento=%d#catalogo" % n); r.entrar()
+            r.js("""(() => { activateBuild(library.builds.find(b => b.name === 'Suja QA').id); switchTab('build'); showBuildScreen('forja');
+              window.ligarEdicao(true); rascunho.sujo = true; refletirSalvar(); return 1; })()""")
+            time.sleep(0.4)
+            q0 = r.js(estado); q0["nb"] = r.js("library.builds.filter(b => !b.temp).length")
+            link_a_caminho()
+            r.clicar(sel, 0.3)
+            time.sleep(3.0)   # a resposta lenta (2,5 s) chega com o diálogo aberto
+            q1 = r.js(estado)
+            if q1["dialogo"]:
+                r.clicar('[data-sd="%s"]' % botao, 0.8)
+            q2 = r.js(estado); q2["nb"] = r.js("library.builds.filter(b => !b.temp).length")
+            q2["editando"] = r.js("document.getElementById('edit-toggle') ? document.getElementById('edit-toggle').checked : null")
+            return q0, q1, q2
+        n_novo = gesto_na_espera(10, "#bi-new", "descartar")
+        n_fecha = gesto_na_espera(11, "#bg-fechar", "descartar")
+        n_parar = gesto_na_espera(12, "#bg-parar", "salvar")
+        n_fica = gesto_na_espera(13, "#bi-new", "voltar")
+        ok_n = all(q1["dialogo"] and q1["pend"] is None and q1["hash"] == "#builds" and not q1["temp"] and not q2["temp"]
+                   and q2["aberto"] is None and q2["origem"] is None and not q2["dialogo"]
+                   for (_, q1, q2) in (n_novo, n_fecha, n_parar, n_fica))
+        q0, _, q2 = n_novo
+        ok_n = ok_n and q2["forja"] and q2["hash"] == "#forja" and q2["nb"] == q0["nb"] + 1 and q2["nome"] != "Suja QA"
+        _, _, q2 = n_fecha
+        ok_n = ok_n and q2["lista"] and not q2["forja"] and q2["hash"] == "#builds"
+        _, _, q2 = n_parar
+        ok_n = ok_n and q2["nome"] == "Suja QA" and not q2["sujo"] and q2["editando"] is False
+        _, _, q2 = n_fica
+        ok_n = ok_n and q2["lista"] and q2["view"] == "publicas" and q2["sujo"] and q2["hash"] == "#builds" and "Abrindo" not in q2["resumo"]
+        p.conta("link curto", "servidor lento: o gesto que pergunta durante a espera (Nova build, o × da plaqueta, \"parar de editar\") cancela o link — o Descartar, o \"Salvar e sair\" e o \"Continuar editando\" fazem o que o gesto pediu, e a pública não abre",
+                ok_n, " · ".join("%s→%s %s" % (nome, b, curto(q[2])) for nome, b, q in
+                                 (("Nova build", "descartar", n_novo), ("×", "descartar", n_fecha), ("parar", "salvar", n_parar), ("Nova build", "voltar", n_fica))))
         erros = list(r.erros)
         p.conta("link curto", "servidor lento: nenhuma exceção no console em todo o caminho do link a caminho", not erros, "%s" % erros[:2])
     finally:
