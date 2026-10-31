@@ -120,10 +120,6 @@ window.NOTAS = {
    "quanto o tanque aguenta, na forja"
   ],
   [
-   "Comparar duas builds",
-   "lado a lado, atributo por atributo"
-  ],
-  [
    "Campeões e o Bestiário",
    "as fichas dos campeões e dos monstros, e a calculadora dos épicos"
   ]
