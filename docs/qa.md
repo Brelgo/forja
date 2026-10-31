@@ -205,6 +205,25 @@ navegador trocam de tela; numa aba nova, o link #runas abre nas Runas, e trocar 
 "Autor nas suas publicações" no resumo da build começa vazio; o apelido digitado (com espaços nas pontas) vai no `p_autor` limpo,
 fica lembrado no navegador e volta no campo; apagado, a publicação seguinte sai sem autor.
 
+**Link curto da build publicada** (F13-T91; Leo, 30/10/2026: o endereço `#build/<id de 6>`, inspirado no cblow.xyz; servidor
+SIMULADO numa aba própria: o fetch ao Supabase é respondido na página e o `navigator.clipboard.writeText` só anota) — a página
+aberta com `#build/<id>` de uma pública conhecida abre direto na forja, só visualização, com o nome dela, e o endereço fica no
+link; com clique de verdade, sair para o Catálogo escreve `#catalogo` e o voltar do navegador reabre a pública; ID que não existe
+e rede que cai dão a placa com o motivo e deixam o app na lista das Públicas (`#builds`), sem exceção; # torto (maiúsculas, 7
+letras, aspas) é ignorado sem pedido ao servidor; o "Copiar link" da não publicada copia o `#b=`, e o da publicada (Minhas), o
+da pública (Públicas) e o da aberta para ver (forja) copiam o curto, com o title dizendo qual sai; o caminho antigo — o link
+`#b=` abre a build na forja, e `#runas` e `#builds` trocam de tela — continua. Vista falhando: sem a rota no `aplicarRota`,
+caem a abertura, o voltar, a placa e o link da forja; o `#b=` segue passando.
+Revisão do cético (30/10/2026), com servidor simulado LENTO (a pública do link responde depois de 1,5–2,5 s; a lista vem na
+hora, com outra build) e clique de verdade: enquanto a build vem, o resumo mostra a placa "Abrindo a build <id>" e a lista das
+Públicas não escolhe outra sozinha; clicar numa linha das Públicas, na aba Minhas ou digitar na busca cancela (a build do link não
+abre por cima e o # vira `#builds`); o voltar do navegador durante a espera cancela — a forja fica com a build de antes e o #
+volta a `#forja`; na pública aberta pelo link, "Copiar e editar" e o × da plaqueta esquecem o link (o # vira o da tela e o F5 abre
+a build da forja, não a pública); com rascunho sujo, abrir o link e escolher "Continuar editando" deixa tudo como antes (a forja,
+`#forja`, o rascunho, nada marcado); o "Copiar link" da forja numa publicada sem caixas copia o curto, e a não publicada sem
+caixas segue recusando. Antes, o grupo passava 5/5 com o cancelamento arrancado (nunca havia demora). Vista falhando, cada
+conserto revertido num mutante (index.html servido da memória, o arquivo intacto): sem o cancelamento inteiro caem a espera com clique e o voltar; sem o cancelar no popstate cai o voltar; sem esquecer ao sair cai o Copiar e editar/×; sem o cancelar na aba Minhas, na linha ou na busca cai a espera com clique; sem o "voltar" do diálogo cai o Continuar editando; sem a placa ou com a lista escolhendo sozinha cai a placa; com a recusa de volta cai o link da publicada sem caixas — 10 de 10 mortos.
+
 **Fonte para dislexia** (F13-T85; Leo, 18/10/2026, escolheu a OpenDyslexic em 25/10/2026) — com clique de verdade no
 interruptor da Acessibilidade, a OpenDyslexic carrega e vale no texto e nos títulos, e fica lembrada; nada estoura para o lado
 em 1600 e 1280, na loja e na forja (a plaqueta da bigorna passava 57 px em 1280 — agora para a 16 px da borda); nenhum card corta

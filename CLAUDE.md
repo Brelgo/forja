@@ -13,7 +13,7 @@ Tarefa[
 4. Fase 3 — Build (forja). Drag-and-drop com animação (pegar, arrastar, soltar, remover); caixas customizáveis de itens (opcional/obrigatório, arrastáveis); observações do Leo por item, exibidas ao passar o mouse; interruptor Mestre Forjador (aplica masterwork.stats aos Lendários elegíveis e mostra o item como fica); interruptor Reembolso (usa cashback.netGold nos preços); visão Ápice (todos os itens do Build nos status máximos, lendo o campo apex); totais de atributos da build recalculados a cada mudança.
 5. Fase 4 — Som e lojista. Implementar o sistema de áudio a partir de docs/mapa_de_audio.md: sons de interface por núcleo, seleção de tags, abrir/fechar catálogo e build, adicionar item (com som próprio para Lendários); falas do lojista por item e por efeito, com sorteio entre as variantes _01.._NN; controle de volume e mudo; tela de entrada "Entrar na loja" que destrava o áudio e toca open_catalog.mp3.
 6. Fase 5 — Calculadora e biblioteca. Manter a calculadora de dano absorvido e a biblioteca de builds (exportar/importar) funcionando com o novo tema e o novo catálogo; aviso por modo de jogo.
-7. Fase 6 — Publicação e QA. Garantir que tudo funciona aberto do disco e no GitHub Pages (https://brelgo.github.io/montador_de_itens_lol/): caminhos relativos, nomes de arquivo exatos, .nojekyll, sem erro no console, 225 itens renderizados, todo arquivo de áudio referenciado existe em assets/audio. Commit e push a cada tarefa aprovada.
+7. Fase 6 — Publicação e QA. Garantir que tudo funciona aberto do disco e no GitHub Pages (https://brelgo.github.io/forja/ — o site se chama Forja desde 30/10/2026; o endereço antigo, brelgo.github.io/montador_de_itens_lol/, só redireciona): caminhos relativos, nomes de arquivo exatos, .nojekyll, sem erro no console, 225 itens renderizados, todo arquivo de áudio referenciado existe em assets/audio. Commit e push a cada tarefa aprovada.
 8. Em toda fase: trabalhar em tarefas pequenas; cada tarefa termina com captura de tela, uma frase do que mudou, commit e CHECKPOINT.md atualizado; nada é dado como concluído sem o aprovado do Leo. O escopo de conteúdo são os 225 itens do Capítulo 1 e só. Se uma feature precisar de dado que o catálogo não tem, propor a adição no Capítulo 1 em vez de improvisar o dado.
 ]
 
@@ -30,7 +30,7 @@ O que você nunca faz:
 - Nunca remove ou "melhora" o efeito de hover dos ícones, a estrutura de três telas, a biblioteca de builds com exportar/importar, nem qualquer coisa que o Leo já tenha aprovado numa fase anterior. Evoluir sim, substituir não.
 - Nunca reescreve o app do zero. Cada tarefa é um incremento sobre o que existe, e o git diff precisa caber na cabeça de quem revisa.
 - Nunca adiciona dependência que quebre o "abrir com dois cliques": sem build step, sem bundler, sem framework que exija servidor. Bibliotecas só se forem um arquivo em assets/ (ex.: uma lib de animação) e com aprovação.
-- Nunca usa caminho absoluto (/assets/...), nunca muda maiúsculas e minúsculas de nome de arquivo, nunca referencia som que não está em assets/audio — o site vive em github.io/montador_de_itens_lol/ e é case-sensitive.
+- Nunca usa caminho absoluto (/assets/...), nunca muda maiúsculas e minúsculas de nome de arquivo, nunca referencia som que não está em assets/audio — o site vive em brelgo.github.io/forja/ e é case-sensitive.
 - Nunca dispara áudio antes da primeira interação do usuário: o som nasce na tela "Entrar na loja".
 - Nunca dá uma tarefa por concluída sem captura de tela, commit e CHECKPOINT.md atualizado, e nunca avança de fase sem o aprovado.
 - Nunca mistura animação e dado: toda animação é CSS ou JS puro sobre o DOM; nenhuma altera o conteúdo exibido.
@@ -39,7 +39,7 @@ Quando cumprimentado ou perguntado sobre o que faz: responde em até três linha
 ]
 
 Formato[
-Estrutura da pasta (raiz do repositório montador_de_itens_lol):
+Estrutura da pasta (raiz do repositório forja, Brelgo/forja; a pasta local continua montador_de_itens_lol):
   index.html                 — o app (HTML + CSS + JS num arquivo; pode dividir em css/ e js/ só se o Leo pedir)
   .nojekyll                  — necessário para o GitHub Pages
   data/catalog.js            — gerado; window.CATALOG. Nunca editado à mão

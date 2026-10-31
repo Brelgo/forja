@@ -41,7 +41,7 @@ except Exception:
     pass
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = "https://brelgo.github.io/montador_de_itens_lol/"   # a conta do GitHub virou Brelgo em 30/09/2026 (o endereço antigo dá 404)
+SITE = "https://brelgo.github.io/forja/"   # o site virou "forja" em 30/10/2026 (o endereço montador_de_itens_lol só redireciona)
 CHROMES = [
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
     r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
@@ -5615,6 +5615,345 @@ def checar_tags_somam(s, p):
                           for g, m in medidas.items()))
 
 
+def checar_link_curto(s, p):
+    """F13-T91 (Leo, 30/10/2026): o link curto da build publicada, "#build/<id de 6>", abre direto
+    na pública, só visualização; o "Copiar link" de uma publicada copia o curto e o de uma não
+    publicada continua com o "#b=". Servidor SIMULADO numa aba própria: o fetch ao Supabase é
+    respondido na página (uma pública conhecida; "fff911" não existe; "eee911" cai a rede) e o
+    navigator.clipboard.writeText só anota o que sairia. Nada vai ao servidor de verdade."""
+    print("\n%sLINK CURTO DA BUILD PUBLICADA%s" % (AMARELO, FIM))
+    ID, NOME = "9a1b01", "Link Curto QA"
+    falso = r"""(() => {
+      const ID = '%s', NOME = '%s';
+      // os itens vêm do catálogo da página, nunca digitados aqui
+      const linha = () => { const C = window.CATALOG;
+        return { id: ID, nome: NOME, descricao: 'pública do roteiro', campeao: null, modo: '', marcadores: [],
+          caixas: [{ name: 'Núcleo', kind: 'comum', items: C.items.filter(i => i.tier === 'Lendário').slice(0, 3).map(i => ({ itemId: i.slug })) }],
+          versao: 2, atualizado_em: new Date().toISOString(), patch: C.meta.patch, autor: 'roteiro', engajamentos: 0,
+          pop_dia: 0, popular_semana: false, dias_no_top: 0, layout: null, runas: null, habilidades: null }; };
+      window.__pedidosServidor = []; window.__copiado = [];
+      const f = window.fetch;
+      window.fetch = function (u, ...a) {
+        const t = String(u && u.url || u);
+        if (!t.includes('supabase.co')) return f.call(this, u, ...a);
+        window.__pedidosServidor.push(t.replace(/^.*\/(rest\/v1|rpc)\//, ''));
+        if (t.includes('id=eq.eee911')) return Promise.reject(new TypeError('Failed to fetch'));
+        let corpo = null;
+        if (t.includes('/rest/v1/builds_publicas')) corpo = (t.includes('id=eq.') || t.includes('id=in.')) ? (t.includes(ID) ? [linha()] : []) : [linha()];
+        return Promise.resolve(new Response(JSON.stringify(corpo), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+      };
+      try { navigator.clipboard.writeText = (x) => { window.__copiado.push(String(x)); return Promise.resolve(); }; } catch (e) {}
+    })();""" % (ID, NOME)
+    r = Sessao(s.url)
+
+    def espera(expr, limite=8.0):
+        fim = time.time() + limite
+        while time.time() < fim:
+            try:
+                if r.js(expr):
+                    return True
+            except RuntimeError:
+                pass
+            time.sleep(0.2)
+        return False
+
+    tela = """(() => ({ hash: location.hash, aba: document.querySelector('.tab-btn.active') ? document.querySelector('.tab-btn.active').dataset.tab : null,
+      forja: !document.getElementById('build-editor').hidden, lista: !document.getElementById('build-index').hidden, view: biView,
+      temp: !!build.temp, origem: build.pubOrigem || null, nome: build.name, id: build.id,
+      aviso: (document.getElementById('temp-warning') || {}).innerText || '',
+      entrada: document.getElementById('entrada').classList.contains('fechada'),
+      placa: document.getElementById('pub-dialog').hidden ? null : { titulo: document.getElementById('pub-title').textContent, texto: document.getElementById('pub-text').innerText } }))()"""
+    try:
+        r.envia("Page.addScriptToEvaluateOnNewDocument", {"source": falso})
+        r.tela(1600, 900)
+        # (a) a página aberta com o link curto de uma pública conhecida
+        r.abrir("#build/" + ID)
+        espera("typeof build !== 'undefined' && build.temp && build.pubOrigem === '%s' && !document.getElementById('build-editor').hidden" % ID)
+        time.sleep(0.6)
+        a = r.js(tela)
+        p.conta("link curto", "abrir a página com #build/<id> abre a pública direto, só visualização, com o nome certo (e o endereço fica no link)",
+                a["hash"] == "#build/" + ID and a["aba"] == "build" and a["forja"] and a["temp"] and a["origem"] == ID
+                and a["nome"] == NOME and "Só visualização" in a["aviso"] and a["entrada"] and not a["placa"],
+                "%s" % {k: a[k] for k in ("hash", "aba", "forja", "temp", "origem", "nome", "entrada", "placa")})
+        # o "Copiar link" da forja, na pública aberta para ver: sai o curto (sem a forja, o grupo segue
+        # e a falha fica nesta checagem, não num "não achei" que esconde as seguintes)
+        forja_link = {"ult": None, "base": "", "titulo": ""}
+        if a["forja"]:
+            r.clicar("#toggle-io", 0.5)
+            r.clicar("#link-btn", 0.6)
+            forja_link = r.js("({ ult: window.__copiado[window.__copiado.length - 1] || null, base: location.href.split('#')[0], titulo: document.getElementById('link-btn').title })")
+        # sair para outra tela escreve o endereço dela (T81); o voltar do navegador reabre a pública
+        r.clicar('.tab-btn[data-tab="catalog"]', 0.6)
+        saiu = r.js(tela)
+        r.js("history.back(); 1")
+        espera("location.hash === '#build/%s' && !document.getElementById('build-editor').hidden && build.temp" % ID, 5)
+        time.sleep(0.4)
+        voltou = r.js(tela)
+        p.conta("link curto", "ao sair da pública para outra tela, o endereço volta a ser o da tela (#catalogo); o voltar do navegador reabre a pública",
+                saiu["hash"] == "#catalogo" and saiu["aba"] == "catalog" and voltou["hash"] == "#build/" + ID
+                and voltou["aba"] == "build" and voltou["forja"] and voltou["origem"] == ID,
+                "saiu %s · voltou %s" % ({k: saiu[k] for k in ("hash", "aba")}, {k: voltou[k] for k in ("hash", "aba", "forja", "origem")}))
+
+        # (b) ID que não existe, rede que cai, e # torto: aviso claro, a lista das Públicas, nada quebra
+        r.erros.clear()
+        r.abrir("?inexistente=1#build/fff911")
+        espera("!document.getElementById('pub-dialog').hidden", 8)
+        time.sleep(0.4)
+        b1 = r.js(tela)
+        if b1["placa"]:   # sem placa, a falha fica na checagem (não num "não achei" que esconde as seguintes)
+            r.clicar("#pub-close", 0.4)
+        fechou = r.js("document.getElementById('pub-dialog').hidden")
+        r.abrir("?semrede=1#build/eee911")
+        espera("!document.getElementById('pub-dialog').hidden", 8)
+        time.sleep(0.4)
+        b2 = r.js(tela)
+        tortos = {}
+        for h in ("#build/ABC123", "#build/9a1b011", "#build/9a1b0'"):
+            r.abrir("?torto=%d%s" % (len(tortos), h))
+            time.sleep(1.2)
+            q = r.js(tela)
+            tortos[h] = {"placa": q["placa"], "temp": q["temp"], "pedidos_id": r.js("window.__pedidosServidor.filter(x => x.includes('id=eq.')).length")}
+        erros = list(r.erros)
+        ok_b1 = (b1["placa"] and b1["placa"]["titulo"] == "Build não encontrada" and "fff911" in b1["placa"]["texto"]
+                 and b1["hash"] == "#builds" and b1["aba"] == "build" and b1["lista"] and b1["view"] == "publicas" and not b1["temp"] and fechou)
+        ok_b2 = (b2["placa"] and b2["placa"]["titulo"] == "Não deu para abrir o link" and "internet" in b2["placa"]["texto"]
+                 and b2["view"] == "publicas" and b2["lista"] and not b2["temp"])
+        ok_t = all(not v["placa"] and not v["temp"] and v["pedidos_id"] == 0 for v in tortos.values())
+        p.conta("link curto", "ID inexistente ou sem rede: a placa diz o motivo, o app fica na lista das Públicas, e nenhuma exceção no console; # torto é ignorado (sem pedido ao servidor)",
+                ok_b1 and ok_b2 and ok_t and not erros,
+                "inexistente %s · sem rede %s · tortos %s · erros %s" % ({k: b1[k] for k in ("placa", "hash", "view", "lista")},
+                                                                    {k: b2[k] for k in ("placa", "view")}, tortos, erros[:2]))
+
+        # (c) "Copiar link", com clique de verdade: a não publicada sai pelo #b=, a publicada e a pública pelo curto
+        r.abrir("?copiar=1#builds"); r.entrar()
+        r.nova_build()
+        r.js("""(() => { build.name = 'Sem publicar QA'; build.cats[0].items.push({ itemId: CATALOG.items.find(i => i.tier === 'Épico').slug, note: '' });
+          gravarBuild(); showBuildScreen('lista'); mostrarListaDe('minhas'); biSelected = build.id; renderBuildIndex(); return 1; })()""")
+        time.sleep(0.5)
+        t_longo = r.js("document.querySelector('#bi-detail [data-act=\"link\"]').title")
+        r.clicar('#bi-detail [data-act="link"]', 0.6)
+        longo = r.js("window.__copiado[window.__copiado.length - 1] || null")
+        r.js("""(() => { const b = library.builds.find(x => x.id === build.id); b.pubId = build.pubId = '%s'; b.pubVersao = build.pubVersao = 2;
+          gravarBiblioteca(); renderBuildIndex(); return 1; })()""" % ID)
+        time.sleep(0.4)
+        t_curto = r.js("document.querySelector('#bi-detail [data-act=\"link\"]').title")
+        r.clicar('#bi-detail [data-act="link"]', 0.6)
+        curto = r.js("({ ult: window.__copiado[window.__copiado.length - 1] || null, msg: document.getElementById('bd-link-msg').innerText })")
+        r.clicar('.bi-tab[data-view="publicas"]', 0.6)
+        espera("!!document.querySelector('.bi-row[data-pub=\"%s\"]')" % ID, 6)
+        r.clicar('.bi-row[data-pub="%s"]' % ID, 0.5)
+        r.clicar('#bi-detail [data-act="link"]', 0.6)
+        publica = r.js("({ ult: window.__copiado[window.__copiado.length - 1] || null, base: location.href.split('#')[0] })")
+        base = publica["base"]
+        p.conta("link curto", "Copiar link: a não publicada copia o #b=; a publicada (Minhas), a pública (Públicas) e a aberta para ver (forja) copiam o curto; o title diz qual sai",
+                bool(longo) and longo.startswith(base + "#b=") and curto["ult"] == base + "#build/" + ID and "Link curto copiado" in curto["msg"]
+                and publica["ult"] == base + "#build/" + ID and forja_link["ult"] == forja_link["base"] + "#build/" + ID
+                and "#b=" in t_longo and "#build/" + ID in t_curto and "#build/" + ID in forja_link["titulo"],
+                "não publicada %r · publicada %r · pública %r · forja %r · títulos %r / %r" % (
+                    (longo or "")[:60], curto["ult"], publica["ult"], forja_link["ult"], t_longo[:40], t_curto[:40]))
+
+        # (d) o caminho antigo: o #b= continua abrindo a build, e #runas / #builds trocam de tela
+        r.erros.clear()
+        r.abrir("?antigo=1#" + longo.split("#", 1)[1])
+        espera("typeof build !== 'undefined' && build.name === 'Sem publicar QA' && !document.getElementById('build-editor').hidden", 6)
+        time.sleep(0.5)
+        d0 = r.js(tela)
+        r.js("(() => { location.hash = '#runas'; return 1; })()"); time.sleep(0.6)
+        d1 = r.js(tela)
+        r.js("(() => { location.hash = '#builds'; return 1; })()"); time.sleep(0.6)
+        d2 = r.js(tela)
+        erros = list(r.erros)
+        p.conta("link curto", "caminho antigo: o link #b= continua abrindo a build na forja (o # fica como veio), e #runas e #builds continuam trocando de tela",
+                d0["nome"] == "Sem publicar QA" and str(d0["id"]).startswith("l-") and d0["forja"] and d0["hash"].startswith("#b=") and not d0["temp"]
+                and d1["aba"] == "runas" and d2["aba"] == "build" and d2["lista"] and not erros,
+                "b= %s · runas %s · builds %s · erros %s" % ({k: d0[k] for k in ("nome", "id", "forja", "temp")}, d1["aba"], {k: d2[k] for k in ("aba", "lista")}, erros[:2]))
+    finally:
+        r.fechar()
+    _link_curto_lento(s, p, ID, NOME)
+
+
+def _link_curto_lento(s, p, ID, NOME):
+    """F13-T91, revisão do cético (30/10/2026): a build do link a CAMINHO. Servidor simulado LENTO — a
+    pública do link responde depois de `__atraso` ms (a lista vem na hora, só com "Outra QA", bbb222).
+    Sem a demora, o cancelamento nunca é exercido: o grupo passava 5/5 com ele arrancado. Todo gesto
+    é clique de verdade (o voltar do navegador é o history.back, que é o que o botão faz)."""
+    OUTRA = "bbb222"
+    falso = r"""(() => {
+      const ID = '%s', NOME = '%s', OUTRA = '%s';
+      window.__atraso = Number(new URLSearchParams(location.search).get('atraso') || 0);
+      const linha = (id, nome) => { const C = window.CATALOG;
+        return { id, nome, descricao: 'pública lenta do roteiro', campeao: null, modo: '', marcadores: [],
+          caixas: [{ name: 'Núcleo', kind: 'comum', items: C.items.filter(i => i.tier === 'Lendário').slice(0, 3).map(i => ({ itemId: i.slug })) }],
+          versao: 2, atualizado_em: new Date().toISOString(), patch: C.meta.patch, autor: 'roteiro', engajamentos: 0,
+          pop_dia: 0, popular_semana: false, dias_no_top: 0, layout: null, runas: null, habilidades: null }; };
+      window.__copiado = [];
+      const f = window.fetch;
+      window.fetch = function (u, ...a) {
+        const t = String(u && u.url || u);
+        if (!t.includes('supabase.co')) return f.call(this, u, ...a);
+        const ok = (c) => new Response(JSON.stringify(c), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        if (!t.includes('/rest/v1/builds_publicas')) return Promise.resolve(ok(null));
+        if (t.includes('id=eq.' + ID)) return new Promise(r => setTimeout(() => r(ok([linha(ID, NOME)])), window.__atraso));
+        if (t.includes('id=eq.' + OUTRA)) return Promise.resolve(ok([linha(OUTRA, 'Outra QA')]));
+        if (t.includes('id=eq.') || t.includes('id=in.')) return Promise.resolve(ok([]));
+        return Promise.resolve(ok([linha(OUTRA, 'Outra QA')]));
+      };
+      try { navigator.clipboard.writeText = (x) => { window.__copiado.push(String(x)); return Promise.resolve(); }; } catch (e) {}
+    })();""" % (ID, NOME, OUTRA)
+    estado = """(() => ({ hash: location.hash, aba: document.querySelector('.tab-btn.active') ? document.querySelector('.tab-btn.active').dataset.tab : null,
+      forja: !document.getElementById('build-editor').hidden, lista: !document.getElementById('build-index').hidden, view: biView,
+      temp: !!build.temp, origem: build.pubOrigem || null, nome: build.name, pend: linkCurto.pendente, aberto: linkCurto.aberto,
+      sel: biSelected, linhaSel: (document.querySelector('.bi-row.sel') || { dataset: {} }).dataset.id || null,
+      resumo: (document.getElementById('bi-detail').innerText || '').slice(0, 160), sujo: rascunho.sujo,
+      dialogo: !document.getElementById('save-dialog').hidden }))()"""
+    r = Sessao(s.url)
+
+    def espera(expr, limite=8.0):
+        fim = time.time() + limite
+        while time.time() < fim:
+            try:
+                if r.js(expr):
+                    return True
+            except RuntimeError:
+                pass
+            time.sleep(0.2)
+        return False
+
+    def recarregar():
+        r.envia("Page.reload", {})
+        fim = time.time() + 30
+        while time.time() < fim:
+            msg = json.loads(r.ws.recv())
+            r._anota(msg)
+            if msg.get("method") == "Page.loadEventFired":
+                break
+        time.sleep(1.5)
+
+    def link_a_caminho(atraso=2500):
+        """Põe o link no endereço (como colar na barra) e espera a lista das Públicas com a placa."""
+        r.js("(() => { window.__atraso = %d; location.hash = '#build/%s'; return 1; })()" % (atraso, ID))
+        espera("linkCurto.pendente === '%s' && !!document.querySelector('.bi-row[data-pub=\"%s\"]')" % (ID, OUTRA), 5)
+        time.sleep(0.4)
+
+    def curto(q):
+        return {k: q[k] for k in ("hash", "aba", "forja", "view", "temp", "nome", "pend", "aberto", "sel")}
+
+    try:
+        r.envia("Page.addScriptToEvaluateOnNewDocument", {"source": falso})
+        r.tela(1600, 900)
+        r.erros.clear()
+
+        # (e) a espera tem cara: a placa "Abrindo a build <id>" e nenhuma linha escolhida sozinha
+        r.abrir("?lento=1#catalogo"); r.entrar()
+        link_a_caminho()
+        e0 = r.js(estado)
+        p.conta("link curto", "servidor lento: enquanto a build do link vem, o resumo mostra a placa \"Abrindo a build <id>\" e a lista das Públicas não escolhe outra build sozinha",
+                e0["pend"] == ID and e0["view"] == "publicas" and "Abrindo a build" in e0["resumo"] and ID in e0["resumo"]
+                and e0["sel"] is None and e0["linhaSel"] is None and "Outra QA" not in e0["resumo"],
+                "%s · linha escolhida %r · resumo %r" % (curto(e0), e0["linhaSel"], e0["resumo"][:70]))
+
+        # (f) achado 3: durante a espera, a aba Minhas, uma linha das Públicas e a busca cancelam
+        r.clicar('.bi-row[data-pub="%s"]' % OUTRA, 0.3)
+        time.sleep(2.8)
+        f1 = r.js(estado)
+        r.abrir("?lento=2#catalogo"); r.entrar()
+        link_a_caminho()
+        r.clicar('.bi-tab[data-view="minhas"]', 0.3)
+        time.sleep(2.8)
+        f2 = r.js(estado)
+        r.abrir("?lento=3#catalogo"); r.entrar()
+        link_a_caminho()
+        r.clicar("#bi-search", 0.2)
+        r.envia("Input.insertText", {"text": "Outra"})
+        time.sleep(2.8)
+        f3 = r.js(estado)
+        r.js("(() => { const b = document.getElementById('bi-search'); b.value = ''; b.dispatchEvent(new Event('input')); return 1; })()")
+        ok_f = (not f1["temp"] and f1["pend"] is None and f1["hash"] == "#builds" and f1["sel"] == "pub:" + OUTRA and "Outra QA" in f1["resumo"]
+                and not f2["temp"] and f2["pend"] is None and f2["view"] == "minhas" and f2["hash"] == "#builds" and "Abrindo" not in f2["resumo"]
+                and not f3["temp"] and f3["pend"] is None and f3["hash"] == "#builds" and "Abrindo" not in f3["resumo"])
+        p.conta("link curto", "servidor lento: durante a espera, clicar numa linha das Públicas, na aba Minhas ou digitar na busca cancela — a build do link não abre por cima e o # vira #builds",
+                ok_f, "linha %s · Minhas %s · busca %s" % (curto(f1), curto(f2), curto(f3)))
+
+        # (g) achado 1: o voltar do navegador durante a espera cancela (a pública não toma a forja)
+        r.nova_build()
+        r.js("(() => { build.name = 'Minha QA'; gravarBuild(); renderBuildAll(); return 1; })()")
+        time.sleep(0.4)
+        g0 = r.js(estado)
+        link_a_caminho()
+        r.js("history.back(); 1")
+        time.sleep(3.0)
+        g1 = r.js(estado)
+        p.conta("link curto", "servidor lento: o voltar do navegador durante a espera cancela — a forja fica com a build de antes, o # volta a #forja e a resposta que chega depois não reescreve nada",
+                g0["hash"] == "#forja" and g1["hash"] == "#forja" and g1["forja"] and not g1["temp"] and g1["nome"] == "Minha QA"
+                and g1["pend"] is None and g1["aberto"] is None,
+                "antes %s · depois %s" % (curto(g0), curto(g1)))
+
+        # (h) achado 2: sair da pública do link pelo "Copiar e editar" ou pelo ×: o # é o da tela e o F5 abre a da forja
+        r.abrir("?lento=4&atraso=1500#build/" + ID)
+        espera("build.temp && build.pubOrigem === '%s' && !document.getElementById('build-editor').hidden" % ID, 6)
+        time.sleep(0.6)
+        h0 = r.js(estado)
+        r.clicar("#temp-copiar", 0.8)
+        h1 = r.js(estado)
+        recarregar()
+        h2 = r.js(estado)
+        r.abrir("?lento=5&atraso=1500#build/" + ID)
+        espera("build.temp && build.pubOrigem === '%s' && !document.getElementById('build-editor').hidden" % ID, 6)
+        time.sleep(0.6)
+        r.clicar("#bg-fechar", 0.8)
+        h3 = r.js(estado)
+        recarregar()
+        h4 = r.js(estado)
+        ok_h = (h0["temp"] and h0["hash"] == "#build/" + ID
+                and h1["hash"] == "#forja" and not h1["temp"] and h1["aberto"] is None and h1["nome"] == NOME
+                and h2["hash"] == "#forja" and not h2["temp"] and h2["nome"] == NOME
+                and not h3["hash"].startswith("#build/") and not h3["temp"] and h3["aberto"] is None
+                and not h4["temp"] and not h4["hash"].startswith("#build/"))
+        p.conta("link curto", "servidor lento: na pública aberta pelo link, \"Copiar e editar\" e o × da plaqueta esquecem o link — o # vira o da tela e o F5 abre a build que está na forja, não a pública",
+                ok_h, "aberta %s · Copiar e editar %s · F5 %s · × %s · F5 %s" % (curto(h0)["hash"], curto(h1), curto(h2), curto(h3), curto(h4)))
+
+        # (i) achado 4: rascunho sujo + link, "Continuar editando": tudo como antes do link
+        espera("!!build.id && !document.getElementById('build-editor').hidden", 3)
+        if not r.js("document.getElementById('entrada').classList.contains('fechada')"):
+            r.entrar()
+        r.js("(() => { rascunho.sujo = true; refletirSalvar(); return 1; })()")
+        time.sleep(0.3)
+        i0 = r.js(estado)
+        r.js("(() => { window.__atraso = 1500; location.hash = '#build/%s'; return 1; })()" % ID)
+        espera("!document.getElementById('save-dialog').hidden", 6)
+        time.sleep(0.4)
+        i1 = r.js(estado)
+        if i1["dialogo"]:   # sem diálogo, a falha fica na checagem
+            r.clicar('[data-sd="voltar"]', 0.8)
+        i2 = r.js(estado)
+        p.conta("link curto", "servidor lento: com rascunho sujo, abrir o link e escolher \"Continuar editando\" deixa tudo como antes — a forja na tela, o # dela, o rascunho e nada marcado",
+                i1["dialogo"] and i2["forja"] and i2["aba"] == "build" and i2["hash"] == i0["hash"] == "#forja" and i2["nome"] == i0["nome"]
+                and not i2["temp"] and i2["sujo"] and i2["aberto"] is None and i2["pend"] is None and i2["sel"] != "pub:" + ID and not i2["dialogo"],
+                "antes %s · diálogo %s · depois %s" % (curto(i0), i1["dialogo"], curto(i2)))
+        r.js("(() => { descartarAlteracoes(); return 1; })()")
+
+        # (j) a publicada SEM caixas: o Copiar link da forja sai pelo curto; a não publicada sem caixas segue recusando
+        r.js("""(() => { const b = library.builds.find(x => x.id === build.id); b.cats = []; build.cats = []; b.pubId = build.pubId = '%s'; b.pubVersao = build.pubVersao = 2;
+          gravarBiblioteca(); renderBuildAll(); window.__copiado = []; return 1; })()""" % ID)
+        time.sleep(0.4)
+        if not r.js("document.getElementById('io-panel').classList.contains('show')"):
+            r.clicar("#toggle-io", 0.5)
+        r.clicar("#link-btn", 0.6)
+        j1 = r.js("({ ult: window.__copiado[window.__copiado.length - 1] || null, msg: document.getElementById('io-msg').textContent, base: location.href.split('#')[0] })")
+        r.js("""(() => { const b = library.builds.find(x => x.id === build.id); b.pubId = build.pubId = null; b.pubVersao = build.pubVersao = 0;
+          gravarBiblioteca(); renderBuildAll(); window.__copiado = []; return 1; })()""")
+        time.sleep(0.3)
+        r.clicar("#link-btn", 0.6)
+        j2 = r.js("({ n: window.__copiado.length, msg: document.getElementById('io-msg').textContent })")
+        p.conta("link curto", "Copiar link da forja numa build publicada sem caixas copia o link curto (a recusa \"ainda não tem categorias\" fica só para o #b= da não publicada)",
+                j1["ult"] == j1["base"] + "#build/" + ID and "Link curto copiado" in j1["msg"] and j2["n"] == 0 and "ainda não tem categorias" in j2["msg"],
+                "publicada %r / %r · não publicada %r" % (j1["ult"], j1["msg"][:50], j2))
+        erros = list(r.erros)
+        p.conta("link curto", "servidor lento: nenhuma exceção no console em todo o caminho do link a caminho", not erros, "%s" % erros[:2])
+    finally:
+        r.fechar()
+
+
 # ---------------------------------------------------------------- principal
 GRUPOS = [
     ("catálogo", checar_catalogo),
@@ -5625,6 +5964,7 @@ GRUPOS = [
     ("notas", checar_notas),
     ("endereço por tela", checar_enderecos),
     ("autor", checar_autor),
+    ("link curto", checar_link_curto),
     ("dislexia", checar_dislexia),
     ("tags somam", checar_tags_somam),
     ("visualização", checar_visualizacao),

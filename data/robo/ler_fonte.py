@@ -32,7 +32,7 @@ RAIZ = os.path.dirname(os.path.dirname(AQUI))
 sys.path.insert(0, AQUI)
 from lua_tabela import ErroLua, ler_modulo  # noqa: E402
 
-UA = "MontadorDeItens-robo/0.1 (https://brelgo.github.io/montador_de_itens_lol/)"
+UA = "MontadorDeItens-robo/0.1 (https://brelgo.github.io/forja/)"
 URL_VERSOES = "https://ddragon.leagueoflegends.com/api/versions.json"
 URL_WIKI = ("https://wiki.leagueoflegends.com/en-us/api.php?action=query&prop=revisions"
             "&titles=Module:ItemData/data&rvprop=content|ids|timestamp&rvslots=main&format=json&formatversion=2")
