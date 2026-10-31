@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "31/10/2026",
+   "add": [],
+   "aj": [
+    "O voltar do navegador no link curto: com o \"Salvar e sair?\" aberto ele vale \"Continuar editando\", e durante a espera devolve a tela de antes"
+   ],
+   "rem": []
+  },
+  {
    "data": "30/10/2026",
    "add": [
     "O site agora se chama Forja (brelgo.github.io/forja/) e a build publicada tem um link curto, …/forja/#build/<id>"
