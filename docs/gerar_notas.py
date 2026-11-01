@@ -32,7 +32,10 @@ def notas():
         tarefa = m.group(1)
         linhas = [[c, f] for c, f in LINHA.findall(corpo)] or fonte["antigas"].get(tarefa)
         if not linhas:
-            sem_nota.append(tarefa)
+            # F13-T97: a tarefa que não mudou nada para quem usa (uma amostra, uma escolha) fica de fora
+            # por nome, na lista "internas" do notas.json — nunca por esquecimento
+            if tarefa not in fonte.get("internas", []):
+                sem_nota.append(tarefa)
             continue
         dia = por_dia.setdefault(data, {"add": [], "aj": [], "rem": []})
         for cat, frase in reversed(linhas):          # o log vem do mais novo; dentro do dia, a ordem das tarefas

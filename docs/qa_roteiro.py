@@ -391,7 +391,11 @@ class Sessao:
         while time.time() < fim and self.js("typeof decidido !== 'undefined' && !decidido"):
             time.sleep(0.1)
         self.js("document.getElementById('entrar').click(); document.documentElement.style.scrollBehavior='auto'")
-        time.sleep(1.8)
+        # F13-T97: a entrada é o posto de troca do Freljord, que abre animado (~2,1 s; 0,85 s com
+        # menos movimento) — espera ela fechar de fato, em vez do 1,8 s fixo da placa antiga
+        fim = time.time() + 5
+        while time.time() < fim and not self.js("(() => { const e = document.getElementById('entrada'); return !e || e.classList.contains('fechada'); })()"):
+            time.sleep(0.1)
 
     def limpar_memoria(self):
         self.js("localStorage.clear()")
@@ -553,22 +557,34 @@ def checar_fundacao(s, p):
     patch = s.js("CATALOG.meta && CATALOG.meta.patch")
     p.conta("fundação", "o catálogo diz de que patch é", bool(patch), "patch %s" % patch)
     # F13-T54 (Leo, 19/10/2026): a placa de entrada diz que é hobby e como falar
-    # com o autor — escrito, à vista, e a placa inteira cabe na tela
+    # com o autor — escrito, à vista, e a placa inteira cabe na tela.
+    # F13-T97: a placa é a de madeira do posto de troca (título na madeira, o resto no pergaminho
+    # pregado nela, a nota na etiqueta de baixo). Cada canal tem o nome e o ID na mesma linha; a
+    # letra conta como aparece (a computada vezes a escala do palco e da câmera): rótulos ≥ 10 px,
+    # nota e IDs ≥ 12 px nas quatro resoluções.
     le = """(() => { const pl = document.querySelector('.entrada-placa'), t = pl ? pl.innerText.replace(/\\s+/g, ' ') : '';
+      const grupo = pl && pl.parentElement, nota = document.querySelector('.entrada-nota');
       const ids = [...document.querySelectorAll('.entrada-contato .ea-id')].map(b => b.textContent + ':' + getComputedStyle(b).userSelect);
-      const r = pl ? pl.getBoundingClientRect() : null;
-      // offsetTop, não o retângulo: a placa entra balançando (girada), e o giro desalinha os topos
-      const topos = [...document.querySelectorAll('.entrada-contato .ea-canal')].map(e => e.offsetTop);
-      return { linha: topos.length === 2 && topos[0] === topos[1], hobby: t.includes('Este é um projeto feito por hobby sem fins lucrativos.'),
+      const dentro = e => { if (!e) return false; const r = e.getBoundingClientRect(); return r.width > 0 && r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight; };
+      const canais = [...document.querySelectorAll('.entrada-contato .ea-canal')].map(c => { const n = c.querySelector('.ea-nome'), i = c.querySelector('.ea-id');
+        if (!n || !i) return false; const a = n.getBoundingClientRect(), b = i.getBoundingClientRect();
+        return a.top < b.bottom && b.top < a.bottom && a.right <= b.left + 1 && c.scrollWidth <= c.clientWidth + 1; });
+      const esc = e => { let m = new DOMMatrix(); for (let x = e; x; x = x.parentElement) { const tr = getComputedStyle(x).transform; if (tr && tr !== 'none') m = new DOMMatrix(tr).multiply(m); }
+        return Math.sqrt(Math.abs(m.a * m.d - m.b * m.c)); };
+      const px = sel => Math.min(...[...document.querySelectorAll(sel)].map(e => parseFloat(getComputedStyle(e).fontSize) * esc(e)));
+      const estouros = ['.entrada-titulo', '.entrada-hobby', '.entrada-contato', '.entrada-contato .ea-canal', '.entrada-nota']
+        .flatMap(sel => [...document.querySelectorAll(sel)]).map(e => e.scrollWidth - e.clientWidth);
+      return { linha: canais.length === 2 && canais.every(Boolean), hobby: t.includes('Este é um projeto feito por hobby sem fins lucrativos.'),
                lol: /League of Legends Brelgo#RPG/i.test(t), discord: /Discord brelgo/i.test(t), ids,
-               cabe: !!r && r.top >= 0 && r.bottom <= innerHeight && r.right <= innerWidth,
-               estouro: pl ? pl.scrollWidth - pl.clientWidth : null }; })()"""
+               cabe: dentro(pl) && dentro(grupo) && dentro(nota), estouro: pl ? Math.max(...estouros) : null,
+               letra: { rotulos: +px('.entrada-contato .ea-rot, .entrada-contato .ea-nome').toFixed(1), nota: +px('.entrada-nota').toFixed(1), ids: +px('.entrada-contato .ea-id').toFixed(1) } }; })()"""
     ruins = []
     for w, h in RESOLUCOES:
         s.tela(w, h)
         r = s.js(le)
         if not (r["hobby"] and r["lol"] and r["discord"] and r["cabe"] and r["estouro"] <= 1 and r["linha"]
-                and r["ids"] == ["Brelgo#RPG:all", "brelgo:all"]):
+                and r["ids"] == ["Brelgo#RPG:all", "brelgo:all"]
+                and r["letra"]["rotulos"] >= 10 and r["letra"]["nota"] >= 12 and r["letra"]["ids"] >= 12):
             ruins.append("%dx%d %s" % (w, h, r))
     s.tela_normal()
     # F13-T57 (Leo, 19/10/2026): "Bem Vindo(a)!", "Meus Contatos" e a atualização do
@@ -1319,7 +1335,7 @@ def checar_visualizacao(s, p):
 def _tecla(s, nome):
     """Tecla de verdade (CDP), no elemento com o foco. O Enter leva o "\\r" para o
     navegador gerar o clique num botão, como acontece com a tecla."""
-    codigos = {"Escape": 27, "Enter": 13}
+    codigos = {"Escape": 27, "Enter": 13, "Tab": 9}
     extra = {"text": "\r", "unmodifiedText": "\r"} if nome == "Enter" else {}
     s.envia("Input.dispatchKeyEvent", dict({"type": "keyDown", "key": nome, "code": nome, "windowsVirtualKeyCode": codigos[nome]}, **extra))
     s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": nome, "code": nome, "windowsVirtualKeyCode": codigos[nome]})
@@ -4691,6 +4707,293 @@ def checar_entrada(s, p):
             "%s; editor de observação aberto: %s" % ({k: r[k] for k in ("id", "editando", "forja")}, editor))
     s.abrir(); time.sleep(0.8); s.entrar()
 
+def checar_entrada_loja(s, p):
+    """F13-T97: a entrada da loja é o posto de troca na nevasca do Freljord (o conceito B da
+    F13-T96). Com perfil limpo ela aparece desenhada, com a placa, a dica e o foco no #entrar;
+    o clique de verdade em qualquer lugar abre (portas girando, câmera, um som só) e fecha
+    no fim; os IDs só se selecionam; o Enter abre uma vez; com menos movimento, nada de
+    câmera; o link direto fecha na hora e mudo; e depois de fechada, nada da entrada roda."""
+    print("\n%sENTRADA DA LOJA%s" % (AMARELO, FIM))
+    # o som que toca de verdade (o elemento de áudio), contado desde o começo de cada página
+    sonda = s.envia("Page.addScriptToEvaluateOnNewDocument", {"source": """(() => { window.__tocou = [];
+      const o = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () { window.__tocou.push(String(this.currentSrc || this.src).split('/').pop()); return o.apply(this, arguments); }; })();"""})["identifier"]
+    espia = """(() => { window.__sons = []; if (!Som.__orig) { Som.__orig = Som.play; Som.play = (ev, c) => { window.__sons.push(ev); return Som.__orig(ev, c); }; }
+      const e = document.getElementById('entrada'); window.__entT = [[performance.now(), e.className]];
+      new MutationObserver(() => window.__entT.push([performance.now(), e.className])).observe(e, { attributes: true, attributeFilter: ['class'] });
+      return 1; })()"""
+    estado = """(() => { const e = document.getElementById('entrada'), fe = document.querySelector('#entrada .en-folha.en-esq'), m = document.getElementById('en-mundo');
+      const t = window.__entT || [], ini = t.find(x => /saindo/.test(x[1])), fim = t.find(x => /fechada/.test(x[1]));
+      return { cls: e.className, folha: fe ? getComputedStyle(fe).transform : null, mundo: m ? m.style.transform : null,
+               sons: (window.__sons || []).filter(x => x === 'catalog:open'), todos: window.__sons || [], tocou: (window.__tocou || []).filter(f => /open_catalog/.test(f)).length,
+               dur: ini && fim ? Math.round(fim[0] - ini[0]) : null, sel: String(getSelection()),
+               foco: document.activeElement && document.activeElement.id }; })()"""
+
+    def pagina(caminho=""):
+        s.abrir(caminho)
+        fim = time.time() + 6
+        while time.time() < fim and s.js("typeof decidido !== 'undefined' && !decidido"):
+            time.sleep(0.1)
+        time.sleep(0.3)
+
+    def espera_fechar(limite=5):
+        fim = time.time() + limite
+        while time.time() < fim and not s.js("document.getElementById('entrada').classList.contains('fechada')"):
+            time.sleep(0.05)
+
+    def clique_em(x, y):
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": x, "y": y})
+        for tipo in ("mousePressed", "mouseReleased"):
+            s.envia("Input.dispatchMouseEvent", {"type": tipo, "x": x, "y": y, "button": "left", "clickCount": 1})
+
+    try:
+        s.tela(1440, 900)
+        # (a) perfil limpo: a fachada desenhada, a placa, a dica e o foco no #entrar
+        s.js("localStorage.clear(); sessionStorage.clear(); 'ok'")
+        pagina()
+        a = s.js("""(() => { const e = document.getElementById('entrada'), b = document.getElementById('entrar'), pl = document.querySelector('.entrada-placa');
+          const vis = x => { if (!x) return false; const r = x.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.top < innerHeight && r.bottom > 0; };
+          const d = document.getElementById('en-toldo-couro');
+          return { aberta: getComputedStyle(e).display !== 'none' && !/saindo|fechada/.test(e.className),
+                   fachada: !!d && (d.getAttribute('d') || '').length > 100 && document.getElementById('en-pinheiros').childElementCount > 5
+                     && document.querySelectorAll('#entrada .en-braseiro svg').length === 2 && vis(document.getElementById('en-mundo')),
+                   placa: vis(pl), dica: b && b.tagName === 'BUTTON' && b.textContent.trim() === '(Clique em qualquer local para abrir)'
+                     && b.getAttribute('aria-label') === 'Entrar na loja' && vis(b) && b.tabIndex === 0,
+                   foco: document.activeElement === b }; })()""")
+        p.conta("entrada da loja", "com perfil limpo: a fachada, a placa, a dica e o foco no #entrar",
+                all(a.values()), "%s" % a)
+
+        # (b) clique de verdade num ponto vazio da cena (o céu): abre, as portas giram, a câmera anda, um som
+        s.js(espia)
+        antes = s.js(estado)
+        clique_em(720, 60)
+        time.sleep(0.15)
+        logo = s.js(estado)
+        time.sleep(0.6)
+        meio = s.js(estado)
+        espera_fechar()
+        depois = s.js(estado)
+        p.conta("entrada da loja", "o clique em qualquer lugar abre: portas, câmera, um som e fecha no fim",
+                "saindo" in logo["cls"] and "fechada" not in logo["cls"] and meio["folha"] != antes["folha"]
+                and meio["mundo"] != antes["mundo"] and "fechada" in depois["cls"] and depois["sons"] == ["catalog:open"]
+                and depois["tocou"] == 1 and depois["dur"] is not None and 1900 <= depois["dur"] <= 2600,
+                "logo: %s; portas %s → %s; câmera %s → %s; sons %s (tocou %s); saindo→fechada em %s ms"
+                % (logo["cls"], antes["folha"], meio["folha"], antes["mundo"], meio["mundo"], depois["sons"], depois["tocou"], depois["dur"]))
+
+        # (g) depois de fechada: nenhum quadro da entrada pedido em 1 s, e nada no console
+        n_erros = len(s.erros)
+        s.js("""(() => { window.__raf = 0; const o = window.requestAnimationFrame; window.__rafOrig = o;
+          window.requestAnimationFrame = function (f) { window.__raf++; return o.call(window, f); }; return 1; })()""")
+        m0 = s.js("document.getElementById('en-mundo').style.transform")
+        time.sleep(1.0)
+        g = s.js("({ raf: window.__raf, mundo: document.getElementById('en-mundo').style.transform })")
+        s.js("window.requestAnimationFrame = window.__rafOrig; 1")
+        p.conta("entrada da loja", "fechada, nada da entrada roda (nenhum quadro pedido em 1 s) e o console fica limpo",
+                g["raf"] == 0 and g["mundo"] == m0 and len(s.erros) == n_erros and not s.erros,
+                "%s quadro(s) pedido(s) em 1 s; câmera parada: %s; erros: %s" % (g["raf"], g["mundo"] == m0, "; ".join(s.erros[:2]) or "nenhum"))
+
+        # (c) o clique num ID não abre, e seleciona o ID inteiro
+        pagina()
+        s.js(espia)
+        s.js("getSelection().removeAllRanges(); 1")
+        pt = s.caixa(".entrada-contato .ea-id")
+        clique_em(pt[0], pt[1])
+        time.sleep(0.5)
+        c = s.js(estado)
+        p.conta("entrada da loja", "o clique no ID não abre: seleciona o ID inteiro",
+                not re.search(r"saindo|fechada", c["cls"]) and c["sel"] == "Brelgo#RPG" and c["sons"] == [],
+                "classe %r; seleção %r; sons %s" % (c["cls"], c["sel"], c["sons"]))
+
+        # (d) o Enter abre uma vez só: no #entrar (vira clique) e com o foco no corpo da página
+        s.js("getSelection().removeAllRanges(); document.getElementById('entrar').focus(); 1")
+        _tecla(s, "Enter")
+        espera_fechar()
+        d1 = s.js(estado)
+        pagina()
+        s.js(espia)
+        s.js("document.activeElement && document.activeElement.blur(); 1")
+        _tecla(s, "Enter")
+        espera_fechar()
+        d2 = s.js(estado)
+        p.conta("entrada da loja", "o Enter abre uma vez só (no #entrar e com o foco na página)",
+                all("fechada" in d["cls"] and d["sons"] == ["catalog:open"] and d["tocou"] == 1 for d in (d1, d2)),
+                "no #entrar: sons da entrada %s (todos %s), tocou %s, %s; na página: sons da entrada %s (todos %s), tocou %s, %s"
+                % (d1["sons"], d1["todos"], d1["tocou"], d1["cls"], d2["sons"], d2["todos"], d2["tocou"], d2["cls"]))
+
+        # (e) com menos movimento (do sistema): a câmera não anda e fecha rápido
+        s.envia("Emulation.setEmulatedMedia", {"features": [{"name": "prefers-reduced-motion", "value": "reduce"}]})
+        try:
+            pagina()
+            s.js(espia)
+            antes = s.js(estado)
+            clique_em(720, 60)
+            vistos = []
+            for _ in range(5):
+                time.sleep(0.12)
+                vistos.append(s.js("document.getElementById('en-mundo').style.transform"))
+            espera_fechar()
+            e = s.js(estado)
+        finally:
+            s.envia("Emulation.setEmulatedMedia", {"features": []})
+        p.conta("entrada da loja", "com menos movimento a câmera não anda e a entrada fecha logo",
+                all(v == antes["mundo"] for v in vistos) and "fechada" in e["cls"] and e["dur"] is not None and e["dur"] <= 950
+                and e["sons"] == ["catalog:open"],
+                "câmera %s → %s; saindo→fechada em %s ms; sons %s" % (antes["mundo"], sorted(set(vistos)), e["dur"], e["sons"]))
+
+        # (f) o link que entra direto fecha na hora, sem som e sem montar a cena
+        pagina("?r=97#calc")
+        f = s.js("""(() => { const e = document.getElementById('entrada');
+          return { cls: e.className, display: getComputedStyle(e).display, montada: document.getElementById('en-pinheiros').childElementCount,
+                   tocou: (window.__tocou || []).filter(f => /open_catalog/.test(f)).length }; })()""")
+        p.conta("entrada da loja", "o link com # (#calc) entra direto: fechada na hora, sem som",
+                "fechada" in f["cls"] and "saindo" not in f["cls"] and f["display"] == "none" and f["tocou"] == 0 and f["montada"] == 0,
+                "%s" % f)
+
+        # F13-T97, a revisão do cético: cada conserto com a sua checagem
+        # (i) o 2º clique durante a abertura, sobre um card escondido da loja, não abre a ficha nem toca a loja
+        pagina()
+        s.js(espia)
+        alvo = s.js("""(() => { for (let y = 320; y < innerHeight - 60; y += 40) for (let x = 200; x < innerWidth - 200; x += 60) {
+            const el = document.elementsFromPoint(x, y).find(e => !e.closest('#entrada'));
+            if (el && el.closest('.card[data-slug]')) return [x, y]; } return null; })()""")
+        clique_em(*alvo)
+        time.sleep(0.7)
+        clique_em(*alvo)
+        espera_fechar()
+        time.sleep(0.3)
+        i = s.js("({ ficha: document.getElementById('overlay').classList.contains('show'), todos: window.__sons || [] })")
+        s.js("(() => { const o = document.getElementById('overlay'); if (o.classList.contains('show')) closeModal && closeModal(); return 1; })()")
+        p.conta("entrada da loja", "o 2º clique durante a abertura, sobre a loja escondida, não atravessa: nem ficha aberta, nem som da loja",
+                alvo is not None and not i["ficha"] and not any(x in i["todos"] for x in ("catalog:click", "catalog:pergaminho")),
+                "ponto %s; ficha aberta %s; sons %s" % (alvo, i["ficha"], i["todos"]))
+
+        # (j) o "Menos movimento" da loja (não o do sistema): as portas esmaecem e a entrada some aos poucos
+        s.js("localStorage.setItem('acessibilidade', JSON.stringify({ movimento: true })); 1")
+        try:
+            pagina()
+            s.js(espia)
+            clique_em(720, 60)
+            ops = []
+            for _ in range(6):
+                time.sleep(0.12)
+                ops.append(s.js("""(() => { const f = document.querySelector('#entrada .en-folha.en-esq'), e = document.getElementById('entrada');
+                  return [+getComputedStyle(f).opacity, +getComputedStyle(e).opacity]; })()"""))
+            espera_fechar()
+            j = s.js(estado)
+        finally:
+            s.js("localStorage.removeItem('acessibilidade'); 1")
+        p.conta("entrada da loja", "com o \"Menos movimento\" da loja, as portas esmaecem e a entrada some aos poucos (não de golpe)",
+                min(o[0] for o in ops) < 0.5 and any(0.05 < o[1] < 0.95 for o in ops) and "fechada" in j["cls"] and j["dur"] is not None and j["dur"] <= 950,
+                "opacidade [porta, entrada] a cada 120 ms: %s; saindo→fechada em %s ms" % ([[round(a, 2), round(b, 2)] for a, b in ops], j["dur"]))
+
+        # (k) arrastar para selecionar o ID (apertar nele e soltar fora dele) não abre a loja
+        pagina()
+        s.js(espia)
+        s.js("getSelection().removeAllRanges(); 1")
+        # o gesto de quem seleciona: aperta perto do fim do ID e solta logo depois dele, na mesma linha
+        # (o clique vai para o ancestral comum, que não é o ID). A placa balança o tempo todo: o balanço fica
+        # parado durante o gesto, senão o ponto medido anda e o soltar às vezes ainda cai no ID
+        s.js("(() => { const g = document.querySelector('#entrada .en-placa-grupo'); if (g) g.getAnimations().forEach(a => a.pause()); return 1; })()")
+        fimx, fimy = s.js("(() => { const r = document.querySelector('.entrada-contato .ea-id').getBoundingClientRect(); return [Math.round(r.right), Math.round((r.top + r.bottom) / 2)]; })()")
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": fimx - 4, "y": fimy})
+        s.envia("Input.dispatchMouseEvent", {"type": "mousePressed", "x": fimx - 4, "y": fimy, "button": "left", "clickCount": 1})
+        # (só "buttons": com "button" no mover, o Chrome começa a arrastar o texto selecionado e não há clique)
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": fimx + 25, "y": fimy + 2, "buttons": 1})
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseReleased", "x": fimx + 25, "y": fimy + 2, "button": "left", "clickCount": 1})
+        time.sleep(0.5)
+        k = s.js(estado)
+        p.conta("entrada da loja", "arrastar para selecionar o ID (apertar nele e soltar fora) não abre a loja",
+                not re.search(r"saindo|fechada", k["cls"]) and k["sons"] == [],
+                "classe %r; seleção %r; sons %s" % (k["cls"], k["sel"], k["sons"]))
+
+        # (l) com a entrada de pé, a roda do mouse não rola a loja escondida; ao entrar, a rolagem volta
+        s.js("window.scrollTo(0, 0); 1")
+        for _ in range(4):
+            s.envia("Input.dispatchMouseEvent", {"type": "mouseWheel", "x": 720, "y": 450, "deltaX": 0, "deltaY": 600})
+            time.sleep(0.1)
+        l1 = s.js("({ y: scrollY, trava: document.documentElement.classList.contains('com-entrada'), over: getComputedStyle(document.documentElement).overflowY })")
+
+        # (m) o Tab não sai da entrada (o aria-modal): o foco fica no #entrar
+        s.js("document.getElementById('entrar').focus(); 1")
+        for _ in range(3):
+            _tecla(s, "Tab")
+        m = s.js("({ foco: document.activeElement && document.activeElement.id, hash: location.hash, cls: document.getElementById('entrada').className })")
+        clique_em(720, 60)
+        espera_fechar()
+        l2 = s.js("({ y: scrollY, trava: document.documentElement.classList.contains('com-entrada'), over: getComputedStyle(document.documentElement).overflowY })")
+        p.conta("entrada da loja", "com a entrada de pé, a roda do mouse não rola a loja escondida; ao entrar, a loja abre no topo e rola de novo",
+                l1["y"] == 0 and l1["trava"] and l1["over"] == "hidden" and l2["y"] == 0 and not l2["trava"] and l2["over"] != "hidden",
+                "de pé %s; depois de entrar %s" % (l1, l2))
+        p.conta("entrada da loja", "o Tab não sai da entrada: o foco fica no #entrar (nada por baixo é acionado)",
+                m["foco"] == "entrar" and not re.search(r"saindo|fechada", m["cls"]),
+                "%s" % m)
+
+        # (o) parada na tela, a entrada não ocupa a thread principal (o pulso da dica)
+        pagina()
+        time.sleep(4.5)                     # a chegada da dica e o pulso já começaram
+        s.envia("Performance.enable")
+        met = lambda: {x["name"]: x["value"] for x in s.envia("Performance.getMetrics")["metrics"]}
+        m1 = met(); time.sleep(2.0); m2 = met()
+        s.envia("Performance.disable")
+        tarefa = (m2["TaskDuration"] - m1["TaskDuration"]) / max(0.1, m2["Timestamp"] - m1["Timestamp"])
+        p.conta("entrada da loja", "parada na tela, a entrada quase não gasta a thread principal (menos de 15%)",
+                tarefa < 0.15, "%.0f ms de tarefa por segundo" % (tarefa * 1000))
+
+        # (q) a fachada não baixa a textura de 2,8 MB: a janela usa a imagem pequena do card do Freljord
+        q = s.js(r"""(() => { const r = performance.getEntriesByType('resource').map(e => e.name);
+          return { png: r.filter(n => /texturas\/freljord\.png/.test(n)).length, jpg: r.filter(n => /cards\/freljord\.jpg/.test(n)).length }; })()""")
+        p.conta("entrada da loja", "a fachada não baixa a textura de 2,8 MB (a janela usa o jpg pequeno do card)",
+                q["png"] == 0 and q["jpg"] >= 1, "%s" % q)
+
+        # (p) em janela menor que as quatro do roteiro, a letra da placa não cai abaixo do piso
+        menores = {}
+        for w, h in ((1366, 768), (1024, 768)):
+            s.tela(w, h)
+            time.sleep(0.5)
+            menores["%dx%d" % (w, h)] = s.js("""(() => { const ef = el => { const r = el.getBoundingClientRect(); return parseFloat(getComputedStyle(el).fontSize) * (r.width / Math.max(1, el.offsetWidth)); };
+              const pl = document.querySelector('.entrada-placa').getBoundingClientRect(), nt = document.querySelector('.entrada-nota').getBoundingClientRect();
+              return { rot: +ef(document.querySelector('.entrada-contato .ea-rot')).toFixed(1), nota: +ef(document.querySelector('.entrada-nota')).toFixed(1),
+                       id: +ef(document.querySelector('.entrada-contato .ea-id')).toFixed(1),
+                       dentro: pl.top >= 0 && pl.right <= innerWidth && nt.bottom <= innerHeight && nt.right <= innerWidth }; })()""")
+        s.tela(1440, 900)
+        p.conta("entrada da loja", "em 1366×768 e 1024×768 a letra da placa não cai abaixo do piso (rótulo ≥ 10 px, nota e ID ≥ 12 px) e a placa fica na tela",
+                all(v["rot"] >= 10 and v["nota"] >= 12 and v["id"] >= 12 and v["dentro"] for v in menores.values()), "%s" % menores)
+
+        # (n) com a fonte para dislexia, o Riot ID cabe inteiro no pergaminho (não sai cortado)
+        s.js("localStorage.setItem('acessibilidade', JSON.stringify({ dislexia: true })); 1")
+        try:
+            dis = {}
+            for w, h in ((1440, 900), (1280, 800)):
+                s.tela(w, h)
+                pagina()
+                s.js("document.fonts.ready.then(() => 1)")
+                time.sleep(0.6)
+                dis["%dx%d" % (w, h)] = s.js("""(() => { const per = document.querySelector('.en-pergaminho') || document.querySelector('.entrada-placa');
+                  const b = per.getBoundingClientRect();
+                  return { fonte: document.fonts.check('16px OpenDyslexic') && document.body.classList.contains('ac-dislexia'),
+                           ids: [...document.querySelectorAll('.entrada-contato .ea-id')].map(e => { const r = e.getBoundingClientRect(); return [e.textContent, Math.round(b.right - r.right), Math.round(r.left - b.left)]; }) }; })()""")
+        finally:
+            s.js("localStorage.removeItem('acessibilidade'); 1")
+            s.tela(1440, 900)
+        p.conta("entrada da loja", "com a fonte para dislexia, os IDs cabem inteiros no pergaminho (o Riot ID não sai cortado)",
+                all(v["fonte"] and len(v["ids"]) == 2 and all(i[1] >= 0 and i[2] >= 0 for i in v["ids"]) for v in dis.values()),
+                "folga [ID, à direita, à esquerda] por resolução: %s" % dis)
+    finally:
+        s.envia("Page.removeScriptToEvaluateOnNewDocument", {"identifier": sonda})
+        s.tela_normal()
+
+    # (h) o som só pelo Som: nenhum new Audio( fora do módulo Som
+    idx = open(os.path.join(RAIZ, "index.html"), encoding="utf-8").read()
+    ini = idx.find("const Som = (() => {")
+    fim_som = idx.find("\n})();", ini)
+    fora = [idx.count("\n", 0, m.start()) + 1 for m in re.finditer(r"new Audio\(", idx)
+            if not (ini <= m.start() <= fim_som) and "//" not in idx[idx.rfind("\n", 0, m.start()) + 1:m.start()]]   # comentário não conta
+    p.conta("entrada da loja", "nenhum new Audio( fora do módulo Som", ini > 0 and not fora,
+            "fora do Som nas linhas %s" % fora if fora else "só o Som cria áudio")
+
+    s.abrir(); time.sleep(0.8); s.entrar()
+
+
 def checar_desatualizadas(s, p):
     """F13-T56 (Leo, 19/10/2026: "builds marcadas como desatualizada não devem
     aparecer nas públicas por ser desatualizado"): a aba Públicas mostra só o
@@ -7027,6 +7330,7 @@ GRUPOS = [
     ("bigorna", checar_bigorna),
     ("fechar", checar_fechar),
     ("entrada", checar_entrada),
+    ("entrada da loja", checar_entrada_loja),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
     ("acessibilidade", checar_acessibilidade),

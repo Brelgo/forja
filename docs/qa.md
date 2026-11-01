@@ -496,6 +496,25 @@ saem da bigorna e vão para a fileira, com a bota (o virado no lugar da Dádiva;
 só, para caberem três ícones). Três casos novos nas peças; vistos falhando os mutantes da
 regra (P1 a P4, P31, P37, P38) e os novos P47 a P49.
 
+A entrada da loja (F13-T97, 01/11/2026), grupo "entrada da loja": o posto de troca na
+nevasca do Freljord (o conceito B da F13-T96) no lugar da placa. Com perfil limpo, a
+fachada, a placa, a dica e o foco no #entrar; o clique de verdade em qualquer lugar abre
+(as portas giram, a câmera anda, um som só) e fecha aos ~2,15 s; o clique no ID só
+seleciona; o Enter abre uma vez; com menos movimento do sistema, nada de câmera e fecha
+aos ~0,85 s; o link com # entra direto, mudo; fechada, nenhum quadro da entrada roda; e
+nenhum new Audio fora do Som. A "fundação" confere a placa nova nas quatro resoluções
+(textos exatos, IDs selecionáveis, tudo na tela, a letra como aparece na tela ≥ 10 px
+nos rótulos e ≥ 12 px na nota e nos IDs), e o Sessao.entrar() espera a entrada fechar
+em vez de um tempo fixo. A revisão do cético (Opus xhigh, duas lentes e uma
+reverificação) achou nove defeitos, todos consertados com checagem: o 2º clique durante
+a abertura atravessava a cena e abria a ficha de um item; com o "Menos movimento" da
+loja a cena congelava e sumia de golpe; arrastar para selecionar o ID abria a loja; a
+roda do mouse rolava a loja escondida; o Tab fugia para as abas escondidas; com a fonte
+para dislexia o Riot ID saía cortado (a mais grave); o pulso da dica ocupava ~90% da
+thread principal; a letra da placa caía abaixo do piso em 1366×768 e 1024×768; e a
+janela da fachada baixava uma textura de 2,8 MB. Vista falhando cada conserto num
+mutante: Q1 a Q9.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar
