@@ -7,7 +7,8 @@ window.NOTAS = {
     "A nova entrada da loja: o posto de troca do Freljord, com as portas que se abrem e a câmera que entra"
    ],
    "aj": [
-    "No card do Discord, o item de suporte fica embaixo, junto da bota, e a bigorna mostra o Core da build"
+    "No card do Discord, o item de suporte fica embaixo, junto da bota, e a bigorna mostra o Core da build",
+    "O card do Discord agora é a ficha da build: o retrato, as runas, a ordem das habilidades e os itens"
    ],
    "rem": []
   },
