@@ -4,7 +4,8 @@ window.NOTAS = {
   {
    "data": "01/11/2026",
    "add": [
-    "A nova entrada da loja: o posto de troca do Freljord, com as portas que se abrem e a câmera que entra"
+    "A nova entrada da loja: o posto de troca do Freljord, com as portas que se abrem e a câmera que entra",
+    "A entrada da loja agora sorteia a região: o Freljord, o arsenal de Noxus ou a loja de relíquias de Shurima"
    ],
    "aj": [
     "No card do Discord, o item de suporte fica embaixo, junto da bota, e a bigorna mostra o Core da build",
