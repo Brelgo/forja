@@ -6312,6 +6312,7 @@ def checar_card(s, p):
           const pecaDe = (a, b) => (b.components || []).some(c => c.namePt === a.namePt);
           const botaBase = B.find(b => B.some(o => pecaDe(b, o))), botaFinal = B.find(o => pecaDe(botaBase, o)), outraFinal = B.find(o => o !== botaFinal && pecaDe(botaBase, o));
           const evBpeca = C.find(i => i.tier === 'Bota' && pecaDe(i, evB));
+          const dadiva = C.find(i => i.tier === 'Lendário (Evolução)'), supVirado = L.find(i => pecaDe(dadiva, i));
           const sl = (...its) => its.map(i => i.slug);
           const caso = (caixas, bigorna, pequenos, itens, escolhas) => ({ got: escolherItens({ caixas }), want: { bigorna, pequenos, itens, escolhas } });
           return {
@@ -6333,11 +6334,15 @@ def checar_card(s, p):
             bota_e_evolucao: caso([cx('comum', L[0], evBpeca, evB)], sl(L[0]), sl(evB), 0, 0),
             // sem Lendário, a sentinela não vai para a bigorna
             sem_lendario_com_sentinela: caso([cx('comum', Tr[0], E[0])], sl(E[0]), [], 0, 0),
+            // F13-T95b (opção B do Leo): o item de suporte vai para a fileira, como a bota; a bigorna fica com o Core
+            suporte: caso([cx('comum', S[0], Co[0]), cx('comum', B[1]), cx('comum', supVirado, L[0], L[1], L[2])], sl(L[0], L[1], L[2]), sl(B[1], supVirado, S[0]), 0, 0),
+            suporte_dadiva_e_virado: caso([cx('comum', dadiva, supVirado, L[0])], sl(L[0]), sl(supVirado), 0, 0),
+            suporte_so_dadiva: caso([cx('comum', S[0], dadiva, L[0])], sl(L[0]), sl(dadiva, S[0]), 0, 0),
             conta: { got: [contaDoResto(3, 0), contaDoResto(1, 1), contaDoResto(0, 2), contaDoResto(0, 0)], want: ['+ 3 itens', '+ 1 item e 1 escolha', '+ 2 escolhas', ''] },
           };
         })()""")
         errados = {k: v for k, v in casos.items() if v["got"] != v["want"] and not (isinstance(v["got"], dict) and all(v["got"].get(c) == v["want"][c] for c in v["want"]))}
-        p.conta("card do Discord", "as peças: na bigorna os 3 primeiros Lendários do Total (sem Opcional; da Escolha só a 1ª), embaixo a bota da build (não a peça \"Botas\") e 2 iniciais, a conta \"+ N itens e M escolhas\"; a evolução de bota é bota; sem Lendário, o resto (sem a sentinela); item fora do catálogo, repetido e com nome de propriedade (\"constructor\", \"__proto__\") não contam",
+        p.conta("card do Discord", "as peças: na bigorna os 3 primeiros Lendários do Total (sem Opcional; da Escolha só a 1ª), embaixo a bota da build (não a peça \"Botas\"), o item de suporte (o virado da Dádiva, não o Lendário do Core) e os iniciais, a conta \"+ N itens e M escolhas\"; a evolução de bota é bota; sem Lendário, o resto (sem a sentinela); item fora do catálogo, repetido e com nome de propriedade (\"constructor\", \"__proto__\") não contam",
                 not errados, "errados: %s" % json.dumps(errados, ensure_ascii=False)[:300] if errados else "%d casos" % len(casos))
 
         # (b) o desenho: cada build desenhada de verdade, com a foto que o robô tiraria

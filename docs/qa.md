@@ -491,6 +491,10 @@ do cético (Opus xhigh): a 1ª, em três lentes com reverificação, confirmou 1
 o mais grave, uma build publicada com o itemId "constructor" derrubava todas as rodadas
 do robô — e a 2ª, sobre os consertos, achou 5 restos de gravidade baixa; todos
 consertados com checagem. Vista falhando cada peça num mutante: P1 a P46, 47 de 47.
+O item de suporte (F13-T95b, a opção B do Leo): a Dádiva dos Mundos e o que ela vira
+saem da bigorna e vão para a fileira, com a bota (o virado no lugar da Dádiva; um inicial
+só, para caberem três ícones). Três casos novos nas peças; vistos falhando os mutantes da
+regra (P1 a P4, P31, P37, P38) e os novos P47 a P49.
 
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
