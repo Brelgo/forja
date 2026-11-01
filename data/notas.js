@@ -5,7 +5,8 @@ window.NOTAS = {
    "data": "31/10/2026",
    "add": [
     "Duas abas ao mesmo tempo: a segunda vira controle remoto — navega à vontade e acompanha a build da primeira ao vivo; editar continua na primeira",
-    "Na segunda aba, o clique no item da loja, a caixa escolhida e o Editar valem para a build da primeira"
+    "Na segunda aba, o clique no item da loja, a caixa escolhida e o Editar valem para a build da primeira",
+    "O link de uma build publicada mostra o card dela no Discord: a arte do campeão, o nome e o Core na bigorna"
    ],
    "aj": [
     "O voltar do navegador no link curto: com o \"Salvar e sair?\" aberto ele vale \"Continuar editando\", e durante a espera devolve a tela de antes",
