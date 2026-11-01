@@ -9,7 +9,8 @@ window.NOTAS = {
    ],
    "aj": [
     "No card do Discord, o item de suporte fica embaixo, junto da bota, e a bigorna mostra o Core da build",
-    "O card do Discord agora é a ficha da build: o retrato, as runas, a ordem das habilidades e os itens"
+    "O card do Discord agora é a ficha da build: o retrato, as runas, a ordem das habilidades e os itens",
+    "O som da entrada da loja agora sai junto com o clique, e a abertura das portas ficou mais lisa"
    ],
    "rem": []
   },
