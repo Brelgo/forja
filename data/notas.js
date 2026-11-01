@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "01/11/2026",
+   "add": [],
+   "aj": [
+    "No card do Discord, o item de suporte fica embaixo, junto da bota, e a bigorna mostra o Core da build"
+   ],
+   "rem": []
+  },
+  {
    "data": "31/10/2026",
    "add": [
     "Duas abas ao mesmo tempo: a segunda vira controle remoto — navega à vontade e acompanha a build da primeira ao vivo; editar continua na primeira",
