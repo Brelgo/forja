@@ -3900,6 +3900,12 @@ body:not(.cat-selected) #grid .card { cursor: zoom-in; }
 .entrada.fechada { display: none; }
 /* com a entrada de pé, a roda e a barra não rolam a loja escondida por baixo (a loja abre no topo) */
 html.com-entrada { overflow: hidden; }
+/* F13-T100 (Leo, 01/11/2026: "tem vezes que os frames pulam"): por baixo da entrada, os 225 raios dos
+   cards (.card-burst, invisíveis fora do hover) giravam o tempo todo — cada um uma camada animada, e cada
+   card por cima dele outra (450 camadas). A câmera da entrada anda pela thread principal e, a cada quadro,
+   a loja escondida entrava na conta (o roteiro mediu: metade dos quadros perdidos da abertura). Com a
+   entrada de pé eles não giram; ao fechar, voltam — ninguém vê a diferença (opacidade 0, loja coberta). */
+html.com-entrada .card-burst { animation: none; }
 body.na-loja .entrada { display: none; }
 
 /* menos movimento (do sistema): sem câmera; a arte de cada região diz o que esmaece no tema dela */
@@ -8510,7 +8516,8 @@ aplicarCamadaDoRobo(window.CATALOG, window.ATUALIZACAO_PATCH, window.ROBO);
 // - REGRA DO LEO (13/09/2026): sempre que um evento tiver mais de um arquivo, a
 //   ativação é aleatória — um deles é sorteado a cada disparo, sem repetir o anterior.
 // - Pré-carregamento de todos os arquivos ao destravar: o som toca no instante do
-//   evento (hover em qualquer card dispara na hora, sem cooldown).
+//   evento (hover em qualquer card dispara na hora, sem cooldown). F13-T100: o da
+//   abertura vem antes (Som.preparar, com a entrada parada); o resto, depois da abertura.
 // - Falas do lojista não se sobrepõem: se uma estiver tocando, a nova é descartada.
 // - Volume e mudo persistem em localStorage (som.volume, som.mudo).
 // - Nada toca antes de Som.destravar(), chamado no clique em "Entrar na loja".
@@ -8688,15 +8695,30 @@ const Som = (() => {
   const LOJISTA = { FOLGA_MS: 500, INTERVALO_MIN_MS: 15000, CHANCE: 0.4 };
   const cache = {};         // arquivo → Audio pré-carregado (pronto para tocar sem atraso)
 
+  function carregarArquivo(f) {
+    if (cache[f]) return cache[f];
+    const a = new Audio();
+    a.preload = "auto";
+    a.src = BASE + f;
+    a.load();
+    return (cache[f] = a);
+  }
   function precarregar() {
-    Object.values(SOM_ARQUIVOS).flat().forEach(f => {
-      if (cache[f]) return;
-      const a = new Audio();
-      a.preload = "auto";
-      a.src = BASE + f;
-      a.load();
-      cache[f] = a;
-    });
+    Object.values(SOM_ARQUIVOS).flat().forEach(carregarArquivo);
+  }
+  // F13-T100 (Leo, 01/11/2026: "o som está mal sincronizado com a animação de abertura" — chegava
+  // tarde): o open_catalog só começava a baixar no clique, junto com os outros ~80 arquivos, e tocava
+  // 0,2–1 s depois. Agora a entrada pede o arquivo dela enquanto está parada: ele só é baixado e
+  // decodificado (preload), nada toca — o som continua nascendo no clique, pelo destravar().
+  const EVENTO_BASE = { "catalog:open": "open_catalog" };
+  function preparar(evento) {
+    const base = EVENTO_BASE[evento];
+    (SOM_ARQUIVOS[base] || []).forEach(carregarArquivo);
+  }
+  // HAVE_ENOUGH_DATA (4) em todas as variantes do evento: pronto para tocar sem esperar a rede
+  function pronto(evento) {
+    const lista = SOM_ARQUIVOS[EVENTO_BASE[evento]] || [];
+    return lista.length > 0 && lista.every(f => cache[f] && cache[f].readyState >= 4);
   }
 
   const chave = s => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -8761,7 +8783,8 @@ const Som = (() => {
     // Usa o elemento pré-carregado; se ele ainda estiver tocando, um clone (já em cache do navegador).
     let a = cache[f];
     if (!a) { a = new Audio(BASE + f); cache[f] = a; }
-    if (!a.paused && !a.ended) a = a.cloneNode(); else a.currentTime = 0;
+    // F13-T100: no elemento que nunca tocou, o currentTime = 0 era uma busca à toa (o play esperava por ela)
+    if (!a.paused && !a.ended) a = a.cloneNode(); else if (a.currentTime) a.currentTime = 0;
     a.volume = Math.min(1, curva(estado.volume) * ganhoDe(f) * (opts.ganho || 1));
     const p = a.play();
     if (p && p.catch) p.catch(() => { /* autoplay bloqueado ou arquivo ausente: silêncio */ });
@@ -8820,7 +8843,16 @@ const Som = (() => {
     return false;
   }
 
-  function destravar() { estado.destravado = true; precarregar(); avisar(); }
+  // F13-T100: o resto dos arquivos (~80) não baixa mais no próprio clique — criar os elementos de áudio
+  // ali ocupava a thread principal no primeiro quadro da abertura e disputava a rede com o som dela.
+  // `adiar` (ms): a entrada pede o pré-carregamento depois da abertura; sem ele (link direto), na hora.
+  let precarga = 0;
+  function destravar(adiar) {
+    estado.destravado = true;
+    clearTimeout(precarga);
+    if (adiar > 0) precarga = setTimeout(precarregar, adiar); else precarregar();
+    avisar();
+  }
   function setVolume(v) { estado.volume = Math.min(1, Math.max(0, Number(v) || 0)); salvar(); avisar(); }
   function setMudo(m) { estado.mudo = !!m; salvar(); avisar(); }
   function alternarMudo() { setMudo(!estado.mudo); }
@@ -8843,7 +8875,7 @@ const Som = (() => {
   }
 
   carregar();
-  return { play, destravar, setVolume, setMudo, alternarMudo, setCanal, onChange, verificar, LOJISTA, get estado() { return { ...estado, canais: { ...estado.canais } }; }, ARQUIVOS: SOM_ARQUIVOS };
+  return { play, destravar, preparar, pronto, setVolume, setMudo, alternarMudo, setCanal, onChange, verificar, LOJISTA, get estado() { return { ...estado, canais: { ...estado.canais } }; }, ARQUIVOS: SOM_ARQUIVOS };
 })();
 </script>
 <script>
@@ -9098,7 +9130,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.99";
+const ATUALIZACAO = "13.100";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -18785,7 +18817,7 @@ const EntradaLoja = (function () {
     if (raiz) raiz.classList.add("fechada");
     document.documentElement.classList.remove("com-entrada");
   }
-  return { montar: montar, abrir: abrir, fechar: fechar, DUR: DUR, REGIOES: REGIOES, regiao: function () { return regiao; } };
+  return { montar: montar, abrir: abrir, fechar: fechar, DUR: DUR, FIM: FIM, REGIOES: REGIOES, regiao: function () { return regiao; } };
 })();
 
 // ---------------- init ----------------
@@ -18910,15 +18942,17 @@ function init() {
   // sorteada a cada visita (Freljord, Noxus, Shurima), montada antes da placa ganhar os textos.
   const entrada = document.getElementById("entrada");
   const entraDireto = /^#(item=|ficha=|apice$|animacoes$|build$|build-animacoes$|build-observacao$|build-apice$|build-exportar$|calc$|b=|build\/[0-9a-f]{6}$)/.test(location.hash);
-  if (!entraDireto) { document.documentElement.classList.add("com-entrada"); EntradaLoja.montar(); }
+  // F13-T100: o som da abertura baixa e decodifica enquanto a entrada está parada (nada toca antes do clique)
+  if (!entraDireto) { document.documentElement.classList.add("com-entrada"); EntradaLoja.montar(); Som.preparar("catalog:open"); }
   document.querySelectorAll("[data-patch]").forEach(el => el.textContent = CATALOG.meta.patch || "");
   document.querySelectorAll("[data-atualizacao]").forEach(el => el.textContent = ATUALIZACAO);
   // o pergaminho da placa (o papiro em Shurima) sorteia a textura, como todo papel da loja
   setPaper(document.querySelector("#entrada .en-pergaminho"), randomPaper());
   function entrarNaLoja(imediato) {
     if (!entrada || entrada.classList.contains("saindo") || entrada.classList.contains("fechada")) return;
-    // O som nasce aqui: o clique destrava o áudio e a loja abre.
-    Som.destravar();
+    // O som nasce aqui: o clique destrava o áudio e a loja abre. F13-T100: na abertura animada, o
+    // resto dos sons baixa depois dela (o da abertura já está pronto, pelo Som.preparar do init)
+    Som.destravar(imediato ? 0 : EntradaLoja.FIM + 300);
     if (imediato) { EntradaLoja.fechar(); return; }
     Som.play("catalog:open");
     EntradaLoja.abrir();

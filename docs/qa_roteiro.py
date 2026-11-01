@@ -4729,7 +4729,9 @@ def checar_entrada_loja(s, p):
     no fim; os IDs só se selecionam; o Enter abre uma vez; com menos movimento, nada de
     câmera; o link direto fecha na hora e mudo; e depois de fechada, nada da entrada roda.
     F13-T99: a região é sorteada a cada visita (o Freljord, Noxus, Shurima) — tudo isso vale
-    para as três, cada uma forçada pelo ?entrada=; e o sorteio varia e monta só a sorteada."""
+    para as três, cada uma forçada pelo ?entrada=; e o sorteio varia e monta só a sorteada.
+    F13-T100: o som da abertura pronto antes do clique e tocando em até 80 ms dele; o clique não baixa
+    os outros sons; a loja escondida não anima por baixo; e os quadros da abertura nas três regiões."""
     print("\n%sENTRADA DA LOJA%s" % (AMARELO, FIM))
     # o som que toca de verdade (o elemento de áudio), contado desde o começo de cada página
     sonda = s.envia("Page.addScriptToEvaluateOnNewDocument", {"source": """(() => { window.__tocou = [];
@@ -5054,6 +5056,113 @@ def checar_entrada_loja(s, p):
                 len(set(vistas)) >= 2 and not repetidas, "regiões vistas: %s; repetidas em seguida nas cargas %s" % (vistas, repetidas or "nenhuma"))
         p.conta("entrada da loja", "só a região sorteada está montada (um tema, um <style>, nenhum molde sobrando, nada das outras)",
                 not ruins, "%s" % (ruins[:2] or "12 de 12 cargas com uma região só"))
+
+        # F13-T100 (Leo, 01/11/2026: "o som está mal sincronizado com a animação de abertura" — chegava tarde;
+        # "tem vezes que os frames pulam"). Uma sonda própria em cada carga: o relógio do clique, os elementos de
+        # áudio criados (e quando), o play e o "playing" do open_catalog, e os quadros (rAF) da abertura.
+        sonda_t100 = s.envia("Page.addScriptToEvaluateOnNewDocument", {"source": """(() => {
+          const T = window.__t100 = { clique: null, criados: [], q: [] };
+          const A = window.Audio;
+          window.Audio = function () { const e = new A(...arguments); T.criados.push([performance.now(), e]); return e; };
+          window.Audio.prototype = A.prototype;
+          document.addEventListener('click', () => { if (T.clique != null) return; T.clique = performance.now();
+            T.raios = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length;
+            let ult = T.clique; const f = (t) => { T.q.push(t - ult); ult = t; if (t - T.clique < 2150) requestAnimationFrame(f); };
+            requestAnimationFrame(f);
+            setTimeout(() => { T.raiosMeio = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length; }, 900); }, true);
+          const o = HTMLMediaElement.prototype.play;
+          HTMLMediaElement.prototype.play = function () {
+            if (/open_catalog/.test(this.src) && T.play == null) { const a = this; T.play = performance.now(); T.rs = a.readyState;
+              a.addEventListener('playing', () => { T.playing = performance.now(); }, { once: true }); }
+            return o.apply(this, arguments); }; })();"""})["identifier"]
+        LE_T100 = """(() => { const T = window.__t100, c = T.clique, r = x => x == null || c == null ? null : Math.round(x - c);
+          const nome = e => decodeURIComponent(String(e.src || '').split('/').pop());
+          return { antes: T.criados.filter(x => c == null || x[0] < c).map(x => nome(x[1])),
+                   noClique: T.criados.filter(x => c != null && x[0] >= c && x[0] < c + 1500).length,
+                   rs: T.rs == null ? null : T.rs, play: r(T.play), playing: r(T.playing),
+                   raios: T.raios, raiosMeio: T.raiosMeio,
+                   q: T.q.map(x => Math.round(x * 10) / 10) }; })()"""
+
+        def abre_e_mede(rg, antigo=False):
+            """Uma abertura de verdade (clique no céu), com a página nova. `antigo`: o comportamento de antes da
+            F13-T100 de volta, só nesta carga — os raios da loja girando por baixo e os ~80 sons baixando no clique."""
+            pagina("?entrada=" + rg)
+            fim = time.time() + 4
+            while time.time() < fim and not s.js("typeof Som.pronto === 'function' && Som.pronto('catalog:open')"):
+                time.sleep(0.1)
+            time.sleep(0.4)
+            pronto = s.js("typeof Som.pronto === 'function' && Som.pronto('catalog:open')")
+            if antigo:
+                s.js("""(() => { const st = document.createElement('style');
+                  st.textContent = 'html.com-entrada .card-burst { animation: burst-spin 14s linear infinite !important; }'; document.head.appendChild(st);
+                  const d = Som.destravar; Som.destravar = () => d(0); return 1; })()""")
+                time.sleep(0.3)
+            antes = s.js(LE_T100)
+            clique_em(720, 60)
+            time.sleep(2.5)
+            espera_fechar()
+            r = s.js(LE_T100)
+            r["pronto"] = pronto
+            r["tocouAntes"] = antes["play"] is not None or antes["playing"] is not None
+            r["criadosAntes"] = antes["antes"]
+            longos = [x for x in r["q"] if x > 34]
+            r["pior"] = max(r["q"]) if r["q"] else None
+            r["soma"] = round(sum(longos))
+            time.sleep(0.6)
+            r["raiosDepois"] = s.js("document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length")
+            return r
+
+        try:
+            s.tela(1440, 900)
+            s.js("localStorage.clear(); sessionStorage.clear(); 'ok'")
+            com, sem = {}, {}
+            for volta in range(2):                       # intercalado: a mesma máquina, no mesmo momento, mede os dois
+                for rg in REGIOES_ENTRADA:
+                    com.setdefault(rg, []).append(abre_e_mede(rg))
+                    sem.setdefault(rg, []).append(abre_e_mede(rg, antigo=True))
+
+            # (t) o som da abertura: o arquivo pronto antes do clique (baixado e decodificado, nada tocando; o único
+            # áudio criado antes do clique é o dele) e o "playing" em até 80 ms do clique
+            ruins = []
+            for rg in REGIOES_ENTRADA:
+                for r in com[rg]:
+                    if not (r["pronto"] and not r["tocouAntes"] and r["criadosAntes"] and all(n.startswith("open_catalog") for n in r["criadosAntes"])
+                            and r["rs"] == 4 and r["playing"] is not None and r["playing"] <= 80):
+                        ruins.append("%s: pronto %s, tocou antes %s, criados antes %s, readyState no play %s, playing a %s ms"
+                                     % (NOME_REGIAO[rg], r["pronto"], r["tocouAntes"], r["criadosAntes"][:3], r["rs"], r["playing"]))
+            p.conta("entrada da loja", "o som da abertura já está pronto antes do clique (sem tocar nada) e começa em até 80 ms do clique",
+                    not ruins, "; ".join(ruins[:3]) or "playing a %s ms do clique (6 aberturas); antes do clique só o open_catalog existe, pronto e parado"
+                    % sorted(r["playing"] for rg in REGIOES_ENTRADA for r in com[rg]))
+
+            # (u) o clique não baixa os outros ~80 sons junto com o da abertura: eles ficam para depois dela
+            n_clique = [r["noClique"] for rg in REGIOES_ENTRADA for r in com[rg]]
+            p.conta("entrada da loja", "no clique, nenhum outro som começa a baixar junto com o da abertura (o resto baixa depois dela)",
+                    max(n_clique) == 0 and all(r["noClique"] > 40 for rg in REGIOES_ENTRADA for r in sem[rg]),
+                    "áudios criados nos 1,5 s depois do clique: %s (o comportamento antigo, na mesma rodada: %s)"
+                    % (n_clique, [r["noClique"] for rg in REGIOES_ENTRADA for r in sem[rg]]))
+
+            # (v) por baixo da entrada, os raios dos cards não giram (eram 225 camadas animadas a cada quadro da câmera);
+            # depois de fechada, voltam a girar — o efeito do hover dos cards fica intacto
+            raios = [(r["raios"], r["raiosMeio"], r["raiosDepois"]) for rg in REGIOES_ENTRADA for r in com[rg]]
+            p.conta("entrada da loja", "durante a abertura a loja escondida não gira os raios dos cards; ao fechar, os 225 voltam",
+                    all(a == 0 and b == 0 and d == 225 for a, b, d in raios),
+                    "[no clique, no meio da abertura, depois de fechada] por abertura: %s" % raios)
+
+            # (w) os quadros: nenhuma região passa do teto no melhor de duas aberturas (medido no Chrome sem janela —
+            # que aqui usa a placa de vídeo —, com folga sobre o consertado: pior 60–130 ms), e a soma dos quadros
+            # longos (> 34 ms) das três regiões cai em relação ao comportamento antigo medido na mesma rodada
+            TETO = 200
+            melhor = {rg: min(r["pior"] for r in com[rg]) for rg in REGIOES_ENTRADA}
+            soma_com = sum(r["soma"] for rg in REGIOES_ENTRADA for r in com[rg])
+            soma_sem = sum(r["soma"] for rg in REGIOES_ENTRADA for r in sem[rg])
+            p.conta("entrada da loja", "a abertura das três regiões fica abaixo do teto de quadro (%d ms) e a soma dos quadros longos cai ao menos 20%% em relação ao comportamento antigo" % TETO,
+                    all(v is not None and v <= TETO for v in melhor.values()) and soma_sem > 0 and soma_com <= 0.8 * soma_sem,
+                    "pior quadro (melhor de duas) %s; soma dos quadros > 34 ms: %d ms agora × %d ms com o comportamento antigo (%s); por abertura agora %s, antes %s"
+                    % (melhor, soma_com, soma_sem, "%.0f%%" % (100.0 * soma_com / soma_sem) if soma_sem else "—",
+                       {NOME_REGIAO[rg]: [r["soma"] for r in com[rg]] for rg in REGIOES_ENTRADA},
+                       {NOME_REGIAO[rg]: [r["soma"] for r in sem[rg]] for rg in REGIOES_ENTRADA}))
+        finally:
+            s.envia("Page.removeScriptToEvaluateOnNewDocument", {"identifier": sonda_t100})
     finally:
         s.envia("Page.removeScriptToEvaluateOnNewDocument", {"identifier": sonda})
         s.tela_normal()

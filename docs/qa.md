@@ -557,6 +557,27 @@ placa de Noxus, a lasca de volta, o #calc montando a cena, as portas de Noxus se
 "Menos movimento" da loja, o Discord errado só na placa de Noxus (a fundação), a textura
 de 2,8 MB de volta e a placa sem o piso de escala (falha nas três).
 
+O som e os quadros da abertura (F13-T100, 01/11/2026; Leo: "o som está mal sincronizado
+com a animação de abertura" — chegava tarde; "tem vezes que os frames pulam"). Medido no
+Chrome sem janela (que nesta máquina usa a RTX 3060): o open_catalog só começava a baixar no
+clique, junto com os outros ~80 sons, e o "playing" chegava 0,2–1,0 s depois; agora a entrada
+pede o arquivo dele enquanto está parada (Som.preparar, só preload — nada toca antes do
+clique), o resto baixa depois da abertura, e o som começa em ~20–30 ms. O arquivo não tem
+silêncio no começo (som a partir de ~30 ms, pico em 110–200 ms, junto da tranca, e outro em
+310–330 ms, quando as folhas começam a girar): nada foi pulado nem deslocado. Os quadros: por
+baixo da entrada, os 225 raios dos cards giravam sem parar (450 camadas na conta de cada
+quadro da câmera); com a entrada de pé eles não giram e voltam ao fechar. A soma dos quadros
+longos (> 34 ms) caiu ~40–55% em Noxus e Shurima (1440×900 e 1920×1080) e no Freljord em
+1920×1080; no Freljord em 1440×900, ~15%. Novas no grupo "entrada da loja": o som pronto antes
+do clique e tocando em até 80 ms dele; o clique não baixa os outros sons; a loja escondida não
+gira os raios (e os 225 voltam depois); e os quadros das três regiões abaixo do teto de 200 ms
+(melhor de duas) com a soma dos longos ao menos 20% menor que o comportamento antigo medido na
+mesma rodada (os raios girando e os sons baixando no clique, injetados só naquela carga).
+Vistos falhando: sem o Som.preparar (o som não está pronto e toca a 217–365 ms), o
+pré-carregamento de volta no clique (82 áudios criados), os raios girando por baixo (225 no
+meio da abertura) e o conserto inteiro desfeito (as quatro; a soma dos longos fica igual ao
+comportamento antigo). O teto de 200 ms sozinho não separa: o de antes também passa nele.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar
