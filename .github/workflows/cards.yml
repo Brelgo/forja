@@ -14,6 +14,7 @@ on:
       - data/robo/card.html
       - data/robo/cards.py
       - data/catalog.js
+      - data/runas.js            # F13-T98: a Ficha mostra as runas
       - .github/workflows/cards.yml
 
 permissions:

@@ -1,6 +1,8 @@
 """O robô dos cards (F13-T95): a prévia da build publicada no Discord.
 
 Plano aprovado pelo Leo em 31/10/2026 (o robô novo a cada 30 min, "ok"; o desenho, a Bigorna).
+F13-T98 (Leo, 01/11/2026: "os usuários gostaram mais do conceito 1"): o desenho passa a ser a Ficha
+da build — o retrato, as runas, a ordem das habilidades, os iniciais, o Core, a bota e os situacionais.
 Para cada build publicada, uma página estática em b/<id>/ com as etiquetas Open Graph (o que o
 Discord lê para montar a prévia) e a imagem do card, b/<id>/card.jpg, fotografada do molde
 data/robo/card.html num Chrome sem janela. Quem abre a página vai direto para #build/<id>, a build
@@ -8,7 +10,7 @@ no app. A build que saiu do servidor perde a página (o 404.html da raiz manda o
 que diz que ela não existe mais).
 
 Só lê o servidor, com a chave pública (data/servidor.js), como o site. Só escreve em b/.
-Refaz uma página só quando a build, o molde, o catálogo ou este script mudam (a assinatura fica
+Refaz uma página só quando a build, o molde, o catálogo, as runas ou este script mudam (a assinatura fica
 na própria página).
 
 Uso:  python data/robo/cards.py                    (lê o servidor e atualiza b/)
@@ -40,7 +42,8 @@ RAIZ = os.path.dirname(os.path.dirname(AQUI))
 MOLDE = os.path.join(AQUI, "card.html")
 SITE = "https://brelgo.github.io/forja/"
 UA = "MontadorDeItens-robo-dos-cards/0.1 (https://brelgo.github.io/forja/)"
-CAMPOS = ("id", "nome", "descricao", "campeao", "modo", "rota", "patch", "autor", "caixas")
+# o que o card mostra (e a assinatura acompanha): a Ficha mostra as runas e a ordem das habilidades
+CAMPOS = ("id", "nome", "descricao", "campeao", "modo", "rota", "patch", "autor", "caixas", "runas", "habilidades")
 ID_OK = re.compile(r"^[0-9a-f]{6}$")
 ESPERA_MOLDE = 30   # segundos para o molde abrir no Chrome
 ORCAMENTO = 14 * 60   # segundos de fotos por rodada: o resto fica para a próxima (o Actions corta o job em 20 min)
@@ -84,9 +87,10 @@ def buscar_publicas():
 
 
 def base_da_assinatura():
-    """O que, mudando, refaz todos os cards: o molde, o catálogo e este script."""
+    """O que, mudando, refaz todos os cards: o molde, o catálogo, as runas (a Ficha mostra os ícones
+    delas, F13-T98) e este script."""
     h = hashlib.sha256()
-    for c in (MOLDE, os.path.join(RAIZ, "data", "catalog.js"), os.path.abspath(__file__)):
+    for c in (MOLDE, os.path.join(RAIZ, "data", "catalog.js"), os.path.join(RAIZ, "data", "runas.js"), os.path.abspath(__file__)):
         h.update(ler_texto(c).encode("utf-8"))
     return h.hexdigest()
 
@@ -251,8 +255,10 @@ class Fotografo:
 
 # ---------------------------------------------------------------- a rodada
 def falta_algo(build, info):
-    """A foto saiu sem uma peça da rede: um ícone, a arte do campeão ou as fontes do molde."""
-    return bool(info.get("quebradas") or (build.get("campeao") and not info.get("arte")) or not info.get("fontes"))
+    """A foto saiu sem uma peça da rede: um ícone, a arte do campeão, as fontes do molde ou o que o
+    molde anota em "faltou" (as habilidades do campeão para a ordem, o retrato)."""
+    return bool(info.get("quebradas") or (build.get("campeao") and not info.get("arte")) or not info.get("fontes")
+                or info.get("faltou"))
 
 
 def rodar(builds, saida, so=None, apagar=True, orcamento=ORCAMENTO):
@@ -351,7 +357,7 @@ def main():
         if c["adiadas"]:
             print("::warning title=Cards para a próxima rodada::%d builds (a rodada passou do tempo)" % len(c["adiadas"]))
         if c["incompletas"]:
-            print("::warning title=Cards incompletos::%s (sem a arte, um ícone ou as fontes; a próxima rodada tenta de novo)" % ", ".join(c["incompletas"]))
+            print("::warning title=Cards incompletos::%s (sem a arte, um ícone, as fontes, o retrato ou as habilidades; a próxima rodada tenta de novo)" % ", ".join(c["incompletas"]))
 
 
 if __name__ == "__main__":

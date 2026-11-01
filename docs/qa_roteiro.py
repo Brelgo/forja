@@ -6572,14 +6572,18 @@ def _jpeg_tamanho(dados):
 
 
 def checar_card(s, p):
-    """F13-T95 (Leo, 31/10/2026: "gostei do 2, a bigorna"): o card da build no Discord. O robô dos
+    """F13-T95 (Leo, 31/10/2026) e F13-T98 (Leo, 01/11/2026: "os usuários gostaram mais do conceito 1
+    do card do Discord"): o card da build no Discord, agora no desenho da Ficha da build. O robô dos
     cards (data/robo/cards.py) fotografa o molde data/robo/card.html para cada build publicada e
-    escreve b/<id>/: a página com as etiquetas da prévia e o card.jpg. Aqui: as peças que o molde
-    escolhe (a bigorna, a fileira de baixo, a conta do resto), o nome e o autor compridos, a build sem
-    campeão, o nome com HTML; a página gerada (escapada, a imagem com endereço inteiro, o caminho para
-    o #build/<id>); a assinatura (refaz só o que mudou; a incompleta refaz); o que o robô apaga e o
-    que não apaga. As builds são do roteiro, os itens vêm do catálogo; tudo numa pasta temporária —
-    nada vai ao servidor nem ao b/."""
+    escreve b/<id>/: a página com as etiquetas da prévia e o card.jpg. Aqui: os quadros que o molde
+    monta (fichaDaBuild: o Core, a bota e o suporte, os iniciais, os situacionais), a ordem das
+    habilidades, o desenho de verdade (o retrato, a arte, as runas, a ordem com os ícones, o nome
+    comprido, sem campeão, o HTML, o rodapé, nada estourando), a rede (as fontes, a folha pendurada,
+    as habilidades do campeão que não vêm); a página gerada (escapada, a imagem com endereço inteiro, o
+    caminho para o #build/<id>); a assinatura (refaz só o que mudou, agora com as runas e a ordem; a
+    incompleta refaz); o que o robô apaga e o que não apaga. As builds são do roteiro, os itens e as
+    runas vêm do catálogo e de data/runas.js; tudo numa pasta temporária — nada vai ao servidor nem
+    ao b/."""
     print("\n%sCARD DO DISCORD%s" % (AMARELO, FIM))
     import importlib
     import shutil
@@ -6603,144 +6607,223 @@ def checar_card(s, p):
 
     try:
         r.envia("Page.navigate", {"url": s.url + "data/robo/card.html"})
-        espera("typeof window.desenhar === 'function' && typeof CATALOG === 'object'")
-        # (a) as peças: os itens de cada caso vêm do catálogo, pelo tier
+        espera("typeof window.desenhar === 'function' && typeof CATALOG === 'object' && typeof RUNAS === 'object'")
+        # (a) os quadros da Ficha: os itens de cada caso vêm do catálogo, pelo tier
         casos = r.js(r"""(() => {
           const C = CATALOG.items, T = t => C.filter(i => i.tier === t);
-          const L = T('Lendário'), B = T('Bota'), S = T('Starter'), Co = T('Consumível'), Tr = T('Trinket'), E = T('Épico');
+          const pecaDe = (a, b) => (b.components || []).some(c => c.namePt === a.namePt);
+          const dadiva = C.find(i => i.tier === 'Lendário (Evolução)');
+          // os Lendários que não são o item de suporte (o que a Dádiva vira também é tier Lendário)
+          const L = T('Lendário').filter(i => !pecaDe(dadiva, i)), B = T('Bota'), S = T('Starter'), Co = T('Consumível'), Tr = T('Trinket'), E = T('Épico');
           const porNome = Object.fromEntries(C.map(i => [i.namePt, i]));
           const deBota = i => (i.components || []).some(c => (porNome[c.namePt] || {}).tier === 'Bota');
           const evB = C.find(i => i.tier === 'Evolução' && deBota(i)), evL = C.find(i => i.tier === 'Evolução' && !deBota(i));
           const cx = (kind, ...its) => ({ kind, items: its.map(i => ({ itemId: typeof i === 'string' ? i : i.slug })) });
-          const pecaDe = (a, b) => (b.components || []).some(c => c.namePt === a.namePt);
           const botaBase = B.find(b => B.some(o => pecaDe(b, o))), botaFinal = B.find(o => pecaDe(botaBase, o)), outraFinal = B.find(o => o !== botaFinal && pecaDe(botaBase, o));
           const evBpeca = C.find(i => i.tier === 'Bota' && pecaDe(i, evB));
-          const dadiva = C.find(i => i.tier === 'Lendário (Evolução)'), supVirado = L.find(i => pecaDe(dadiva, i));
+          const supVirado = T('Lendário').find(i => pecaDe(dadiva, i));
           const sl = (...its) => its.map(i => i.slug);
-          const caso = (caixas, bigorna, pequenos, itens, escolhas) => ({ got: escolherItens({ caixas }), want: { bigorna, pequenos, itens, escolhas } });
+          const caso = (caixas, core, bota, suporte, iniciais, situacionais, aMais) =>
+            ({ got: fichaDaBuild({ caixas }), want: { core, bota, suporte, iniciais, situacionais, aMais: aMais || 0 } });
+          const ini = [...S, ...Co, ...Tr];
           return {
             ekko: caso([cx('comum', S[0], Co[0], Tr[0]), cx('comum', B[1]), cx('prioridade', L[0], L[1], L[2]), cx('opcional', L[3]),
-                        cx('escolha', L[4], L[5]), cx('escolha', L[6]), cx('escolha', L[7])], sl(L[0], L[1], L[2]), sl(B[1], S[0], Co[0]), 0, 3),
-            opcional_e_escolha: caso([cx('opcional', L[0], L[1]), cx('escolha', L[2], L[3]), cx('comum', L[4])], sl(L[2], L[4]), [], 0, 0),
-            evolucao: caso([cx('comum', evB, evL)], sl(evL), sl(evB), 0, 0),
-            sem_lendario: caso([cx('comum', S[0], E[0], B[0])], sl(E[0]), sl(B[0], S[0]), 0, 0),
-            so_iniciais: caso([cx('comum', S[0], B[0])], sl(S[0], B[0]), [], 0, 0),
-            fora_do_catalogo: caso([cx('comum', 'nao-existe-no-catalogo', L[0])], sl(L[0]), [], 0, 0),
-            itens_a_mais: caso([cx('comum', L[0], L[1], L[2], L[3], L[4], L[5])], sl(L[0], L[1], L[2]), [], 3, 0),
-            repetido: caso([cx('comum', L[0]), cx('comum', L[0], L[1])], sl(L[0], L[1]), [], 0, 0),
-            vazia: caso([], [], [], 0, 0),
-            // F13-T95, cético: o itemId é de quem publica — nome de propriedade herdada não é item
-            prototipo: caso([cx('comum', 'constructor', '__proto__', 'toString', 'valueOf', 'hasOwnProperty')], [], [], 0, 0),
-            prototipo_e_inicial: caso([cx('comum', S[0], 'constructor'), cx('escolha', '__proto__', L[0])], sl(S[0]), [], 0, 1),
-            // a bota da build, não a peça: "Botas" seguida da bota que ela vira mostra a de verdade
-            botas: caso([cx('comum', L[0], botaBase), cx('escolha', botaFinal, outraFinal)], sl(L[0]), sl(botaFinal), 0, 0),
-            bota_e_evolucao: caso([cx('comum', L[0], evBpeca, evB)], sl(L[0]), sl(evB), 0, 0),
-            // sem Lendário, a sentinela não vai para a bigorna
-            sem_lendario_com_sentinela: caso([cx('comum', Tr[0], E[0])], sl(E[0]), [], 0, 0),
-            // F13-T95b (opção B do Leo): o item de suporte vai para a fileira, como a bota; a bigorna fica com o Core
-            suporte: caso([cx('comum', S[0], Co[0]), cx('comum', B[1]), cx('comum', supVirado, L[0], L[1], L[2])], sl(L[0], L[1], L[2]), sl(B[1], supVirado, S[0]), 0, 0),
-            suporte_dadiva_e_virado: caso([cx('comum', dadiva, supVirado, L[0])], sl(L[0]), sl(supVirado), 0, 0),
-            suporte_so_dadiva: caso([cx('comum', S[0], dadiva, L[0])], sl(L[0]), sl(dadiva, S[0]), 0, 0),
-            conta: { got: [contaDoResto(3, 0), contaDoResto(1, 1), contaDoResto(0, 2), contaDoResto(0, 0)], want: ['+ 3 itens', '+ 1 item e 1 escolha', '+ 2 escolhas', ''] },
+                        cx('escolha', L[4], L[5]), cx('escolha', L[6]), cx('escolha', L[7])],
+                       sl(L[0], L[1], L[2]), sl(B[1]), [], sl(S[0], Co[0], Tr[0]), sl(L[4], L[5], L[6], L[7])),
+            opcional_e_escolha: caso([cx('opcional', L[0], L[1]), cx('escolha', L[2], L[3]), cx('comum', L[4])], sl(L[2], L[4]), [], [], [], sl(L[3])),
+            evolucao: caso([cx('comum', evB, evL)], sl(evL), sl(evB), [], [], []),
+            sem_lendario: caso([cx('comum', S[0], E[0], B[0])], sl(E[0]), sl(B[0]), [], sl(S[0]), []),
+            so_iniciais: caso([cx('comum', S[0], B[0])], [], sl(B[0]), [], sl(S[0]), []),
+            sem_lendario_com_sentinela: caso([cx('comum', Tr[0], E[0])], sl(E[0]), [], [], sl(Tr[0]), []),
+            fora_do_catalogo: caso([cx('comum', 'nao-existe-no-catalogo', L[0])], sl(L[0]), [], [], [], []),
+            lendarios_a_mais: caso([cx('comum', L[0], L[1], L[2], L[3], L[4], L[5])], sl(L[0], L[1], L[2]), [], [], [], sl(L[3], L[4], L[5])),
+            repetido: caso([cx('comum', L[0]), cx('comum', L[0], L[1])], sl(L[0], L[1]), [], [], [], []),
+            vazia: caso([], [], [], [], [], []),
+            // o itemId é de quem publica — nome de propriedade herdada não é item
+            prototipo: caso([cx('comum', 'constructor', '__proto__', 'toString', 'valueOf', 'hasOwnProperty')], [], [], [], [], []),
+            prototipo_e_inicial: caso([cx('comum', S[0], 'constructor'), cx('escolha', '__proto__', 'toString', L[0])], [], [], [], sl(S[0]), sl(L[0])),
+            // a bota da build, não a peça "Botas"; a outra bota da Escolha vira situacional
+            botas: caso([cx('comum', L[0], botaBase), cx('escolha', botaFinal, outraFinal)], sl(L[0]), sl(botaFinal), [], [], sl(outraFinal)),
+            bota_e_evolucao: caso([cx('comum', L[0], evBpeca, evB)], sl(L[0]), sl(evB), [], [], []),
+            // o item de suporte vai para "Bota e suporte" (o virado da Dádiva no lugar dela), nunca para o Core
+            suporte: caso([cx('comum', S[0], Co[0]), cx('comum', B[1]), cx('comum', supVirado, L[0], L[1], L[2])], sl(L[0], L[1], L[2]), sl(B[1]), sl(supVirado), sl(S[0], Co[0]), []),
+            suporte_dadiva_e_virado: caso([cx('comum', dadiva, supVirado, L[0])], sl(L[0]), [], sl(supVirado), [], []),
+            suporte_so_dadiva: caso([cx('comum', S[0], dadiva, L[0])], sl(L[0]), [], sl(dadiva), sl(S[0]), []),
+            // os iniciais: Starter, Consumível e Trinket, até seis
+            iniciais_seis: caso([cx('comum', ...ini.slice(0, 8))], [], [], [], sl(...ini.slice(0, 6)), []),
+            // situacionais: só Lendário ou bota das Escolhas (o resto das opções não), sem repetir o que já aparece
+            escolha_nao_lendaria: caso([cx('comum', L[0]), cx('escolha', Co[0], E[0], S[1], L[1])], sl(L[0]), [], [], sl(Co[0]), sl(L[1])),
+            sem_repetir: caso([cx('escolha', L[0], L[1]), cx('escolha', L[1], L[2]), cx('comum', L[3]), cx('escolha', L[2], L[0])], sl(L[0], L[1], L[3]), [], [], [], sl(L[2])),
+            // até 15, e o "+ N" do resto
+            quinze: caso([cx('comum', L[0], L[1], L[2]), cx('escolha', ...L.slice(3, 21), B[1])], sl(L[0], L[1], L[2]), [], [], [], sl(...L.slice(3, 18)), 4),
+            quinze_exatos: caso([cx('comum', L[0], L[1], L[2]), cx('escolha', ...L.slice(3, 18))], sl(L[0], L[1], L[2]), [], [], [], sl(...L.slice(3, 18)), 0),
           };
         })()""")
-        errados = {k: v for k, v in casos.items() if v["got"] != v["want"] and not (isinstance(v["got"], dict) and all(v["got"].get(c) == v["want"][c] for c in v["want"]))}
-        p.conta("card do Discord", "as peças: na bigorna os 3 primeiros Lendários do Total (sem Opcional; da Escolha só a 1ª), embaixo a bota da build (não a peça \"Botas\"), o item de suporte (o virado da Dádiva, não o Lendário do Core) e os iniciais, a conta \"+ N itens e M escolhas\"; a evolução de bota é bota; sem Lendário, o resto (sem a sentinela); item fora do catálogo, repetido e com nome de propriedade (\"constructor\", \"__proto__\") não contam",
-                not errados, "errados: %s" % json.dumps(errados, ensure_ascii=False)[:300] if errados else "%d casos" % len(casos))
+        errados = {k: v for k, v in casos.items() if v["got"] != v["want"]}
+        p.conta("card do Discord", "os quadros da Ficha: o Core com os 3 primeiros Lendários do Total (sem Opcional; da Escolha só a 1ª), a bota da build (não a peça \"Botas\"; a evolução de bota é bota), o item de suporte em \"Bota e suporte\" (o virado da Dádiva no lugar dela), os iniciais (Starter, Consumível, Trinket; até 6), os situacionais (as opções das Escolhas que são Lendário ou bota e os Lendários fora do Core, sem repetir, até 15 e o \"+ N\"); sem Lendário, o resto vai para o Core; item fora do catálogo, repetido e com nome de propriedade (\"constructor\", \"__proto__\", \"toString\") não contam",
+                not errados and len(casos) == 22, "errados: %s" % json.dumps(errados, ensure_ascii=False)[:400] if errados else "%d casos" % len(casos))
 
-        # (b) o desenho: cada build desenhada de verdade, com a foto que o robô tiraria
+        # (b) a ordem de maximização das habilidades
+        ordens = r.js(r"""(() => ({
+          qew: ordemDasHabilidades(['Q','E','W','Q','Q','R','Q','E','Q','E','R','E','E','W','W','R','W','W']),
+          // o Q vem primeiro, mas o W chega a 5 antes: vale quem chega a 5
+          wqe: ordemDasHabilidades(['Q','W','E','W','W','R','W','Q','W','Q','R','Q','Q','E','E','R','E','E']),
+          parcial: ordemDasHabilidades(['W','W','Q']),
+          empate: ordemDasHabilidades(['E','Q']),
+          so_r: ordemDasHabilidades(['R','R','R']),
+          vazia: ordemDasHabilidades([]),
+          nula: ordemDasHabilidades(null),
+          texto: ordemDasHabilidades('QWE'),
+          nulls: ordemDasHabilidades([null, 'Q', null, 'W', undefined, 'X', 'constructor']),
+        }))()""")
+        quer = {"qew": ["Q", "E", "W"], "wqe": ["W", "Q", "E"], "parcial": ["W", "Q"], "empate": ["E", "Q"], "so_r": [], "vazia": [], "nula": [], "texto": [], "nulls": ["Q", "W"]}
+        p.conta("card do Discord", "a ordem das habilidades: a que chega a 5 pontos primeiro vem antes (Q›E›W; W›Q›E mesmo com o Q no nível 1); sem o 5º, a com mais pontos e depois a primeira; só R, vazia, nula, texto e nulls no meio não quebram (o R e o lixo ficam de fora)",
+                ordens == quer, "%s" % {k: v for k, v in ordens.items() if quer.get(k) != v} or "%d casos" % len(quer))
+
+        # (c) o desenho: cada build desenhada de verdade, com a foto que o robô tiraria
         def desenha(build):
             return r.js("desenhar(%s)" % json.dumps(build, ensure_ascii=False))
 
-        caixas = r.js("""(() => { const L = CATALOG.items.filter(i => i.tier === 'Lendário'), B = CATALOG.items.filter(i => i.tier === 'Bota');
-          return [{ kind: 'comum', items: [{ itemId: B[1].slug }] }, { kind: 'prioridade', items: L.slice(0, 3).map(i => ({ itemId: i.slug })) },
+        caixas = r.js("""(() => { const C = CATALOG.items, dadiva = C.find(i => i.tier === 'Lendário (Evolução)'), B = C.filter(i => i.tier === 'Bota');
+          const L = C.filter(i => i.tier === 'Lendário' && !(i.components || []).some(c => c.namePt === dadiva.namePt));
+          const S = C.filter(i => i.tier === 'Starter'), Co = C.filter(i => i.tier === 'Consumível');
+          return [{ kind: 'comum', items: [{ itemId: S[0].slug }, { itemId: Co[0].slug }] }, { kind: 'comum', items: [{ itemId: B[1].slug }] },
+                  { kind: 'prioridade', items: L.slice(0, 3).map(i => ({ itemId: i.slug })) },
                   { kind: 'escolha', items: L.slice(3, 5).map(i => ({ itemId: i.slug })) }]; })()""")
+        # as runas da build, tiradas de data/runas.js (a 1ª de cada fileira das duas primeiras trilhas)
+        runas = r.js("""(() => { const T = RUNAS.trilhas, um = s => s.runas[0].id;
+          return { primaria: T[0].id, assinatura: um(T[0].slots[0]), slots: T[0].slots.slice(1, 4).map(um), secundaria: T[1].id,
+                   secundarios: [um(T[1].slots[1]), um(T[1].slots[2])], fragmentos: (RUNAS.fragmentos || []).map(f => f.runas[0].id) }; })()""")
         patch = r.js("CATALOG.meta.patch")
+        ordem_qew = ["Q", "E", "W", "Q", "Q", "R", "Q", "E", "Q", "E", "R", "E", "E", "W", "W", "R", "W", "W"]
         base = {"id": "abc124", "nome": "AA AP", "autor": "Brelgo", "campeao": {"id": "Ekko", "name": "Ekko"}, "modo": "Summoner's Rift",
-                "rota": "selva", "patch": patch, "caixas": caixas}
-        curto = desenha(base)
-        longo = desenha(dict(base, nome="Braum Top — Tanque de Teleporte (Tanque protetor · PEEL; rota fora do meta)"))
-        enorme = desenha(dict(base, nome="Forja " * 40))
-        medida = "(() => { const t = document.querySelector('.titulo'); return { txt: t.textContent, alt: t.getBoundingClientRect().height, fs: parseFloat(t.style.fontSize) }; })()"
-        enorme["dom"] = r.js(medida)
-        acentos = desenha(dict(base, nome="Ação Épica Ômega Ânimo Índio Úmido " * 5))
-        acentos["dom"] = r.js(medida)
-        emojis = []
-        for prefixo in ("", "A", "AB", "ABC"):
-            desenha(dict(base, nome=prefixo + "🔥" * 160))
-            emojis.append(r.js(r"""(() => { const t = document.querySelector('.titulo');
-              return { fim: t.textContent.slice(-3), cortado: t.classList.contains('cortado'),
-                       solto: /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(t.textContent) }; })()"""))
-        cabe3 = lambda d: d["alt"] <= 3 * d["fs"] * 1.04 + 2 and d["txt"].endswith("…")
-        p.conta("card do Discord", "o nome: curto fica com a letra cheia (64 px); comprido encolhe e cabe sem cortar; enorme é cortado com \"…\" no fim da 3ª linha, sem a 4ª escondida (os acentos dela vazavam) e sem partir um emoji ao meio — e nada passa do rodapé, com a arte do campeão, as fontes e nenhum ícone quebrado",
-                curto["fonte"] == 64 and curto["cabe"] and longo["fonte"] < 64 and not longo["cortado"] and longo["cabe"]
-                and enorme["cortado"] and enorme["cabe"] and curto["arte"] and longo["arte"] and curto["quebradas"] == 0 and curto["fontes"]
-                and cabe3(enorme["dom"]) and len(enorme["dom"]["txt"]) < len("Forja " * 40) and acentos["cortado"] and cabe3(acentos["dom"])
-                and all(e["cortado"] and not e["solto"] and e["fim"].endswith("…") for e in emojis)
-                and curto["quem"] == "Ekko · Selva · Summoner's Rift",
-                "curto %s · longo %s · enorme %s %r · acentos %s · arte %s · quem %r" % ({k: curto[k] for k in ("fonte", "cabe", "fontes")}, {k: longo[k] for k in ("fonte", "cabe", "cortado")},
-                                                                         {k: enorme[k] for k in ("fonte", "cabe", "cortado")}, enorme["dom"]["txt"][-24:], acentos["dom"], curto["arte"], curto["quem"])
-                + " · emojis %s" % [(e["fim"], e["solto"]) for e in emojis])
+                "rota": "selva", "patch": patch, "caixas": caixas, "runas": runas, "habilidades": ordem_qew}
+        DOM = r"""(() => { const c = document.getElementById('card'), q = s => c.querySelector(s), t = s => { const e = q(s); return e ? e.textContent : null; };
+          const paineis = [...c.querySelectorAll('.painel')].map(e => ({ h: e.querySelector('h3').textContent, txt: e.innerText }));
+          const pe = q('.pe'), b = q('.build');
+          return { nome: t('.nome'), build: t('.build'), tags: t('.tags'), pe: pe ? pe.textContent : null, retrato: !!q('.retrato'), fundo: !!q('.fundo'),
+                   habIcones: c.querySelectorAll('.hab img.ico').length, habLetras: c.querySelectorAll('.hab .letra').length,
+                   runaIcones: c.querySelectorAll('.runas img').length, vazios: c.querySelectorAll('.painel .vazio').length, paineis,
+                   buildLinha: b ? { corta: b.scrollWidth > b.clientWidth, alt: b.getBoundingClientRect().height, fs: parseFloat(getComputedStyle(b).fontSize),
+                                     reticencias: getComputedStyle(b).textOverflow === 'ellipsis' } : null,
+                   nomeLinha: (() => { const n = q('.nome'); return { corta: n.scrollWidth > n.clientWidth, alt: n.getBoundingClientRect().height,
+                                     fs: parseFloat(getComputedStyle(n).fontSize), reticencias: getComputedStyle(n).textOverflow === 'ellipsis' }; })(),
+                   peLinha: pe ? { corta: pe.scrollWidth > pe.clientWidth, reticencias: getComputedStyle(pe).textOverflow === 'ellipsis',
+                                   dentro: pe.getBoundingClientRect().right <= c.getBoundingClientRect().right - 16 } : null }; })()"""
+        painel = lambda d, h: next((x["txt"] for x in d["dom"]["paineis"] if x["h"].startswith(h)), None)
+        umaLinha = lambda l: l and l["corta"] and l["reticencias"] and l["alt"] < l["fs"] * 1.6
 
-        encosta = "(() => { const a = document.querySelector('.pe'), b = document.querySelector('.selo'); return !a || a.getBoundingClientRect().right <= b.getBoundingClientRect().left; })()"
-        a1 = desenha(base); a1["livre"] = r.js(encosta)
-        a2 = desenha(dict(base, autor="Brelgo - criada por Mylon")); a2["livre"] = r.js(encosta)
-        a3 = desenha(dict(base, autor="Brelgo - criada por Mylon, Kennzy, e mais uma turma inteira de amigos da selva")); a3["livre"] = r.js(encosta)
-        a4 = desenha(dict(base, autor="")); a4["texto"] = r.js("document.getElementById('card').innerText")
-        p.conta("card do Discord", "o rodapé: \"por <autor> · patch\"; autor comprido deixa a marca só \"FORJA\" e, se ainda não couber, corta com \"…\" — nunca encosta; sem autor, só o patch (sem \"por\")",
-                a1["selo"] == "FORJA · MONTADOR DE ITENS" and a1["pe"] == "por Brelgo · patch " + patch and a1["livre"] and not a1["rodapeCortado"]
-                and a2["selo"] == "FORJA" and a2["livre"] and a3["selo"] == "FORJA" and a3["livre"] and a3["rodapeCortado"]
-                and a4["pe"] == "patch " + patch and "por " not in a4["texto"].lower(),
-                "curto %s · comprido %s · enorme %s · sem autor %r" % ({k: a1[k] for k in ("selo", "pe", "livre")}, {k: a2[k] for k in ("selo", "livre")},
-                                                                        {k: a3[k] for k in ("selo", "livre", "rodapeCortado")}, a4["pe"]))
+        cheio = desenha(base); cheio["dom"] = r.js(DOM)
+        p.conta("card do Discord", "o desenho de uma build de verdade: o retrato, a arte, o nome do campeão em cima e o da build embaixo, as runas com os ícones, a ordem Q›E›W com os ícones do campeão, os quadros, as fontes e nenhum ícone quebrado — e nada estourando (o \"cabe\")",
+                cheio["arte"] and cheio["fontes"] and cheio["quebradas"] == 0 and cheio["faltou"] == [] and cheio["cabe"] and cheio["temRunas"]
+                and cheio["ordem"] == ["Q", "E", "W"] and cheio["dom"]["habIcones"] == 3 and cheio["dom"]["habLetras"] == 0
+                and cheio["dom"]["runaIcones"] >= 8 and cheio["dom"]["retrato"] and cheio["dom"]["fundo"]
+                and cheio["dom"]["nome"] == "Ekko" and cheio["dom"]["build"] == "AA AP" and cheio["dom"]["tags"] == "Selva · Summoner's Rift"
+                and cheio["quem"] == "Ekko · Selva · Summoner's Rift" and len(cheio["core"]) == 3 and len(cheio["bota"]) == 1 and len(cheio["iniciais"]) == 2
+                and len(cheio["situacionais"]) == 2 and cheio["dom"]["vazios"] == 0,
+                "%s · dom %s" % ({k: cheio[k] for k in ("arte", "fontes", "quebradas", "faltou", "cabe", "temRunas", "ordem")},
+                                 {k: cheio["dom"][k] for k in ("habIcones", "habLetras", "runaIcones", "retrato", "nome", "build", "tags")}))
 
-        c1 = desenha(dict(base, campeao=None, rota="", modo=""))
-        c1["dom"] = r.js("({ classe: document.getElementById('card').className, esq: document.querySelector('.dir').getBoundingClientRect().left - document.getElementById('card').getBoundingClientRect().left, arte: !!document.querySelector('.arte') })")
-        c2 = desenha(dict(base, campeao={"id": "CampeaoQueNaoExiste", "name": "Ninguém"}))
+        sr = desenha(dict(base, runas=None)); sr["dom"] = r.js(DOM)
+        sr2 = desenha(dict(base, runas={"assinatura": "constructor", "slots": ["__proto__", "toString"], "primaria": "valueOf"})); sr2["dom"] = r.js(DOM)
+        so = desenha(dict(base, habilidades=[])); so["dom"] = r.js(DOM)
+        so2 = desenha(dict(base, habilidades=["R", "R"])); so2["dom"] = r.js(DOM)
+        p.conta("card do Discord", "sem runas (ou com runas que não existem, \"constructor\"/\"__proto__\"): o quadro diz \"sem runas\"; sem a ordem (vazia ou só R): \"sem a ordem\" — e nada falta (o card não fica incompleto por isso)",
+                not sr["temRunas"] and "sem runas" in painel(sr, "RUNAS") and sr["dom"]["runaIcones"] == 0 and sr["faltou"] == [] and sr["cabe"]
+                and not sr2["temRunas"] and "sem runas" in painel(sr2, "RUNAS") and sr2["quebradas"] == 0
+                and so["ordem"] == [] and "sem a ordem" in painel(so, "ORDEM") and so["dom"]["habIcones"] == 0 and so["faltou"] == []
+                and so2["ordem"] == [] and "sem a ordem" in painel(so2, "ORDEM") and so2["faltou"] == [],
+                "sem runas %r · runas tortas %r · sem ordem %r · só R %r" % (painel(sr, "RUNAS"), painel(sr2, "RUNAS"), painel(so, "ORDEM"), painel(so2, "ORDEM")))
+
+        longo = desenha(dict(base, nome="Forja " * 40)); longo["dom"] = r.js(DOM)
+        semch = desenha(dict(base, campeao=None)); semch["dom"] = r.js(DOM)
+        semch_longo = desenha(dict(base, campeao=None, rota="", modo="", nome="Bigorna " * 30)); semch_longo["dom"] = r.js(DOM)
+        p.conta("card do Discord", "o nome da build comprido é cortado com \"…\" numa linha só; sem campeão: sem retrato e sem arte, o nome grande vira o da build (o comprido também numa linha, com \"…\"), a ordem fica nas letras e nada falta",
+                umaLinha(longo["dom"]["buildLinha"]) and longo["cabe"] and longo["dom"]["nome"] == "Ekko"
+                and not semch["dom"]["retrato"] and not semch["dom"]["fundo"] and not semch["arte"] and semch["dom"]["nome"] == "AA AP" and semch["dom"]["build"] is None
+                and semch["faltou"] == [] and semch["dom"]["habLetras"] == 3 and semch["dom"]["habIcones"] == 0 and semch["cabe"] and semch["quem"] == "Selva · Summoner's Rift"
+                and umaLinha(semch_longo["dom"]["nomeLinha"]) and semch_longo["cabe"] and semch_longo["dom"]["tags"] is None,
+                "longo %s · sem campeão %s · sem campeão e longo %s" % (longo["dom"]["buildLinha"], {k: semch["dom"][k] for k in ("retrato", "nome", "build", "habLetras")},
+                                                                        semch_longo["dom"]["nomeLinha"]))
+
         r.js("(() => { window.__inj = 0; return 1; })()")
-        c3 = desenha(dict(base, nome='<img src=x onerror="window.__inj=1">Nome', autor="<b>QA</b>"))
+        h1 = desenha(dict(base, nome='<img src=x onerror="window.__inj=1">Nome', autor="<b>QA</b>", descricao="<script>window.__inj=2</script>")); h1["dom"] = r.js(DOM)
+        h1["tags"] = r.js("document.querySelectorAll('#card .build img, #card .pe b, #card script').length")
+        h2 = desenha(dict(base, campeao=None, nome='<img src=x onerror="window.__inj=3">Sem', autor="")); h2["dom"] = r.js(DOM)
         time.sleep(0.4)
-        c3["dom"] = r.js("({ inj: window.__inj, titulo: document.querySelector('.titulo').textContent, pe: document.querySelector('.pe').textContent, imgs: document.querySelectorAll('.titulo img, .pe b').length })")
-        p.conta("card do Discord", "sem campeão (ou com um que o Data Dragon não tem): sem arte, o texto vai para a esquerda e nada quebra; nome e autor com HTML saem como texto",
-                not c1["arte"] and "sem-arte" in c1["dom"]["classe"] and c1["dom"]["esq"] == 64 and not c1["dom"]["arte"] and c1["quem"] == "" and c1["cabe"]
-                and not c2["arte"] and c2["quebradas"] == 0 and c2["quem"].startswith("Ninguém")
-                and c3["dom"]["inj"] == 0 and c3["dom"]["titulo"].startswith("<img") and c3["dom"]["imgs"] == 0 and "<b>QA</b>" in c3["dom"]["pe"],
-                "sem campeão %s · inexistente %s · HTML %s" % ({k: c1[k] for k in ("arte", "quem")} | c1["dom"], {k: c2[k] for k in ("arte", "quebradas")}, c3["dom"]))
+        inj = r.js("window.__inj")
+        p.conta("card do Discord", "nome, autor e descrição com HTML saem como texto (com e sem campeão), sem rodar nada",
+                inj == 0 and h1["dom"]["build"].startswith("<img") and h1["dom"]["pe"].startswith("por <b>QA</b>") and h1["tags"] == 0
+                and h2["dom"]["nome"].startswith("<img"),
+                "inj %r · build %r · pe %r · sem campeão %r" % (inj, h1["dom"]["build"][:20], h1["dom"]["pe"], h2["dom"]["nome"][:20]))
+
+        a1 = desenha(base); a1["dom"] = r.js(DOM)
+        a2 = desenha(dict(base, autor="")); a2["dom"] = r.js(DOM)
+        a3 = desenha(dict(base, autor="Brelgo - criada por Mylon, Kennzy, e mais uma turma inteira de amigos da selva e do rio")); a3["dom"] = r.js(DOM)
+        a4 = desenha(dict(base, autor="", patch="")); a4["dom"] = r.js(DOM)
+        p.conta("card do Discord", "o rodapé: \"por <autor> · patch\"; sem autor, só o patch (sem \"por\"); sem os dois, sem rodapé; o autor comprido corta com \"…\" dentro do card — e o card cabe",
+                a1["pe"] == "por Brelgo · patch " + patch and a1["dom"]["pe"] == a1["pe"] and not a1["dom"]["peLinha"]["corta"]
+                and a2["pe"] == "patch " + patch and a2["dom"]["pe"] == "patch " + patch and "por" not in a2["dom"]["pe"].lower()
+                and a4["pe"] == "" and a4["dom"]["pe"] is None
+                and a3["dom"]["peLinha"]["corta"] and a3["dom"]["peLinha"]["reticencias"] and a3["dom"]["peLinha"]["dentro"] and a3["cabe"],
+                "curto %r · sem autor %r · sem nada %r · comprido %s cabe %s" % (a1["dom"]["pe"], a2["dom"]["pe"], a4["dom"]["pe"], a3["dom"]["peLinha"], a3["cabe"]))
+
+        ci = desenha(dict(base, campeao={"id": "CampeaoQueNaoExiste", "name": "Ninguém"}))
+        p.conta("card do Discord", "campeão que o Data Dragon não tem: sem arte, sem o retrato e sem as habilidades — o desenho sai (as letras no lugar dos ícones, nada quebrado) e \"faltou\" diz o quê (o robô a dá por incompleta)",
+                not ci["arte"] and ci["quebradas"] == 0 and "retrato" in ci["faltou"] and "habilidades" in ci["faltou"] and ci["cabe"] and cards.falta_algo(dict(base, campeao={"id": "X"}), ci),
+                "%s" % {k: ci[k] for k in ("arte", "quebradas", "faltou", "cabe")})
 
         # o prazo: um endereço que não responde vira falha em vez de pendurar o desenho (e a rodada inteira)
         prazo = r.js("Promise.race([carregar('%s__pendura', 400).then(v => ({ v })), new Promise(ok => setTimeout(() => ok({ v: 'pendurou' }), 3000))])" % s.url)
     finally:
         r.fechar()
+
+    # (d) a rede: as fontes e as habilidades do campeão, cada uma bloqueada numa aba nova
     rf = Sessao(s.url)
     fontes = {}
+
+    def abre(sufixo, limite=20):
+        rf.envia("Page.navigate", {"url": s.url + "data/robo/card.html?" + sufixo})
+        fim = time.time() + limite
+        while time.time() < fim and not rf.js("typeof window.desenhar === 'function'"):
+            time.sleep(0.2)
+
+    def tenta(nome, extra=None):
+        try:
+            d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
+            fontes[nome] = dict({"fontes": d["fontes"], "cabe": d["cabe"], "faltou": d["faltou"], "erro": None}, **(extra or {}))
+            return d
+        except RuntimeError as e:
+            fontes[nome] = dict({"fontes": None, "erro": str(e)[:80]}, **(extra or {}))
+            return None
+
+    rede = {}
     try:
         rf.envia("Network.enable"); rf.envia("Network.setCacheDisabled", {"cacheDisabled": True})
         for nome, bloqueio in (("css", "*fonts.googleapis.com*"), ("arquivo", "*fonts.gstatic.com*")):
             rf.envia("Network.setBlockedURLs", {"urls": [bloqueio]})
-            rf.envia("Page.navigate", {"url": s.url + "data/robo/card.html?" + nome})
-            fim = time.time() + 10
-            while time.time() < fim and not rf.js("typeof window.desenhar === 'function'"):
-                time.sleep(0.2)
-            try:
-                d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
-                fontes[nome] = {"fontes": d["fontes"], "cabe": d["cabe"], "erro": None}
-            except RuntimeError as e:
-                fontes[nome] = {"fontes": None, "erro": str(e)[:80]}
-        # só o itálico da Alegreya (a linha "quem") falhando: o card sai incompleto, não com uma linha em
+            abre(nome)
+            tenta(nome)
+        # só o itálico da Alegreya (as tags) falhando: o card sai incompleto, não com uma linha em
         # Georgia. Os endereços dos arquivos vêm da própria folha, pedida com o navegador da aba
         href = re.search(r'<link id="fontes" href="([^"]+)"', open(os.path.join(RAIZ, "data", "robo", "card.html"), encoding="utf-8").read()).group(1).replace("&amp;", "&")
         folha = urllib.request.urlopen(urllib.request.Request(href, headers={"User-Agent": rf.js("navigator.userAgent")}), timeout=20).read().decode("utf-8")
         italicos = re.findall(r"font-family: 'Alegreya';\s*font-style: italic;[^}]*?url\((https://[^)]+)\)", folha)
         rf.envia("Network.setBlockedURLs", {"urls": italicos})
-        rf.envia("Page.navigate", {"url": s.url + "data/robo/card.html?italico"})
-        fim = time.time() + 10
-        while time.time() < fim and not rf.js("typeof window.desenhar === 'function'"):
-            time.sleep(0.2)
-        try:
-            d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
-            fontes["italico"] = {"fontes": d["fontes"], "cabe": d["cabe"], "erro": None, "arquivos": len(italicos)}
-        except RuntimeError as e:
-            fontes["italico"] = {"fontes": None, "erro": str(e)[:80], "arquivos": len(italicos)}
+        abre("italico")
+        tenta("italico", {"arquivos": len(italicos)})
+        # F13-T98: as habilidades do campeão (o JSON do Data Dragon) que não vêm: o desenho sai com as
+        # letras, "faltou" diz "habilidades" e o robô dá a foto por incompleta (tenta de novo na próxima)
+        rf.envia("Network.setBlockedURLs", {"urls": ["*ddragon.leagueoflegends.com/cdn/*/data/pt_BR/champion/*"]})
+        abre("habilidades")
+        d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
+        rede["habilidades"] = {"faltou": d["faltou"], "arte": d["arte"], "fontes": d["fontes"], "quebradas": d["quebradas"], "cabe": d["cabe"],
+                               "letras": rf.js("document.querySelectorAll('#card .hab .letra').length"), "incompleta": cards.falta_algo(base, d)}
+        # e o retrato que não vem
+        rf.envia("Network.setBlockedURLs", {"urls": ["*ddragon.leagueoflegends.com/cdn/*/img/champion/Ekko.png"]})
+        abre("retrato")
+        d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
+        rede["retrato"] = {"faltou": d["faltou"], "arte": d["arte"], "incompleta": cards.falta_algo(base, d)}
         # a folha do Google Fonts que nunca responde: o molde abre do mesmo jeito (ela não segura os
         # scripts) e o desenho sai no prazo, sem as fontes
         rf.envia("Network.setBlockedURLs", {"urls": []})
@@ -6751,23 +6834,26 @@ def checar_card(s, p):
         while time.time() - t0 < 8 and not rf.js("typeof window.desenhar === 'function'"):
             time.sleep(0.2)
         abriu = round(time.time() - t0, 1)
-        try:
-            d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
-            fontes["pendurado"] = {"fontes": d["fontes"], "cabe": d["cabe"], "erro": None, "abriu": abriu, "desenhou": round(time.time() - t0, 1)}
-        except RuntimeError as e:
-            fontes["pendurado"] = {"fontes": None, "erro": str(e)[:80], "abriu": abriu}
+        tenta("pendurado", {"abriu": abriu})
+        fontes["pendurado"]["desenhou"] = round(time.time() - t0, 1)
     finally:
         rf.fechar()
     p.conta("card do Discord", "a rede: sem a folha do Google Fonts, sem o arquivo da fonte, só sem o itálico da Alegreya ou com a folha que nunca responde, o molde abre e o desenho sai no prazo, marcado \"sem as fontes\" (o robô o dá por incompleto); um endereço que não responde vira falha no prazo, sem pendurar o desenho",
             prazo == {"v": False} and all(f["erro"] is None and f["fontes"] is False for f in fontes.values()) and len(fontes) == 4 and fontes["italico"]["arquivos"] > 0
             and fontes["pendurado"]["abriu"] < 5 and fontes["pendurado"].get("desenhou", 99) < 40,
             "prazo %s · sem fontes %s" % (prazo, fontes))
+    hb, rt = rede.get("habilidades") or {}, rede.get("retrato") or {}
+    p.conta("card do Discord", "a rede: as habilidades do campeão que não vêm (o JSON do Data Dragon bloqueado) — o desenho sai, com as letras no lugar dos ícones e nada quebrado, \"faltou\" diz \"habilidades\" e o robô a dá por incompleta; o retrato que não vem, o mesmo",
+            hb.get("faltou") == ["habilidades"] and hb.get("arte") and hb.get("fontes") and hb.get("quebradas") == 0 and hb.get("cabe") and hb.get("letras") == 3 and hb.get("incompleta") is True
+            and rt.get("faltou") == ["retrato"] and rt.get("arte") and rt.get("incompleta") is True,
+            "habilidades %s · retrato %s" % (hb, rt))
 
-    # (c) a página gerada
+    # (e) a página gerada
     ass = "f" * 24
     malvado = {"id": "abc123", "nome": 'Nome "aspas" <script>alert(1)</script>', "autor": "QA", "descricao": "d" * 400}
     pg = cards.pagina(malvado, {"quem": "Ekko · Selva"}, ass, "0123456789")
     pg_sem = cards.pagina(dict(malvado, autor="", descricao=""), {"quem": "Ekko"}, ass)
+    pg_html = cards.pagina(dict(malvado, nome="X", autor="<b>QA</b>", descricao="<img src=x onerror=alert(1)>"), {"quem": "Ekko"}, ass)
     desc = re.search(r'<meta property="og:description" content="([^"]*)">', pg)
     ok_pg = ("<script>alert" not in pg and "&lt;script&gt;" in pg and "&quot;aspas&quot;" in pg
              and '<meta property="og:image" content="%sb/abc123/card.jpg?v=0123456789">' % cards.SITE in pg
@@ -6775,29 +6861,45 @@ def checar_card(s, p):
              and '<meta property="og:image:width" content="1200">' in pg and '<meta name="twitter:card" content="summary_large_image">' in pg
              and 'url=../../#build/abc123"' in pg and 'location.replace("../../#build/abc123")' in pg and '<meta name="forja:assinatura" content="%s">' % ass in pg
              and desc is not None and len(desc.group(1)) <= 200 and desc.group(1).startswith("Ekko · Selva · por QA — ddd") and desc.group(1).endswith("…")
-             and '<meta property="og:description" content="Ekko">' in pg_sem)
-    p.conta("card do Discord", "a página b/<id>/: o nome escapado, a imagem e o endereço com o site inteiro (a imagem com ?v= da assinatura), 1200×630, summary_large_image, a descrição de até 200 letras (sem \"por\" quando não há autor) e o caminho para o #build/<id>",
+             and '<meta property="og:description" content="Ekko">' in pg_sem
+             and "<b>" not in pg_html and "<img" not in pg_html and "&lt;img src=x" in pg_html)
+    p.conta("card do Discord", "a página b/<id>/: o nome, o autor e a descrição escapados, a imagem e o endereço com o site inteiro (a imagem com ?v= da assinatura), 1200×630, summary_large_image, a descrição de até 200 letras (sem \"por\" quando não há autor) e o caminho para o #build/<id>",
             ok_pg, "descrição %r · sem autor %r" % (desc.group(1)[:50] if desc else None, re.search(r'og:description" content="([^"]*)"', pg_sem).group(1)))
 
-    # (d) a assinatura: muda com o que o card mostra, não com o que ele não mostra; o \r\n do Windows não conta
-    b0 = {"id": "abc124", "nome": "X", "autor": "", "caixas": [], "engajamentos": 1, "atualizado_em": "a"}
+    # (f) a assinatura: muda com o que o card mostra, não com o que ele não mostra; o \r\n do Windows não conta
+    b0 = {"id": "abc124", "nome": "X", "autor": "", "caixas": [], "runas": runas, "habilidades": ordem_qew, "engajamentos": 1, "atualizado_em": "a"}
     s0 = cards.assinatura(b0, "base")
     tmp = tempfile.mkdtemp(prefix="qa-card-")
+    raiz_de_verdade = cards.RAIZ
     try:
         with open(os.path.join(tmp, "lf.txt"), "wb") as f:
             f.write(b"a\nb\n")
         with open(os.path.join(tmp, "crlf.txt"), "wb") as f:
             f.write(b"a\r\nb\r\n")
         mesmo_texto = cards.ler_texto(os.path.join(tmp, "lf.txt")) == cards.ler_texto(os.path.join(tmp, "crlf.txt"))
+        # a base acompanha data/runas.js (a Ficha mostra os ícones das runas): numa cópia da pasta data
+        os.makedirs(os.path.join(tmp, "data"))
+        for arq in ("catalog.js", "runas.js"):
+            shutil.copy(os.path.join(RAIZ, "data", arq), os.path.join(tmp, "data", arq))
+        cards.RAIZ = tmp
+        base0 = cards.base_da_assinatura()
+        with open(os.path.join(tmp, "data", "runas.js"), "a", encoding="utf-8") as f:
+            f.write("\n// runas novas\n")
+        base_runas = cards.base_da_assinatura()
     finally:
+        cards.RAIZ = raiz_de_verdade
         shutil.rmtree(tmp, ignore_errors=True)
-    p.conta("card do Discord", "a assinatura muda com o nome, o autor, as caixas e a base (molde, catálogo, robô); não muda com a popularidade nem a hora; o arquivo com \\r\\n (Windows) e com \\n (o robô) dá o mesmo texto",
+    outras_runas = dict(runas, assinatura=runas["slots"][0])
+    p.conta("card do Discord", "a assinatura muda com o nome, o autor, as caixas, as runas, a ordem das habilidades e a base (molde, catálogo, runas, robô); não muda com a popularidade nem a hora; o arquivo com \\r\\n (Windows) e com \\n (o robô) dá o mesmo texto; o servidor é lido com as runas e as habilidades",
             s0 == cards.assinatura(dict(b0, engajamentos=9, atualizado_em="b"), "base") and s0 != cards.assinatura(dict(b0, nome="Y"), "base")
             and s0 != cards.assinatura(dict(b0, autor="Z"), "base") and s0 != cards.assinatura(dict(b0, caixas=[{"kind": "comum"}]), "base")
-            and s0 != cards.assinatura(b0, "outra base") and mesmo_texto,
-            "assinatura %s · \\r\\n igual %s" % (s0, mesmo_texto))
+            and s0 != cards.assinatura(dict(b0, runas=outras_runas), "base") and s0 != cards.assinatura(dict(b0, runas=None), "base")
+            and s0 != cards.assinatura(dict(b0, habilidades=list(reversed(ordem_qew))), "base") and s0 != cards.assinatura(dict(b0, habilidades=[]), "base")
+            and s0 != cards.assinatura(b0, "outra base") and base0 != base_runas and mesmo_texto
+            and "runas" in cards.CAMPOS and "habilidades" in cards.CAMPOS,
+            "assinatura %s · base com runas %s · \\r\\n igual %s · campos %s" % (s0, base0 != base_runas, mesmo_texto, ",".join(cards.CAMPOS)))
 
-    # (e) a rodada do robô, numa pasta temporária, com o Chrome de verdade
+    # (g) a rodada do robô, numa pasta temporária, com o Chrome de verdade
     tmp = tempfile.mkdtemp(prefix="qa-cards-")
     try:
         os.makedirs(os.path.join(tmp, "abc123"))          # a página de uma build que saiu
@@ -6805,7 +6907,7 @@ def checar_card(s, p):
         with open(os.path.join(tmp, "LEIAME.txt"), "w") as f:
             f.write("x")
         bq = {"id": "abc124", "nome": "Card QA", "autor": "roteiro", "campeao": {"id": "Ekko", "name": "Ekko"}, "modo": "Summoner's Rift",
-              "rota": "selva", "patch": patch, "caixas": caixas, "descricao": ""}
+              "rota": "selva", "patch": patch, "caixas": caixas, "descricao": "", "runas": runas, "habilidades": ordem_qew}
         e0 = cards.rodar([], tmp)
         sobrou0 = os.path.isdir(os.path.join(tmp, "abc123"))
         e1 = cards.rodar([bq], tmp)
@@ -6817,6 +6919,7 @@ def checar_card(s, p):
         v1 = versao_de("abc124")
         e2 = cards.rodar([bq], tmp)
         e3 = cards.rodar([dict(bq, nome="Card QA novo")], tmp)
+        e3r = cards.rodar([dict(bq, nome="Card QA novo", habilidades=list(reversed(ordem_qew)))], tmp)
         os.makedirs(os.path.join(tmp, "abc125"))
         e4 = cards.rodar([dict(bq, nome="Card QA novo")], tmp, so={"abc124"})
         sobrou4 = os.path.isdir(os.path.join(tmp, "abc125"))
@@ -6833,24 +6936,26 @@ def checar_card(s, p):
         resto = sorted(os.listdir(tmp))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
-    p.conta("card do Discord", "a rodada do robô: o servidor vazio não apaga nada; a build nova ganha a página e um JPEG 1200×630 com a assinatura (e o ?v= da imagem tirado dos bytes dela); de novo, igual (sem foto); mudou o nome, refaz; a página da build que saiu é apagada, a pasta que não é de build fica; com --so, nada é apagado",
+    p.conta("card do Discord", "a rodada do robô: o servidor vazio não apaga nada; a build nova ganha a página e um JPEG 1200×630 com a assinatura (e o ?v= da imagem tirado dos bytes dela); de novo, igual (sem foto); mudou o nome ou a ordem das habilidades, refaz; a página da build que saiu é apagada, a pasta que não é de build fica; com --so, nada é apagado",
             not e0["apagadas"] and sobrou0 and e1["novas"] == ["abc124"] and e1["apagadas"] == ["abc123"] and tam == (1200, 630)
-            and v1 == hashlib.sha256(jpg).hexdigest()[:10]
+            and v1 == hashlib.sha256(jpg).hexdigest()[:10] and not e1["incompletas"]
             and gravada == cards.assinatura(bq, cards.base_da_assinatura()) and e2["iguais"] == 1 and not e2["novas"] and not e2["refeitas"]
-            and e3["refeitas"] == ["abc124"] and sobrou4 and not e4["apagadas"] and "notas" in resto and "LEIAME.txt" in resto,
-            "vazio %s · 1ª %s · %s · igual %s · mudou %s · --so %s · pasta %s" % (
-                e0["apagadas"], {k: e1[k] for k in ("novas", "apagadas")}, tam, e2["iguais"], e3["refeitas"], e4["apagadas"], resto))
+            and e3["refeitas"] == ["abc124"] and e3r["refeitas"] == ["abc124"] and sobrou4 and not e4["apagadas"] and "notas" in resto and "LEIAME.txt" in resto,
+            "vazio %s · 1ª %s · %s · igual %s · mudou %s · a ordem %s · --so %s · pasta %s" % (
+                e0["apagadas"], {k: e1[k] for k in ("novas", "apagadas", "incompletas")}, tam, e2["iguais"], e3["refeitas"], e3r["refeitas"], e4["apagadas"], resto))
     p.conta("card do Discord", "a build cujo campeão o Data Dragon não deu fica \"incompleta\": ganha a página (o card sem arte), mas com a assinatura marcada — a próxima rodada tenta de novo (e, sem arte outra vez, fica o card que já estava)",
             e5["incompletas"] == ["abc126"] and "abc126" in e5["novas"] and g5.startswith("incompleta-") and e6["incompletas"] == ["abc126"] and not e6["refeitas"] and e6["iguais"] == 1
             and e7["incompletas"] == ["abc126"] and '<meta property="og:title" content="Card QA renomeada">' in pg7 and jpg7 == jpg6 and v7 == v6 and v6 is not None,
             "1ª %s · assinatura %s… · 2ª %s · renomeada: título %s, card igual %s" % ({k: e5[k] for k in ("novas", "incompletas")}, g5[:16], {k: e6[k] for k in ("incompletas", "iguais")},
                                                                                   "Card QA renomeada" in pg7, jpg7 == jpg6))
 
-    # (f) cada build por si: a que quebra fica de fora, o Chrome é reaberto e as outras seguem; a foto
-    # sem as fontes é incompleta. Um fotógrafo de mentira faz o papel do Chrome (o quebrado continua quebrado)
+    # (h) cada build por si: a que quebra fica de fora, o Chrome é reaberto e as outras seguem; a foto
+    # sem as fontes é incompleta; a que o molde diz que faltou algo (as habilidades) também. Um
+    # fotógrafo de mentira faz o papel do Chrome (o quebrado continua quebrado)
     class FotoFalsa:
         criadas = 0
         pagina_sem_fonte = None
+        tentativas_205 = 0
 
         def __init__(self):
             FotoFalsa.criadas += 1
@@ -6865,8 +6970,11 @@ def checar_card(s, p):
             if b["id"] == "abc204":     # a fonte falhou nesta página: nela, falha sempre; num Chrome novo, vem
                 if FotoFalsa.pagina_sem_fonte is None:
                     FotoFalsa.pagina_sem_fonte = self
-                return {"arte": True, "fontes": self is not FotoFalsa.pagina_sem_fonte, "quebradas": 0, "quem": "QA"}, b"\xff\xd8 card 204"
-            return {"arte": True, "fontes": b["id"] != "abc203", "quebradas": 0, "quem": "QA"}, b"\xff\xd8 card de mentira"
+                return {"arte": True, "fontes": self is not FotoFalsa.pagina_sem_fonte, "quebradas": 0, "faltou": [], "quem": "QA"}, b"\xff\xd8 card 204"
+            if b["id"] == "abc205":     # F13-T98: as habilidades do campeão não vieram (as duas vezes)
+                FotoFalsa.tentativas_205 += 1
+                return {"arte": True, "fontes": True, "quebradas": 0, "faltou": ["habilidades"], "quem": "QA"}, b"\xff\xd8 card 205"
+            return {"arte": True, "fontes": b["id"] != "abc203", "quebradas": 0, "faltou": [], "quem": "QA"}, b"\xff\xd8 card de mentira"
 
         def fechar(self):
             pass
@@ -6876,21 +6984,24 @@ def checar_card(s, p):
     cards.Fotografo = FotoFalsa
     try:
         try:
-            f1 = cards.rodar([dict(bq, id="abc200"), dict(bq, id="abc201"), dict(bq, id="abc202"), dict(bq, id="abc203"), dict(bq, id="abc204")], tmp)
+            f1 = cards.rodar([dict(bq, id="abc200"), dict(bq, id="abc201"), dict(bq, id="abc202"), dict(bq, id="abc203"), dict(bq, id="abc204"), dict(bq, id="abc205")], tmp)
             f1_erro = None
         except Exception as e:
             f1, f1_erro = {}, "%s: %s" % (type(e).__name__, str(e)[:80])
         g203 = cards.assinatura_gravada(os.path.join(tmp, "abc203")) or ""
+        g205 = cards.assinatura_gravada(os.path.join(tmp, "abc205")) or ""
         feitas = sorted(d for d in os.listdir(tmp) if os.path.exists(os.path.join(tmp, d, "index.html")))
     finally:
         cards.Fotografo = foto_de_verdade
         shutil.rmtree(tmp, ignore_errors=True)
-    p.conta("card do Discord", "a rodada não cai por uma build: a que quebra fica de fora (anotada em falhas), o Chrome é reaberto e as outras seguem; a foto sem as fontes tenta de novo num Chrome novo (a falha fica na página) e, faltando ainda, fica incompleta",
-            f1_erro is None and len(f1.get("falhas", [])) == 1 and f1["falhas"][0].startswith("abc201") and feitas == ["abc200", "abc202", "abc203", "abc204"]
-            and FotoFalsa.criadas == 4 and f1["incompletas"] == ["abc203"] and g203.startswith("incompleta-"),
-            "erro %s · falhas %s · feitas %s · Chromes %d · incompletas %s" % (f1_erro, f1.get("falhas"), feitas, FotoFalsa.criadas, f1.get("incompletas")))
+    p.conta("card do Discord", "a rodada não cai por uma build: a que quebra fica de fora (anotada em falhas), o Chrome é reaberto e as outras seguem; a foto sem as fontes tenta de novo num Chrome novo (a falha fica na página) e, faltando ainda, fica incompleta; a que saiu sem as habilidades tenta de novo e fica incompleta",
+            f1_erro is None and len(f1.get("falhas", [])) == 1 and f1["falhas"][0].startswith("abc201") and feitas == ["abc200", "abc202", "abc203", "abc204", "abc205"]
+            and FotoFalsa.criadas == 4 and f1["incompletas"] == ["abc203", "abc205"] and g203.startswith("incompleta-") and g205.startswith("incompleta-")
+            and FotoFalsa.tentativas_205 == 2,
+            "erro %s · falhas %s · feitas %s · Chromes %d · incompletas %s · tentativas sem as habilidades %d" % (
+                f1_erro, f1.get("falhas"), feitas, FotoFalsa.criadas, f1.get("incompletas"), FotoFalsa.tentativas_205))
 
-    # (f2) a rede pendurada deixa cada foto lenta: passou do orçamento, o que falta fica para a próxima
+    # (h2) a rede pendurada deixa cada foto lenta: passou do orçamento, o que falta fica para a próxima
     # rodada (sem apagar a página que já existia) e o que ficou pronto é gravado
     class FotoLenta:
         def __init__(self):
@@ -6898,7 +7009,7 @@ def checar_card(s, p):
 
         def card(self, b):
             time.sleep(0.4)
-            return {"arte": True, "fontes": True, "quebradas": 0, "quem": "QA"}, b"\xff\xd8 card lento"
+            return {"arte": True, "fontes": True, "quebradas": 0, "faltou": [], "quem": "QA"}, b"\xff\xd8 card lento"
 
         def fechar(self):
             pass
@@ -6919,13 +7030,14 @@ def checar_card(s, p):
             and velha == "a página da rodada anterior" and not o1["apagadas"],
             "feitas %s · adiadas %s · a página antiga %s" % (o1["novas"], o1["adiadas"], "ficou" if velha.startswith("a página") else "sumiu"))
 
-    # (g) a lista vem inteira, de página em página (o servidor corta em 1000, ou menos); resposta torta para tudo
+    # (i) a lista vem inteira, de página em página (o servidor corta em 1000, ou menos); resposta torta para tudo
     import io
     todas = [{"id": "%06x" % k} for k in range(2500)]
-    respostas = {"modo": "lista"}
+    respostas = {"modo": "lista", "select": None}
 
     def urlopen_falso(pedido, timeout=None):
         u = pedido.full_url
+        respostas["select"] = (re.search(r"select=([^&]+)", u) or [None, None])[1]
         if respostas["modo"] == "erro":
             return io.BytesIO(json.dumps({"message": "erro do servidor"}).encode())
         off = int(re.search(r"offset=(\d+)", u).group(1)) if "offset=" in u else 0
@@ -6936,6 +7048,7 @@ def checar_card(s, p):
     cards.urllib.request.urlopen = urlopen_falso
     try:
         lidas = cards.buscar_publicas()
+        select = (respostas["select"] or "").split(",")
         respostas["modo"] = "erro"
         try:
             cards.buscar_publicas()
@@ -6944,11 +7057,11 @@ def checar_card(s, p):
             torta = str(e)[:60]
     finally:
         cards.urllib.request.urlopen = urlopen_de_verdade
-    p.conta("card do Discord", "a lista das públicas vem inteira, de página em página, mesmo com o servidor cortando em menos de 1000 (antes, acima de 1000 o robô apagava a página das que ficavam fora); a resposta que não é lista interrompe a rodada",
-            len(lidas) == 2500 and len({b["id"] for b in lidas}) == 2500 and torta.startswith("o servidor não devolveu"),
-            "lidas %d · resposta torta: %s" % (len(lidas), torta))
+    p.conta("card do Discord", "a lista das públicas vem inteira, de página em página, mesmo com o servidor cortando em menos de 1000 (antes, acima de 1000 o robô apagava a página das que ficavam fora), pedindo as runas e as habilidades; a resposta que não é lista interrompe a rodada",
+            len(lidas) == 2500 and len({b["id"] for b in lidas}) == 2500 and torta.startswith("o servidor não devolveu") and "runas" in select and "habilidades" in select,
+            "lidas %d · select %s · resposta torta: %s" % (len(lidas), ",".join(select), torta))
 
-    # (h) o molde que não abre: o robô desiste com o motivo e não deixa o Chrome aberto
+    # (j) o molde que não abre: o robô desiste com o motivo e não deixa o Chrome aberto
     tmp = tempfile.mkdtemp(prefix="qa-cards-")
     procs = []
     popen_de_verdade, molde_de_verdade, espera_de_verdade = cards.subprocess.Popen, cards.MOLDE, cards.ESPERA_MOLDE

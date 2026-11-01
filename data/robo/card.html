@@ -2,60 +2,77 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<title>Forja — molde do card da build</title>
-<!-- F13-T95 (Leo, 31/10/2026: "gostei do 2, a bigorna"): o molde do card que aparece quando o link
-     de uma build publicada é colado no Discord (a imagem de prévia, 1200×630). O robô dos cards
-     (data/robo/cards.py) abre esta página num Chrome sem janela, chama desenhar(build) para cada
-     build publicada e fotografa o #card. Tudo vem da build (o servidor), do catálogo (../catalog.js)
-     e do Data Dragon (a arte do campeão e os ícones, como no app). Aberta sozinha, ?amostra mostra
-     uma build de exemplo. -->
+<title>Forja — molde do card da build (a Ficha)</title>
+<!-- F13-T98 (Leo, 01/11/2026: "os usuários gostaram mais do conceito 1 do card do Discord"): o molde
+     do card da prévia no Discord no desenho da Ficha da build (o conceito 1 da F13-T95: o retrato, as
+     runas, a ordem das habilidades, os iniciais, o Core, a bota e os situacionais), no lugar da Bigorna.
+     O robô dos cards (data/robo/cards.py) abre esta página num Chrome sem janela, chama
+     desenhar(build) para cada build publicada e fotografa o #card (1200×630). Tudo vem da build (o
+     servidor), do catálogo (../catalog.js), das runas (../runas.js) e do Data Dragon (a arte, o retrato,
+     as habilidades e os ícones, como no app). Aberta sozinha, ?amostra mostra uma build de exemplo. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <!-- media="print" até carregar: a folha das fontes não segura os scripts (se o Google Fonts pendurar,
      o molde abre do mesmo jeito e o card sai marcado "sem as fontes") -->
 <link id="fontes" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" media="print">
 <script src="../catalog.js"></script>
+<script src="../runas.js"></script>
 <style>
   :root {
     --ferro-1: #1a1614; --ferro-2: #100d0b; --borda: #443a32; --brasa: #ff7a1e; --brasa-clara: #ffd27a;
-    --brasa-glow: rgba(255,120,30,.55); --ouro: #c9a25b; --texto: #d8cbb6; --suave: #8f8074;
+    --brasa-glow: rgba(255,120,30,.55); --ouro: #c9a25b; --ouro-claro: #e9c983; --texto: #d8cbb6; --suave: #8f8074;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: #0b0908; }
   .card { width: 1200px; height: 630px; position: relative; overflow: hidden; color: var(--texto); font-family: 'Alegreya', Georgia, serif;
-    background: linear-gradient(180deg, var(--ferro-1), var(--ferro-2)); }
+    background: radial-gradient(ellipse at 80% 20%, #2a201a 0%, #120e0c 60%, #0b0908 100%); }
   .ico { display: block; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.6); }
-  .marca { position: absolute; font-family: 'Cinzel', serif; letter-spacing: .18em; font-size: 15px; color: var(--ouro); white-space: nowrap; }
+  .marca { position: absolute; right: 34px; top: 30px; font-family: 'Cinzel', serif; letter-spacing: .18em; font-size: 15px; color: var(--ouro); white-space: nowrap; }
   .marca b { color: var(--brasa-clara); font-weight: 700; }
-  .marca.pe { overflow: hidden; text-overflow: ellipsis; }
-  .arte { position: absolute; left: 0; top: 0; bottom: 0; width: 560px; background-size: cover; background-position: 50% 30%;
-    -webkit-mask-image: linear-gradient(90deg, #000 55%, transparent 100%); mask-image: linear-gradient(90deg, #000 55%, transparent 100%); }
-  .brasa { position: absolute; left: 0; right: 0; bottom: 0; height: 160px; background: linear-gradient(0deg, rgba(255,90,10,.35), transparent); }
-  .dir { position: absolute; left: 470px; right: 48px; top: 54px; }
-  .card.sem-arte .dir { left: 64px; }
-  .rotulo { font-family: 'Cinzel', serif; letter-spacing: .3em; font-size: 15px; color: var(--brasa); }
-  .titulo { font-family: 'Cinzel', serif; font-weight: 700; font-size: 64px; line-height: 1.04; color: #f3e6c8; margin-top: 10px;
-    text-shadow: 0 2px 0 #000, 0 0 30px rgba(255,120,30,.25); overflow-wrap: anywhere; }
-  .quem { font-size: 26px; color: var(--brasa-clara); margin-top: 10px; font-style: italic; }
-  .bigorna { margin-top: 30px; display: flex; gap: 22px; padding: 18px 22px 22px; background: linear-gradient(180deg, #2b2521, #15110f); border: 1px solid var(--borda); border-radius: 4px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 22px rgba(0,0,0,.6); border-bottom: 3px solid var(--brasa); width: max-content; }
-  .bigorna .ico { box-shadow: 0 0 0 2px #0b0908, 0 0 0 3px var(--ouro), 0 0 22px var(--brasa-glow); }
-  .mais { margin-top: 18px; display: flex; gap: 10px; align-items: center; color: var(--suave); font-size: 18px; }
-  .mais span { margin-left: 4px; }
+  .fundo { position: absolute; inset: 0 0 0 auto; width: 720px; background-size: cover; background-position: 50% 25%; opacity: .32;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%); }
+  .topo { position: absolute; left: 34px; top: 26px; right: 190px; display: flex; gap: 20px; align-items: center; height: 124px; }
+  .retrato { flex: none; width: 118px; height: 118px; border-radius: 50%; border: 3px solid var(--ouro); box-shadow: 0 0 0 5px #0b0908, 0 0 0 6px var(--borda), 0 0 24px var(--brasa-glow); background-size: cover; }
+  .cab { min-width: 0; flex: 1; }
+  .nome { font-family: 'Cinzel', serif; font-weight: 700; font-size: 50px; color: var(--ouro-claro); line-height: 1.05; letter-spacing: .04em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .build { font-family: 'Cinzel', serif; font-size: 22px; color: var(--texto); margin-top: 6px; letter-spacing: .06em; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tags { margin-top: 6px; font-size: 18px; color: var(--brasa-clara); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .painel { position: absolute; background: rgba(16,13,11,.86); border: 1px solid #6b5333; box-shadow: inset 0 0 0 1px rgba(201,162,91,.18), 0 6px 18px rgba(0,0,0,.6); padding: 12px 14px; }
+  .painel h3 { margin: 0 0 10px; font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: .14em; color: var(--ouro-claro); font-weight: 600; white-space: nowrap; }
+  .painel .vazio { font-style: italic; color: var(--suave); font-size: 16px; }
+  .runas { left: 34px; top: 176px; width: 196px; height: 410px; }
+  .runas .chave { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .runas .col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; justify-items: center; align-items: center; }
+  .runas .frag { display: flex; gap: 10px; margin-top: 12px; justify-content: center; }
+  .fileira { display: flex; gap: 12px; align-items: flex-end; }
+  .it { text-align: center; width: 92px; font-size: 13px; line-height: 1.15; color: var(--texto); }
+  .it .ico { margin: 0 auto 6px; }
+  .it span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .hab { text-align: center; font-family: 'Cinzel', serif; font-size: 15px; color: var(--ouro-claro); }
+  .hab .letra { width: 56px; height: 56px; display: grid; place-items: center; background: #2b2521; border-radius: 4px; font-size: 24px; }
+  .gt { font-family: 'Cinzel', serif; color: var(--ouro); font-size: 24px; align-self: center; margin-bottom: 18px; }
+  .mais { color: var(--suave); font-size: 16px; align-self: center; margin-left: 4px; }
+  .pe { position: absolute; left: 34px; bottom: 12px; font-family: 'Cinzel', serif; letter-spacing: .18em; font-size: 13px; color: var(--ouro); white-space: nowrap; max-width: 520px; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 <body>
 <div class="card" id="card"></div>
 <script>
 const DD = "https://ddragon.leagueoflegends.com/cdn/";
-// Map, não objeto: quem publica escolhe o itemId, e "constructor" ou "__proto__" num objeto comum
-// achavam a função herdada (o desenho quebrava e, com ele, a rodada do robô)
+const PATCH = CATALOG.meta.patch;
+// Map, não objeto: quem publica escolhe o itemId e as runas, e "constructor" ou "__proto__" num objeto
+// comum achavam a função herdada (F13-T95: o desenho quebrava e, com ele, a rodada do robô)
 const porSlug = new Map(CATALOG.items.map(i => [i.slug, i]));
 const porNome = new Map(CATALOG.items.map(i => [i.namePt, i]));
+const runas = new Map();
+RUNAS.trilhas.forEach(t => { runas.set(t.id, t); t.slots.forEach(s => s.runas.forEach(r => runas.set(r.id, r))); });
+(RUNAS.fragmentos || []).forEach(f => f.runas.forEach(r => { if (!runas.has(r.id)) runas.set(r.id, r); }));
 // os nomes de rota da tela (index.html, ROTAS)
 const ROTAS = new Map(Object.entries({ top: "Top", selva: "Selva", meio: "Meio", atirador: "Atirador", suporte: "Suporte" }));
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const lista = x => Array.isArray(x) ? x : [];
-// o prazo de cada coisa que vem da rede (a arte, um ícone, as fontes): passou, conta como falha
+// o prazo de cada coisa que vem da rede (a arte, um ícone, as habilidades, as fontes): passou, conta como falha
 const PRAZO_MS = 15000;
 function comPrazo(promessa, ms, valor) {
   return Promise.race([promessa, new Promise(ok => setTimeout(() => ok(valor), ms))]);
@@ -66,18 +83,17 @@ function ehBota(it) {
   if (it.tier === "Bota") return true;
   return /Evolução/.test(it.tier || "") && lista(it.components).some(c => (porNome.get(c.namePt) || {}).tier === "Bota");
 }
-// F13-T95b (Leo, 31/10/2026: a opção B): o item de suporte — a Dádiva dos Mundos e o que ela vira
-// (Trenó do Solstício, Canção de Sangue…) — vai para a fileira, como a bota; a bigorna fica com o Core.
+// o item de suporte: a Dádiva dos Mundos e o que ela vira (Trenó do Solstício, Canção de Sangue…)
 const ehSuporte = it => it.tier === "Lendário (Evolução)" || lista(it.components).some(c => (porNome.get(c.namePt) || {}).tier === "Lendário (Evolução)");
 function ehLendario(it) { return (/^Lendário/.test(it.tier || "") || (it.tier === "Evolução" && !ehBota(it))) && !ehSuporte(it); }
-const ehInicial = it => it.tier === "Starter" || it.tier === "Consumível";
+const ehInicial = it => it.tier === "Starter" || it.tier === "Consumível" || it.tier === "Trinket";
 
-// O que vai na bigorna e na fileira de baixo. A build é lida como o "Total (sem opcionais)" do app:
-// sem as caixas Opcionais, e da Escolha 1 só a primeira (a padrão). Na bigorna, os três primeiros
-// Lendários nessa ordem (na build do Ekko, o Core); embaixo, a bota, o item de suporte e os
-// iniciais (três ícones no máximo); o resto vira a conta "+ N itens e M escolhas". Item que o
-// catálogo não tem fica de fora.
-function escolherItens(build) {
+// Os quadros da Ficha. A build é lida como o "Total (sem opcionais)" do app: sem as caixas Opcionais,
+// e da Escolha 1 só a primeira (a padrão). Core: os três primeiros Lendários nessa ordem; Bota (e o
+// item de suporte, se houver): a bota da build, não a peça "Botas"; Iniciais: os iniciais, poções e a
+// sentinela; Situacionais: as outras opções das caixas de Escolha e os Lendários fora do Core. Item que
+// o catálogo não tem fica de fora.
+function fichaDaBuild(build) {
   const caixas = lista(build && build.caixas).filter(c => c && typeof c === "object" && c.kind !== "opcional");
   const contados = [], visto = new Set();
   caixas.forEach(c => (c.kind === "escolha" ? lista(c.items).slice(0, 1) : lista(c.items)).forEach(e => {
@@ -85,38 +101,51 @@ function escolherItens(build) {
     if (it && !visto.has(it.slug)) { visto.add(it.slug); contados.push({ it, escolha: c.kind === "escolha" }); }
   }));
   let grandes = contados.filter(x => ehLendario(x.it));
-  // sem Lendário: o que não é bota, inicial, sentinela nem item distribuído
-  if (!grandes.length) grandes = contados.filter(x => !ehBota(x.it) && !ehSuporte(x.it) && !ehInicial(x.it) && x.it.tier !== "Trinket" && x.it.tier !== "Distribuído");
-  if (!grandes.length) grandes = contados;
-  const bigorna = grandes.slice(0, 3);
-  const naBigorna = new Set(bigorna.map(x => x.it.slug));
-  // a bota da build, não a peça: as "Botas" de 300 g que viram outra bota contada ficam de fora
-  const botas = contados.filter(x => ehBota(x.it) && !naBigorna.has(x.it.slug));
+  // sem Lendário: o que não é bota, suporte, inicial, sentinela nem item distribuído
+  if (!grandes.length) grandes = contados.filter(x => !ehBota(x.it) && !ehSuporte(x.it) && !ehInicial(x.it) && x.it.tier !== "Distribuído");
+  const core = grandes.slice(0, 3);
+  const noCore = new Set(core.map(x => x.it.slug));
+  const botas = contados.filter(x => ehBota(x.it) && !noCore.has(x.it.slug));
   const pecas = new Set(botas.flatMap(x => lista(x.it.components).map(c => (porNome.get(c.namePt) || {}).slug)));
   const finais = botas.filter(x => !pecas.has(x.it.slug));
   const bota = (finais.length ? finais : botas).slice(0, 1);
-  // o item de suporte: o que a Dádiva vira, se a build tiver; senão, a própria Dádiva
-  const sups = contados.filter(x => ehSuporte(x.it) && !naBigorna.has(x.it.slug));
+  const sups = contados.filter(x => ehSuporte(x.it) && !noCore.has(x.it.slug));
   const viradas = sups.filter(x => x.it.tier !== "Lendário (Evolução)");
   const suporte = (viradas.length ? viradas : sups).slice(0, 1);
-  const iniciais = contados.filter(x => ehInicial(x.it) && !naBigorna.has(x.it.slug)).slice(0, suporte.length ? 1 : 2);
-  const mostrados = new Set([...bigorna, ...bota, ...suporte, ...iniciais].map(x => x.it.slug));
-  // o resto: Lendário fora da bigorna (de caixa comum) e caixa de escolha que não apareceu
-  const itens = grandes.filter(x => !mostrados.has(x.it.slug) && !x.escolha).length;
-  const escolhas = caixas.filter(c => c.kind === "escolha" && lista(c.items).length
-    && !mostrados.has((porSlug.get((lista(c.items)[0] || {}).itemId) || {}).slug)).length;
-  return { bigorna: bigorna.map(x => x.it.slug), pequenos: [...bota, ...suporte, ...iniciais].map(x => x.it.slug), itens, escolhas };
+  const iniciais = contados.filter(x => ehInicial(x.it) && !noCore.has(x.it.slug)).slice(0, 6);
+  const mostrados = new Set([...core, ...bota, ...suporte, ...iniciais].map(x => x.it.slug));
+  // situacionais: as opções das caixas de Escolha (Lendário ou bota) e os Lendários fora do Core
+  const situ = [];
+  const poe = it => { if (it && !mostrados.has(it.slug) && !situ.includes(it.slug)) situ.push(it.slug); };
+  caixas.forEach(c => {
+    if (c.kind === "escolha") lista(c.items).forEach(e => { const it = e && porSlug.get(e.itemId); if (it && (ehLendario(it) || ehBota(it))) poe(it); });
+    else lista(c.items).forEach(e => { const it = e && porSlug.get(e.itemId); if (it && ehLendario(it)) poe(it); });
+  });
+  const so = l => l.map(x => x.it.slug);
+  return { core: so(core), bota: so(bota), suporte: so(suporte), iniciais: so(iniciais), situacionais: situ.slice(0, 15), aMais: Math.max(0, situ.length - 15) };
 }
 
-function contaDoResto(n, m) {
-  const p = [];
-  if (n) p.push(n === 1 ? "1 item" : n + " itens");
-  if (m) p.push(m === 1 ? "1 escolha" : m + " escolhas");
-  return p.length ? "+ " + p.join(" e ") : "";
+// a ordem de maximização das habilidades (Q, W, E até o teto de 5), como o app
+function ordemDasHabilidades(h) {
+  const seq = lista(h);
+  const d = ["Q", "W", "E"].map(L => {
+    let n = 0, quinto = 99, prim = 99;
+    seq.forEach((x, i) => { if (x !== L) return; n++; if (prim === 99) prim = i; if (n === 5) quinto = i; });
+    return { L, n, quinto, prim };
+  }).filter(x => x.n).sort((a, b) => a.quinto - b.quinto || b.n - a.n || a.prim - b.prim);
+  return d.map(x => x.L);
 }
 
 function carregar(url, prazo = PRAZO_MS) {
   return comPrazo(new Promise(ok => { if (!url) return ok(false); const i = new Image(); i.onload = () => ok(true); i.onerror = () => ok(false); i.src = url; }), prazo, false);
+}
+async function habilidadesDo(ch) {
+  if (!ch) return null;
+  try {
+    const r = await comPrazo(fetch(`${DD}${PATCH}/data/pt_BR/champion/${encodeURIComponent(ch)}.json`).then(x => x.ok ? x.json() : null), PRAZO_MS, null);
+    const c = r && r.data && Object.values(r.data)[0];
+    return c && Array.isArray(c.spells) ? c.spells : null;
+  } catch (e) { return null; }
 }
 
 // a folha das fontes: liga quando chegar (ver o <link id="fontes">)
@@ -127,83 +156,86 @@ const folhaDasFontes = new Promise(ok => {
   l.addEventListener("load", () => liga(true));
   l.addEventListener("error", () => liga(false));
 });
-// os rostos que o card usa (o título, a marca e o rótulo; o texto e a linha "quem", em itálico)
-const ROSTOS = ["700 64px Cinzel", "15px Cinzel", "26px Alegreya", "italic 26px Alegreya"];
-
-// O nome da build cabe em duas linhas a 64 px; se não couber, a letra encolhe até 40 px e ganha a
-// terceira linha; passou disso, o nome é cortado aqui, com "…" no fim da terceira — sem a quarta
-// linha escondida (o -webkit-line-clamp deixava os acentos dela aparecerem embaixo da terceira).
-function caberTitulo(t) {
-  const linhas = n => t.getBoundingClientRect().height <= n * parseFloat(t.style.fontSize) * 1.04 + 2;
-  let fs = 64;
-  t.style.fontSize = fs + "px";
-  while (fs > 48 && !linhas(2)) { fs -= 2; t.style.fontSize = fs + "px"; }
-  while (fs > 40 && !linhas(3)) { fs -= 2; t.style.fontSize = fs + "px"; }
-  if (!linhas(3)) {
-    const letras = Array.from(t.textContent);   // por ponto de código: um emoji não é partido ao meio
-    let lo = 0, hi = letras.length;
-    while (lo < hi) {
-      const m = Math.ceil((lo + hi) / 2);
-      t.textContent = letras.slice(0, m).join("").trimEnd() + "…";
-      if (linhas(3)) lo = m; else hi = m - 1;
-    }
-    let corte = letras.slice(0, lo).join("");
-    const espaco = corte.lastIndexOf(" ");
-    if (espaco > 0 && espaco > corte.length - 16) corte = corte.slice(0, espaco);   // corta na palavra, se ela estiver perto
-    t.textContent = corte.replace(/[\s\-–—·,;:(]+$/, "") + "…";
-    t.classList.add("cortado");
-  }
-  return fs;
-}
+// os rostos que o card usa (o nome, os títulos dos quadros, a build; os nomes dos itens e as marcas, em itálico)
+const ROSTOS = ["700 50px Cinzel", "600 14px Cinzel", "22px Cinzel", "13px Alegreya", "italic 18px Alegreya"];
 
 async function desenhar(build) {
   const card = document.getElementById("card");
   const ch = build.campeao && build.campeao.id;
-  // a arte centrada do Data Dragon (o campeão no meio, para a coluna da esquerda); sem ela, a splash
+  const faltou = [];
+  // a arte centrada do Data Dragon (o campeão no meio); sem ela, a splash
   let arte = ch ? `${DD}img/champion/centered/${encodeURIComponent(ch)}_0.jpg` : "";
   let temArte = await carregar(arte);
   if (ch && !temArte) { arte = `${DD}img/champion/splash/${encodeURIComponent(ch)}_0.jpg`; temArte = await carregar(arte); }
-  const esc_ = escolherItens(build);
+  const retrato = ch ? `${DD}${PATCH}/img/champion/${encodeURIComponent(ch)}.png` : "";
+  const f = fichaDaBuild(build);
+  const R = build.runas && typeof build.runas === "object" ? build.runas : {};
+  const ordem = ordemDasHabilidades(build.habilidades);
+  const spells = ordem.length ? await habilidadesDo(ch) : null;
+  if (ordem.length && ch && !spells) faltou.push("habilidades");
   const ico = (slug, px) => `<img class="ico" src="${esc(porSlug.get(slug).iconUrl)}" width="${px}" height="${px}" alt="">`;
+  const rIco = (id, px) => { const r = runas.get(id); return r && r.iconUrl ? `<img src="${esc(r.iconUrl)}" width="${px}" height="${px}" alt="">` : ""; };
+  const hab = L => { const s = spells && spells["QWE".indexOf(L)]; return s && s.image ? `<img class="ico" src="${esc(DD + PATCH + "/img/spell/" + s.image.full)}" width="56" height="56" alt="">` : `<div class="letra">${L}</div>`; };
+  const it = s => `<div class="it">${ico(s, 64)}<span>${esc(porSlug.get(s).namePt)}</span></div>`;
+  const temRunas = runas.has(R.assinatura) || lista(R.slots).some(id => runas.has(id));
+  const tags = [ROTAS.get(build.rota) || "", build.modo].filter(Boolean).join(" · ");
   const quem = [build.campeao && build.campeao.name, ROTAS.get(build.rota) || "", build.modo].filter(Boolean).join(" · ");
-  const resto = contaDoResto(esc_.itens, esc_.escolhas);
   const pe = [build.autor ? "por " + build.autor : "", build.patch ? "patch " + build.patch : ""].filter(Boolean).join(" · ");
-  card.className = "card" + (temArte ? "" : " sem-arte");
-  card.innerHTML = `${temArte ? `<div class="arte" style="background-image:url(&quot;${esc(arte)}&quot;)"></div>` : ""}<div class="brasa"></div>
-    <div class="dir"><div class="rotulo">BUILD PUBLICADA NA FORJA</div><div class="titulo">${esc(build.nome || "Build sem nome")}</div>
-      ${quem ? `<div class="quem">${esc(quem)}</div>` : ""}
-      ${esc_.bigorna.length ? `<div class="bigorna">${esc_.bigorna.map(s => ico(s, 112)).join("")}</div>` : ""}
-      ${esc_.pequenos.length || resto ? `<div class="mais">${esc_.pequenos.map(s => ico(s, 46)).join("")}${resto ? `<span>${esc(resto)}</span>` : ""}</div>` : ""}</div>
-    <div class="marca selo" style="right:34px;bottom:20px"><b>FORJA</b> · MONTADOR DE ITENS</div>
-    ${pe ? `<div class="marca pe" style="left:${temArte ? 470 : 64}px;bottom:20px;font-size:13px">${esc(pe)}</div>` : ""}`;
+  const nomeCampeao = build.campeao && build.campeao.name;
+  const vazio = t => `<div class="vazio">${t}</div>`;
+  card.innerHTML = `${temArte ? `<div class="fundo" style="background-image:url(&quot;${esc(arte)}&quot;)"></div>` : ""}
+    <div class="topo">${ch ? `<div class="retrato" style="background-image:url(&quot;${esc(retrato)}&quot;)"></div>` : ""}
+      <div class="cab"><div class="nome">${esc(nomeCampeao || build.nome || "Build sem nome")}</div>
+        ${nomeCampeao ? `<div class="build">${esc(build.nome || "Build sem nome")}</div>` : ""}
+        ${tags ? `<div class="tags">${esc(tags)}</div>` : ""}</div></div>
+    <div class="painel runas"><h3>RUNAS</h3>${temRunas ? `
+      <div class="chave">${rIco(R.assinatura, 74)}<div>${rIco(R.primaria, 30)}</div></div>
+      <div class="col">${lista(R.slots).map(id => rIco(id, 44)).join("")}${rIco(R.secundaria, 30)}</div>
+      <div class="col" style="margin-top:10px">${lista(R.secundarios).map(id => rIco(id, 40)).join("")}</div>
+      <div class="frag">${lista(R.fragmentos).map(id => rIco(id, 26)).join("")}</div>` : vazio("sem runas")}</div>
+    <div class="painel" style="left:250px;top:176px;width:330px;height:132px"><h3>ORDEM DAS HABILIDADES</h3>
+      ${ordem.length ? `<div class="fileira">${ordem.map((L, i) => `<div class="hab">${hab(L)}<div>${L}</div></div>${i < ordem.length - 1 ? '<div class="gt">›</div>' : ""}`).join("")}</div>` : vazio("sem a ordem")}</div>
+    <div class="painel" style="left:600px;top:176px;width:566px;height:132px"><h3>ITENS INICIAIS</h3>
+      ${f.iniciais.length ? `<div class="fileira">${f.iniciais.map(s => ico(s, 56)).join("")}</div>` : vazio("sem iniciais")}</div>
+    <div class="painel" style="left:250px;top:326px;width:500px;height:150px"><h3>CORE</h3>
+      ${f.core.length ? `<div class="fileira">${f.core.map(it).join("")}</div>` : vazio("sem Lendários")}</div>
+    <div class="painel" style="left:770px;top:326px;width:396px;height:150px"><h3>${f.suporte.length ? "BOTA E SUPORTE" : "BOTA"}</h3>
+      ${f.bota.length || f.suporte.length ? `<div class="fileira">${[...f.bota, ...f.suporte].map(it).join("")}</div>` : vazio("sem bota")}</div>
+    <div class="painel" style="left:250px;top:494px;width:916px;height:92px"><h3>SITUACIONAIS</h3>
+      ${f.situacionais.length ? `<div class="fileira" style="gap:9px">${f.situacionais.map(s => ico(s, 44)).join("")}${f.aMais ? `<span class="mais">+ ${f.aMais}</span>` : ""}</div>` : vazio("sem situacionais")}</div>
+    ${pe ? `<div class="pe">${esc(pe)}</div>` : ""}
+    <div class="marca"><b>FORJA</b></div>`;
   // as fontes, com prazo e sem deixar a falha de rede derrubar o desenho; o robô confere "fontes" —
-  // rosto a rosto: um só que falte (o itálico da linha "quem", por exemplo) e a foto sai incompleta
+  // rosto a rosto: um só que falte e a foto sai incompleta
   await comPrazo(folhaDasFontes, PRAZO_MS, false);
-  const rostos = await comPrazo(Promise.all(ROSTOS.map(f => document.fonts.load(f).then(l => l.length > 0 && l.every(x => x.status === "loaded"), () => false))), PRAZO_MS, []);
+  const rostos = await comPrazo(Promise.all(ROSTOS.map(fo => document.fonts.load(fo).then(l => l.length > 0 && l.every(x => x.status === "loaded"), () => false))), PRAZO_MS, []);
   await comPrazo(document.fonts.ready.catch(() => null), PRAZO_MS, null);
   const fontes = rostos.length === ROSTOS.length && rostos.every(Boolean);
-  const fs = caberTitulo(card.querySelector(".titulo"));
-  // o autor comprido ("Brelgo - criada por Mylon") encostava na marca: a marca fica só "FORJA" e,
-  // se ainda não couber, o rodapé corta com "…"
-  const rodape = card.querySelector(".pe"), selo = card.querySelector(".selo");
-  const encosta = () => rodape && rodape.getBoundingClientRect().right > selo.getBoundingClientRect().left - 24;
-  if (encosta()) selo.innerHTML = "<b>FORJA</b>";
-  if (encosta()) rodape.style.maxWidth = (selo.getBoundingClientRect().left - 24 - rodape.getBoundingClientRect().left) + "px";
+  if (ch && retrato && !(await carregar(retrato))) faltou.push("retrato");
   await Promise.all([...card.querySelectorAll("img")].map(i => i.complete ? i.naturalWidth > 0 : carregar(i.src)));
   // o que a foto vai mostrar, para o robô e o roteiro conferirem
-  const caixa = card.getBoundingClientRect(), dir = card.querySelector(".dir").getBoundingClientRect();
-  return { arte: temArte, fontes, fonte: fs, cortado: card.querySelector(".titulo").classList.contains("cortado"),
-           cabe: dir.bottom <= (rodape ? rodape.getBoundingClientRect().top - 8 : caixa.bottom - 8) && dir.right <= caixa.right,
-           rodapeCortado: !!rodape && rodape.scrollWidth > rodape.clientWidth, selo: selo.textContent,
-           quebradas: [...card.querySelectorAll("img")].filter(i => !i.naturalWidth).length, ...esc_, resto, pe, quem };
+  const caixa = card.getBoundingClientRect();
+  // o rodapé corta o autor comprido com "…" de propósito (o max-width): nele só conta passar da borda
+  const fora = [...card.querySelectorAll(".painel, .topo, .pe")].filter(e => { const b = e.getBoundingClientRect(); return b.right > caixa.right + 1 || b.bottom > caixa.bottom + 1
+    || (!e.classList.contains("pe") && e.scrollWidth > e.clientWidth + 1) || e.scrollHeight > e.clientHeight + 1; }).length;
+  return { arte: temArte, fontes, quebradas: [...card.querySelectorAll("img")].filter(i => !i.naturalWidth).length, faltou, cabe: fora === 0,
+           ...f, ordem, temRunas, pe, quem };
 }
-window.escolherItens = escolherItens;
+window.fichaDaBuild = fichaDaBuild;
+window.ordemDasHabilidades = ordemDasHabilidades;
 window.desenhar = desenhar;
 
-if (/[?&]amostra\b/.test(location.search)) desenhar({ nome: "Mage Assasin", autor: "", campeao: { id: "Ekko", name: "Ekko" }, modo: "Summoner's Rift", rota: "selva", patch: CATALOG.meta.patch,
-  caixas: [{ kind: "comum", items: [{ itemId: "scorchclaw-pup" }, { itemId: "health-potion" }, { itemId: "stealth-ward" }] }, { kind: "comum", items: [{ itemId: "sorcerer-s-shoes" }] },
-    { kind: "prioridade", items: [{ itemId: "dusk-and-dawn" }, { itemId: "nashor-s-tooth" }, { itemId: "shadowflame" }] }, { kind: "opcional", items: [{ itemId: "oracle-lens" }] },
-    { kind: "escolha", items: [{ itemId: "hextech-rocketbelt" }, { itemId: "cosmic-drive" }] }, { kind: "escolha", items: [{ itemId: "zhonya-s-hourglass" }] }, { kind: "escolha", items: [{ itemId: "void-staff" }] }] });
+// ?amostra: a build do Ekko de exemplo (as runas e a ordem tiradas das runas; os itens, do catálogo)
+if (/[?&]amostra\b/.test(location.search)) {
+  const T = RUNAS.trilhas, um = s => s.runas[0].id;
+  desenhar({ nome: "Mage Assasin", autor: "", campeao: { id: "Ekko", name: "Ekko" }, modo: "Summoner's Rift", rota: "selva", patch: CATALOG.meta.patch,
+    runas: { primaria: T[0].id, assinatura: um(T[0].slots[0]), slots: T[0].slots.slice(1, 4).map(um), secundaria: T[1].id,
+             secundarios: [um(T[1].slots[1]), um(T[1].slots[2])], fragmentos: (RUNAS.fragmentos || []).map(f => f.runas[0].id) },
+    habilidades: ["Q", "E", "W", "Q", "Q", "R", "Q", "E", "Q", "E", "R", "E", "E", "W", "W", "R", "W", "W"],
+    caixas: [{ kind: "comum", items: [{ itemId: "scorchclaw-pup" }, { itemId: "health-potion" }, { itemId: "stealth-ward" }] }, { kind: "comum", items: [{ itemId: "sorcerer-s-shoes" }] },
+      { kind: "prioridade", items: [{ itemId: "dusk-and-dawn" }, { itemId: "nashor-s-tooth" }, { itemId: "shadowflame" }] }, { kind: "opcional", items: [{ itemId: "oracle-lens" }] },
+      { kind: "escolha", items: [{ itemId: "hextech-rocketbelt" }, { itemId: "cosmic-drive" }] }, { kind: "escolha", items: [{ itemId: "zhonya-s-hourglass" }] }, { kind: "escolha", items: [{ itemId: "void-staff" }] }] });
+}
 </script>
 </body>
 </html>

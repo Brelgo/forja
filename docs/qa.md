@@ -495,7 +495,6 @@ O item de suporte (F13-T95b, a opção B do Leo): a Dádiva dos Mundos e o que e
 saem da bigorna e vão para a fileira, com a bota (o virado no lugar da Dádiva; um inicial
 só, para caberem três ícones). Três casos novos nas peças; vistos falhando os mutantes da
 regra (P1 a P4, P31, P37, P38) e os novos P47 a P49.
-
 A entrada da loja (F13-T97, 01/11/2026), grupo "entrada da loja": o posto de troca na
 nevasca do Freljord (o conceito B da F13-T96) no lugar da placa. Com perfil limpo, a
 fachada, a placa, a dica e o foco no #entrar; o clique de verdade em qualquer lugar abre
@@ -514,6 +513,32 @@ para dislexia o Riot ID saía cortado (a mais grave); o pulso da dica ocupava ~9
 thread principal; a letra da placa caía abaixo do piso em 1366×768 e 1024×768; e a
 janela da fachada baixava uma textura de 2,8 MB. Vista falhando cada conserto num
 mutante: Q1 a Q9.
+
+A Ficha da build (F13-T98, Leo: "os usuários gostaram mais do conceito 1"): o molde passa
+a ser a Ficha — o retrato, as runas, a ordem das habilidades, os iniciais, o Core, a bota
+e o suporte, os situacionais — e o grupo foi reescrito para ela. Os quadros, em 22 casos
+montados do catálogo pelo tier (o Core sem Opcional e da Escolha só a 1ª; a bota e não a
+peça; o virado da Dádiva em "Bota e suporte"; os iniciais com a sentinela, até 6; os
+situacionais das Escolhas, só Lendário ou bota, sem repetir, até 15 e o "+ N"; sem
+Lendário; fora do catálogo; "constructor"/"__proto__"/"toString"); a ordem das
+habilidades em 9 casos (vale quem chega a 5 primeiro; só R, vazia, nula, lixo). O desenho
+com builds do roteiro (as runas tiradas de data/runas.js): o retrato, a arte, as runas e
+"sem runas" (também com runas que não existem), a ordem com os ícones e "sem a ordem", o
+nome comprido numa linha com "…", sem campeão (o nome grande vira o da build), HTML no
+nome, no autor e na descrição, o rodapé (sem "por" sem autor; o autor comprido cortado
+dentro do card — o "cabe" contava esse corte como estouro, e o molde foi ajustado). A
+rede: as fontes como antes e, novo, o JSON do campeão bloqueado (CDP) e o retrato
+bloqueado — o desenho sai e "faltou" diz o quê. O robô: a assinatura e o pedido ao
+servidor com as runas e as habilidades, a base com data/runas.js, a foto com "faltou"
+dada por incompleta e tentada de novo. As 44 públicas renderizadas: 0 incompletas, 0
+falhas, todas cabem. Vistos falhando, cada um numa cópia com o conserto desfeito, 19 de
+19: no molde, os iniciais sem a sentinela, os situacionais até 16, a bota da Escolha fora
+dos situacionais, a Dádiva no lugar do virado, a peça "Botas" no lugar da bota, o porSlug
+num objeto comum, a ordem sem o 5º ponto e com as letras sem ponto, o "faltou" sem as
+habilidades e sem o retrato, o nome da build sem escapar, o "por" sem autor, o nome da
+build em várias linhas, o rodapé cortado contado como estouro, as runas tortas contadas,
+o nome vazio sem campeão; no robô, os campos sem runas e habilidades, o falta_algo sem o
+"faltou" e a base sem data/runas.js.
 
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
