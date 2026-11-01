@@ -52,6 +52,11 @@ CHROMES = [
 # Celular NÃO é alvo (Leo, 21/09/2026: "não tenho a intenção de fazer para o
 # celular") — o app é ferramenta de mesa, e 375px nem entra na conta.
 RESOLUCOES = [(2560, 1440), (1920, 1080), (1600, 900), (1280, 800)]
+# F13-T99: a entrada da loja sorteia a região a cada visita; ?entrada=<regiao> força uma. A marca é um
+# elemento que só o desenho daquela região gera (prova que ela foi montada e desenhada).
+REGIOES_ENTRADA = ["freljord", "noxus", "shurima"]
+NOME_REGIAO = {"freljord": "Freljord", "noxus": "Noxus", "shurima": "Shurima"}
+MARCA_REGIAO = {"freljord": "en-pinheiros", "noxus": "en-torres", "shurima": "en-ruinas"}
 
 VERDE, VERMELHO, AMARELO, CINZA, FIM = "\033[32m", "\033[31m", "\033[33m", "\033[90m", "\033[0m"
 
@@ -559,7 +564,8 @@ def checar_fundacao(s, p):
     # F13-T54 (Leo, 19/10/2026): a placa de entrada diz que é hobby e como falar
     # com o autor — escrito, à vista, e a placa inteira cabe na tela.
     # F13-T97: a placa é a de madeira do posto de troca (título na madeira, o resto no pergaminho
-    # pregado nela, a nota na etiqueta de baixo). Cada canal tem o nome e o ID na mesma linha; a
+    # pregado nela, a nota na etiqueta de baixo); F13-T99: ou a chapa de ferro de Noxus, ou a tábua com o
+    # papiro de Shurima — as três com as mesmas classes. Cada canal tem o nome e o ID na mesma linha; a
     # letra conta como aparece (a computada vezes a escala do palco e da câmera): rótulos ≥ 10 px,
     # nota e IDs ≥ 12 px nas quatro resoluções.
     le = """(() => { const pl = document.querySelector('.entrada-placa'), t = pl ? pl.innerText.replace(/\\s+/g, ' ') : '';
@@ -578,19 +584,28 @@ def checar_fundacao(s, p):
                lol: /League of Legends Brelgo#RPG/i.test(t), discord: /Discord brelgo/i.test(t), ids,
                cabe: dentro(pl) && dentro(grupo) && dentro(nota), estouro: pl ? Math.max(...estouros) : null,
                letra: { rotulos: +px('.entrada-contato .ea-rot, .entrada-contato .ea-nome').toFixed(1), nota: +px('.entrada-nota').toFixed(1), ids: +px('.entrada-contato .ea-id').toFixed(1) } }; })()"""
+    # F13-T99: a placa é a de cada região (a entrada sorteia uma por visita): a conta vale para as três,
+    # cada uma forçada pelo ?entrada=
     ruins = []
-    for w, h in RESOLUCOES:
-        s.tela(w, h)
-        r = s.js(le)
-        if not (r["hobby"] and r["lol"] and r["discord"] and r["cabe"] and r["estouro"] <= 1 and r["linha"]
-                and r["ids"] == ["Brelgo#RPG:all", "brelgo:all"]
-                and r["letra"]["rotulos"] >= 10 and r["letra"]["nota"] >= 12 and r["letra"]["ids"] >= 12):
-            ruins.append("%dx%d %s" % (w, h, r))
+    for rg in REGIOES_ENTRADA:
+        s.tela_normal()
+        s.abrir("?entrada=" + rg)
+        time.sleep(0.8)
+        if s.js("document.getElementById('entrada').dataset.regiao") != rg:
+            ruins.append("%s: a região forçada não montou" % rg)
+            continue
+        for w, h in RESOLUCOES:
+            s.tela(w, h)
+            r = s.js(le)
+            if not (r["hobby"] and r["lol"] and r["discord"] and r["cabe"] and r["estouro"] <= 1 and r["linha"]
+                    and r["ids"] == ["Brelgo#RPG:all", "brelgo:all"]
+                    and r["letra"]["rotulos"] >= 10 and r["letra"]["nota"] >= 12 and r["letra"]["ids"] >= 12):
+                ruins.append("%s %dx%d %s" % (rg, w, h, r))
     s.tela_normal()
     # F13-T57 (Leo, 19/10/2026): "Bem Vindo(a)!", "Meus Contatos" e a atualização do
     # projeto ao lado do patch — e o número não fica para trás do último commit de
     # tarefa (com o index.html mexido, uma tarefa está em andamento: tem de estar à frente)
-    pl = s.js("""(() => ({ titulo: document.querySelector('.entrada-titulo').textContent.trim(),
+    pl = s.js("""(() => ({ regiao: document.getElementById('entrada').dataset.regiao, titulo: document.querySelector('.entrada-titulo').textContent.trim(),
       rot: document.querySelector('.entrada-contato .ea-rot').textContent.trim(),
       nota: document.querySelector('.entrada-nota').textContent.replace(/\\s+/g, ' ').trim(),
       at: typeof ATUALIZACAO === 'string' ? ATUALIZACAO : null, patch: CATALOG.meta.patch }))()""")
@@ -607,7 +622,7 @@ def checar_fundacao(s, p):
             and pl["nota"] == "League of Legends · Atualização %s · patch %s" % (pl["at"], pl["patch"]) and em_dia,
             "%s; último commit de tarefa F13-T%s%s" % (pl, ultima, " (index.html mexido: a atualização tem de estar à frente)" if mexido else ""))
     p.conta("fundação", "a placa de entrada diz o hobby e o contato do autor", not ruins,
-            "; ".join(ruins) or "hobby, Brelgo#RPG e brelgo à vista em %d resoluções; um clique seleciona o ID inteiro" % len(RESOLUCOES))
+            "; ".join(ruins) or "hobby, Brelgo#RPG e brelgo à vista em %d resoluções nas %d regiões; um clique seleciona o ID inteiro" % (len(RESOLUCOES), len(REGIOES_ENTRADA)))
     s.entrar()
     p.conta("fundação", "entrar na loja não gera erro", not s.erros, "; ".join(s.erros[:2]))
 
@@ -4712,7 +4727,9 @@ def checar_entrada_loja(s, p):
     F13-T96). Com perfil limpo ela aparece desenhada, com a placa, a dica e o foco no #entrar;
     o clique de verdade em qualquer lugar abre (portas girando, câmera, um som só) e fecha
     no fim; os IDs só se selecionam; o Enter abre uma vez; com menos movimento, nada de
-    câmera; o link direto fecha na hora e mudo; e depois de fechada, nada da entrada roda."""
+    câmera; o link direto fecha na hora e mudo; e depois de fechada, nada da entrada roda.
+    F13-T99: a região é sorteada a cada visita (o Freljord, Noxus, Shurima) — tudo isso vale
+    para as três, cada uma forçada pelo ?entrada=; e o sorteio varia e monta só a sorteada."""
     print("\n%sENTRADA DA LOJA%s" % (AMARELO, FIM))
     # o som que toca de verdade (o elemento de áudio), contado desde o começo de cada página
     sonda = s.envia("Page.addScriptToEvaluateOnNewDocument", {"source": """(() => { window.__tocou = [];
@@ -4746,22 +4763,28 @@ def checar_entrada_loja(s, p):
         for tipo in ("mousePressed", "mouseReleased"):
             s.envia("Input.dispatchMouseEvent", {"type": tipo, "x": x, "y": y, "button": "left", "clickCount": 1})
 
-    try:
+    def rodada(rg):
+        """As checagens da entrada numa região, forçada pelo ?entrada= (F13-T99)."""
+        R = NOME_REGIAO[rg]
+        arg = "?entrada=" + rg
+
+        def conta(nome, ok, det):
+            p.conta("entrada da loja", "%s: %s" % (R, nome), ok, det)
+
         s.tela(1440, 900)
-        # (a) perfil limpo: a fachada desenhada, a placa, a dica e o foco no #entrar
+        # (a) perfil limpo: a fachada da região desenhada, a placa, a dica e o foco no #entrar; e só ela montada
         s.js("localStorage.clear(); sessionStorage.clear(); 'ok'")
-        pagina()
+        pagina(arg)
         a = s.js("""(() => { const e = document.getElementById('entrada'), b = document.getElementById('entrar'), pl = document.querySelector('.entrada-placa');
           const vis = x => { if (!x) return false; const r = x.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.top < innerHeight && r.bottom > 0; };
-          const d = document.getElementById('en-toldo-couro');
+          const marca = document.getElementById(%s);
           return { aberta: getComputedStyle(e).display !== 'none' && !/saindo|fechada/.test(e.className),
-                   fachada: !!d && (d.getAttribute('d') || '').length > 100 && document.getElementById('en-pinheiros').childElementCount > 5
-                     && document.querySelectorAll('#entrada .en-braseiro svg').length === 2 && vis(document.getElementById('en-mundo')),
+                   regiao: e.dataset.regiao === %s,
+                   fachada: !!marca && marca.innerHTML.length > 400 && document.querySelectorAll('#entrada .en-braseiro svg').length === 2 && vis(document.getElementById('en-mundo')),
                    placa: vis(pl), dica: b && b.tagName === 'BUTTON' && b.textContent.trim() === '(Clique em qualquer local para abrir)'
                      && b.getAttribute('aria-label') === 'Entrar na loja' && vis(b) && b.tabIndex === 0,
-                   foco: document.activeElement === b }; })()""")
-        p.conta("entrada da loja", "com perfil limpo: a fachada, a placa, a dica e o foco no #entrar",
-                all(a.values()), "%s" % a)
+                   foco: document.activeElement === b }; })()""" % (json.dumps(MARCA_REGIAO[rg]), json.dumps(rg)))
+        conta("com perfil limpo: a fachada da região, a placa, a dica e o foco no #entrar", all(a.values()), "%s" % a)
 
         # (b) clique de verdade num ponto vazio da cena (o céu): abre, as portas giram, a câmera anda, um som
         s.js(espia)
@@ -4773,12 +4796,12 @@ def checar_entrada_loja(s, p):
         meio = s.js(estado)
         espera_fechar()
         depois = s.js(estado)
-        p.conta("entrada da loja", "o clique em qualquer lugar abre: portas, câmera, um som e fecha no fim",
-                "saindo" in logo["cls"] and "fechada" not in logo["cls"] and meio["folha"] != antes["folha"]
-                and meio["mundo"] != antes["mundo"] and "fechada" in depois["cls"] and depois["sons"] == ["catalog:open"]
-                and depois["tocou"] == 1 and depois["dur"] is not None and 1900 <= depois["dur"] <= 2600,
-                "logo: %s; portas %s → %s; câmera %s → %s; sons %s (tocou %s); saindo→fechada em %s ms"
-                % (logo["cls"], antes["folha"], meio["folha"], antes["mundo"], meio["mundo"], depois["sons"], depois["tocou"], depois["dur"]))
+        conta("o clique em qualquer lugar abre: portas, câmera, um som e fecha no fim",
+              "saindo" in logo["cls"] and "fechada" not in logo["cls"] and meio["folha"] != antes["folha"]
+              and meio["mundo"] != antes["mundo"] and "fechada" in depois["cls"] and depois["sons"] == ["catalog:open"]
+              and depois["tocou"] == 1 and depois["dur"] is not None and 1900 <= depois["dur"] <= 2600,
+              "logo: %s; portas %s → %s; câmera %s → %s; sons %s (tocou %s); saindo→fechada em %s ms"
+              % (logo["cls"], antes["folha"], meio["folha"], antes["mundo"], meio["mundo"], depois["sons"], depois["tocou"], depois["dur"]))
 
         # (g) depois de fechada: nenhum quadro da entrada pedido em 1 s, e nada no console
         n_erros = len(s.erros)
@@ -4788,42 +4811,42 @@ def checar_entrada_loja(s, p):
         time.sleep(1.0)
         g = s.js("({ raf: window.__raf, mundo: document.getElementById('en-mundo').style.transform })")
         s.js("window.requestAnimationFrame = window.__rafOrig; 1")
-        p.conta("entrada da loja", "fechada, nada da entrada roda (nenhum quadro pedido em 1 s) e o console fica limpo",
-                g["raf"] == 0 and g["mundo"] == m0 and len(s.erros) == n_erros and not s.erros,
-                "%s quadro(s) pedido(s) em 1 s; câmera parada: %s; erros: %s" % (g["raf"], g["mundo"] == m0, "; ".join(s.erros[:2]) or "nenhum"))
+        conta("fechada, nada da entrada roda (nenhum quadro pedido em 1 s) e o console fica limpo",
+              g["raf"] == 0 and g["mundo"] == m0 and len(s.erros) == n_erros and not s.erros,
+              "%s quadro(s) pedido(s) em 1 s; câmera parada: %s; erros: %s" % (g["raf"], g["mundo"] == m0, "; ".join(s.erros[:2]) or "nenhum"))
 
         # (c) o clique num ID não abre, e seleciona o ID inteiro
-        pagina()
+        pagina(arg)
         s.js(espia)
         s.js("getSelection().removeAllRanges(); 1")
         pt = s.caixa(".entrada-contato .ea-id")
         clique_em(pt[0], pt[1])
         time.sleep(0.5)
         c = s.js(estado)
-        p.conta("entrada da loja", "o clique no ID não abre: seleciona o ID inteiro",
-                not re.search(r"saindo|fechada", c["cls"]) and c["sel"] == "Brelgo#RPG" and c["sons"] == [],
-                "classe %r; seleção %r; sons %s" % (c["cls"], c["sel"], c["sons"]))
+        conta("o clique no ID não abre: seleciona o ID inteiro",
+              not re.search(r"saindo|fechada", c["cls"]) and c["sel"] == "Brelgo#RPG" and c["sons"] == [],
+              "classe %r; seleção %r; sons %s" % (c["cls"], c["sel"], c["sons"]))
 
         # (d) o Enter abre uma vez só: no #entrar (vira clique) e com o foco no corpo da página
         s.js("getSelection().removeAllRanges(); document.getElementById('entrar').focus(); 1")
         _tecla(s, "Enter")
         espera_fechar()
         d1 = s.js(estado)
-        pagina()
+        pagina(arg)
         s.js(espia)
         s.js("document.activeElement && document.activeElement.blur(); 1")
         _tecla(s, "Enter")
         espera_fechar()
         d2 = s.js(estado)
-        p.conta("entrada da loja", "o Enter abre uma vez só (no #entrar e com o foco na página)",
-                all("fechada" in d["cls"] and d["sons"] == ["catalog:open"] and d["tocou"] == 1 for d in (d1, d2)),
-                "no #entrar: sons da entrada %s (todos %s), tocou %s, %s; na página: sons da entrada %s (todos %s), tocou %s, %s"
-                % (d1["sons"], d1["todos"], d1["tocou"], d1["cls"], d2["sons"], d2["todos"], d2["tocou"], d2["cls"]))
+        conta("o Enter abre uma vez só (no #entrar e com o foco na página)",
+              all("fechada" in d["cls"] and d["sons"] == ["catalog:open"] and d["tocou"] == 1 for d in (d1, d2)),
+              "no #entrar: sons da entrada %s (todos %s), tocou %s, %s; na página: sons da entrada %s (todos %s), tocou %s, %s"
+              % (d1["sons"], d1["todos"], d1["tocou"], d1["cls"], d2["sons"], d2["todos"], d2["tocou"], d2["cls"]))
 
         # (e) com menos movimento (do sistema): a câmera não anda e fecha rápido
         s.envia("Emulation.setEmulatedMedia", {"features": [{"name": "prefers-reduced-motion", "value": "reduce"}]})
         try:
-            pagina()
+            pagina(arg)
             s.js(espia)
             antes = s.js(estado)
             clique_em(720, 60)
@@ -4835,23 +4858,23 @@ def checar_entrada_loja(s, p):
             e = s.js(estado)
         finally:
             s.envia("Emulation.setEmulatedMedia", {"features": []})
-        p.conta("entrada da loja", "com menos movimento a câmera não anda e a entrada fecha logo",
-                all(v == antes["mundo"] for v in vistos) and "fechada" in e["cls"] and e["dur"] is not None and e["dur"] <= 950
-                and e["sons"] == ["catalog:open"],
-                "câmera %s → %s; saindo→fechada em %s ms; sons %s" % (antes["mundo"], sorted(set(vistos)), e["dur"], e["sons"]))
+        conta("com menos movimento a câmera não anda e a entrada fecha logo",
+              all(v == antes["mundo"] for v in vistos) and "fechada" in e["cls"] and e["dur"] is not None and e["dur"] <= 950
+              and e["sons"] == ["catalog:open"],
+              "câmera %s → %s; saindo→fechada em %s ms; sons %s" % (antes["mundo"], sorted(set(vistos)), e["dur"], e["sons"]))
 
-        # (f) o link que entra direto fecha na hora, sem som e sem montar a cena
-        pagina("?r=97#calc")
+        # (f) o link que entra direto fecha na hora, sem som e sem montar a cena (nem a forçada)
+        pagina(arg + "&r=97#calc")
         f = s.js("""(() => { const e = document.getElementById('entrada');
-          return { cls: e.className, display: getComputedStyle(e).display, montada: document.getElementById('en-pinheiros').childElementCount,
+          return { cls: e.className, display: getComputedStyle(e).display, montada: e.querySelectorAll('.en-palco, style').length,
                    tocou: (window.__tocou || []).filter(f => /open_catalog/.test(f)).length }; })()""")
-        p.conta("entrada da loja", "o link com # (#calc) entra direto: fechada na hora, sem som",
-                "fechada" in f["cls"] and "saindo" not in f["cls"] and f["display"] == "none" and f["tocou"] == 0 and f["montada"] == 0,
-                "%s" % f)
+        conta("o link com # (#calc) entra direto: fechada na hora, sem som e sem montar a cena",
+              "fechada" in f["cls"] and "saindo" not in f["cls"] and f["display"] == "none" and f["tocou"] == 0 and f["montada"] == 0,
+              "%s" % f)
 
         # F13-T97, a revisão do cético: cada conserto com a sua checagem
         # (i) o 2º clique durante a abertura, sobre um card escondido da loja, não abre a ficha nem toca a loja
-        pagina()
+        pagina(arg)
         s.js(espia)
         alvo = s.js("""(() => { for (let y = 320; y < innerHeight - 60; y += 40) for (let x = 200; x < innerWidth - 200; x += 60) {
             const el = document.elementsFromPoint(x, y).find(e => !e.closest('#entrada'));
@@ -4863,14 +4886,14 @@ def checar_entrada_loja(s, p):
         time.sleep(0.3)
         i = s.js("({ ficha: document.getElementById('overlay').classList.contains('show'), todos: window.__sons || [] })")
         s.js("(() => { const o = document.getElementById('overlay'); if (o.classList.contains('show')) closeModal && closeModal(); return 1; })()")
-        p.conta("entrada da loja", "o 2º clique durante a abertura, sobre a loja escondida, não atravessa: nem ficha aberta, nem som da loja",
-                alvo is not None and not i["ficha"] and not any(x in i["todos"] for x in ("catalog:click", "catalog:pergaminho")),
-                "ponto %s; ficha aberta %s; sons %s" % (alvo, i["ficha"], i["todos"]))
+        conta("o 2º clique durante a abertura, sobre a loja escondida, não atravessa: nem ficha aberta, nem som da loja",
+              alvo is not None and not i["ficha"] and not any(x in i["todos"] for x in ("catalog:click", "catalog:pergaminho")),
+              "ponto %s; ficha aberta %s; sons %s" % (alvo, i["ficha"], i["todos"]))
 
         # (j) o "Menos movimento" da loja (não o do sistema): as portas esmaecem e a entrada some aos poucos
         s.js("localStorage.setItem('acessibilidade', JSON.stringify({ movimento: true })); 1")
         try:
-            pagina()
+            pagina(arg)
             s.js(espia)
             clique_em(720, 60)
             ops = []
@@ -4882,12 +4905,12 @@ def checar_entrada_loja(s, p):
             j = s.js(estado)
         finally:
             s.js("localStorage.removeItem('acessibilidade'); 1")
-        p.conta("entrada da loja", "com o \"Menos movimento\" da loja, as portas esmaecem e a entrada some aos poucos (não de golpe)",
-                min(o[0] for o in ops) < 0.5 and any(0.05 < o[1] < 0.95 for o in ops) and "fechada" in j["cls"] and j["dur"] is not None and j["dur"] <= 950,
-                "opacidade [porta, entrada] a cada 120 ms: %s; saindo→fechada em %s ms" % ([[round(a, 2), round(b, 2)] for a, b in ops], j["dur"]))
+        conta("com o \"Menos movimento\" da loja, as portas esmaecem e a entrada some aos poucos (não de golpe)",
+              min(o[0] for o in ops) < 0.5 and any(0.05 < o[1] < 0.95 for o in ops) and "fechada" in j["cls"] and j["dur"] is not None and j["dur"] <= 950,
+              "opacidade [porta, entrada] a cada 120 ms: %s; saindo→fechada em %s ms" % ([[round(a, 2), round(b, 2)] for a, b in ops], j["dur"]))
 
         # (k) arrastar para selecionar o ID (apertar nele e soltar fora dele) não abre a loja
-        pagina()
+        pagina(arg)
         s.js(espia)
         s.js("getSelection().removeAllRanges(); 1")
         # o gesto de quem seleciona: aperta perto do fim do ID e solta logo depois dele, na mesma linha
@@ -4902,9 +4925,9 @@ def checar_entrada_loja(s, p):
         s.envia("Input.dispatchMouseEvent", {"type": "mouseReleased", "x": fimx + 25, "y": fimy + 2, "button": "left", "clickCount": 1})
         time.sleep(0.5)
         k = s.js(estado)
-        p.conta("entrada da loja", "arrastar para selecionar o ID (apertar nele e soltar fora) não abre a loja",
-                not re.search(r"saindo|fechada", k["cls"]) and k["sons"] == [],
-                "classe %r; seleção %r; sons %s" % (k["cls"], k["sel"], k["sons"]))
+        conta("arrastar para selecionar o ID (apertar nele e soltar fora) não abre a loja",
+              not re.search(r"saindo|fechada", k["cls"]) and k["sons"] == [],
+              "classe %r; seleção %r; sons %s" % (k["cls"], k["sel"], k["sons"]))
 
         # (l) com a entrada de pé, a roda do mouse não rola a loja escondida; ao entrar, a rolagem volta
         s.js("window.scrollTo(0, 0); 1")
@@ -4921,29 +4944,40 @@ def checar_entrada_loja(s, p):
         clique_em(720, 60)
         espera_fechar()
         l2 = s.js("({ y: scrollY, trava: document.documentElement.classList.contains('com-entrada'), over: getComputedStyle(document.documentElement).overflowY })")
-        p.conta("entrada da loja", "com a entrada de pé, a roda do mouse não rola a loja escondida; ao entrar, a loja abre no topo e rola de novo",
-                l1["y"] == 0 and l1["trava"] and l1["over"] == "hidden" and l2["y"] == 0 and not l2["trava"] and l2["over"] != "hidden",
-                "de pé %s; depois de entrar %s" % (l1, l2))
-        p.conta("entrada da loja", "o Tab não sai da entrada: o foco fica no #entrar (nada por baixo é acionado)",
-                m["foco"] == "entrar" and not re.search(r"saindo|fechada", m["cls"]),
-                "%s" % m)
+        conta("com a entrada de pé, a roda do mouse não rola a loja escondida; ao entrar, a loja abre no topo e rola de novo",
+              l1["y"] == 0 and l1["trava"] and l1["over"] == "hidden" and l2["y"] == 0 and not l2["trava"] and l2["over"] != "hidden",
+              "de pé %s; depois de entrar %s" % (l1, l2))
+        conta("o Tab não sai da entrada: o foco fica no #entrar (nada por baixo é acionado)",
+              m["foco"] == "entrar" and not re.search(r"saindo|fechada", m["cls"]),
+              "%s" % m)
 
         # (o) parada na tela, a entrada não ocupa a thread principal (o pulso da dica)
-        pagina()
+        pagina(arg)
         time.sleep(4.5)                     # a chegada da dica e o pulso já começaram
         s.envia("Performance.enable")
         met = lambda: {x["name"]: x["value"] for x in s.envia("Performance.getMetrics")["metrics"]}
         m1 = met(); time.sleep(2.0); m2 = met()
         s.envia("Performance.disable")
         tarefa = (m2["TaskDuration"] - m1["TaskDuration"]) / max(0.1, m2["Timestamp"] - m1["Timestamp"])
-        p.conta("entrada da loja", "parada na tela, a entrada quase não gasta a thread principal (menos de 15%)",
-                tarefa < 0.15, "%.0f ms de tarefa por segundo" % (tarefa * 1000))
+        conta("parada na tela, a entrada quase não gasta a thread principal (menos de 15%)",
+              tarefa < 0.15, "%.0f ms de tarefa por segundo" % (tarefa * 1000))
 
-        # (q) a fachada não baixa a textura de 2,8 MB: a janela usa a imagem pequena do card do Freljord
-        q = s.js(r"""(() => { const r = performance.getEntriesByType('resource').map(e => e.name);
-          return { png: r.filter(n => /texturas\/freljord\.png/.test(n)).length, jpg: r.filter(n => /cards\/freljord\.jpg/.test(n)).length }; })()""")
-        p.conta("entrada da loja", "a fachada não baixa a textura de 2,8 MB (a janela usa o jpg pequeno do card)",
-                q["png"] == 0 and q["jpg"] >= 1, "%s" % q)
+        # (q) o peso: a entrada não baixa imagem grande — o que ela usa (fundos, máscaras e <image>) tem menos
+        # de 300 KB cada (no Freljord, a janela usa o jpg pequeno do card); a textura de 2,8 MB nunca
+        q = s.js(r"""(() => { const usa = new Set(), base = location.href;
+          document.querySelectorAll('#entrada, #entrada *').forEach(el => {
+            for (const pr of ['background-image', 'mask-image', '-webkit-mask-image', 'border-image-source']) {
+              // fora os data: (o que vai dentro deles não é pedido) e as referências na própria página (url(#…))
+              const v = (getComputedStyle(el).getPropertyValue(pr) || '').replace(/url\("data:[^"]*"\)/g, '');
+              for (const m of v.matchAll(/url\("?([^")]+)"?\)/g)) if (!/^#/.test(m[1])) usa.add(new URL(m[1], base).href); }
+            if (el.tagName === 'image') usa.add(new URL(el.getAttribute('href') || el.getAttribute('xlink:href'), base).href); });
+          const rec = performance.getEntriesByType('resource');
+          const tam = [...usa].map(u => { const e = rec.find(x => x.name === u); return [u.split('/').slice(-2).join('/'), e ? e.decodedBodySize : null]; });
+          return { usa: tam, png: rec.filter(e => /regioes\/texturas\//.test(e.name)).map(e => e.name.split('/').pop()) }; })()""")
+        conta("o peso: o que a entrada usa é leve (cada imagem < 300 KB) e a textura de 2,8 MB não baixa",
+              bool(q["usa"]) and all(t is not None and t < 300000 for _, t in q["usa"]) and not q["png"]
+              and (rg != "freljord" or any(u.endswith("cards/freljord.jpg") for u, _ in q["usa"])),
+              "%s" % q)
 
         # (p) em janela menor que as quatro do roteiro, a letra da placa não cai abaixo do piso
         menores = {}
@@ -4956,8 +4990,25 @@ def checar_entrada_loja(s, p):
                        id: +ef(document.querySelector('.entrada-contato .ea-id')).toFixed(1),
                        dentro: pl.top >= 0 && pl.right <= innerWidth && nt.bottom <= innerHeight && nt.right <= innerWidth }; })()""")
         s.tela(1440, 900)
-        p.conta("entrada da loja", "em 1366×768 e 1024×768 a letra da placa não cai abaixo do piso (rótulo ≥ 10 px, nota e ID ≥ 12 px) e a placa fica na tela",
-                all(v["rot"] >= 10 and v["nota"] >= 12 and v["id"] >= 12 and v["dentro"] for v in menores.values()), "%s" % menores)
+        conta("em 1366×768 e 1024×768 a letra da placa não cai abaixo do piso (rótulo ≥ 10 px, nota e ID ≥ 12 px) e a placa fica na tela",
+              all(v["rot"] >= 10 and v["nota"] >= 12 and v["id"] >= 12 and v["dentro"] for v in menores.values()), "%s" % menores)
+
+        # (r) F13-T99, o diretor de arte: em Noxus a cinza não passa por cima da placa nem da etiqueta (nem para
+        # em cima do texto com menos movimento) — a placa é pintada depois da camada da cinza; em Shurima, a lasca
+        # caída ao pé da porta saiu (o disco partido aparece uma vez só, no alto do portal)
+        if rg == "noxus":
+            r = s.js("""(() => { const e = document.getElementById('entrada'), cinza = document.getElementById('en-neveTela'), g = document.querySelector('#entrada .en-placa-grupo');
+              const topo = x => { while (x && x.parentElement !== e) x = x.parentElement; return x; };
+              const filhos = [...e.children], ip = filhos.indexOf(topo(g)), ic = filhos.indexOf(cinza);
+              return { placa: ip, cinza: ic, etiqueta: !!g.querySelector('.en-etiqueta'),
+                       zcinza: getComputedStyle(cinza).zIndex, zplaca: getComputedStyle(topo(g)).zIndex }; })()""")
+            conta("a cinza não passa por cima da placa nem da etiqueta: a placa é pintada depois da camada da cinza",
+                  r["placa"] > r["cinza"] >= 0 and r["etiqueta"] and r["zcinza"] == "auto" and r["zplaca"] == "auto", "%s" % r)
+        if rg == "shurima":
+            r = s.js("""(() => ({ discos: document.querySelectorAll('#entrada use').length ? [...document.querySelectorAll('#entrada use')].filter(u => /#en-disco-arte$/.test(u.getAttribute('href') || '')).length : 0,
+              lasca: !!document.querySelector('#entrada [clip-path="url(#en-cCunha)"], #en-cunha-clip, #en-esquerda-porta') }))()""")
+            conta("a lasca caída ao pé da porta saiu: o disco partido aparece uma vez só, no alto do portal",
+                  r["discos"] == 1 and not r["lasca"], "%s" % r)
 
         # (n) com a fonte para dislexia, o Riot ID cabe inteiro no pergaminho (não sai cortado)
         s.js("localStorage.setItem('acessibilidade', JSON.stringify({ dislexia: true })); 1")
@@ -4965,7 +5016,7 @@ def checar_entrada_loja(s, p):
             dis = {}
             for w, h in ((1440, 900), (1280, 800)):
                 s.tela(w, h)
-                pagina()
+                pagina(arg)
                 s.js("document.fonts.ready.then(() => 1)")
                 time.sleep(0.6)
                 dis["%dx%d" % (w, h)] = s.js("""(() => { const per = document.querySelector('.en-pergaminho') || document.querySelector('.entrada-placa');
@@ -4975,9 +5026,34 @@ def checar_entrada_loja(s, p):
         finally:
             s.js("localStorage.removeItem('acessibilidade'); 1")
             s.tela(1440, 900)
-        p.conta("entrada da loja", "com a fonte para dislexia, os IDs cabem inteiros no pergaminho (o Riot ID não sai cortado)",
-                all(v["fonte"] and len(v["ids"]) == 2 and all(i[1] >= 0 and i[2] >= 0 for i in v["ids"]) for v in dis.values()),
-                "folga [ID, à direita, à esquerda] por resolução: %s" % dis)
+        conta("com a fonte para dislexia, os IDs cabem inteiros no pergaminho (o Riot ID não sai cortado)",
+              all(v["fonte"] and len(v["ids"]) == 2 and all(i[1] >= 0 and i[2] >= 0 for i in v["ids"]) for v in dis.values()),
+              "folga [ID, à direita, à esquerda] por resolução: %s" % dis)
+
+    try:
+        for rg in REGIOES_ENTRADA:
+            rodada(rg)
+
+        # (s) F13-T99: sem o parâmetro, a região é sorteada a cada carga (12 cargas dão pelo menos duas) e
+        # só a sorteada está montada: um tema, um <style>, nenhum molde sobrando, nada das outras duas
+        s.tela(1440, 900)
+        vistas, ruins = [], []
+        for _ in range(12):
+            pagina()
+            v = s.js("""(() => { const e = document.getElementById('entrada'), rg = e.dataset.regiao;
+              const marcas = %s, outras = Object.keys(marcas).filter(k => k !== rg && document.getElementById(marcas[k]));
+              return { rg, estilos: e.querySelectorAll('style').length, moldes: document.querySelectorAll('template.en-tema, template[id^="en-tema-"]').length,
+                       palcos: e.querySelectorAll('.en-palco').length, outras,
+                       propria: !!(rg && document.getElementById(marcas[rg])) }; })()""" % json.dumps(MARCA_REGIAO))
+            vistas.append(v["rg"])
+            if not (v["rg"] in REGIOES_ENTRADA and v["estilos"] == 1 and v["moldes"] == 0 and v["propria"] and not v["outras"]
+                    and v["palcos"] == (2 if v["rg"] == "noxus" else 1)):
+                ruins.append(v)
+        repetidas = [i for i in range(1, len(vistas)) if vistas[i] == vistas[i - 1]]
+        p.conta("entrada da loja", "sem o parâmetro, a região é sorteada a cada carga (12 cargas dão pelo menos duas regiões) e nunca repete a da visita anterior",
+                len(set(vistas)) >= 2 and not repetidas, "regiões vistas: %s; repetidas em seguida nas cargas %s" % (vistas, repetidas or "nenhuma"))
+        p.conta("entrada da loja", "só a região sorteada está montada (um tema, um <style>, nenhum molde sobrando, nada das outras)",
+                not ruins, "%s" % (ruins[:2] or "12 de 12 cargas com uma região só"))
     finally:
         s.envia("Page.removeScriptToEvaluateOnNewDocument", {"identifier": sonda})
         s.tela_normal()

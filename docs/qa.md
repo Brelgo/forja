@@ -540,6 +540,23 @@ build em várias linhas, o rodapé cortado contado como estouro, as runas tortas
 o nome vazio sem campeão; no robô, os campos sem runas e habilidades, o falta_algo sem o
 "faltou" e a base sem data/runas.js.
 
+A entrada por região (F13-T99, 01/11/2026): a entrada sorteia a região a cada visita — o
+Freljord, Noxus (o arsenal da praça) ou Shurima (a tenda das relíquias) —, e o parâmetro
+?entrada=freljord|noxus|shurima força uma. O grupo "entrada da loja" roda inteiro em cada
+uma das três, forçada pelo parâmetro (a fachada da região desenhada, o clique, o Enter, o
+ID, o arraste no ID, o Tab, a rolagem, menos movimento do sistema e da loja, o #calc sem
+montar a cena, o 2º clique, a thread principal parada, a letra em 1366×768 e 1024×768, a
+dislexia), e a "fundação" confere a placa das três nas quatro resoluções. Novas: o peso
+(o que a entrada usa — fundos, máscaras e <image> — tem menos de 300 KB cada, e a textura
+de 2,8 MB nunca baixa); em Noxus a placa é pintada depois da camada da cinza (a cinza não
+passa nem para em cima do texto); em Shurima o disco partido aparece uma vez só (a lasca
+caída saiu); sem o parâmetro, 12 cargas dão pelo menos duas regiões e cada carga monta só
+a sorteada (um tema, um <style>, nenhum molde sobrando, nada das outras). Vistos falhando,
+cada um num mutante: o sorteio fixo, as três montadas juntas, a cinza de novo por cima da
+placa de Noxus, a lasca de volta, o #calc montando a cena, as portas de Noxus sem o
+"Menos movimento" da loja, o Discord errado só na placa de Noxus (a fundação), a textura
+de 2,8 MB de volta e a placa sem o piso de escala (falha nas três).
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

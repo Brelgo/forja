@@ -1,0 +1,1782 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forja · Entrada de Shurima</title>
+<!-- F13-T99: "A tenda das relíquias no entardecer". Amostra autossuficiente no molde da entrada do
+     Freljord (fase13-t96-entrada-freljord-3.html): mesmo esqueleto (palco, três camadas de câmera,
+     porta dupla em CSS 3D, placa, dica, botão, loja placeholder); toda a arte trocada, própria, em SVG/CSS.
+     Os ganchos têm os nomes do Freljord (neveTela/.neve-tela, .neve, .nevoa, .braseiro, .luz-neve, .runas-*,
+     .janela-*), mesmo quando o conteúdo é areia, lanterna ou glifo: a integração só troca a arte. -->
+<!-- Refino (01/11): papiro sem grade; disco com a lasca da borda e a lasca fincada na areia; panos desbotados
+     (garança, índigo queimado, ocre; sanefa e abas em panos diferentes); relíquias próprias (máscara de raios,
+     ave de asas abertas, cetro, placa do sol); laterais recuadas; tapete curto; etiqueta de 340 px. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --papel: #e5d3ad;
+  --papiro: #e4c98e;
+  --tinta: #2c1d12;
+  --tinta-suave: #5a4630;
+  --latao: #b6873a;
+  --bronze: #a8742f;
+  --cera: #8d2c22;
+  --brasa: #ff7a1e;
+  --brasa-clara: #ffd27a;
+  --titulos: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --texto: 'Alegreya', Georgia, serif;
+  --gravado: 'Cinzel', Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: #120c1e; overflow: hidden; color: var(--tinta); font-family: var(--texto); }
+
+/* ============ A CENA ============ */
+.entrada { position: fixed; inset: 0; overflow: hidden; cursor: pointer; background: #1a1026; }
+/* o palco: 1440×900 de desenho, encaixado inteiro na tela (o resto da arte sangra para fora) */
+.palco { position: absolute; left: 50%; top: 50%; width: 1440px; height: 900px; transform-origin: 50% 50%; }
+/* três camadas de câmera (paralaxe): longe (céu, dunas, ruínas), mundo (a tenda), perto (lanternas, dunas da frente) */
+.camada { position: absolute; inset: 0; transform-origin: 720px 597px; transform: scale(.86); will-change: transform; }
+.camada > * { position: absolute; }
+.longe { pointer-events: none; }
+.perto { pointer-events: none; }
+
+/* céu do entardecer: índigo em cima, o poente cor de cobre no horizonte (camada de longe) */
+.ceu { left: -900px; top: -700px; width: 3240px; height: 2000px;
+  background:
+    radial-gradient(ellipse 900px 260px at 2160px 1330px, rgba(255,196,120,.55), transparent 70%),
+    linear-gradient(180deg, #070616 0, #0d0b24 420px, #19143a 700px, #2e1d4c 900px, #55295a 1060px, #8c3a58 1170px, #c55a48 1250px, #e98a48 1305px, #f6b862 1345px, #f9d48e 1380px, #e9a868 1440px); }
+.estrelas { left: -900px; top: -700px; width: 3240px; height: 1250px; background-repeat: no-repeat; }
+.estrelas.e1 { animation: cintila 4.2s ease-in-out infinite alternate; }
+.estrelas.e2 { animation: cintila 6.6s ease-in-out -2s infinite alternate; }
+.estrelas.e3 { animation: cintila 9.4s ease-in-out -5s infinite alternate-reverse; }
+@keyframes cintila { 0% { opacity: .35; } 100% { opacity: 1; } }
+.lua { left: 92px; top: -6px; width: 58px; height: 58px; border-radius: 50%; background: transparent;
+  box-shadow: inset -15px 7px 0 0 #f6ecd2; filter: drop-shadow(0 0 10px rgba(255,236,200,.55)) drop-shadow(0 0 26px rgba(255,220,180,.25)); transform: rotate(-18deg); }
+.poente { left: 520px; top: 380px; width: 1700px; height: 420px; border-radius: 50%; mix-blend-mode: screen; pointer-events: none;
+  background: radial-gradient(ellipse 50% 50% at 62% 62%, rgba(255,150,80,.42), rgba(255,110,70,.12) 55%, transparent 75%);
+  animation: respira 9s ease-in-out infinite; }
+svg.serras { left: -900px; top: -700px; width: 3240px; height: 2000px; overflow: visible; }
+
+svg.fundo { left: -600px; top: -400px; width: 2640px; height: 1700px; overflow: visible; }
+svg.frente { left: -600px; top: -400px; width: 2640px; height: 1700px; overflow: visible; }
+/* os glifos do lintel e da pedra caída respiram em SVG próprio (a opacidade fica no compositor) */
+svg.runas-vivas { left: 560px; top: 330px; width: 320px; height: 70px; overflow: visible; pointer-events: none; animation: runas 6s ease-in-out infinite; }
+svg.runas-marco { left: -60px; top: 760px; width: 200px; height: 160px; overflow: visible; pointer-events: none; animation: runas 6s ease-in-out -3s infinite; }
+/* luz que vaza pela lona em volta do portal, e o halo dos lampiões pendurados */
+.janela-brilho { left: 420px; top: 300px; width: 600px; height: 520px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 50% 50% at 50% 55%, rgba(255,170,80,.22), rgba(255,120,50,.06) 60%, transparent 75%); animation: respira 5.2s ease-in-out infinite; }
+.janela-halo { width: 240px; height: 240px; margin: -120px 0 0 -120px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255,214,140,.5), rgba(255,160,70,.16) 38%, transparent 68%); animation: tremula 2.9s steps(8) infinite; }
+.janela-halo.h2 { animation-duration: 2.3s; animation-delay: -1.1s; }
+@keyframes respira { 0%,100% { opacity: .78; } 45% { opacity: 1; } 70% { opacity: .86; } }
+@keyframes runas { 0%,100% { opacity: .35; } 50% { opacity: .9; } }
+
+/* ============ A PORTA ============ */
+/* o vão: 240×386, de x 600 a 840, y 404 a 790 */
+.vao { left: 600px; top: 404px; width: 240px; height: 386px; perspective: 820px; perspective-origin: 50% 46%; }
+.interior { position: absolute; inset: 0; overflow: hidden; background: #6b3412; }
+.interior svg { display: block; width: 100%; height: 100%; }
+.interior .acende { position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(ellipse 70% 55% at 50% 30%, #fff4d0, rgba(255,206,120,.6) 45%, rgba(255,150,60,0) 80%); mix-blend-mode: screen; }
+.interior .amuleto-brilho { position: absolute; left: 140px; top: 244px; width: 44px; height: 44px; border-radius: 50%; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255,240,180,.95), rgba(255,200,90,.35) 40%, transparent 70%); animation: respira 2.6s ease-in-out infinite; }
+.folha { position: absolute; top: 0; width: 120px; height: 386px; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform; }
+.folha.esq { left: 0; transform-origin: 0 50%; }
+.folha.dir { right: 0; transform-origin: 100% 50%; }
+/* cedro antigo: quatro tábuas por folha, com fresta de 2px por onde a luz de dentro passa */
+.tabuas { position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(30,14,40,.42), transparent 26%, transparent 66%, rgba(255,160,80,.14) 92%, rgba(255,186,110,.3)),
+    radial-gradient(ellipse 26px 70px at 30% 60%, rgba(20,8,4,.32), transparent 70%),
+    radial-gradient(ellipse 18px 40px at 74% 26%, rgba(255,210,160,.07), transparent 70%),
+    linear-gradient(90deg, rgba(0,0,0,.34), transparent 22%, transparent 78%, rgba(0,0,0,.38)) 0 0 / 30px 100%,
+    repeating-linear-gradient(90deg, rgba(255,200,150,.05) 0 1px, transparent 1px 4px, rgba(0,0,0,.12) 4px 5px, transparent 5px 9px),
+    repeating-linear-gradient(180deg, transparent 0 53px, rgba(0,0,0,.16) 53px 54px, transparent 54px 117px),
+    linear-gradient(180deg, #5c3621, #48291a 55%, #321c11);
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 28px, transparent 28px 30px);
+          mask-image: repeating-linear-gradient(90deg, #000 0 28px, transparent 28px 30px); }
+.folha.dir .tabuas { -webkit-mask-image: repeating-linear-gradient(270deg, #000 0 28px, transparent 28px 30px);
+                             mask-image: repeating-linear-gradient(270deg, #000 0 28px, transparent 28px 30px); }
+/* a moldura de bronze cravejada, por dentro da borda */
+.moldura { position: absolute; left: 7px; right: 7px; top: 8px; bottom: 8px; border: 3px solid #7a5222; border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255,220,150,.18), 0 0 0 1px rgba(0,0,0,.45);
+  background: radial-gradient(circle at 50% 50%, #e2b866 0 1.5px, #5e3c12 2.5px, transparent 3.1px) 50% 6px / 100% 32px repeat-y; }
+.folha.esq .moldura { background-position: 100% 6px; background-size: 14px 32px; }
+.folha.dir .moldura { background-position: 0 6px; background-size: 14px 32px; }
+/* cintas de bronze que viram dobradiça na borda de fora */
+.cinta { position: absolute; height: 16px; width: 112px;
+  background:
+    radial-gradient(circle at 50% 50%, #f6dc98 0 1.4px, #6a4416 2.4px, transparent 3px) 9px 0 / 22px 100% repeat-x,
+    linear-gradient(180deg, #d9ab5c 0, #a8742f 38%, #6e4618 80%, #3e260a 100%);
+  box-shadow: 0 2px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,236,190,.35); }
+.folha.esq .cinta { left: -6px; clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%); }
+.folha.dir .cinta { right: -6px; clip-path: polygon(12% 0, 100% 0, 100% 100%, 12% 100%, 0 50%); }
+.cinta.c1 { top: 40px; } .cinta.c2 { top: 168px; } .cinta.c3 { top: 318px; }
+/* suportes da tranca e argolas de bronze */
+.suporte { position: absolute; top: 190px; width: 24px; height: 40px; border-radius: 3px;
+  background: radial-gradient(circle at 50% 5px, #f2d690 0 1.6px, transparent 2.4px), radial-gradient(circle at 50% 35px, #f2d690 0 1.6px, transparent 2.4px), linear-gradient(90deg, #4a2e10, #b07a34 50%, #4a2e10);
+  box-shadow: 0 2px 3px rgba(0,0,0,.6); }
+.folha.esq .suporte { left: 78px; } .folha.dir .suporte { right: 78px; }
+.argola { position: absolute; top: 254px; width: 30px; height: 30px; }
+.folha.esq .argola { right: 12px; } .folha.dir .argola { left: 12px; }
+.argola::before { content: ""; position: absolute; left: 8px; top: -5px; width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f2d690, #8a5a1e 55%, #3e260a 80%); box-shadow: 0 1px 2px rgba(0,0,0,.7); }
+.argola::after { content: ""; position: absolute; left: 1px; top: 2px; width: 28px; height: 28px; border-radius: 50%;
+  border: 4px solid #7a5222; border-top-color: #d9ab5c; border-left-color: #a8742f; box-shadow: 0 2px 2px rgba(0,0,0,.6); }
+/* a roseta solar de bronze só na folha da esquerda; na da direita, o amuleto contra mau-olhado (a porta não é espelho) */
+.roseta { position: absolute; left: 30px; top: 74px; width: 60px; height: 60px; overflow: visible; filter: drop-shadow(0 3px 2px rgba(0,0,0,.6)); }
+.amuleto-porta { position: absolute; left: 36px; top: 64px; width: 48px; height: 96px; overflow: visible; filter: drop-shadow(0 3px 2px rgba(0,0,0,.6)); }
+.folha .sombra { position: absolute; inset: 0; background: #0a0604; opacity: 0; }
+/* espessura da folha (a borda que aparece quando gira) */
+.folha .borda { position: absolute; top: 0; height: 100%; width: 16px; background: linear-gradient(90deg, #2a170c, #4a2c1a, #1e110a); }
+.folha.esq .borda { right: 0; transform-origin: 100% 50%; transform: rotateY(-90deg); }
+.folha.dir .borda { left: 0; transform-origin: 0 50%; transform: rotateY(90deg); }
+/* a luz pela fresta do meio e debaixo da porta */
+.fresta-meio { left: 717px; top: 404px; width: 6px; height: 386px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,190,100,.0), rgba(255,206,120,.85) 20%, rgba(255,216,140,.95) 60%, rgba(255,186,90,.7));
+  filter: blur(2px); mix-blend-mode: screen; }
+.fresta-chao { left: 596px; top: 783px; width: 248px; height: 14px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255,218,140,.95), rgba(255,156,60,.5) 45%, transparent 75%);
+  filter: blur(2px); mix-blend-mode: screen; }
+/* a tranca: uma viga de cedro com ponteiras de bronze, presa pelo selo de barro do mercador */
+.tranca { left: 572px; top: 600px; width: 298px; height: 26px; transform-origin: 149px 13px; border-radius: 4px;
+  background:
+    linear-gradient(90deg, #3e260a 0, #c8964a 6px, #8a5a1e 22px, #3e260a 30px, transparent 30px calc(100% - 30px), #3e260a calc(100% - 30px), #8a5a1e calc(100% - 22px), #c8964a calc(100% - 6px), #3e260a),
+    repeating-linear-gradient(180deg, rgba(255,220,170,.07) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, #7e4e2c, #5c3820 45%, #3a2214);
+  box-shadow: 0 6px 8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,220,170,.28), inset 0 -2px 0 rgba(0,0,0,.4); }
+.tranca::before { content: ""; position: absolute; left: 7px; top: 4px; width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fbe6a8, #b07a34 55%, #4a2e10); box-shadow: 0 1px 2px #000; }
+.tranca::after { content: ""; position: absolute; left: 40px; right: 40px; top: -3px; height: 4px; border-radius: 3px;
+  background: linear-gradient(90deg, transparent, rgba(230,180,120,.55) 20%, rgba(240,196,140,.4) 70%, transparent); }
+/* o cordão que amarra as argolas e o selo de barro estampado com o sol */
+svg.cordao { left: 676px; top: 598px; width: 88px; height: 94px; overflow: visible; pointer-events: none; }
+.selo { left: 694px; top: 588px; width: 52px; height: 52px; pointer-events: none; filter: drop-shadow(0 4px 3px rgba(0,0,0,.6)); }
+.selo i { position: absolute; inset: 0; border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #3e0f0a 0 4px, transparent 5px),
+    radial-gradient(circle at 50% 50%, transparent 0 9px, rgba(40,8,4,.75) 9.5px 11px, transparent 11.5px),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(40,8,4,.55) 0 6deg, transparent 6deg 22.5deg),
+    radial-gradient(circle at 50% 50%, transparent 0 18px, rgba(40,8,4,.6) 18.5px 20px, transparent 20.5px),
+    radial-gradient(circle at 38% 32%, #c4553e, #8d2c22 55%, #561510 85%, #3a0c08); }
+.selo i.e { clip-path: polygon(0 0, 54% 0, 47% 18%, 56% 34%, 45% 52%, 55% 70%, 46% 86%, 52% 100%, 0 100%); }
+.selo i.d { clip-path: polygon(54% 0, 100% 0, 100% 100%, 52% 100%, 46% 86%, 55% 70%, 45% 52%, 56% 34%, 47% 18%); }
+
+/* a luz que sai pela porta e deita na areia */
+.luz-neve { left: 420px; top: 760px; width: 600px; height: 200px; pointer-events: none; opacity: .35; border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 50% 30%, rgba(255,200,110,.75), rgba(255,140,50,.28) 50%, transparent 78%);
+  mix-blend-mode: screen; }
+.poca { left: 360px; top: 792px; width: 720px; height: 360px; pointer-events: none; opacity: .55; transform-origin: 50% 0;
+  clip-path: polygon(33% 0, 67% 0, 100% 100%, 0 100%);
+  background: radial-gradient(ellipse 60% 85% at 50% 0, rgba(255,218,130,.95), rgba(255,160,70,.45) 45%, transparent 82%);
+  mix-blend-mode: screen; transform: scaleY(.3); }
+.raios { left: 270px; top: 200px; width: 900px; height: 800px; pointer-events: none; opacity: 0;
+  background:
+    radial-gradient(ellipse 30% 40% at 50% 50%, rgba(255,232,160,.85), rgba(255,176,80,.25) 55%, transparent 80%),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,214,140,.18) 0 4deg, transparent 4deg 11deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0, rgba(0,0,0,.6) 35%, transparent 70%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 0, rgba(0,0,0,.6) 35%, transparent 70%);
+  mix-blend-mode: screen; }
+
+/* ============ AS LANTERNAS DE LATÃO (camada de perto) ============ */
+.braseiro { width: 140px; height: 330px; top: 575px; transform: scale(1.12); transform-origin: 50% 100%; }
+.braseiro.b1 { left: 395px; } .braseiro.b2 { left: 905px; }
+.braseiro svg { position: absolute; inset: 0; width: 140px; height: 330px; overflow: visible; }
+.halo { position: absolute; left: 70px; top: 122px; width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,190,100,.36), rgba(255,130,50,.13) 32%, rgba(255,100,30,.04) 52%, transparent 66%);
+  animation: tremula 2.3s steps(9) infinite; }
+.b2 .halo { animation-duration: 1.9s; animation-delay: -.7s; }
+@keyframes tremula { 0% { opacity: .82; } 13% { opacity: .95; } 27% { opacity: .78; } 41% { opacity: 1; } 55% { opacity: .86; } 70% { opacity: .97; } 84% { opacity: .8; } 100% { opacity: .9; } }
+.chamas { position: absolute; left: 70px; top: 150px; width: 0; height: 0; }
+.ch { position: absolute; bottom: -4px; transform-origin: 50% 100%; mix-blend-mode: screen; filter: blur(1px);
+  animation: chama .8s ease-in-out infinite alternate; }
+.ch::before { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; aspect-ratio: 1; border-radius: 0 50% 50% 50%; transform: rotate(45deg); transform-origin: 50% 50%;
+  background: radial-gradient(circle at 62% 62%, #fff8dc 0, #ffe08a 24%, #ff9a30 52%, #d84a12 74%, rgba(160,30,5,0) 86%); }
+.ch.f1 { left: -12px; width: 24px; height: 24px; animation-duration: .9s; }
+.ch.f2 { left: -7px; width: 14px; height: 14px; animation-duration: .62s; animation-delay: -.3s; }
+.ch.f2::before { background: radial-gradient(circle at 62% 62%, #fffdf0 0, #fff4c0 30%, #ffcc66 55%, rgba(255,140,40,0) 80%); }
+.ch.f3 { left: -16px; width: 13px; height: 13px; animation-duration: .75s; animation-delay: -.5s; }
+.ch.f4 { left: 3px; width: 12px; height: 12px; animation-duration: .68s; animation-delay: -.15s; }
+@keyframes chama { 0% { transform: scale(1, 1.55) skewX(-5deg); } 35% { transform: scale(.9, 1.85) skewX(-9deg); } 70% { transform: scale(1.06, 1.45) skewX(-3deg); } 100% { transform: scale(.95, 1.75) skewX(-7deg); } }
+.faisca { position: absolute; left: 70px; top: 64px; width: 3px; height: 3px; border-radius: 50%; background: #ffe6a8;
+  box-shadow: 0 0 4px 1px rgba(255,160,60,.9); opacity: 0; animation: sobe 2.4s linear infinite; }
+@keyframes sobe { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 50% { transform: translate(calc(var(--dx) * .45), -90px); } 100% { transform: translate(var(--dx), -210px); opacity: 0; } }
+/* os pontinhos de luz que o domo furado joga na areia */
+.furos { position: absolute; left: -40px; top: 262px; width: 220px; height: 80px; border-radius: 50%; mix-blend-mode: screen; opacity: .5;
+  background: radial-gradient(circle at 30% 40%, rgba(255,214,140,.9) 0 1.4px, transparent 2.2px) 0 0 / 17px 11px,
+              radial-gradient(circle at 70% 60%, rgba(255,214,140,.7) 0 1.2px, transparent 2px) 5px 3px / 23px 13px;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 20%, transparent 72%);
+          mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 20%, transparent 72%);
+  animation: tremula 2.3s steps(9) infinite; }
+
+/* luz das lanternas na fachada */
+.luz-fachada { left: 0; top: 0; width: 1440px; height: 900px; pointer-events: none; mix-blend-mode: soft-light;
+  background:
+    radial-gradient(ellipse 380px 330px at 465px 690px, rgba(255,160,70,.85), transparent 70%),
+    radial-gradient(ellipse 380px 330px at 975px 690px, rgba(255,160,70,.85), transparent 70%);
+  animation: tremula 2.7s steps(7) infinite; }
+
+/* ============ A PLACA (tábua de acácia com o papiro, pendurada do braço da lança cravada na areia) ============ */
+.placa-grupo { left: 1024px; top: 384px; width: 360px; transform-origin: 50% 0; animation: balanca 5.5s ease-in-out infinite; cursor: default; }
+@keyframes balanca { 0%,100% { transform: rotate(-.9deg); } 50% { transform: rotate(1.1deg); } }
+.corda { position: absolute; top: 0; width: 5px; height: 30px; border-radius: 2px;
+  background: repeating-linear-gradient(155deg, #d2b07a 0 3px, #7e5e34 3px 6px); box-shadow: 1px 1px 1px rgba(0,0,0,.5); }
+.corda.e { left: 40px; } .corda.d { right: 40px; }
+.corda::after { content: ""; position: absolute; left: -4px; bottom: -6px; width: 13px; height: 10px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f0d08a, #8a5a1e 70%); }
+.entrada-placa { position: relative; margin-top: 28px; padding: 16px 16px 16px; border-radius: 5px; text-align: center;
+  border: 2px solid #2e1a0c;
+  background:
+    radial-gradient(ellipse 70% 60% at 0% 80%, rgba(255,150,60,.16), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(255,170,110,.12), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 84px, rgba(0,0,0,.45) 84px 86px, transparent 86px),
+    repeating-linear-gradient(178deg, rgba(255,236,200,.07) 0 2px, transparent 2px 7px, rgba(0,0,0,.08) 7px 8px, transparent 8px 14px),
+    linear-gradient(180deg, #8c6744, #6c4c30 50%, #573b24);
+  box-shadow: 0 18px 28px rgba(0,0,0,.6), inset 0 0 0 3px rgba(0,0,0,.2), inset 0 2px 0 rgba(255,226,180,.2); }
+/* cantoneiras de bronze */
+.entrada-placa::before, .entrada-placa::after { content: ""; position: absolute; bottom: -2px; width: 24px; height: 24px;
+  border-bottom: 6px solid #9a6a2a; box-shadow: 0 1px 0 rgba(0,0,0,.4); }
+.entrada-placa::before { left: -2px; border-left: 6px solid #9a6a2a; border-radius: 0 0 0 5px; }
+.entrada-placa::after { right: -2px; border-right: 6px solid #9a6a2a; border-radius: 0 0 5px 0; }
+/* o pano listrado atravessado no alto da tábua, com as borlas nas pontas */
+.entrada-placa .pano-topo { position: absolute; left: -9px; right: -9px; top: -9px; height: 19px; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255,230,190,.25), transparent 40%, rgba(0,0,0,.35)),
+    repeating-linear-gradient(90deg, #7c5040 0 22px, #55505c 22px 25px, #957448 25px 39px, #a08a6c 39px 43px, #7c5040 43px 70px, #957448 70px 79px, #a08a6c 79px 84px);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 80% 74%, 64% 96%, 50% 72%, 36% 96%, 20% 74%, 8% 100%, 0 70%);
+  filter: drop-shadow(0 3px 2px rgba(0,0,0,.5)); }
+.entrada-placa .borla { position: absolute; top: 4px; width: 9px; height: 30px; pointer-events: none;
+  background: linear-gradient(180deg, #b8a07c 0 5px, #84503f 5px 9px, transparent 9px),
+    repeating-linear-gradient(90deg, #8e5a46 0 1.5px, #5a3428 1.5px 3px);
+  clip-path: polygon(30% 0, 70% 0, 70% 30%, 100% 100%, 0 100%, 30% 30%); }
+.entrada-placa .borla.e { left: -12px; } .entrada-placa .borla.d { right: -12px; }
+.entrada-titulo { margin: 6px 0 11px; font-family: var(--titulos); font-weight: 400; font-size: 44px; line-height: 1; letter-spacing: .03em;
+  color: #f4e2b6; text-shadow: 0 2px 0 #1e110a, 0 0 14px rgba(0,0,0,.45); }
+/* o papiro: fibras de junco irregulares, borda roída */
+.pergaminho { position: relative; padding: 15px 15px 13px; transform: rotate(.7deg);
+  background-color: var(--papiro);
+  /* fibras de junco: faixas irregulares (turbulência esticada na horizontal), a camada de baixo bem apagada — sem grade */
+  background-image:
+    radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgba(120,70,20,.22)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='260'><filter id='e' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.0045 .16' numOctaves='3' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .27  0 0 0 0 .1  2.8 0 0 0 -1.5'/></filter><filter id='c' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.006 .11' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .96  0 0 0 0 .84  -3 0 0 0 1.32'/></filter><filter id='v' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.09 .004' numOctaves='2' seed='23' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .27  0 0 0 0 .1  2.4 0 0 0 -1.32'/></filter><rect width='100%25' height='100%25' filter='url(%23v)' opacity='.4'/><rect width='100%25' height='100%25' filter='url(%23c)' opacity='.32'/><rect width='100%25' height='100%25' filter='url(%23e)' opacity='.85'/></svg>"),
+    url("../../assets/textures/shopitem_papertexture02_psd.png");
+  background-size: auto, 420px 260px, 420px; background-blend-mode: normal, normal, multiply; color: var(--tinta);
+  box-shadow: 0 3px 6px rgba(0,0,0,.5), inset 0 0 18px rgba(120,70,20,.28);
+  clip-path: polygon(0 2%, 4% 0, 12% 1.6%, 26% .3%, 38% 1.8%, 55% .2%, 70% 1.4%, 86% 0, 96% 1.2%, 100% 3%, 99.2% 24%, 100% 47%, 99.4% 76%, 100% 97%, 91% 99.4%, 77% 98.4%, 60% 100%, 44% 98.6%, 27% 100%, 13% 98.8%, 2% 100%, .4% 80%, 0 56%, .8% 30%); }
+.pergaminho .prego { position: absolute; top: 6px; width: 7px; height: 7px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f6dc98, #8a5a1e 60%, #3e260a); box-shadow: 0 1px 1px rgba(0,0,0,.6); }
+.pergaminho .prego.e { left: 7px; } .pergaminho .prego.d { right: 7px; }
+.entrada-hobby { margin: 0 0 10px; font-style: italic; font-size: 17px; line-height: 1.3; color: var(--tinta); }
+.entrada-contato { margin: 0; padding-top: 9px; border-top: 1px dashed rgba(60,40,20,.4);
+  font-family: var(--gravado); font-size: 13.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-suave); line-height: 1.75; }
+.entrada-contato .ea-rot { display: block; font-size: 13.5px; font-weight: 600; letter-spacing: .2em; margin-bottom: 1px; }
+.entrada-contato .ea-canal { display: block; white-space: nowrap; }
+.entrada-contato .ea-id { font-family: var(--texto); font-size: 19px; font-weight: 700; letter-spacing: .02em; text-transform: none;
+  color: var(--tinta); user-select: all; -webkit-user-select: all; cursor: text; margin-left: 4px;
+  border-bottom: 1px dotted rgba(44,29,18,.38); }
+.entrada-contato .ea-id:hover { border-bottom-color: var(--cera); color: var(--cera); }
+/* a etiqueta da versão, pendurada sob a placa por dois elos de bronze */
+.etiqueta { position: relative; width: 340px; margin: 16px auto 0; padding: 7px 14px 8px; border-radius: 4px; text-align: center;
+  border: 2px solid #2e1a0c; transform-origin: 50% -16px; animation: balanca2 3.9s ease-in-out infinite;
+  background:
+    repeating-linear-gradient(178deg, rgba(255,236,200,.07) 0 2px, transparent 2px 7px, rgba(0,0,0,.08) 7px 8px, transparent 8px 14px),
+    linear-gradient(180deg, #7a5838, #5e4228 60%, #4a3220);
+  box-shadow: 0 8px 14px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,226,180,.18); }
+.etiqueta::before, .etiqueta::after { content: ""; position: absolute; top: -18px; width: 7px; height: 18px; border-radius: 3px;
+  border: 2px solid #8a5a1e; border-top-color: #e2b866; }
+.etiqueta::before { left: 34px; } .etiqueta::after { right: 34px; }
+@keyframes balanca2 { 0%,100% { transform: rotate(1.4deg); } 50% { transform: rotate(-1.6deg); } }
+.entrada-nota .nw { white-space: nowrap; }
+.entrada-nota { margin: 0; font-style: italic; font-size: 16px; color: #f1dfb6; line-height: 1.3; text-shadow: 0 1px 0 #1e110a; }
+
+/* ============ SOBRE A CENA (tela, não mundo) ============ */
+/* a areia fina que o vento leva: grãos alongados no sentido do vento (a camada é girada e corre no próprio eixo) */
+.neve { position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; pointer-events: none; will-change: transform; }
+.neve.n1 { animation: sopra 6s linear infinite; opacity: .42; }
+.neve.n2 { animation: sopra 2.4s linear infinite; opacity: .6; }
+.neve.n3 { animation: sopra 1.05s linear infinite; filter: blur(1px); opacity: .75; }
+@keyframes sopra { from { transform: rotate(-80deg) translateY(calc(var(--t) * -1)); } to { transform: rotate(-80deg) translateY(0); } }
+.nevoa { position: absolute; left: -20%; right: -20%; bottom: -4%; height: 40%; pointer-events: none;
+  background:
+    radial-gradient(ellipse 30% 40% at 20% 72%, rgba(226,168,110,.16), transparent 70%),
+    radial-gradient(ellipse 34% 36% at 70% 82%, rgba(226,168,110,.14), transparent 70%),
+    linear-gradient(180deg, transparent, rgba(214,150,96,.1) 60%, rgba(214,150,96,.18));
+  animation: nevoa 12s ease-in-out infinite alternate; }
+@keyframes nevoa { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
+.rajada { position: absolute; left: -70%; width: 80%; height: 180px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(232,178,120,.2), transparent 70%); filter: blur(12px);
+  animation: rajada 8s linear infinite; }
+.rajada.r1 { top: 30%; }
+.rajada.r2 { top: 62%; animation-duration: 10s; animation-delay: -5s; height: 240px; }
+@keyframes rajada { 0% { transform: translate(0, 0) rotate(3deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: .8; } 100% { transform: translate(230%, 6vh) rotate(3deg); opacity: 0; } }
+/* fios de areia que correm rente ao chão */
+.veio { position: absolute; left: -40%; height: 3px; width: 46%; border-radius: 50%; pointer-events: none; filter: blur(1.5px);
+  background: linear-gradient(90deg, transparent, rgba(246,214,160,.38) 30%, rgba(246,214,160,.5) 60%, transparent);
+  animation: veio 4.6s linear infinite; }
+.veio.v1 { top: 83%; } .veio.v2 { top: 90%; animation-duration: 3.4s; animation-delay: -1.7s; width: 60%; }
+.veio.v3 { top: 95%; animation-duration: 5.4s; animation-delay: -3s; }
+@keyframes veio { 0% { transform: translateX(0) skewX(-30deg); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(260%) skewX(-30deg); opacity: 0; } }
+.vinheta { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 76% at 50% 56%, transparent 52%, rgba(14,6,18,.6) 100%); }
+.grao { position: absolute; inset: 0; pointer-events: none; opacity: .3; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+.flash { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 55%, #fff6da, #ffd98a 45%, #e89a46 100%); }
+.dica { position: absolute; left: 0; right: 0; bottom: 16px; margin: 0; text-align: center; pointer-events: none;
+  font-family: var(--texto); font-style: italic; font-size: 14px; letter-spacing: .04em; color: rgba(250,230,200,.52);
+  text-shadow: 0 1px 2px rgba(0,0,0,.85), 0 0 8px rgba(20,8,14,.9), 0 0 16px rgba(20,8,14,.6); animation: dica-chega 1.2s ease 1.4s both, dica-pulsa 4s ease-in-out 2.6s infinite; }
+@keyframes dica-chega { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dica-pulsa { 0%,100% { opacity: 1; } 50% { opacity: .62; } }
+/* o botão para leitor de tela e teclado: invisível até receber foco pelo teclado (Tab) */
+.btn-entrar { position: absolute; left: 50%; bottom: 50px; transform: translateX(-50%); padding: 8px 22px; cursor: pointer;
+  font-family: var(--titulos); font-size: 17px; letter-spacing: .08em; color: #f4e6c4; background: var(--cera);
+  border: 1px solid #5c150d; border-radius: 2px; box-shadow: 0 3px 0 #4a1109, 0 6px 12px rgba(0,0,0,.5);
+  opacity: 0; }
+.btn-entrar:focus-visible { opacity: 1; outline: 2px solid var(--brasa-clara); outline-offset: 3px; }
+
+/* a loja (placeholder: na integração é o app) */
+.loja { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  visibility: hidden; opacity: 0;
+  background:
+    radial-gradient(ellipse 900px 520px at 50% 40%, rgba(255,190,110,.14), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 10px, rgba(0,0,0,.09) 10px 11px),
+    repeating-linear-gradient(180deg, transparent 0 118px, rgba(0,0,0,.45) 118px 120px),
+    linear-gradient(180deg, #3b2617, #2a1a0f 60%, #21130a); }
+.loja h2 { margin: 0; font-family: var(--titulos); font-weight: 400; font-size: 64px; color: #e8d3a2; text-shadow: 0 2px 0 #1a0d05; letter-spacing: .03em; }
+.loja p { margin: 0; font-family: var(--texto); font-style: italic; font-size: 15px; color: #b89a66; }
+.loja .atalho { position: absolute; right: 18px; bottom: 14px; font-family: var(--gravado); font-size: 11px; letter-spacing: .2em; color: #8a6e48; text-transform: uppercase; }
+
+/* ============ A ABERTURA ============ */
+body.abrindo .entrada { cursor: default; }
+/* o selo se parte em dois e cai na areia; o cordão afrouxa (0–0,5 s) */
+body.abrindo .selo i.e { animation: selo-e .62s cubic-bezier(.4,0,.7,1) both; }
+body.abrindo .selo i.d { animation: selo-d .62s cubic-bezier(.4,0,.7,1) both; }
+@keyframes selo-e { 0% { transform: none; } 14% { transform: translate(-3px, -1px) rotate(-4deg); } 100% { transform: translate(-58px, 178px) rotate(-210deg); } }
+@keyframes selo-d { 0% { transform: none; } 14% { transform: translate(3px, -1px) rotate(5deg); } 100% { transform: translate(46px, 182px) rotate(160deg); } }
+body.abrindo svg.cordao { animation: cordao .34s ease-in .06s both; }
+@keyframes cordao { to { transform: translateY(26px); opacity: 0; } }
+/* a viga: sai dos suportes, gira e encosta no batente à esquerda (0,1–0,5 s) */
+body.abrindo .tranca { animation: tranca .42s cubic-bezier(.45,0,.35,1) .1s both; }
+@keyframes tranca {
+  0%   { transform: translate(0, 0) rotate(0); }
+  16%  { transform: translate(0, -15px) rotate(-1deg); }
+  52%  { transform: translate(-118px, -34px) rotate(-44deg); }
+  82%  { transform: translate(-186px, 30px) rotate(-86deg); }
+  92%  { transform: translate(-186px, 24px) rotate(-82deg); }
+  100% { transform: translate(-186px, 27px) rotate(-84deg); }
+}
+/* os glifos do sol acordam com o clique */
+body.abrindo .runas-acorda { animation: acorda .6s ease-out both; }
+@keyframes acorda { 0% { stroke: #ffcf7a; stroke-width: 1.8; opacity: .6; } 30% { stroke: #fffbe8; stroke-width: 3.6; opacity: 1; } 100% { stroke: #ffd98a; stroke-width: 1.8; opacity: .8; } }
+body.abrindo .folha.esq { animation: abre-esq 1.25s cubic-bezier(.5,.02,.2,1) .3s both; }
+body.abrindo .folha.dir { animation: abre-dir 1.25s cubic-bezier(.5,.02,.2,1) .3s both; }
+@keyframes abre-esq { 0% { transform: rotateY(0); } 6% { transform: rotateY(-1.5deg); } 100% { transform: rotateY(82deg); } }
+@keyframes abre-dir { 0% { transform: rotateY(0); } 6% { transform: rotateY(1.5deg); } 100% { transform: rotateY(-82deg); } }
+body.abrindo .folha .sombra { animation: escurece 1.25s ease-in .3s both; }
+@keyframes escurece { to { opacity: .62; } }
+body.abrindo .interior .acende { animation: acende 1.1s ease-out .34s both; }
+@keyframes acende { to { opacity: 1; } }
+body.abrindo .fresta-meio { animation: some .3s ease .34s both; }
+@keyframes some { to { opacity: 0; } }
+/* a luz quente se espalha pela areia logo no começo, antes de a câmera sair do chão */
+body.abrindo .luz-neve { animation: luz-neve .6s ease-out .04s both; }
+@keyframes luz-neve { to { opacity: 1; transform: scale(1.25, 1.1); } }
+body.abrindo .poca { animation: poca 1.1s cubic-bezier(.3,.6,.3,1) .08s both; }
+@keyframes poca { to { opacity: 1; transform: scaleY(1); } }
+body.abrindo .raios { animation: raios 1.4s ease-out .42s both; }
+@keyframes raios { 0% { opacity: 0; transform: scale(.6); } 100% { opacity: .95; transform: scale(1.15); } }
+body.abrindo .dica { animation: some .3s ease both; }
+body.abrindo .placa-grupo, body.abrindo .etiqueta { animation-play-state: paused; }
+body.abrindo .flash { animation: flash .45s ease-in 1.4s both; }
+@keyframes flash { from { opacity: 0; } to { opacity: 1; } }
+body.abrindo .loja { animation: loja .42s ease-out 1.68s both; }
+@keyframes loja { 0% { visibility: visible; opacity: 0; transform: scale(1.04); } 100% { visibility: visible; opacity: 1; transform: none; } }
+body.aberta .entrada { visibility: hidden; }
+.neve-tela { position: absolute; inset: 0; pointer-events: none; transform-origin: 50% 60%; will-change: transform, opacity;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.18) 0, rgba(0,0,0,.4) 35%, #000 70%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.18) 0, rgba(0,0,0,.4) 35%, #000 70%); }
+/* pré-aquecimento: as luzes da abertura já nascem em camada própria */
+.raios, .poca, .luz-neve, .flash, .interior .acende, .fresta-meio, .selo i, svg.cordao { will-change: transform, opacity; }
+
+/* menos movimento: as portas só esmaecem, sem câmera */
+@media (prefers-reduced-motion: reduce) {
+  .neve, .nevoa, .rajada, .veio, .estrelas, .poente, .halo, .furos, .luz-fachada, .ch, .faisca, .placa-grupo, .etiqueta, .janela-brilho, .janela-halo, .interior .amuleto-brilho, svg.runas-vivas, svg.runas-marco, .dica { animation: none !important; }
+  .faisca, .veio, .rajada { display: none; }
+  .dica { opacity: 1; }
+  body.abrindo .dica { opacity: 0 !important; visibility: hidden; }
+  body.abrindo .neve-tela, body.abrindo .raios, body.abrindo .flash, body.abrindo .poca, body.abrindo .luz-neve, body.abrindo .runas-acorda { animation: none !important; }
+  body.abrindo .fresta-meio, body.abrindo .fresta-chao { animation: none !important; opacity: 0; }
+  body.abrindo .tranca, body.abrindo .selo i, body.abrindo svg.cordao { animation: esmaece .4s ease both !important; }
+  body.abrindo .folha.esq, body.abrindo .folha.dir { animation: esmaece .55s ease both !important; }
+  body.abrindo .loja { animation: loja-calma .45s ease .5s both !important; }
+}
+@keyframes esmaece { to { opacity: 0; } }
+@keyframes loja-calma { 0% { visibility: visible; opacity: 0; } 100% { visibility: visible; opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div id="entrada" class="entrada" role="dialog" aria-modal="true" aria-label="Entrada da loja — tenda das relíquias de Shurima">
+  <div class="palco" id="palco">
+
+    <!-- ===== LONGE: céu, estrelas, lua, ruínas e dunas (avança pouco na câmera) ===== -->
+    <div class="camada longe" id="longe" aria-hidden="true">
+      <div class="ceu"></div>
+      <div class="estrelas e1"></div><div class="estrelas e2"></div><div class="estrelas e3"></div>
+      <div class="lua"></div>
+      <svg class="serras" viewBox="-900 -700 3240 2000">
+        <defs>
+          <linearGradient id="gRuina" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5a3050"/><stop offset="1" stop-color="#3a2040"/>
+          </linearGradient>
+          <linearGradient id="gDunaLonge" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8a4650"/><stop offset="1" stop-color="#4a2440"/>
+          </linearGradient>
+          <linearGradient id="gDunaMeio" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a65a44"/><stop offset=".5" stop-color="#7a3c3a"/><stop offset="1" stop-color="#4e2634"/>
+          </linearGradient>
+          <filter id="borraoL"><feGaussianBlur stdDeviation="7"/></filter>
+        </defs>
+        <!-- ruínas ao longe, na linha do poente -->
+        <g id="ruinas" fill="url(#gRuina)"></g>
+        <g id="ruinas-luz" fill="none" stroke="#f6a868" stroke-width="2" opacity=".42"></g>
+        <rect x="-900" y="560" width="3240" height="90" fill="#e8905a" opacity=".22" filter="url(#borraoL)"/>
+        <path id="duna-longe" fill="url(#gDunaLonge)"/>
+        <path id="duna-longe-crista" fill="none" stroke="#f8b678" stroke-width="2" opacity=".5"/>
+        <g id="duna-meio"></g>
+      </svg>
+      <div class="poente"></div>
+    </div>
+
+    <!-- ===== MUNDO: a tenda das relíquias ===== -->
+    <div class="camada mundo" id="mundo">
+      <svg class="fundo" viewBox="-600 -400 2640 1700" aria-hidden="true">
+        <defs>
+          <linearGradient id="gAreia" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#c8875a"/>
+            <stop offset=".08" stop-color="#b37650"/>
+            <stop offset=".4" stop-color="#8c553a"/>
+            <stop offset="1" stop-color="#5e3428"/>
+          </linearGradient>
+          <linearGradient id="gDunaPerto" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#c47e52"/><stop offset=".5" stop-color="#9a5c40"/><stop offset="1" stop-color="#6e3e30"/>
+          </linearGradient>
+          <linearGradient id="gArenito" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#4a2a30"/>
+            <stop offset=".28" stop-color="#7a4a3a"/>
+            <stop offset=".62" stop-color="#b8805a"/>
+            <stop offset=".86" stop-color="#e6aa70"/>
+            <stop offset="1" stop-color="#7a4632"/>
+          </linearGradient>
+          <linearGradient id="gArenitoV" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e2a46c"/>
+            <stop offset=".45" stop-color="#b07650"/>
+            <stop offset="1" stop-color="#6e4234"/>
+          </linearGradient>
+          <linearGradient id="gLonaParede" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4e3240"/>
+            <stop offset=".35" stop-color="#7a5446"/>
+            <stop offset=".75" stop-color="#94684a"/>
+            <stop offset="1" stop-color="#6a4434"/>
+          </linearGradient>
+          <!-- a sanefa: lã velha queimada de sol — garança e ocre desbotados, filete de índigo, larguras desiguais -->
+          <pattern id="listras" patternUnits="userSpaceOnUse" x="0" y="0" width="150" height="40">
+            <rect width="150" height="40" fill="#a08a6c"/>
+            <rect x="0" width="34" height="40" fill="#7c5040"/>
+            <rect x="37" width="5" height="40" fill="#55505c"/>
+            <rect x="48" width="22" height="40" fill="#957448"/>
+            <rect x="76" width="40" height="40" fill="#7c5040"/>
+            <rect x="119" width="3" height="40" fill="#55505c"/>
+            <rect x="128" width="14" height="40" fill="#957448"/>
+            <g fill="#000" opacity=".1"><rect x="2" width="1" height="40"/><rect x="21" width="1" height="40"/><rect x="58" width="1" height="40"/><rect x="95" width="1" height="40"/></g>
+          </pattern>
+          <!-- as abas: outro pano, mais gasto — índigo queimado quase cinza, com um par de filetes de garança -->
+          <pattern id="listrasAba" patternUnits="userSpaceOnUse" x="0" y="0" width="112" height="40">
+            <rect width="112" height="40" fill="#5c5560"/>
+            <rect x="0" width="44" height="40" fill="#665a5c"/>
+            <rect x="52" width="4" height="40" fill="#7a5244"/>
+            <rect x="60" width="2" height="40" fill="#8f7656"/>
+            <rect x="88" width="6" height="40" fill="#6e5a52"/>
+          </pattern>
+          <linearGradient id="gSanefaLuz" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffd6a0" stop-opacity=".35"/>
+            <stop offset=".35" stop-color="#000" stop-opacity="0"/>
+            <stop offset="1" stop-color="#14081e" stop-opacity=".45"/>
+          </linearGradient>
+          <linearGradient id="gAbaSombra" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#14081e" stop-opacity=".7"/>
+            <stop offset=".6" stop-color="#14081e" stop-opacity=".25"/>
+            <stop offset="1" stop-color="#14081e" stop-opacity=".5"/>
+          </linearGradient>
+          <linearGradient id="gAbaSombraD" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stop-color="#14081e" stop-opacity=".45"/>
+            <stop offset=".6" stop-color="#14081e" stop-opacity=".1"/>
+            <stop offset="1" stop-color="#14081e" stop-opacity=".45"/>
+          </linearGradient>
+          <linearGradient id="gBronze" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ecc67e"/><stop offset=".4" stop-color="#b0803c"/><stop offset=".75" stop-color="#6e4818"/><stop offset="1" stop-color="#3e260a"/>
+          </linearGradient>
+          <linearGradient id="gOuro" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff3c0"/><stop offset=".25" stop-color="#f2c95a"/><stop offset=".55" stop-color="#c8902a"/><stop offset=".8" stop-color="#8a5a14"/><stop offset="1" stop-color="#5a3608"/>
+          </linearGradient>
+          <radialGradient id="gOuroDisco" cx=".42" cy=".38" r=".7">
+            <stop offset="0" stop-color="#fff0b4"/><stop offset=".3" stop-color="#eec05a"/><stop offset=".7" stop-color="#b47e28"/><stop offset="1" stop-color="#6a4210"/>
+          </radialGradient>
+          <linearGradient id="gOuroVelho" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ead2a0"/><stop offset=".3" stop-color="#cfa75a"/><stop offset=".6" stop-color="#a47a32"/><stop offset="1" stop-color="#5a3c12"/>
+          </linearGradient>
+          <radialGradient id="gOuroDiscoV" cx=".42" cy=".38" r=".7">
+            <stop offset="0" stop-color="#e8d098"/><stop offset=".35" stop-color="#c49a50"/><stop offset=".75" stop-color="#93682a"/><stop offset="1" stop-color="#5a3c12"/>
+          </radialGradient>
+          <linearGradient id="gTerracota" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#341712"/><stop offset=".25" stop-color="#6e3422"/><stop offset=".6" stop-color="#b0603a"/><stop offset=".84" stop-color="#e09a5e"/><stop offset="1" stop-color="#5a2a1a"/>
+          </linearGradient>
+          <linearGradient id="gBarroClaro" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#4a2c22"/><stop offset=".3" stop-color="#8a6448"/><stop offset=".65" stop-color="#c8a272"/><stop offset=".86" stop-color="#ecc890"/><stop offset="1" stop-color="#6e4a34"/>
+          </linearGradient>
+          <linearGradient id="gMadeira" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7a5434"/><stop offset=".55" stop-color="#5a3a22"/><stop offset="1" stop-color="#3a2416"/>
+          </linearGradient>
+          <linearGradient id="gPoste" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#22140c"/><stop offset=".35" stop-color="#6a4a30"/><stop offset=".6" stop-color="#4a3220"/><stop offset="1" stop-color="#1a0f09"/>
+          </linearGradient>
+          <linearGradient id="gVerga" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7a5636"/><stop offset=".5" stop-color="#5a3c24"/><stop offset="1" stop-color="#2a1a0e"/>
+          </linearGradient>
+          <radialGradient id="gVidro" cx=".5" cy=".6" r=".7">
+            <stop offset="0" stop-color="#fff6d0"/><stop offset=".45" stop-color="#ffc864"/><stop offset="1" stop-color="#c06a20"/>
+          </radialGradient>
+          <linearGradient id="gCrepusculo" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1a0e34" stop-opacity=".55"/><stop offset=".55" stop-color="#1a0e34" stop-opacity=".15"/><stop offset="1" stop-color="#1a0e34" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="gForaEixo" gradientUnits="userSpaceOnUse" cx="740" cy="560" r="760" gradientTransform="translate(740 560) scale(1 .78) translate(-740 -560)">
+            <stop offset="0" stop-color="#1c1222" stop-opacity="0"/><stop offset=".4" stop-color="#1c1222" stop-opacity="0"/>
+            <stop offset=".66" stop-color="#1c1222" stop-opacity=".34"/><stop offset="1" stop-color="#1c1222" stop-opacity=".55"/>
+          </radialGradient>
+          <radialGradient id="gLuzPortal" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#ffb060" stop-opacity=".45"/><stop offset="1" stop-color="#ff9040" stop-opacity="0"/>
+          </radialGradient>
+          <!-- textura do arenito: poros e veios horizontais -->
+          <filter id="grao" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05 0.22" numOctaves="3" seed="5" result="n"/>
+            <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.16  0 0 0 0 0.07  0 0 0 0 0.06  1.7 0 0 0 -0.66"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+          <filter id="poros" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="3" result="n"/>
+            <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.98  0 0 0 0 0.82  0 0 0 0 0.62  2.6 0 0 0 -1.5"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+          <!-- manchas na lona (sol, chuva de areia, remendos velhos) -->
+          <filter id="manchas" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.008 0.02" numOctaves="3" seed="13" result="n"/>
+            <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.06  0 0 0 0 0.04  2.2 0 0 0 -1.05"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+          <filter id="tecido" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9 0.06" numOctaves="2" seed="21" result="n"/>
+            <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -.62"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+          <filter id="borrao6"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="borrao3"><feGaussianBlur stdDeviation="3"/></filter>
+          <filter id="borrao2"><feGaussianBlur stdDeviation="2"/></filter>
+          <clipPath id="cLona"><path id="lona-clip" d=""/></clipPath>
+          <clipPath id="cSanefa"><path id="sanefa-clip" d=""/></clipPath>
+          <clipPath id="cDisco"><path id="disco-clip" d=""/></clipPath>
+          <clipPath id="cCunha"><path id="cunha-clip" d=""/></clipPath>
+          <!-- glifos próprios (inventados para a amostra): sol, água, olho, duna, junco, pássaro, estrela, mão -->
+          <g id="h1"><circle cx="10" cy="12" r="8"/><circle cx="10" cy="12" r="1.6"/></g>
+          <g id="h2"><path d="M0 6 q5 -5 10 0 t10 0 M0 13 q5 -5 10 0 t10 0 M0 20 q5 -5 10 0 t10 0"/></g>
+          <g id="h3"><path d="M0 12 Q10 2 20 12 Q10 22 0 12Z M10 9 v6 M6 22 l-3 3 M14 22 l3 3"/></g>
+          <g id="h4"><path d="M0 24 L10 4 L20 24Z M5 16 h10"/></g>
+          <g id="h5"><path d="M10 24 V2 M10 6 q6 2 6 7 M10 12 q-6 2 -6 7"/></g>
+          <g id="h6"><path d="M2 24 V12 Q2 4 10 4 L18 6 L11 9 Q14 14 12 24"/></g>
+          <g id="h7"><path d="M10 0 V24 M0 12 H20 M3 4 L17 20 M17 4 L3 20"/></g>
+          <g id="h8"><path d="M4 24 V8 M8 24 V4 M12 24 V4 M16 24 V8 M2 24 H18"/></g>
+        </defs>
+
+        <!-- dunas que sobem atrás da tenda -->
+        <g id="dunas-perto"></g>
+        <!-- a palmeira do poço, à esquerda -->
+        <g id="palmeira"></g>
+        <!-- chão de areia -->
+        <rect x="-600" y="772" width="2640" height="530" fill="url(#gAreia)"/>
+        <g id="ondulas" fill="none"></g>
+
+        <!-- ===== a tenda: parede de lona, mastro, sanefa listrada, abas presas nas colunas ===== -->
+        <path id="lona-parede" d="" fill="url(#gLonaParede)"/>
+        <g clip-path="url(#cLona)">
+          <rect x="200" y="100" width="1040" height="700" fill="#000" filter="url(#manchas)" opacity=".7"/>
+          <g id="lona-costuras" fill="none" stroke="#2a1820" stroke-width="1.6" opacity=".45"></g>
+          <g id="lona-remendos"></g>
+          <ellipse cx="720" cy="560" rx="420" ry="300" fill="url(#gLuzPortal)"/>
+          <rect x="200" y="100" width="1040" height="700" fill="url(#gCrepusculo)"/>
+        </g>
+        <!-- o tapete pendurado na lona, à esquerda do portal -->
+        <g id="tapete-parede"></g>
+        <!-- a faixa índigo bordada, à direita -->
+        <g id="pano-dir"></g>
+        <!-- o mastro central e o remate de latão -->
+        <g>
+          <rect x="714" y="104" width="12" height="230" fill="url(#gPoste)"/>
+          <path d="M720 104 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0" fill="url(#gBronze)"/>
+          <path d="M708 88 Q720 64 732 88 Q720 76 708 88Z" fill="url(#gOuro)" stroke="#5a3608" stroke-width="1"/>
+          <circle cx="720" cy="66" r="3.4" fill="#f6dc98"/>
+        </g>
+        <!-- a sanefa (a aba listrada do teto), recortada em ondas, com borlas -->
+        <g>
+          <path id="sanefa" d="" fill="url(#listras)"/>
+          <g clip-path="url(#cSanefa)">
+            <rect x="180" y="100" width="1080" height="240" fill="#000" filter="url(#tecido)" opacity=".5"/>
+            <path id="sanefa-luz" d="" fill="url(#gSanefaLuz)"/>
+            <g id="sanefa-pregas" fill="#14081e" opacity=".22"></g>
+          </g>
+          <path id="sanefa-viés" d="" fill="none" stroke="#b8a07c" stroke-width="3" opacity=".8"/>
+          <g id="borlas"></g>
+        </g>
+        <!-- as abas da tenda, amarradas para trás nas colunas -->
+        <g id="abas"></g>
+        <!-- as colunas quebradas de arenito -->
+        <g id="colunas"></g>
+        <!-- cordas de amarração até as estacas -->
+        <g id="cordas" fill="none" stroke-linecap="round"></g>
+        <g id="penduricalhos"></g>
+        <!-- a mesa de relíquias, do lado de fora -->
+        <g id="mesa"></g>
+
+        <!-- ===== o portal de arenito tirado de uma ruína ===== -->
+        <g>
+          <!-- sombra do portal na lona -->
+          <path d="M520 316 L928 316 L940 800 L508 800Z" fill="#14081e" opacity=".35" filter="url(#borrao6)"/>
+          <rect x="556" y="372" width="48" height="425" fill="url(#gArenito)"/>
+          <rect x="836" y="372" width="48" height="425" fill="url(#gArenito)"/>
+          <rect x="556" y="372" width="48" height="425" fill="#000" filter="url(#grao)"/>
+          <rect x="836" y="372" width="48" height="425" fill="#000" filter="url(#grao)"/>
+          <rect x="556" y="372" width="48" height="425" fill="#000" filter="url(#poros)" opacity=".35"/>
+          <rect x="836" y="372" width="48" height="425" fill="#000" filter="url(#poros)" opacity=".35"/>
+          <g stroke="#3a1e1c" stroke-width="2" opacity=".7"><path d="M556 452 h48 M556 538 h48 M556 626 h48 M556 712 h48 M836 446 h48 M836 530 h48 M836 618 h48 M836 708 h48"/></g>
+          <g stroke="#f2c08a" stroke-width="1" opacity=".4"><path d="M556 454 h48 M556 540 h48 M556 628 h48 M556 714 h48 M836 448 h48 M836 532 h48 M836 620 h48 M836 710 h48"/></g>
+          <!-- lascas nas quinas -->
+          <g fill="#2e1820" opacity=".75"><path d="M556 500 l7 6 l-7 9Z M604 590 l-6 4 l6 10Z M556 680 l5 3 l-5 7Z M884 470 l-8 5 l8 12Z M836 650 l6 6 l-6 8Z"/></g>
+          <!-- o fundo do vão (a espessura da pedra) -->
+          <rect x="600" y="400" width="5" height="392" fill="#1a0c10" opacity=".7"/>
+          <rect x="835" y="400" width="5" height="392" fill="#1a0c10" opacity=".55"/>
+          <!-- o lintel, com a cornija em cima -->
+          <path d="M516 312 L924 312 L912 332 L528 332Z" fill="url(#gArenitoV)"/>
+          <path d="M516 312 L924 312 L922 316 L518 316Z" fill="#f6c890" opacity=".65"/>
+          <rect x="532" y="330" width="376" height="76" fill="url(#gArenitoV)"/>
+          <rect x="532" y="330" width="376" height="76" fill="#000" filter="url(#grao)"/>
+          <rect x="532" y="330" width="376" height="76" fill="#000" filter="url(#poros)" opacity=".35"/>
+          <path d="M532 404 h376" stroke="#2a1418" stroke-width="3" opacity=".6"/>
+          <path d="M600 330 l-4 22 l8 18 l-6 18 M846 330 l5 16 l-6 20" fill="none" stroke="#3a1e1c" stroke-width="1.3" opacity=".7"/>
+          <!-- os glifos entalhados (sombra do talho e a borda clara) -->
+          <g fill="none" stroke="#2a1214" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <use href="#h1" x="562" y="350"/><use href="#h2" x="590" y="350"/><use href="#h5" x="618" y="350"/><use href="#h3" x="644" y="350"/><use href="#h4" x="672" y="350"/>
+            <use href="#h6" x="748" y="350"/><use href="#h8" x="776" y="350"/><use href="#h7" x="804" y="350"/><use href="#h2" x="832" y="350"/><use href="#h1" x="860" y="350"/>
+          </g>
+          <g fill="none" stroke="#f6c890" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity=".45" transform="translate(1 1.4)">
+            <use href="#h1" x="562" y="350"/><use href="#h2" x="590" y="350"/><use href="#h5" x="618" y="350"/><use href="#h3" x="644" y="350"/><use href="#h4" x="672" y="350"/>
+            <use href="#h6" x="748" y="350"/><use href="#h8" x="776" y="350"/><use href="#h7" x="804" y="350"/><use href="#h2" x="832" y="350"/><use href="#h1" x="860" y="350"/>
+          </g>
+          <!-- a plaqueta de bronze com a bigorna da Forja: a marca da loja -->
+          <g transform="translate(720 368)">
+            <rect x="-27" y="-17" width="54" height="34" rx="4" fill="#000" opacity=".5" transform="translate(1.5 2.5)"/>
+            <rect x="-27" y="-17" width="54" height="34" rx="4" fill="#4a2e12" stroke="#2a1806" stroke-width="2"/>
+            <rect x="-24" y="-14" width="48" height="28" rx="3" fill="none" stroke="#c8964a" stroke-width="1" opacity=".7"/>
+            <g fill="#f2d690"><circle cx="-21" cy="-11" r="1.8"/><circle cx="21" cy="-11" r="1.8"/><circle cx="-21" cy="11" r="1.8"/><circle cx="21" cy="11" r="1.8"/></g>
+            <path d="M-15 -6 H8 Q12 -6 15 -9 H18 Q17 -3 9 -1 V2 H5 L8 8 H-9 L-6 2 V-1 H-10 Q-15 -2 -15 -6Z" fill="url(#gOuro)" stroke="#4a3210" stroke-width="1"/>
+            <path d="M-14 -5.5 H8" stroke="#fff0c0" stroke-width="1" opacity=".8"/>
+          </g>
+          <!-- dobradiças (pinos de bronze) -->
+          <g fill="url(#gBronze)"><rect x="596" y="438" width="8" height="26" rx="3"/><rect x="596" y="566" width="8" height="26" rx="3"/><rect x="596" y="716" width="8" height="26" rx="3"/>
+            <rect x="836" y="438" width="8" height="26" rx="3"/><rect x="836" y="566" width="8" height="26" rx="3"/><rect x="836" y="716" width="8" height="26" rx="3"/></g>
+          <!-- pino da tranca e o gancho do outro lado -->
+          <rect x="578" y="604" width="20" height="20" rx="3" fill="#6e4818"/>
+          <path d="M842 600 h18 v30 h-18" fill="none" stroke="#7a5222" stroke-width="6"/>
+        </g>
+        <!-- o disco solar partido no alto do portal (o pedaço que falta está no chão, à direita) -->
+        <g id="disco"></g>
+
+        <!-- degraus de arenito na soleira, com areia acumulada -->
+        <g>
+          <path d="M584 792 L856 792 L864 808 L576 808Z" fill="url(#gArenitoV)"/>
+          <path d="M584 792 L856 792" stroke="#f6c890" stroke-width="2" opacity=".7"/>
+          <path d="M562 808 L878 808 L888 826 L552 826Z" fill="url(#gArenitoV)" opacity=".95"/>
+          <path d="M562 808 L878 808" stroke="#f6c890" stroke-width="2" opacity=".55"/>
+          <path d="M576 808 L864 808 L862 812 L578 812Z M552 826 L888 826 L886 830 L554 830Z" fill="#2a1418" opacity=".5"/>
+          <path d="M560 826 Q600 806 650 812 Q640 820 560 826Z M880 826 Q850 804 806 810 Q830 820 880 826Z" fill="#d79a62"/>
+        </g>
+        <!-- o tapete estendido na areia até a porta -->
+        <g id="tapete-chao"></g>
+        <!-- jarros, o baú e a ave dourada, à direita; o pedaço do disco, à esquerda da porta -->
+        <g id="direita"></g>
+        <g id="esquerda-porta"></g>
+        <!-- lampiões de latão pendurados na sanefa -->
+        <g id="lampioes"></g>
+        <!-- a lança da placa, cravada na areia, com o braço -->
+        <g>
+          <path d="M1412 836 Q1418 600 1414 352 L1438 352 Q1442 600 1436 836Z" fill="url(#gPoste)"/>
+          <path d="M1420 360 Q1424 600 1420 820" stroke="#1a110a" stroke-width="1.4" opacity=".5" fill="none"/>
+          <!-- a ponta de bronze e a borla vermelha -->
+          <path d="M1414 352 L1438 352 L1434 336 L1418 336Z" fill="url(#gBronze)"/>
+          <path d="M1418 338 L1426 262 L1434 338Z" fill="url(#gBronze)" stroke="#3e260a" stroke-width="1.2"/>
+          <path d="M1426 268 L1426 334" stroke="#fff0c0" stroke-width="1" opacity=".6"/>
+          <path d="M1414 344 q-10 8 -8 30 l4 22 l6 -22 q2 -16 -2 -30Z" fill="#84503f"/>
+          <path d="M1408 376 l2 20 M1412 372 l1 26" stroke="#5a1810" stroke-width="1.2"/>
+          <path d="M1428 478 L1330 386" stroke="#2a1a0e" stroke-width="13" stroke-linecap="round"/>
+          <path d="M1428 478 L1330 386" stroke="#7a5636" stroke-width="3" stroke-linecap="round" opacity=".6" transform="translate(-2 -2)"/>
+          <rect x="1006" y="368" width="440" height="19" rx="4" fill="url(#gVerga)"/>
+          <path d="M1008 369 h436" stroke="#f0c08a" stroke-width="1.4" opacity=".4"/>
+          <path d="M1408 362 l34 8 M1408 372 l34 8 M1408 382 l34 8" stroke="#c8a06a" stroke-width="3"/>
+          <g fill="url(#gBronze)"><circle cx="1066" cy="389" r="5"/><circle cx="1346" cy="389" r="5"/></g>
+          <path d="M1370 840 Q1426 806 1486 840 Q1426 850 1370 840Z" fill="#c88a5a"/>
+        </g>
+        <!-- fora do eixo da porta e da placa, a cena recua: menos brilho e menos cor nas laterais -->
+        <rect x="-600" y="-400" width="2640" height="1700" fill="url(#gForaEixo)" pointer-events="none"/>
+        <!-- o crepúsculo pesa no alto da cena -->
+        <rect x="-600" y="-400" width="2640" height="900" fill="url(#gCrepusculo)" pointer-events="none"/>
+      </svg>
+
+      <!-- os glifos do lintel num SVG pequeno e próprio: a respiração e o "acordar" não repintam a fachada -->
+      <svg class="runas-vivas" viewBox="560 330 320 70" aria-hidden="true">
+        <defs>
+          <filter id="brilhoSol" x="-20%" y="-50%" width="140%" height="200%">
+            <feGaussianBlur stdDeviation="2.6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g class="runas-acorda" fill="none" stroke="#ffcf7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#brilhoSol)">
+          <use href="#h1" x="562" y="350"/><use href="#h2" x="590" y="350"/><use href="#h5" x="618" y="350"/><use href="#h3" x="644" y="350"/><use href="#h4" x="672" y="350"/>
+          <use href="#h6" x="748" y="350"/><use href="#h8" x="776" y="350"/><use href="#h7" x="804" y="350"/><use href="#h2" x="832" y="350"/><use href="#h1" x="860" y="350"/>
+        </g>
+      </svg>
+      <div class="janela-brilho" aria-hidden="true"></div>
+      <div class="janela-halo h1" style="left:470px;top:358px" aria-hidden="true"></div>
+      <div class="janela-halo h2" style="left:975px;top:368px" aria-hidden="true"></div>
+
+      <!-- ===== A PORTA DUPLA ===== -->
+      <div class="luz-neve" aria-hidden="true"></div>
+      <div class="poca" aria-hidden="true"></div>
+      <div class="vao" aria-hidden="true">
+        <div class="interior">
+          <svg viewBox="0 0 240 386" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id="gDentro" cx=".5" cy=".3" r=".85">
+                <stop offset="0" stop-color="#ffeab4"/>
+                <stop offset=".35" stop-color="#f6ae56"/>
+                <stop offset=".75" stop-color="#a84e1a"/>
+                <stop offset="1" stop-color="#4a1d08"/>
+              </radialGradient>
+              <radialGradient id="gLanterna" cx=".5" cy=".5" r=".5">
+                <stop offset="0" stop-color="#fff6d6" stop-opacity=".9"/>
+                <stop offset="1" stop-color="#ffcf80" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="gAmuleto" cx=".4" cy=".35" r=".7">
+                <stop offset="0" stop-color="#fffbe0"/><stop offset=".45" stop-color="#ffd25a"/><stop offset="1" stop-color="#a06a14"/>
+              </radialGradient>
+            </defs>
+            <rect width="240" height="386" fill="url(#gDentro)"/>
+            <!-- tapetes pendurados no fundo e prateleiras de jarros -->
+            <g fill="#4a1e08" opacity=".55">
+              <path d="M6 30 h62 v150 h-62Z"/>
+              <path d="M178 54 h56 v8 h-56Z M178 132 h56 v8 h-56Z"/>
+              <path d="M184 54 q-6 -18 4 -30 q10 12 4 30Z M200 54 v-26 q8 -8 16 0 v26Z M222 54 q-4 -20 6 -24 q8 6 0 24Z"/>
+              <path d="M182 132 q-4 -30 10 -40 q14 10 10 40Z M208 132 v-20 h20 v20Z"/>
+            </g>
+            <g fill="none" stroke="#ffcf8a" stroke-width="1.4" opacity=".3">
+              <path d="M12 36 h50 v138 h-50Z M37 60 l18 45 l-18 45 l-18 -45Z"/>
+            </g>
+            <g stroke="#4a1e08" stroke-width="1.5" opacity=".5"><path d="M8 180 v10 M16 180 v10 M24 180 v10 M32 180 v10 M40 180 v10 M48 180 v10 M56 180 v10 M64 180 v10"/></g>
+            <!-- lampião de latão pendurado, com furos de estrela -->
+            <path d="M104 0V30" stroke="#3a1a08" stroke-width="2"/>
+            <circle cx="104" cy="54" r="48" fill="url(#gLanterna)"/>
+            <path d="M92 30 h24 l-4 -6 h-16Z M90 36 Q104 22 118 36Z" fill="#3a1a08"/>
+            <path d="M92 36 h24 l-3 26 h-18Z" fill="#fff4cf" stroke="#3a1a08" stroke-width="2.4"/>
+            <g fill="#3a1a08"><circle cx="98" cy="44" r="1.6"/><circle cx="104" cy="50" r="1.6"/><circle cx="110" cy="44" r="1.6"/><circle cx="101" cy="56" r="1.4"/><circle cx="107" cy="56" r="1.4"/></g>
+            <path d="M95 62 h18 l-5 8 h-8Z" fill="#3a1a08"/>
+            <!-- o mercador: turbante com a joia, barba, manto, o amuleto no peito -->
+            <g>
+              <path d="M98 300 Q100 266 126 254 Q140 248 150 246 L174 246 Q186 248 198 254 Q222 266 224 300Z" fill="#1c0b04"/>
+              <path d="M146 246 L162 270 L178 246" fill="none" stroke="#3a1a0a" stroke-width="3"/>
+              <path d="M98 300 Q100 266 126 254 Q140 248 150 246 L174 246 Q186 248 198 254 Q222 266 224 300" fill="none" stroke="#ffa24a" stroke-opacity=".55" stroke-width="1.5"/>
+              <ellipse cx="162" cy="218" rx="16" ry="20" fill="#1c0b04"/>
+              <path d="M148 224 Q150 250 162 256 Q174 250 176 224 Q168 232 162 232 Q156 232 148 224Z" fill="#2a1206"/>
+              <path d="M186 204 Q200 222 196 250 Q190 236 182 224Z" fill="#26100a"/>
+              <path d="M138 210 Q130 186 146 174 Q160 164 176 168 Q194 176 190 210 Q178 216 162 216 Q146 216 138 210Z" fill="#26100a"/>
+              <path d="M140 200 Q160 186 188 196 M139 208 Q164 196 189 205 M146 180 Q166 192 188 186 M150 172 Q168 182 182 174" fill="none" stroke="#5a2a14" stroke-width="2"/>
+              <path d="M138 210 Q130 186 146 174 Q160 164 176 168 Q194 176 190 210" fill="none" stroke="#ffb25a" stroke-opacity=".6" stroke-width="1.4"/>
+              <path d="M147 222 Q146 236 152 244 M177 222 Q178 236 172 244" fill="none" stroke="#ffb25a" stroke-opacity=".35" stroke-width="1"/>
+              <circle cx="163" cy="190" r="4" fill="#3ac0b0" stroke="#ffd25a" stroke-width="1.4"/>
+              <path d="M163 186 q-4 -14 4 -22 q-1 12 -4 22Z" fill="#84503f" stroke="#ffb25a" stroke-opacity=".5" stroke-width=".8"/>
+              <path d="M150 248 Q162 262 174 248" fill="none" stroke="#ffd25a" stroke-width="1.2" opacity=".85"/>
+              <circle cx="162" cy="266" r="9" fill="url(#gAmuleto)" stroke="#6a4210" stroke-width="1"/>
+              <circle cx="162" cy="266" r="3.2" fill="#2aa89a"/>
+              <path d="M162 255 v-3 M162 277 v3 M151 266 h-3 M173 266 h3" stroke="#ffd25a" stroke-width="1.4"/>
+            </g>
+            <!-- balcão de madeira com friso de latão -->
+            <rect x="0" y="292" width="240" height="94" fill="#3a1606"/>
+            <rect x="0" y="292" width="240" height="7" fill="#c7843a"/>
+            <rect x="0" y="292" width="240" height="2" fill="#ffd08a" opacity=".6"/>
+            <g stroke="#1e0a02" stroke-width="2" opacity=".6"><path d="M40 300v86 M120 300v86 M200 300v86"/></g>
+            <g fill="none" stroke="#c7843a" stroke-width="1.2" opacity=".55"><path d="M54 318 l14 14 l-14 14 l-14 -14Z M134 318 l14 14 l-14 14 l-14 -14Z"/></g>
+            <!-- sobre o balcão: uma máscara dourada, moedas e a balança -->
+            <path d="M22 292 v-30 q0 -10 14 -12 q14 2 14 12 v30Z" fill="#2a0e02"/>
+            <path d="M26 262 q10 -6 20 0 M28 270 h6 M38 270 h6" stroke="#ffcf7a" stroke-width="1.2" opacity=".7" fill="none"/>
+            <g fill="#2a0e02"><ellipse cx="80" cy="290" rx="10" ry="3"/><ellipse cx="82" cy="287" rx="9" ry="3"/><ellipse cx="79" cy="284" rx="8" ry="3"/></g>
+            <path d="M206 292 v-34 M190 262 h32 M190 262 l-6 14 h12Z M222 262 l-6 14 h12Z" stroke="#2a0e02" stroke-width="2.5" fill="#2a0e02"/>
+          </svg>
+          <div class="amuleto-brilho"></div>
+          <div class="acende"></div>
+        </div>
+        <div class="folha esq">
+          <div class="borda"></div>
+          <div class="tabuas"></div>
+          <div class="moldura"></div>
+          <div class="cinta c1"></div><div class="cinta c2"></div><div class="cinta c3"></div>
+          <svg class="roseta" viewBox="-30 -30 60 60">
+            <g id="roseta-raios" fill="url(#gBronze)" stroke="#3e260a" stroke-width=".8"></g>
+            <circle r="15" fill="url(#gOuro)" stroke="#3e260a" stroke-width="1.4"/>
+            <circle r="10" fill="none" stroke="#5a3608" stroke-width="1"/>
+            <circle r="4" fill="#2aa89a" stroke="#5a3608" stroke-width="1"/>
+          </svg>
+          <div class="suporte"></div>
+          <div class="argola"></div>
+          <div class="sombra"></div>
+        </div>
+        <div class="folha dir">
+          <div class="borda"></div>
+          <div class="tabuas"></div>
+          <div class="moldura"></div>
+          <div class="cinta c1"></div><div class="cinta c2"></div><div class="cinta c3"></div>
+          <svg class="amuleto-porta" viewBox="0 0 48 96">
+            <path d="M24 0 V14" stroke="#c8a06a" stroke-width="1.6"/>
+            <circle cx="24" cy="4" r="3" fill="url(#gBronze)"/>
+            <path d="M24 14 C38 14 44 26 44 38 C44 52 34 60 24 66 C14 60 4 52 4 38 C4 26 10 14 24 14Z" fill="url(#gBronze)" stroke="#3e260a" stroke-width="1.2"/>
+            <path d="M10 38 Q24 26 38 38 Q24 50 10 38Z" fill="#f4ead2" stroke="#3e260a" stroke-width="1"/>
+            <circle cx="24" cy="38" r="6" fill="#1f6fa8"/><circle cx="24" cy="38" r="2.6" fill="#0c1a2a"/><circle cx="22.4" cy="36.4" r="1.2" fill="#fff"/>
+            <path d="M24 66 V74" stroke="#c8a06a" stroke-width="1.4"/>
+            <circle cx="24" cy="77" r="3.4" fill="#2aa89a"/>
+            <path d="M21 80 L18 95 M24 80 V96 M27 80 L30 95" stroke="#84503f" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="suporte"></div>
+          <div class="argola"></div>
+          <div class="sombra"></div>
+        </div>
+      </div>
+      <div class="fresta-meio" aria-hidden="true"></div>
+      <div class="fresta-chao" aria-hidden="true"></div>
+      <div class="tranca" aria-hidden="true"></div>
+      <svg class="cordao" viewBox="676 598 88 94" aria-hidden="true">
+        <g fill="none" stroke-linecap="round">
+          <path d="M693 672 Q702 642 715 617 M747 672 Q738 642 725 617" stroke="#5a3e1c" stroke-width="4"/>
+          <path d="M693 672 Q702 642 715 617 M747 672 Q738 642 725 617" stroke="#d6b27a" stroke-width="2.4" stroke-dasharray="3 2"/>
+          <path d="M688 668 q6 10 12 2 M752 668 q-6 10 -12 2" stroke="#d6b27a" stroke-width="2.4"/>
+        </g>
+      </svg>
+      <div class="selo" aria-hidden="true"><i class="e"></i><i class="d"></i></div>
+      <div class="raios" aria-hidden="true"></div>
+      <div class="luz-fachada" aria-hidden="true"></div>
+
+      <!-- ===== A PLACA, pendurada do braço da lança cravada na areia ===== -->
+      <div class="placa-grupo" id="placa">
+        <i class="corda e" aria-hidden="true"></i><i class="corda d" aria-hidden="true"></i>
+        <div class="entrada-placa">
+          <span class="pano-topo" aria-hidden="true"></span>
+          <i class="borla e" aria-hidden="true"></i><i class="borla d" aria-hidden="true"></i>
+          <h1 class="entrada-titulo">Bem Vindo(a)!</h1>
+          <div class="pergaminho">
+            <i class="prego e" aria-hidden="true"></i><i class="prego d" aria-hidden="true"></i>
+            <p class="entrada-hobby">Este é um projeto feito por hobby sem fins lucrativos.</p>
+            <p class="entrada-contato"><span class="ea-rot">Meus Contatos</span>
+              <span class="ea-canal"><span class="ea-nome">League of Legends</span> <b class="ea-id" title="Riot ID — clique para selecionar">Brelgo#RPG</b></span>
+              <span class="ea-canal"><span class="ea-nome">Discord</span> <b class="ea-id" title="Clique para selecionar">brelgo</b></span>
+            </p>
+          </div>
+        </div>
+        <div class="etiqueta">
+          <p class="entrada-nota"><span class="nw">League of Legends</span> · <span class="nw">Atualização <span data-atualizacao></span></span> · <span class="nw">patch <span data-patch></span></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PERTO: lanternas de latão, dunas da frente e a pedra caída (passam mais rápido na câmera) ===== -->
+    <div class="camada perto" id="perto" aria-hidden="true">
+      <div class="braseiro b1"></div>
+      <div class="braseiro b2"></div>
+      <svg class="frente" viewBox="-600 -400 2640 1700">
+        <defs>
+          <linearGradient id="gDunaFrente" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a8683e"/><stop offset=".3" stop-color="#7a4430"/><stop offset="1" stop-color="#3e2024"/>
+          </linearGradient>
+          <linearGradient id="gPedra" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#3a2028"/><stop offset=".5" stop-color="#8a5a40"/><stop offset=".85" stop-color="#d09868"/><stop offset="1" stop-color="#6a3c2c"/>
+          </linearGradient>
+          <filter id="graoF" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05 0.2" numOctaves="3" seed="8" result="n"/>
+            <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.16  0 0 0 0 0.07  0 0 0 0 0.06  1.7 0 0 0 -0.66"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+        </defs>
+        <path id="duna-frente-esq" fill="url(#gDunaFrente)"/>
+        <path id="duna-frente-dir" fill="url(#gDunaFrente)"/>
+        <g id="cristas-frente" fill="none" stroke="#f0b47a" stroke-width="3" opacity=".5"></g>
+        <!-- o bloco caído de uma ruína, meio enterrado, com o sol entalhado -->
+        <g transform="translate(-36 742) rotate(-9)">
+          <path d="M0 160 L-4 40 Q-2 18 20 12 L128 0 Q146 2 150 22 L160 160Z" fill="url(#gPedra)"/>
+          <path d="M0 160 L-4 40 Q-2 18 20 12 L128 0 Q146 2 150 22 L160 160Z" fill="#000" filter="url(#graoF)"/>
+          <path d="M-4 40 Q-2 18 20 12 L128 0 Q146 2 150 22" fill="none" stroke="#f0b47a" stroke-width="2.4" opacity=".6"/>
+          <path d="M20 12 L22 160 M128 0 L134 160" stroke="#2a1418" stroke-width="2" opacity=".5"/>
+          <path d="M96 30 l10 24 l-8 12 M40 120 l-10 18" stroke="#2a1418" stroke-width="2" fill="none"/>
+          <g fill="none" stroke="#2a1214" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".75">
+            <circle cx="76" cy="70" r="22"/><circle cx="76" cy="70" r="5"/>
+            <path d="M76 38 v-10 M76 102 v10 M44 70 h-10 M108 70 h10 M54 48 l-7 -7 M98 48 l7 -7 M54 92 l-7 7 M98 92 l7 7"/>
+          </g>
+        </g>
+        <path d="M-640 900 Q-380 846 -120 862 Q60 870 260 900 L260 1300 L-640 1300Z" fill="url(#gDunaFrente)" opacity=".98"/>
+        <path d="M-640 900 Q-380 846 -120 862 Q60 870 260 900" fill="none" stroke="#f0b47a" stroke-width="3" opacity=".45"/>
+        <!-- cacos de um jarro na areia -->
+        <g transform="translate(1260 906)">
+          <path d="M0 0 q14 -22 36 -18 l-6 18Z" fill="#8a4a2c"/><path d="M0 0 q14 -22 36 -18" fill="none" stroke="#e09a5e" stroke-width="2"/>
+          <path d="M46 4 l20 -14 l10 12 l-14 6Z" fill="#6e3422"/>
+        </g>
+      </svg>
+      <svg class="runas-marco" viewBox="-60 760 200 160" aria-hidden="true">
+        <defs>
+          <filter id="brilhoSol2" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g transform="translate(-36 742) rotate(-9)" fill="none" stroke="#ffcf7a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="runas-acorda" filter="url(#brilhoSol2)">
+          <circle cx="76" cy="70" r="22"/><circle cx="76" cy="70" r="5"/>
+          <path d="M76 38 v-10 M76 102 v10 M44 70 h-10 M108 70 h10 M54 48 l-7 -7 M98 48 l7 -7 M54 92 l-7 7 M98 92 l7 7"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- a areia que o vento leva, na tela -->
+  <div class="neve-tela" id="neveTela" aria-hidden="true">
+    <div class="nevoa"></div>
+    <div class="rajada r1"></div><div class="rajada r2"></div>
+    <div class="veio v1"></div><div class="veio v2"></div><div class="veio v3"></div>
+    <div class="neve n1"></div><div class="neve n2"></div><div class="neve n3"></div>
+  </div>
+  <div class="vinheta" aria-hidden="true"></div>
+  <div class="grao" aria-hidden="true"></div>
+  <div class="flash" aria-hidden="true"></div>
+  <p class="dica" aria-hidden="true">(Clique em qualquer local para abrir)</p>
+  <button id="entrar" class="btn-entrar" type="button">Entrar na loja</button>
+</div>
+
+<!-- a loja: placeholder (na integração é o app de verdade) -->
+<main class="loja" id="loja" tabindex="-1" aria-label="O Catálogo">
+  <h2>O Catálogo</h2>
+  <p>aqui entra a loja de verdade</p>
+  <span class="atalho">R · voltar à porta</span>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  // sorteio estável (a cena é sempre a mesma)
+  var semente = 20261101;
+  function rnd() { semente = (semente * 1664525 + 1013904223) >>> 0; return semente / 4294967296; }
+  function el(tag, at, pai) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (pai) pai.appendChild(e); return e; }
+  function $(id) { return document.getElementById(id); }
+  function f1(n) { return n.toFixed(1); }
+
+  /* ---------- o que na integração vem do app (CATALOG.meta.patch e ATUALIZACAO) ---------- */
+  var ATUALIZACAO = "13.97", CATALOG = { meta: { patch: "16.21.1" } };
+  document.querySelectorAll("[data-patch]").forEach(function (e) { e.textContent = CATALOG.meta.patch || ""; });
+  document.querySelectorAll("[data-atualizacao]").forEach(function (e) { e.textContent = ATUALIZACAO; });
+
+  /* ---------- o som (na integração é o módulo Som do app; aqui, um substituto mínimo) ---------- */
+  var Som = window.Som || (function () {
+    var audio = null, destravado = false;
+    return {
+      destravar: function () { destravado = true; try { audio = audio || new Audio("../../assets/audio/open_catalog.mp3"); audio.preload = "auto"; } catch (e) {} },
+      play: function (evento) {
+        if (!destravado || evento !== "catalog:open" || !audio) return;
+        try { audio.currentTime = 0; audio.volume = .8; var p = audio.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+      },
+      parar: function () { if (audio) try { audio.pause(); audio.currentTime = 0; } catch (e) {} }
+    };
+  })();
+
+  /* ---------- utilidades de desenho ---------- */
+  // curva suave por pontos (quadráticas pelos pontos médios)
+  function suave(pts) {
+    var d = "M" + f1(pts[0][0]) + " " + f1(pts[0][1]) + " ";
+    for (var i = 1; i < pts.length - 1; i++) {
+      var mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2;
+      d += "Q" + f1(pts[i][0]) + " " + f1(pts[i][1]) + " " + f1(mx) + " " + f1(my) + " ";
+    }
+    var u = pts[pts.length - 1];
+    return d + "L" + f1(u[0]) + " " + f1(u[1]) + " ";
+  }
+  function yR(x) { return 140 + 0.24 * Math.abs(x - 720); }          // a cumeeira da tenda
+  function cede(x) {                                                    // a lona cede entre os apoios (250, 720, 1190)
+    var a = x < 720 ? 250 : 720, b = x < 720 ? 720 : 1190, t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return 14 * Math.sin(t * Math.PI);
+  }
+
+  /* ---------- o céu: estrelas ---------- */
+  [[".e1", 70, 1.5], [".e2", 60, 1.1], [".e3", 40, 1.9]].forEach(function (c) {
+    var fundos = [];
+    for (var i = 0; i < c[1]; i++) {
+      var x = rnd() * 3240, y = Math.pow(rnd(), 1.7) * 1180, r = c[2] * (.5 + rnd() * .7), a = (.55 + rnd() * .45) * (1 - y / 1500);
+      fundos.push("radial-gradient(circle " + r.toFixed(2) + "px at " + x.toFixed(0) + "px " + y.toFixed(0) + "px, rgba(255,246,226," + a.toFixed(2) + "), rgba(255,246,226,0))");
+    }
+    document.querySelector(".estrelas" + c[0]).style.backgroundImage = fundos.join(",");
+  });
+
+  /* ---------- longe: ruínas e dunas ---------- */
+  (function () {
+    var g = $("ruinas"), gl = $("ruinas-luz");
+    // a pirâmide em degraus, à esquerda
+    var d = "", dl = "", base = 618;
+    for (var s = 0; s < 7; s++) {
+      var w = 300 - s * 40, h = 22, x0 = 100 - w / 2, y0 = base - (s + 1) * h;
+      d += "M" + x0 + " " + (y0 + h) + " L" + (x0 + 4) + " " + y0 + " L" + (x0 + w - 4) + " " + y0 + " L" + (x0 + w) + " " + (y0 + h) + "Z ";
+      dl += "M" + (x0 + w - 4) + " " + y0 + " L" + (x0 + w) + " " + (y0 + h) + " ";
+    }
+    // o obelisco e a colunata partida, à direita, contra o poente
+    d += "M1290 620 L1296 470 L1304 452 L1312 470 L1318 620Z ";
+    dl += "M1304 452 L1312 470 L1318 620 ";
+    [[1420, 520], [1462, 548], [1504, 506], [1546, 560], [1588, 530], [1630, 590]].forEach(function (c) {
+      d += "M" + c[0] + " 622 L" + c[0] + " " + c[1] + " l4 -6 l6 4 l4 -3 L" + (c[0] + 16) + " 622Z ";
+      dl += "M" + (c[0] + 16) + " " + (c[1] - 4) + " L" + (c[0] + 16) + " 622 ";
+    });
+    d += "M1410 520 L1520 512 L1522 500 L1470 498 L1440 506 L1410 508Z ";
+    // a cúpula rachada
+    d += "M1700 622 L1700 560 Q1700 512 1746 506 Q1792 512 1792 560 L1792 622Z M1740 506 l4 -14 l4 14Z ";
+    dl += "M1746 506 Q1792 512 1792 560 ";
+    // a cabeça gigante tombada ao longe, à esquerda
+    d += "M-330 622 Q-340 560 -300 540 L-250 530 Q-220 540 -226 580 L-220 622Z ";
+    el("path", { d: d }, g);
+    el("path", { d: dl }, gl);
+    // dunas de longe e do meio
+    var pts = [];
+    for (var x = -900; x <= 2340; x += 90) pts.push([x, 612 + 10 * Math.sin(x / 210) + 8 * Math.sin(x / 77 + 1) + rnd() * 4]);
+    var top = suave(pts);
+    $("duna-longe").setAttribute("d", top + "L2340 1300 L-900 1300Z");
+    $("duna-longe-crista").setAttribute("d", top);
+    var gm = $("duna-meio");
+    duna(gm, [[-900, 690], [-640, 650], [-380, 676], [-120, 640], [160, 668], [480, 646], [820, 672], [1160, 636], [1500, 662], [1840, 640], [2340, 680]], "url(#gDunaMeio)", "#f6b070", 1300);
+  })();
+
+  // uma fileira de dunas com crista: o lado que olha o poente (à direita) recebe a luz; o outro, a sombra
+  function duna(g, cristas, fill, corCrista, fundo) {
+    var pts = [];
+    cristas.forEach(function (c, i) {
+      if (i > 0) { var a = cristas[i - 1]; pts.push([(a[0] + c[0]) / 2, Math.max(a[1], c[1]) + 26]); }
+      pts.push(c);
+    });
+    var top = suave(pts);
+    el("path", { d: top + "L" + cristas[cristas.length - 1][0] + " " + fundo + " L" + cristas[0][0] + " " + fundo + "Z", fill: fill }, g);
+    var sombra = "";
+    cristas.forEach(function (c, i) {
+      if (i === 0 || i === cristas.length - 1) return;
+      var w = (c[0] - cristas[i - 1][0]) * .7;
+      sombra += "M" + c[0] + " " + c[1] + " Q" + f1(c[0] - w * .25) + " " + f1(c[1] + 30) + " " + f1(c[0] - w * .1) + " " + f1(c[1] + 90) +
+        " Q" + f1(c[0] - w * .55) + " " + f1(c[1] + 60) + " " + f1(c[0] - w * .9) + " " + f1(c[1] + 34) + " Q" + f1(c[0] - w * .45) + " " + f1(c[1] + 8) + " " + c[0] + " " + c[1] + "Z ";
+    });
+    el("path", { d: sombra, fill: "#2a1230", opacity: .32 }, g);
+    el("path", { d: top, fill: "none", stroke: corCrista, "stroke-width": 2, opacity: .55 }, g);
+  }
+
+  /* ---------- mundo: dunas atrás da tenda, a palmeira, a areia ---------- */
+  duna($("dunas-perto"), [[-600, 760], [-420, 700], [-120, 726], [120, 690], [380, 730], [1060, 726], [1300, 680], [1560, 712], [1800, 676], [2040, 730]], "url(#gDunaPerto)", "#f8bc80", 820);
+
+  (function palmeira() {
+    var g = $("palmeira"), bx = -70, by = 742, tx = 10, ty = 330;
+    // o tronco, em gomos, curvado na direção do vento
+    var n = 18, gomos = "";
+    for (var i = 0; i <= n; i++) {
+      var t = i / n, cxp = bx + 37, cyp = (by + ty) / 2, x = (1 - t) * (1 - t) * bx + 2 * (1 - t) * t * cxp + t * t * tx, y = (1 - t) * (1 - t) * by + 2 * (1 - t) * t * cyp + t * t * ty, w = 15 - t * 7;
+      gomos += "M" + f1(x - w) + " " + f1(y) + " Q" + f1(x) + " " + f1(y - 9) + " " + f1(x + w) + " " + f1(y) + " ";
+    }
+    var tronco = "M" + (bx - 16) + " " + by + " Q" + (bx + 26) + " " + ((by + ty) / 2) + " " + (tx - 8) + " " + ty + " L" + (tx + 8) + " " + ty + " Q" + (bx + 48) + " " + ((by + ty) / 2) + " " + (bx + 16) + " " + by + "Z";
+    el("path", { d: tronco, fill: "#3a2024" }, g);
+    el("path", { d: gomos, fill: "none", stroke: "#1e0e14", "stroke-width": 3, opacity: .8 }, g);
+    el("path", { d: "M" + (bx + 16) + " " + by + " Q" + (bx + 48) + " " + ((by + ty) / 2) + " " + (tx + 8) + " " + ty, fill: "none", stroke: "#f0a870", "stroke-width": 2.4, opacity: .55 }, g);
+    // as folhas: arcos com folíolos, caindo
+    [[-160, 40], [-120, 70], [-60, 100], [-20, 120], [30, 110], [90, 80], [150, 50], [190, 90], [-200, 100], [110, 140]].forEach(function (f, k) {
+      var ex = tx + f[0], ey = ty + f[1], cx = tx + f[0] * .45, cy = ty - 70 + f[1] * .2;
+      var haste = "M" + tx + " " + ty + " Q" + f1(cx) + " " + f1(cy) + " " + f1(ex) + " " + f1(ey);
+      el("path", { d: haste, fill: "none", stroke: k % 2 ? "#2a1620" : "#33202a", "stroke-width": 4, "stroke-linecap": "round" }, g);
+      var fol = "";
+      for (var j = 1; j < 16; j++) {
+        var t = j / 16, px = (1 - t) * (1 - t) * tx + 2 * (1 - t) * t * cx + t * t * ex, py = (1 - t) * (1 - t) * ty + 2 * (1 - t) * t * cy + t * t * ey;
+        var l = 34 * Math.sin(t * Math.PI) + 8, dir = f[0] < 0 ? -1 : 1;
+        fol += "M" + f1(px) + " " + f1(py) + " q" + f1(dir * l * .3) + " " + f1(l * .5) + " " + f1(dir * l * .15) + " " + f1(l) + " M" + f1(px) + " " + f1(py) + " q" + f1(-dir * l * .25) + " " + f1(l * .55) + " " + f1(-dir * l * .05) + " " + f1(l * .95) + " ";
+      }
+      el("path", { d: fol, fill: "none", stroke: k % 2 ? "#24121c" : "#2e1a24", "stroke-width": 2.6, "stroke-linecap": "round" }, g);
+    });
+    // tâmaras
+    for (var q = 0; q < 9; q++) el("circle", { cx: f1(tx - 10 + rnd() * 22), cy: f1(ty + 6 + rnd() * 18), r: 4, fill: "#7a3a1e" }, g);
+    el("ellipse", { cx: bx, cy: by + 4, rx: 50, ry: 8, fill: "#2a1424", opacity: .4 }, g);
+  })();
+
+  // as ondinhas que o vento desenha na areia (crescem com a perspectiva)
+  (function () {
+    var g = $("ondulas");
+    for (var i = 0; i < 70; i++) {
+      var y = 780 + Math.pow(rnd(), 1.3) * 230, s = 1 + (y - 780) / 120, x = -600 + rnd() * 2640, w = (60 + rnd() * 120) * s;
+      if (x + w > 440 && x < 1000 && y > 820) continue;   // areia lisa diante da porta (onde cai a dica)
+      var d = "M" + f1(x) + " " + f1(y) + " q" + f1(w * .25) + " " + f1(-3 * s) + " " + f1(w * .5) + " 0 t" + f1(w * .5) + " 0";
+      el("path", { d: d, stroke: "#2e1620", "stroke-width": f1(1 + s * .5), opacity: .3, transform: "translate(0 " + f1(1.6 * s) + ")" }, g);
+      el("path", { d: d, stroke: "#f2b47a", "stroke-width": f1(.8 + s * .4), opacity: .32 }, g);
+    }
+  })();
+
+  /* ---------- a tenda ---------- */
+  (function () {
+    // a parede de lona (do lado de trás do portal), sob a cumeeira
+    var d = "M232 800 L232 " + f1(yR(232) + 4) + " ";
+    for (var x = 240; x <= 1208; x += 16) d += "L" + x + " " + f1(yR(x) + 4) + " ";
+    d += "L1208 800Z";
+    $("lona-parede").setAttribute("d", d);
+    $("lona-clip").setAttribute("d", d);
+    var cs = "";
+    for (var c = 300; c < 1200; c += 92) cs += "M" + c + " " + f1(yR(c)) + " L" + (c + (c - 720) * .02) + " 800 ";
+    $("lona-costuras").setAttribute("d", cs);
+    var gr = $("lona-remendos");
+    [[318, 300, 46, 60], [1090, 330, 54, 44], [900, 640, 40, 52], [430, 680, 50, 40]].forEach(function (r) {
+      el("rect", { x: r[0], y: r[1], width: r[2], height: r[3], fill: "#a07850", opacity: .45, transform: "rotate(" + f1(rnd() * 6 - 3) + " " + r[0] + " " + r[1] + ")" }, gr);
+      el("rect", { x: r[0] + 3, y: r[1] + 3, width: r[2] - 6, height: r[3] - 6, fill: "none", stroke: "#2a1820", "stroke-width": 1.2, "stroke-dasharray": "3 3", opacity: .7, transform: "rotate(" + f1(rnd() * 6 - 3) + " " + r[0] + " " + r[1] + ")" }, gr);
+    });
+
+    // a sanefa listrada: borda de cima na cumeeira, borda de baixo em ondas, cedendo entre os apoios
+    var X0 = 196, X1 = 1244, topo = "M" + X0 + " " + f1(yR(X0) - 14) + " ", baixo = [];
+    for (var x2 = X0; x2 <= X1; x2 += 8) topo += "L" + x2 + " " + f1(yR(x2) - 14) + " ";
+    for (var x3 = X1; x3 >= X0; x3 -= 4) {
+      var onda = 10 * Math.sin(Math.PI * (((x3 - X0) % 44) / 44));
+      baixo.push([x3, yR(x3) + 38 + cede(x3) + onda]);
+    }
+    var dS = topo;
+    baixo.forEach(function (p) { dS += "L" + p[0] + " " + f1(p[1]) + " "; });
+    dS += "Z";
+    $("sanefa").setAttribute("d", dS);
+    $("sanefa-clip").setAttribute("d", dS);
+    $("sanefa-luz").setAttribute("d", dS);
+    var vies = "M" + X0 + " " + f1(yR(X0) + 2) + " ";
+    for (var x4 = X0; x4 <= X1; x4 += 8) vies += "L" + x4 + " " + f1(yR(x4) + 2) + " ";
+    $("sanefa-viés").setAttribute("d", vies);
+    // as pregas: onde a lona franze entre as ondas
+    var gp = $("sanefa-pregas");
+    for (var x5 = X0; x5 <= X1; x5 += 44) el("path", { d: "M" + (x5 - 6) + " " + f1(yR(x5) - 12) + " L" + (x5 + 6) + " " + f1(yR(x5) - 12) + " L" + (x5 + 3) + " " + f1(yR(x5) + 40 + cede(x5)) + " L" + (x5 - 3) + " " + f1(yR(x5) + 40 + cede(x5)) + "Z" }, gp);
+    // borlas nas pontas das ondas
+    var gb = $("borlas");
+    for (var x6 = X0 + 44; x6 < X1; x6 += 44) {
+      var by = yR(x6) + 38 + cede(x6);
+      el("path", { d: "M" + x6 + " " + f1(by) + " v8", stroke: "#b8a07c", "stroke-width": 1.4 }, gb);
+      el("path", { d: "M" + (x6 - 3) + " " + f1(by + 8) + " h6 l2 14 h-10Z", fill: (x6 / 44) % 2 ? "#84503f" : "#4b4a5c" }, gb);
+      el("circle", { cx: x6, cy: f1(by + 8), r: 2.6, fill: "#b8a07c" }, gb);
+    }
+
+    // as abas: penduram da sanefa e estão amarradas para trás nas colunas
+    var ga = $("abas");
+    function aba(esp) {
+      var m = esp ? function (x) { return 1440 - x; } : function (x) { return x; };
+      var x0 = 232, x1 = 476, tie = [300, 512];
+      var d = "M" + m(x0) + " " + f1(yR(x0) + 36) + " ";
+      for (var x = x0; x <= x1; x += 8) d += "L" + m(x) + " " + f1(yR(x) + 36 + cede(x)) + " ";
+      d += "Q" + m(400) + " 400 " + m(tie[0]) + " " + tie[1] + " Q" + m(318) + " 610 " + m(356) + " 800 L" + m(226) + " 800 Z";
+      var gg = el("g", {}, ga);
+      el("path", { d: d, fill: "url(#listrasAba)" }, gg);
+      el("path", { d: d, fill: "#000", filter: "url(#tecido)", opacity: .45 }, gg);
+      el("path", { d: d, fill: esp ? "url(#gAbaSombraD)" : "url(#gAbaSombra)" }, gg);
+      // dobras que convergem no laço
+      var dob = "";
+      for (var k = 0; k < 6; k++) {
+        var xs = x0 + 20 + k * 40;
+        dob += "M" + m(xs) + " " + f1(yR(xs) + 44 + cede(xs)) + " Q" + m(tie[0] + 20 + k * 6) + " " + (tie[1] - 90) + " " + m(tie[0] + 4) + " " + (tie[1] - 4) + " ";
+        dob += "M" + m(tie[0] + 4) + " " + (tie[1] + 6) + " Q" + m(tie[0] - 14 + k * 10) + " " + (tie[1] + 120) + " " + m(232 + k * 22) + " 800 ";
+      }
+      el("path", { d: dob, fill: "none", stroke: "#14081e", "stroke-width": 3, opacity: .35 }, gg);
+      el("path", { d: dob, fill: "none", stroke: "#ffd6a0", "stroke-width": 1, opacity: .16, transform: "translate(3 0)" }, gg);
+      // o laço de corda
+      el("path", { d: "M" + m(tie[0] - 34) + " " + (tie[1] - 6) + " Q" + m(tie[0]) + " " + (tie[1] - 14) + " " + m(tie[0] + 10) + " " + (tie[1] + 2) + " Q" + m(tie[0]) + " " + (tie[1] + 14) + " " + m(tie[0] - 34) + " " + (tie[1] + 8), fill: "none", stroke: "#c8a06a", "stroke-width": 4 }, gg);
+      el("path", { d: "M" + m(tie[0] + 4) + " " + (tie[1] + 4) + " q" + (esp ? -8 : 8) + " 16 " + (esp ? -2 : 2) + " 34", fill: "none", stroke: "#c8a06a", "stroke-width": 3 }, gg);
+    }
+    aba(false); aba(true);
+
+    // as colunas quebradas de arenito
+    var gc = $("colunas");
+    function coluna(x0, x1, topoY, base, capitel) {
+      var g = el("g", {}, gc), w = x1 - x0, jag = "";
+      var pts = [[x0, base]];
+      pts.push([x0, topoY + 18]);
+      for (var i = 1; i < 7; i++) pts.push([x0 + w * i / 7, topoY + (i % 2 ? rnd() * 22 : 4 + rnd() * 10)]);
+      pts.push([x1, topoY + 26]); pts.push([x1, base]);
+      pts.forEach(function (p, i) { jag += (i ? "L" : "M") + f1(p[0]) + " " + f1(p[1]) + " "; });
+      jag += "Z";
+      el("path", { d: jag, fill: "url(#gArenito)" }, g);
+      el("path", { d: jag, fill: "#000", filter: "url(#grao)" }, g);
+      el("path", { d: jag, fill: "#000", filter: "url(#poros)", opacity: .3 }, g);
+      // caneluras
+      var cn = "", cl = "";
+      for (var k = 1; k < 6; k++) { var xx = x0 + w * k / 6; cn += "M" + f1(xx) + " " + f1(topoY + 24) + " L" + f1(xx) + " " + (base - 40) + " "; cl += "M" + f1(xx + 2.4) + " " + f1(topoY + 24) + " L" + f1(xx + 2.4) + " " + (base - 40) + " "; }
+      el("path", { d: cn, stroke: "#2a1418", "stroke-width": 2, opacity: .45 }, g);
+      el("path", { d: cl, stroke: "#f6c890", "stroke-width": 1, opacity: .25 }, g);
+      // juntas dos tambores
+      var jt = "";
+      for (var y = topoY + 70 + rnd() * 20; y < base - 50; y += 70 + rnd() * 16) jt += "M" + x0 + " " + f1(y) + " q" + f1(w / 2) + " " + f1(3 + rnd() * 3) + " " + w + " 0 ";
+      el("path", { d: jt, fill: "none", stroke: "#2a1418", "stroke-width": 2.2, opacity: .6 }, g);
+      // lascas
+      for (var l = 0; l < 6; l++) {
+        var ly = topoY + 40 + rnd() * (base - topoY - 100), lado = rnd() < .5, lx = lado ? x0 : x1, s = 4 + rnd() * 7;
+        el("path", { d: "M" + lx + " " + f1(ly) + " l" + (lado ? s : -s) + " " + f1(s * .6) + " l" + (lado ? -s : s) + " " + f1(s * 1.2) + "Z", fill: "#2a1418", opacity: .7 }, g);
+      }
+      // a quebra de cima, clara, e a base (plinto)
+      el("path", { d: pts.slice(1, -1).map(function (p, i) { return (i ? "L" : "M") + f1(p[0]) + " " + f1(p[1]); }).join(" "), fill: "none", stroke: "#f6c890", "stroke-width": 1.6, opacity: .5 }, g);
+      el("rect", { x: x0 - 10, y: base - 38, width: w + 20, height: 38, fill: "url(#gArenito)" }, g);
+      el("rect", { x: x0 - 10, y: base - 38, width: w + 20, height: 38, fill: "#000", filter: "url(#grao)" }, g);
+      el("path", { d: "M" + (x0 - 10) + " " + (base - 38) + " h" + (w + 20), stroke: "#f6c890", "stroke-width": 1.4, opacity: .5 }, g);
+      el("path", { d: "M" + (x0 - 40) + " " + (base + 4) + " Q" + (x0 - 10) + " " + (base - 26) + " " + (x0 + w / 2) + " " + (base - 14) + " Q" + (x1 + 16) + " " + (base - 24) + " " + (x1 + 44) + " " + (base + 4) + "Z", fill: "#c08454" }, g);
+      if (capitel) {
+        el("path", { d: "M" + (x0 - 14) + " " + (topoY + 2) + " L" + (x1 + 14) + " " + (topoY - 6) + " L" + (x1 + 8) + " " + (topoY + 22) + " L" + (x0 - 8) + " " + (topoY + 26) + "Z", fill: "url(#gArenitoV)" }, g);
+        el("path", { d: "M" + (x0 - 14) + " " + (topoY + 2) + " L" + (x1 + 14) + " " + (topoY - 6) + " L" + (x1 + 12) + " " + (topoY - 2) + " L" + (x0 - 13) + " " + (topoY + 6) + "Z", fill: "#f6c890", opacity: .6 }, g);
+        el("path", { d: "M" + (x1 + 14) + " " + (topoY - 6) + " l-10 -6 l-8 8Z", fill: "#3a1e1c", opacity: .6 }, g);
+      }
+      return g;
+    }
+    coluna(214, 286, 214, 800, true);
+    coluna(1154, 1226, 286, 800, false);
+
+    // cordas de amarração até as estacas na areia (com os penduricalhos na da esquerda)
+    var gk = $("cordas");
+    function corda(a, b, flecha) {
+      var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2 + flecha;
+      var d = "M" + a[0] + " " + a[1] + " Q" + mx + " " + my + " " + b[0] + " " + b[1];
+      el("path", { d: d, stroke: "#2a1a10", "stroke-width": 4.2 }, gk);
+      el("path", { d: d, stroke: "#c8a06a", "stroke-width": 2.2, "stroke-dasharray": "4 2" }, gk);
+      // a estaca
+      el("path", { d: "M" + (b[0] - 4) + " " + (b[1] + 12) + " L" + (b[0] - 2) + " " + (b[1] - 26) + " L" + (b[0] + 6) + " " + (b[1] - 26) + " L" + (b[0] + 4) + " " + (b[1] + 12) + "Z", fill: "url(#gPoste)", stroke: "none" }, gk);
+      el("ellipse", { cx: b[0], cy: b[1] + 12, rx: 22, ry: 5, fill: "#c88a5a", stroke: "none" }, gk);
+    }
+    corda([236, 214], [-176, 790], 26);
+    corda([1214, 290], [1640, 808], 20);
+    corda([720, 112], [-60, 300], 30);
+    corda([720, 112], [1520, 330], 30);
+
+    // penduricalhos na corda da esquerda: amuletos, um sino, uma máscara pequena, contas
+    var gq = $("penduricalhos");
+    function naCorda(x) { var t = (236 - x) / (236 + 176), y = (1 - t) * (1 - t) * 214 + 2 * (1 - t) * t * (502 + 26) + t * t * 790; return y; }
+    [[190, 30, "disco"], [158, 50, "sino"], [124, 40, "mascara"], [90, 58, "contas"], [56, 34, "disco"], [24, 48, "olho"]].forEach(function (p) {
+      var x = p[0], y = naCorda(x), l = p[1], yb = y + l;
+      el("path", { d: "M" + x + " " + f1(y) + " L" + x + " " + f1(yb), stroke: "#c8a06a", "stroke-width": 1.2 }, gq);
+      if (p[2] === "disco") {
+        el("circle", { cx: x, cy: f1(yb + 9), r: 9, fill: "url(#gOuro)", stroke: "#5a3608", "stroke-width": 1 }, gq);
+        el("circle", { cx: x, cy: f1(yb + 9), r: 4, fill: "none", stroke: "#5a3608", "stroke-width": 1 }, gq);
+      } else if (p[2] === "sino") {
+        el("path", { d: "M" + (x - 8) + " " + f1(yb + 16) + " Q" + (x - 8) + " " + f1(yb) + " " + x + " " + f1(yb) + " Q" + (x + 8) + " " + f1(yb) + " " + (x + 8) + " " + f1(yb + 16) + "Z", fill: "url(#gBronze)", stroke: "#3e260a", "stroke-width": 1 }, gq);
+        el("circle", { cx: x, cy: f1(yb + 18), r: 2.4, fill: "#3e260a" }, gq);
+      } else if (p[2] === "mascara") {
+        el("path", { d: "M" + (x - 10) + " " + f1(yb) + " h20 v12 q0 14 -10 16 q-10 -2 -10 -16Z", fill: "url(#gOuro)", stroke: "#5a3608", "stroke-width": 1 }, gq);
+        el("path", { d: "M" + (x - 6) + " " + f1(yb + 8) + " h4 M" + (x + 2) + " " + f1(yb + 8) + " h4", stroke: "#2a1206", "stroke-width": 2 }, gq);
+      } else if (p[2] === "contas") {
+        for (var cc = 0; cc < 6; cc++) el("circle", { cx: x, cy: f1(yb + cc * 6), r: 2.8, fill: cc % 2 ? "#2aa89a" : "#c8902a" }, gq);
+      } else {
+        el("circle", { cx: x, cy: f1(yb + 8), r: 8, fill: "#45607a", stroke: "#b8a07c", "stroke-width": 1.4 }, gq);
+        el("circle", { cx: x, cy: f1(yb + 8), r: 4.4, fill: "#f4ead2" }, gq);
+        el("circle", { cx: x, cy: f1(yb + 8), r: 2.2, fill: "#0c1a2a" }, gq);
+      }
+    });
+  })();
+
+  /* ---------- tapetes ---------- */
+  // um tapete de pé (na lona): campo, barra de dentes, losangos, franja
+  function tapete(g, x, y, w, h, campo, barra, motivo) {
+    el("rect", { x: x - 6, y: y - 6, width: w + 12, height: 8, rx: 4, fill: "url(#gBronze)" }, g);
+    el("circle", { cx: x - 8, cy: y - 2, r: 5, fill: "url(#gOuro)" }, g); el("circle", { cx: x + w + 8, cy: y - 2, r: 5, fill: "url(#gOuro)" }, g);
+    el("rect", { x: x, y: y, width: w, height: h, fill: barra }, g);
+    el("rect", { x: x + 12, y: y + 12, width: w - 24, height: h - 24, fill: campo }, g);
+    var dentes = "";
+    for (var i = x + 12; i < x + w - 12; i += 10) dentes += "M" + i + " " + (y + 12) + " l5 -6 l5 6Z M" + i + " " + (y + h - 12) + " l5 6 l5 -6Z ";
+    for (var j = y + 12; j < y + h - 12; j += 10) dentes += "M" + (x + 12) + " " + j + " l-6 5 l6 5Z M" + (x + w - 12) + " " + j + " l6 5 l-6 5Z ";
+    el("path", { d: dentes, fill: motivo }, g);
+    // o medalhão e os losangos
+    var cx = x + w / 2, cy = y + h / 2;
+    el("path", { d: "M" + cx + " " + (cy - h * .28) + " L" + (cx + w * .3) + " " + cy + " L" + cx + " " + (cy + h * .28) + " L" + (cx - w * .3) + " " + cy + "Z", fill: barra, stroke: motivo, "stroke-width": 3 }, g);
+    el("path", { d: "M" + cx + " " + (cy - h * .14) + " L" + (cx + w * .15) + " " + cy + " L" + cx + " " + (cy + h * .14) + " L" + (cx - w * .15) + " " + cy + "Z", fill: motivo }, g);
+    el("circle", { cx: cx, cy: cy, r: 4, fill: campo }, g);
+    [[.25, .18], [.75, .18], [.25, .82], [.75, .82]].forEach(function (p) {
+      var px = x + w * p[0], py = y + h * p[1];
+      el("path", { d: "M" + px + " " + (py - 9) + " l7 9 l-7 9 l-7 -9Z", fill: motivo }, g);
+    });
+    // franja
+    var fr = "";
+    for (var k = x + 3; k < x + w; k += 5) fr += "M" + k + " " + (y + h) + " l" + f1(rnd() * 2 - 1) + " " + f1(10 + rnd() * 5) + " ";
+    el("path", { d: fr, stroke: "#b8a07c", "stroke-width": 1.6 }, g);
+    // tecido, dobras e luz
+    el("rect", { x: x, y: y, width: w, height: h, fill: "#000", filter: "url(#tecido)", opacity: .5 }, g);
+    for (var q = 1; q < 4; q++) el("rect", { x: x + w * q / 4 - 6, y: y, width: 12, height: h, fill: "#14081e", opacity: .16 }, g);
+    el("rect", { x: x, y: y, width: w, height: h, fill: "url(#gCrepusculo)" }, g);
+    el("rect", { x: x - 2, y: y, width: w + 4, height: h + 16, fill: "#1c1222", opacity: .3 }, g);   // na sombra da sanefa: não compete com a porta
+  }
+  tapete($("tapete-parede"), 396, 412, 148, 236, "#84503f", "#4b4a5c", "#b8a07c");
+  (function () {   // a faixa índigo, à direita, estreita e comprida
+    var g = $("pano-dir");
+    tapete(g, 900, 384, 92, 210, "#4b4a5c", "#5c3a3a", "#a88a5a");
+  })();
+
+  // o tapete estendido na areia, em perspectiva (mapeado num trapézio)
+  (function () {
+    var g = $("tapete-chao");
+    var T = [600, 840, 828], B = [512, 928, 878];   // curto: a dica cai na areia lisa   // topo x0,x1,y; base x0,x1,y
+    function P(u, v) { var vv = Math.pow(v, 1.15), x0 = T[0] + (B[0] - T[0]) * vv, x1 = T[1] + (B[1] - T[1]) * vv; return [x0 + (x1 - x0) * u, T[2] + (B[2] - T[2]) * vv]; }
+    function quad(u0, v0, u1, v1, fill, extra) {
+      var a = P(u0, v0), b = P(u1, v0), c = P(u1, v1), d = P(u0, v1);
+      var at = { d: "M" + f1(a[0]) + " " + f1(a[1]) + " L" + f1(b[0]) + " " + f1(b[1]) + " L" + f1(c[0]) + " " + f1(c[1]) + " L" + f1(d[0]) + " " + f1(d[1]) + "Z", fill: fill };
+      for (var k in extra || {}) at[k] = extra[k];
+      return el("path", at, g);
+    }
+    function losango(u, v, du, dv, fill) {
+      var a = P(u, v - dv), b = P(u + du, v), c = P(u, v + dv), d = P(u - du, v);
+      el("path", { d: "M" + f1(a[0]) + " " + f1(a[1]) + " L" + f1(b[0]) + " " + f1(b[1]) + " L" + f1(c[0]) + " " + f1(c[1]) + " L" + f1(d[0]) + " " + f1(d[1]) + "Z", fill: fill }, g);
+    }
+    quad(0, 0, 1, 1, "#7a2a20");
+    quad(.05, .04, .95, .96, "#4b4a5c");
+    quad(.11, .1, .89, .9, "#84503f");
+    // os dentes da barra
+    for (var u = .12; u < .88; u += .06) { losango(u + .03, .07, .02, .022, "#b8a07c"); }
+    for (var v = .14; v < .88; v += .07) { losango(.08, v, .02, .025, "#b8a07c"); losango(.92, v, .02, .025, "#b8a07c"); }
+    // o campo: medalhão central e losangos
+    losango(.5, .5, .26, .3, "#4b4a5c");
+    losango(.5, .5, .2, .23, "#a07c46");
+    losango(.5, .5, .12, .14, "#84503f");
+    losango(.5, .5, .05, .06, "#b8a07c");
+    [[.24, .22], [.76, .22], [.24, .78], [.76, .78], [.5, .16], [.5, .84]].forEach(function (p) { losango(p[0], p[1], .06, .06, "#b8a07c"); losango(p[0], p[1], .025, .025, "#4b4a5c"); });
+    // franja do lado da porta
+    var fr = "";
+    for (var k = 0; k <= 1; k += .025) { var p = P(k, 0); fr += "M" + f1(p[0]) + " " + f1(p[1]) + " l0 -5 "; }
+    el("path", { d: fr, stroke: "#b8a07c", "stroke-width": 1.4, opacity: .8 }, g);
+    // areia por cima das bordas, tecido e a luz que esfria longe da porta
+    quad(0, 0, 1, 1, "#000", { filter: "url(#tecido)", opacity: .35 });
+    quad(0, 0, 1, .35, "#14081e", { opacity: .18 });
+    el("path", { d: "M450 1000 Q520 960 560 990 Q500 1010 450 1000Z M990 990 Q930 950 890 984 Q950 1004 990 990Z", fill: "#a8683e" }, g);
+  })();
+
+  /* ---------- jarros, máscaras e estatuetas ---------- */
+  var PERFIS = {
+    anfora: [[0, .3], [.04, .32], [.08, .22], [.2, .2], [.3, .56], [.44, .96], [.6, 1], [.78, .8], [.92, .42], [.97, .3], [1, .32]],
+    pote:   [[0, .42], [.05, .46], [.1, .38], [.25, .78], [.5, 1], [.75, .92], [.92, .58], [1, .5]],
+    alto:   [[0, .34], [.05, .38], [.12, .27], [.32, .5], [.56, .62], [.8, .55], [.95, .4], [1, .42]]
+  };
+  function jarro(g, x, base, h, w, tipo, barro, faixa) {
+    var p = PERFIS[tipo], dir = [], esq = [];
+    p.forEach(function (q) { dir.push([x + q[1] * w / 2, base - h + q[0] * h]); });
+    for (var i = p.length - 1; i >= 0; i--) esq.push([x - p[i][1] * w / 2, base - h + p[i][0] * h]);
+    var d = suave(dir.concat(esq)) + "Z";
+    el("ellipse", { cx: x + 6, cy: base, rx: w * .62, ry: w * .12, fill: "#1e0e14", opacity: .45 }, g);
+    el("path", { d: d, fill: barro || "url(#gTerracota)" }, g);
+    if (faixa) {
+      var t = .42, yy = base - h + t * h, rr = w / 2 * .96;
+      var zig = "M" + f1(x - rr * .9) + " " + f1(yy) + " ";
+      for (var k = -0.9; k <= 0.9; k += 0.15) zig += "L" + f1(x + rr * k) + " " + f1(yy + (Math.round(k / .15) % 2 ? 5 : -2) + Math.abs(k) * 4) + " ";
+      el("path", { d: zig, fill: "none", stroke: faixa, "stroke-width": 2.2, opacity: .85 }, g);
+      el("path", { d: "M" + f1(x - rr * .85) + " " + f1(yy - 8) + " Q" + x + " " + f1(yy - 2) + " " + f1(x + rr * .85) + " " + f1(yy - 8), fill: "none", stroke: "#1e0a06", "stroke-width": 2.4, opacity: .6 }, g);
+    }
+    el("ellipse", { cx: x, cy: f1(base - h + 1.5), rx: f1(p[0][1] * w / 2), ry: f1(p[0][1] * w / 8 + 1), fill: "#1e0a06" }, g);
+    el("path", { d: "M" + f1(x + w * .26) + " " + f1(base - h * .7) + " Q" + f1(x + w * .42) + " " + f1(base - h * .4) + " " + f1(x + w * .3) + " " + f1(base - h * .12), fill: "none", stroke: "#ffd8a0", "stroke-width": 2, opacity: .38 }, g);
+  }
+  // as relíquias (inventadas no vocabulário do disco solar: raios, aro, a pedra verde)
+  function raiosEm(cx, cy, r0, r1, r2, n, a0, a1, larg) {   // raios alternados entre os ângulos a0 e a1 (graus)
+    var d = "";
+    for (var i = 0; i < n; i++) {
+      var a = (a0 + (a1 - a0) * i / (n - 1)) * Math.PI / 180, w = larg * Math.PI / 180, r = i % 2 ? r2 : r1;
+      d += "M" + f1(cx + Math.cos(a - w) * r0) + " " + f1(cy + Math.sin(a - w) * r0) + " L" + f1(cx + Math.cos(a) * r) + " " + f1(cy + Math.sin(a) * r) + " L" + f1(cx + Math.cos(a + w) * r0) + " " + f1(cy + Math.sin(a + w) * r0) + "Z ";
+    }
+    return d;
+  }
+  function suporte(gg, w, h) {   // o pezinho de madeira escura onde a peça fica de pé
+    el("path", { d: "M" + (-w / 2) + " 0 L" + (-w / 2 + 3) + " " + (-h) + " L" + (w / 2 - 3) + " " + (-h) + " L" + (w / 2) + " 0Z", fill: "#3a2416", stroke: "#1e120a", "stroke-width": 1 }, gg);
+    el("path", { d: "M" + (-w / 2 + 3) + " " + (-h + .6) + " H" + (w / 2 - 3), stroke: "#a87a4a", "stroke-width": 1, opacity: .6 }, gg);
+  }
+  // a máscara de ouro com a coroa de raios
+  function mascaraSol(g, x, base, s) {
+    var gg = el("g", { transform: "translate(" + x + " " + base + ") scale(" + s + ")" }, g);
+    suporte(gg, 26, 7);
+    el("rect", { x: -2.5, y: -26, width: 5, height: 20, fill: "#3a2416" }, gg);
+    var cy = -52;
+    el("path", { d: raiosEm(0, cy, 21, 36, 30, 13, -200, 20, 7), fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": 1 }, gg);
+    el("path", { d: "M-19 " + (cy - 6) + " Q-20 " + (cy - 25) + " 0 " + (cy - 26) + " Q20 " + (cy - 25) + " 19 " + (cy - 6) + " Q18 " + (cy + 16) + " 0 " + (cy + 28) + " Q-18 " + (cy + 16) + " -19 " + (cy - 6) + "Z", fill: "url(#gOuroDiscoV)", stroke: "#4a2e08", "stroke-width": 1.3 }, gg);
+    // a faixa da testa com a pedra verde
+    el("path", { d: "M-18 " + (cy - 12) + " Q0 " + (cy - 18) + " 18 " + (cy - 12), fill: "none", stroke: "#6e4812", "stroke-width": 2 }, gg);
+    el("circle", { cx: 0, cy: cy - 15, r: 3, fill: "#3f8478", stroke: "#4a2e08", "stroke-width": .8 }, gg);
+    // olhos amendoados vazados, o nariz reto e a boca fechada
+    el("path", { d: "M-13 " + (cy - 2) + " Q-8 " + (cy - 7) + " -3 " + (cy - 2) + " Q-8 " + (cy + 1) + " -13 " + (cy - 2) + "Z M3 " + (cy - 2) + " Q8 " + (cy - 7) + " 13 " + (cy - 2) + " Q8 " + (cy + 1) + " 3 " + (cy - 2) + "Z", fill: "#1e0e06" }, gg);
+    el("path", { d: "M0 " + (cy + 1) + " L-2 " + (cy + 11) + " L2 " + (cy + 11) + " M-5 " + (cy + 17) + " H5", fill: "none", stroke: "#5e3c10", "stroke-width": 1.4, "stroke-linecap": "round" }, gg);
+    el("path", { d: "M-6 " + (cy + 3) + " L-6 " + (cy + 9) + " M6 " + (cy + 3) + " L6 " + (cy + 9), stroke: "#5e3c10", "stroke-width": 1, opacity: .6 }, gg);
+    el("path", { d: "M-14 " + (cy - 8) + " Q-15 " + (cy + 8) + " -6 " + (cy + 20), fill: "none", stroke: "#f6e2b0", "stroke-width": 1.4, opacity: .45 }, gg);
+  }
+  // a ave estilizada: de frente, asas abertas em três degraus de penas, cabeça de perfil, cauda em leque e o sol no peito
+  function aveSol(g, x, base, s) {
+    var gg = el("g", { transform: "translate(" + x + " " + base + ") scale(" + s + ")" }, g);
+    suporte(gg, 24, 6);
+    el("rect", { x: -2, y: -16, width: 4, height: 10, fill: "#3a2416" }, gg);
+    // a cauda em leque
+    el("path", { d: "M0 -22 L-9 -16 L-5 -20 L-3 -15 L0 -20 L3 -15 L5 -20 L9 -16Z", fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": .8 }, gg);
+    // as asas: três fileiras de penas que descem em degrau
+    [1, -1].forEach(function (k) {
+      var asa = "M" + 4 * k + " -46 L" + 30 * k + " -58 L" + 28 * k + " -52 L" + 34 * k + " -50 L" + 29 * k + " -45 L" + 33 * k + " -42 L" + 26 * k + " -38 L" + 28 * k + " -34 L" + 6 * k + " -30Z";
+      el("path", { d: asa, fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": .9, "stroke-linejoin": "round" }, gg);
+      el("path", { d: "M" + 8 * k + " -44 L" + 27 * k + " -52 M" + 8 * k + " -39 L" + 28 * k + " -44 M" + 8 * k + " -34 L" + 24 * k + " -37", stroke: "#6e4812", "stroke-width": 1, fill: "none" }, gg);
+    });
+    // o corpo, a cabeça de perfil com bico curvo
+    el("path", { d: "M0 -50 Q8 -46 7 -34 Q6 -24 0 -21 Q-6 -24 -7 -34 Q-8 -46 0 -50Z", fill: "url(#gOuroDiscoV)", stroke: "#4a2e08", "stroke-width": 1 }, gg);
+    el("path", { d: "M-2 -50 Q-4 -57 1 -59.5 Q6 -60 7.5 -57 L13 -55.5 L9.5 -53.6 Q6.5 -53 4.5 -49.5Z", fill: "url(#gOuroDiscoV)", stroke: "#4a2e08", "stroke-width": .9 }, gg);
+    el("circle", { cx: 3.4, cy: -56.4, r: 1, fill: "#1e0e06" }, gg);
+    // o sol no peito
+    el("circle", { cx: 0, cy: -36, r: 4.4, fill: "none", stroke: "#4a2e08", "stroke-width": 1 }, gg);
+    el("circle", { cx: 0, cy: -36, r: 1.8, fill: "#3f8478" }, gg);
+    el("path", { d: "M-4 -46 Q-6 -36 -3 -27", fill: "none", stroke: "#f6e2b0", "stroke-width": 1, opacity: .45 }, gg);
+  }
+  // o cetro: haste de bronze com o punho enrolado e o sol pequeno no alto, sobre uma meia-lua
+  function cetroSol(g, x, base, s, rot) {
+    var gg = el("g", { transform: "translate(" + x + " " + base + ") rotate(" + (rot || 0) + ") scale(" + s + ")" }, g);
+    el("rect", { x: -2, y: -96, width: 4, height: 96, fill: "url(#gBronze)" }, gg);
+    el("path", { d: "M-3 -30 h6 M-3 -26 h6 M-3 -22 h6 M-3 -18 h6", stroke: "#3a2416", "stroke-width": 2.2 }, gg);
+    el("path", { d: "M-9 -100 Q0 -92 9 -100 Q0 -96 -9 -100Z", fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": .8 }, gg);
+    el("path", { d: raiosEm(0, -110, 6, 13, 10, 12, -180, 150, 11), fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": .7 }, gg);
+    el("circle", { cx: 0, cy: -110, r: 6.6, fill: "url(#gOuroDiscoV)", stroke: "#4a2e08", "stroke-width": 1 }, gg);
+    el("circle", { cx: 0, cy: -110, r: 2.4, fill: "#3f8478" }, gg);
+  }
+  // a placa de bronze de topo redondo com o sol gravado e uma linha de glifos
+  function placaSol(g, x, base, s, rot) {
+    var gg = el("g", { transform: "translate(" + x + " " + base + ") rotate(" + (rot || 0) + ") scale(" + s + ")" }, g);
+    el("path", { d: "M-17 0 L-17 -34 A17 17 0 0 1 17 -34 L17 0Z", fill: "#6e5232", stroke: "#2e1c0c", "stroke-width": 1.4 }, gg);
+    el("path", { d: "M-14 -2 L-14 -34 A14 14 0 0 1 14 -34 L14 -2Z", fill: "none", stroke: "#a88452", "stroke-width": 1, opacity: .7 }, gg);
+    el("path", { d: raiosEm(0, -34, 6, 11, 9, 10, -180, 0, 10), fill: "#3a2614" }, gg);
+    el("circle", { cx: 0, cy: -34, r: 5.4, fill: "none", stroke: "#3a2614", "stroke-width": 1.6 }, gg);
+    el("path", { d: "M-10 -18 h4 M-4 -18 h3 M2 -18 h5 M-9 -11 h5 M-2 -11 h4 M5 -11 h4", stroke: "#3a2614", "stroke-width": 1.6 }, gg);
+    [[-8, -6, 3], [7, -24, 2.6]].forEach(function (p) { el("circle", { cx: p[0], cy: p[1], r: p[2], fill: "#4a8a78", opacity: .5, filter: "url(#borrao2)" }, gg); });
+    el("path", { d: "M-15 -34 A15 15 0 0 1 -4 -48", fill: "none", stroke: "#e8c88a", "stroke-width": 1.2, opacity: .5 }, gg);
+  }
+
+  // a mesa de relíquias, do lado de fora, à esquerda: tábua em dois caixotes, pano listrado, peças douradas
+  (function () {
+    var g = $("mesa");
+    jarro(g, 4, 800, 132, 70, "anfora", null, "#b8a07c");
+    // caixotes
+    [[-26, 690, 74, 108], [128, 700, 70, 98]].forEach(function (c) {
+      el("rect", { x: c[0], y: c[1], width: c[2], height: c[3], fill: "url(#gMadeira)" }, g);
+      el("path", { d: "M" + c[0] + " " + (c[1] + 4) + " h" + c[2] + " M" + c[0] + " " + (c[1] + c[3] / 2) + " h" + c[2] + " M" + c[0] + " " + c[1] + " l" + c[2] + " " + c[3], stroke: "#2a160c", "stroke-width": 3, opacity: .7 }, g);
+      el("rect", { x: c[0], y: c[1], width: c[2], height: c[3], fill: "none", stroke: "#2a160c", "stroke-width": 3 }, g);
+    });
+    el("rect", { x: -40, y: 654, width: 250, height: 14, fill: "url(#gMadeira)" }, g);
+    el("path", { d: "M-40 655 h250", stroke: "#e2a868", "stroke-width": 1.4, opacity: .55 }, g);
+    // o pano que cai na frente da tábua
+    var pano = "M-40 664 L210 664 L206 708 Q190 716 176 706 Q160 718 144 706 Q128 718 112 706 Q96 718 80 706 Q64 718 48 706 Q32 718 16 706 Q0 718 -16 706 Q-30 716 -38 708Z";
+    el("path", { d: pano, fill: "url(#listrasAba)", transform: "" }, g);
+    el("path", { d: pano, fill: "#000", filter: "url(#tecido)", opacity: .45 }, g);
+    el("path", { d: pano, fill: "url(#gSanefaLuz)" }, g);
+    // sobre a mesa: a máscara de raios, o cetro, a ave e a placa do sol
+    cetroSol(g, 56, 654, 1, 8);
+    mascaraSol(g, 18, 654, 1);
+    aveSol(g, 104, 654, 1.05);
+    placaSol(g, 170, 652, 1, -9);
+    el("ellipse", { cx: 196, cy: 652, rx: 9, ry: 2.6, fill: "url(#gOuroVelho)" }, g);
+    el("ellipse", { cx: 198, cy: 649, rx: 8, ry: 2.4, fill: "url(#gOuroVelho)" }, g);
+    // um tapete enrolado encostado
+    el("path", { d: "M188 800 L232 610 L254 616 L212 804Z", fill: "#4b4a5c" }, g);
+    el("path", { d: "M196 770 L240 620 M204 786 L246 624", stroke: "#b8a07c", "stroke-width": 3, opacity: .7 }, g);
+    el("ellipse", { cx: 243, cy: 613, rx: 12, ry: 6, fill: "#84503f", transform: "rotate(14 243 613)" }, g);
+    el("ellipse", { cx: 243, cy: 613, rx: 5, ry: 2.4, fill: "#2a0e08", transform: "rotate(14 243 613)" }, g);
+    jarro(g, 96, 804, 70, 56, "pote", "url(#gBarroClaro)", "#5a1e14");
+    // moedas na areia
+    for (var i = 0; i < 9; i++) el("ellipse", { cx: f1(120 + rnd() * 70), cy: f1(800 + rnd() * 10), rx: 4.4, ry: 1.8, fill: "url(#gOuro)" }, g);
+  })();
+
+  // o disco solar no alto do portal: uma lasca da borda (raios e aro) partiu e caiu na areia; o miolo ficou inteiro
+  (function () {
+    var cx = 720, cy = 248, g = $("disco");
+    var arte = el("g", { id: "disco-arte" }, g);
+    // o disco desenhado inteiro (é recortado depois)
+    var raios = "";
+    for (var i = 0; i < 20; i++) {
+      var a = i / 20 * Math.PI * 2 - Math.PI / 2, a1 = a - .09, a2 = a + .09, r0 = 58, r1 = i % 2 ? 76 : 88;
+      raios += "M" + f1(cx + Math.cos(a1) * r0) + " " + f1(cy + Math.sin(a1) * r0) + " L" + f1(cx + Math.cos(a) * r1) + " " + f1(cy + Math.sin(a) * r1) + " L" + f1(cx + Math.cos(a2) * r0) + " " + f1(cy + Math.sin(a2) * r0) + "Z ";
+    }
+    el("path", { d: raios, fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": 1.2 }, arte);
+    el("circle", { cx: cx, cy: cy, r: 62, fill: "url(#gOuroDiscoV)", stroke: "#4a2e08", "stroke-width": 2 }, arte);
+    el("circle", { cx: cx, cy: cy, r: 53, fill: "none", stroke: "#5e3c10", "stroke-width": 2 }, arte);
+    // a faixa gravada: um ziguezague de raios miúdos (nada de marcas de relógio)
+    var ln = "";
+    for (var k = 0; k <= 48; k++) { var b = k / 48 * Math.PI * 2, rz = k % 2 ? 51 : 41; ln += (k ? "L" : "M") + f1(cx + Math.cos(b) * rz) + " " + f1(cy + Math.sin(b) * rz) + " "; }
+    el("path", { d: ln + "Z", fill: "none", stroke: "#6e4812", "stroke-width": 1.4, "stroke-linejoin": "round", opacity: .8 }, arte);
+    el("circle", { cx: cx, cy: cy, r: 38, fill: "none", stroke: "#5e3c10", "stroke-width": 1.8 }, arte);
+    // o miolo: o sol pequeno gravado, com a pedra verde no centro
+    el("path", { d: raiosEm(cx, cy, 16, 34, 27, 16, -90, 247.5, 7.5), fill: "#7a5418", stroke: "#4a2e08", "stroke-width": .8 }, arte);
+    el("circle", { cx: cx, cy: cy, r: 17, fill: "url(#gOuroVelho)", stroke: "#4a2e08", "stroke-width": 1.4 }, arte);
+    el("circle", { cx: cx, cy: cy, r: 8, fill: "#3f8478", stroke: "#1e4a42", "stroke-width": 1.2 }, arte);
+    el("circle", { cx: cx - 2.4, cy: cy - 3, r: 2.2, fill: "#bfe6dc", opacity: .55 }, arte);
+    // pátina de verdete e o desgaste
+    [[-34, 30, 12], [24, 44, 9], [-46, 4, 7], [8, 54, 6], [-16, -40, 5], [40, 18, 6]].forEach(function (p) { el("circle", { cx: cx + p[0], cy: cy + p[1], r: p[2], fill: "#4a8a78", opacity: .4, filter: "url(#borrao2)" }, arte); });
+    el("path", { d: "M" + (cx - 54) + " " + (cy - 14) + " A56 56 0 0 1 " + (cx - 16) + " " + (cy - 54), fill: "none", stroke: "#f6e2b0", "stroke-width": 2.4, opacity: .35 }, arte);
+
+    // a quebra: uma linha serrilhada que corta raios e aro entre -66° e -16° e para antes do miolo
+    var A1 = -80, A2 = -6, quebra = [];
+    for (var j = 0; j <= 9; j++) {
+      var ang = (A1 + (A2 - A1) * j / 9 + (j && j < 9 ? (rnd() - .5) * 4 : 0)) * Math.PI / 180;
+      var rr = j === 0 || j === 9 ? 66 : 35 + rnd() * 8 + (j % 2 ? 5 : 0);
+      if (j === 1 || j === 8) rr = 50;
+      quebra.push([cx + Math.cos(ang) * rr, cy + Math.sin(ang) * rr]);
+    }
+    var R = 140, e1 = [cx + Math.cos(A1 * Math.PI / 180) * R, cy + Math.sin(A1 * Math.PI / 180) * R], e2 = [cx + Math.cos(A2 * Math.PI / 180) * R, cy + Math.sin(A2 * Math.PI / 180) * R];
+    function linha(pts) { return pts.map(function (p, i) { return (i ? "L" : "M") + f1(p[0]) + " " + f1(p[1]); }).join(" "); }
+    var lasca = "M" + f1(e1[0]) + " " + f1(e1[1]) + " " + linha(quebra).replace(/^M/, "L") + " L" + f1(e2[0]) + " " + f1(e2[1]) + " A" + R + " " + R + " 0 0 0 " + f1(e1[0]) + " " + f1(e1[1]) + "Z";
+    var tudo = "M" + (cx - 220) + " " + cy + " a220 220 0 1 0 440 0 a220 220 0 1 0 -440 0Z ";
+    $("disco-clip").setAttribute("d", tudo + lasca);
+    $("disco-clip").setAttribute("clip-rule", "evenodd");
+    $("cunha-clip").setAttribute("d", lasca);
+    // a trinca fina que corre da quebra para o miolo
+    var t0 = quebra[4], trinca = [t0];
+    for (var q = 1; q <= 4; q++) { var tt = q / 4, px = t0[0] + (cx + 14 - t0[0]) * tt, py = t0[1] + (cy - 10 - t0[1]) * tt; trinca.push([px + (rnd() - .5) * 5, py + (rnd() - .5) * 5]); }
+    g.removeChild(arte);
+    var defs = document.querySelector("svg.fundo defs"); defs.appendChild(arte);
+    // a sombra na lona e o disco recortado
+    var gs = el("g", { "clip-path": "url(#cDisco)" }, g);
+    el("circle", { cx: cx + 6, cy: cy + 8, r: 78, fill: "#14081e", opacity: .4, filter: "url(#borrao6)" }, gs);
+    var gg = el("g", { "clip-path": "url(#cDisco)" }, g);
+    el("use", { href: "#disco-arte" }, gg);
+    // a espessura do metal na quebra (a face cortada, escura) e o fio de luz na aresta
+    var gr = el("g", { "clip-path": "url(#cDisco)" }, g);
+    el("path", { d: linha(quebra), fill: "none", stroke: "#3a2204", "stroke-width": 7, "stroke-linejoin": "bevel", opacity: .9 }, gr);
+    el("path", { d: linha(quebra), fill: "none", stroke: "#e8c682", "stroke-width": 1.2, "stroke-linejoin": "bevel", opacity: .75, transform: "translate(-2.6 2.6)" }, gr);
+    el("path", { d: linha(trinca), fill: "none", stroke: "#3a2204", "stroke-width": 1.6, opacity: .8 }, gr);
+    // o suporte de pedra onde o disco se apoia
+    el("path", { d: "M694 318 L746 318 L741 308 L699 308Z", fill: "url(#gArenitoV)" }, g);
+    window.__cunha = function (pai, t) {
+      var c = el("g", { transform: t }, pai);
+      var cc = el("g", { "clip-path": "url(#cCunha)" }, c);
+      el("use", { href: "#disco-arte" }, cc);
+      el("path", { d: linha(quebra), fill: "none", stroke: "#3a2204", "stroke-width": 7, "stroke-linejoin": "bevel", opacity: .9, "clip-path": "url(#cCunha)" }, c);
+      el("path", { d: linha(quebra), fill: "none", stroke: "#f0d496", "stroke-width": 1.4, "stroke-linejoin": "bevel", opacity: .8, transform: "translate(1.6 -1.6)", "clip-path": "url(#cCunha)" }, c);
+      return c;
+    };
+    window.__lascaCentro = [cx + Math.cos(-43 * Math.PI / 180) * 62, cy + Math.sin(-43 * Math.PI / 180) * 62];
+  })();
+
+  // à direita do portal: jarros, o pedaço do disco e a ave dourada num caixote
+  (function () {
+    var g = $("direita");
+    jarro(g, 1052, 800, 120, 64, "alto", null, "#b8a07c");
+    jarro(g, 912, 802, 64, 60, "pote", "url(#gBarroClaro)", "#5a1e14");
+    jarro(g, 1200, 804, 96, 70, "anfora", null, null);
+    jarro(g, 1300, 806, 80, 60, "pote", null, "#b8a07c");
+    // um baú com moedas sob a placa
+    el("path", { d: "M1236 806 L1236 760 Q1272 740 1308 760 L1308 806Z", fill: "url(#gMadeira)", stroke: "#2a160c", "stroke-width": 2 }, g);
+    el("path", { d: "M1236 774 h72 M1250 806 v-50 M1294 806 v-50", stroke: "url(#gBronze)", "stroke-width": 4 }, g);
+    for (var i = 0; i < 12; i++) el("ellipse", { cx: f1(1240 + rnd() * 70), cy: f1(804 + rnd() * 8), rx: 4.4, ry: 1.8, fill: "url(#gOuro)" }, g);
+    jarro(g, 1380, 808, 120, 66, "alto", null, "#4b4a5c");
+    el("rect", { x: 1452, y: 732, width: 74, height: 80, fill: "url(#gMadeira)" }, g);
+    el("rect", { x: 1452, y: 732, width: 74, height: 80, fill: "none", stroke: "#2a160c", "stroke-width": 3 }, g);
+    el("path", { d: "M1452 758 h74 M1452 784 h74", stroke: "#2a160c", "stroke-width": 2, opacity: .6 }, g);
+    aveSol(g, 1489, 732, 1.1);
+    jarro(g, 1572, 818, 84, 66, "anfora", "url(#gBarroClaro)", "#5a1e14");
+    // à esquerda da porta: a lasca que falta no disco, deitada na areia com a aresta partida para cima
+    var ge = $("esquerda-porta"), lc = window.__lascaCentro;
+    // (fincada de borda, os raios para baixo, enterrados; o que se vê é o aro gravado e a quebra serrilhada)
+    window.__cunha(ge, "translate(538 826) rotate(133) scale(1.15) translate(" + f1(-lc[0]) + " " + f1(-lc[1]) + ")");
+    // a areia que o vento juntou dos dois lados e que cobre os raios
+    el("path", { d: "M460 858 Q466 824 490 816 Q506 814 518 824 Q538 830 558 824 Q572 812 588 816 Q598 826 600 840 L596 858Z", fill: "#b07650" }, ge);
+    el("path", { d: "M470 828 Q480 818 490 816 Q506 814 518 824 Q538 830 558 824 Q572 812 588 816 Q596 822 598 832", fill: "none", stroke: "#eaa872", "stroke-width": 1.6, opacity: .55 }, ge);
+    el("ellipse", { cx: 538, cy: 846, rx: 70, ry: 6, fill: "#1e0e14", opacity: .22, filter: "url(#borrao2)" }, ge);
+  })();
+
+  // lampiões de latão pendurados na sanefa
+  (function () {
+    var g = $("lampioes");
+    [[470, 330], [975, 340]].forEach(function (p) {
+      var x = p[0], top = yR(x) + 38 + cede(x), y = p[1];
+      el("path", { d: "M" + x + " " + f1(top) + " L" + x + " " + y, stroke: "#3e260a", "stroke-width": 2, "stroke-dasharray": "3 2" }, g);
+      el("path", { d: "M" + (x - 4) + " " + y + " h8 l8 14 h-24Z", fill: "url(#gBronze)" }, g);
+      el("path", { d: "M" + (x - 12) + " " + (y + 14) + " Q" + x + " " + (y - 2) + " " + (x + 12) + " " + (y + 14) + "Z", fill: "url(#gBronze)", stroke: "#3e260a", "stroke-width": 1 }, g);
+      el("rect", { x: x - 11, y: y + 14, width: 22, height: 30, fill: "url(#gVidro)", stroke: "#3e260a", "stroke-width": 1.6 }, g);
+      el("path", { d: "M" + x + " " + (y + 14) + " v30 M" + (x - 6) + " " + (y + 14) + " v30 M" + (x + 6) + " " + (y + 14) + " v30", stroke: "#6e4818", "stroke-width": 1.2 }, g);
+      el("path", { d: "M" + (x - 3) + " " + (y + 40) + " q3 -14 3 -18 q2 8 3 18Z", fill: "#fffbe0" }, g);
+      el("path", { d: "M" + (x - 13) + " " + (y + 44) + " h26 l-6 8 h-14Z", fill: "url(#gBronze)" }, g);
+      el("path", { d: "M" + x + " " + (y + 52) + " l-3 6 h6Z", fill: "url(#gBronze)" }, g);
+      el("path", { d: "M" + x + " " + (y + 58) + " v12", stroke: "#84503f", "stroke-width": 2.4 }, g);
+      el("path", { d: "M" + (x - 3) + " " + (y + 66) + " h6 l2 10 h-10Z", fill: "#84503f" }, g);
+    });
+  })();
+
+  /* ---------- perto: as dunas da frente e as lanternas ---------- */
+  (function () {
+    $("duna-frente-esq").setAttribute("d", "M-640 880 Q-420 820 -200 838 Q40 850 300 912 L300 1300 L-640 1300Z");
+    $("duna-frente-dir").setAttribute("d", "M1140 922 Q1340 852 1560 856 Q1820 860 2060 820 L2060 1300 L1140 1300Z");
+    var gc = $("cristas-frente");
+    el("path", { d: "M-640 880 Q-420 820 -200 838 Q40 850 300 912" }, gc);
+    el("path", { d: "M1140 922 Q1340 852 1560 856 Q1820 860 2060 820" }, gc);
+  })();
+
+  // as lanternas de latão no alto de hastes cravadas na areia
+  document.querySelectorAll(".braseiro").forEach(function (b, bi) {
+    var furos = "";
+    for (var i = -2; i <= 2; i++) for (var j = 0; j < 2; j++) furos += '<circle cx="' + (70 + i * 7 + j * 3.5) + '" cy="' + (66 + j * 8) + '" r="1.5"/>';
+    b.innerHTML =
+      '<div class="halo"></div>' +
+      '<div class="furos"></div>' +
+      '<svg viewBox="0 0 140 330">' +
+      '<defs><linearGradient id="gLat' + bi + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3e260a"/><stop offset=".3" stop-color="#a8742f"/><stop offset=".55" stop-color="#f0cc84"/><stop offset=".75" stop-color="#b0803c"/><stop offset="1" stop-color="#3e260a"/></linearGradient>' +
+      '<radialGradient id="gVid' + bi + '" cx=".5" cy=".7" r=".75"><stop offset="0" stop-color="#fffbe0"/><stop offset=".35" stop-color="#ffd27a"/><stop offset=".75" stop-color="#e8862e"/><stop offset="1" stop-color="#8a3a10"/></radialGradient>' +
+      '<radialGradient id="gChaoL' + bi + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffb060" stop-opacity=".5"/><stop offset="1" stop-color="#ff8030" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse cx="70" cy="326" rx="120" ry="22" fill="url(#gChaoL' + bi + ')"/>' +
+      // a haste, com anéis, e o tripé na areia
+      '<g stroke="#2a1a0c" stroke-width="5" stroke-linecap="round" fill="none"><path d="M70 300 Q50 308 34 326 M70 300 Q90 308 106 326 M70 302 L70 330"/></g>' +
+      '<rect x="65" y="176" width="10" height="128" fill="url(#gLat' + bi + ')"/>' +
+      '<g fill="url(#gLat' + bi + ')"><rect x="61" y="210" width="18" height="6" rx="2"/><rect x="61" y="252" width="18" height="6" rx="2"/><rect x="59" y="292" width="22" height="8" rx="2"/></g>' +
+      // a base em prato
+      '<path d="M44 168 Q70 184 96 168 L90 178 Q70 188 50 178Z" fill="url(#gLat' + bi + ')" stroke="#2a1806" stroke-width="1"/>' +
+      // o corpo: vidro aceso entre colunetas de latão
+      '<path d="M48 92 L92 92 L96 166 L44 166Z" fill="url(#gVid' + bi + ')"/>' +
+      '<path d="M48 92 L92 92 L96 166 L44 166Z" fill="none" stroke="#3e260a" stroke-width="3"/>' +
+      '<g stroke="url(#gLat' + bi + ')" stroke-width="4"><path d="M48 92 L44 166 M92 92 L96 166 M70 92 V166"/></g>' +
+      '<g fill="none" stroke="#7a5222" stroke-width="1.6" opacity=".75"><path d="M47 130 h46 M49 104 h42"/></g>' +
+      // o domo furado e o remate
+      '<path d="M42 94 Q44 52 70 46 Q96 52 98 94Z" fill="url(#gLat' + bi + ')" stroke="#2a1806" stroke-width="1.4"/>' +
+      '<path d="M50 90 Q54 60 70 54" fill="none" stroke="#fff0c0" stroke-width="1.4" opacity=".55"/>' +
+      '<g fill="#fff4cc">' + furos + '</g>' +
+      '<path d="M38 92 h64 v6 h-64Z" fill="url(#gLat' + bi + ')" stroke="#2a1806" stroke-width="1"/>' +
+      '<path d="M66 48 L70 22 L74 48Z" fill="url(#gLat' + bi + ')"/>' +
+      '<circle cx="70" cy="20" r="5" fill="none" stroke="url(#gLat' + bi + ')" stroke-width="3"/>' +
+      '<g fill="#c88a5a"><ellipse cx="34" cy="326" rx="14" ry="4"/><ellipse cx="70" cy="330" rx="16" ry="4"/><ellipse cx="106" cy="326" rx="14" ry="4"/></g>' +
+      '</svg>' +
+      '<div class="chamas"><i class="ch f3"></i><i class="ch f1"></i><i class="ch f4"></i><i class="ch f2"></i></div>';
+    for (var f = 0; f < 5; f++) {
+      var s = document.createElement("i");
+      s.className = "faisca";
+      s.style.setProperty("--dx", (40 + rnd() * 90).toFixed(0) + "px");
+      s.style.left = (56 + rnd() * 28).toFixed(0) + "px";
+      s.style.animationDuration = (1.9 + rnd() * 1.4).toFixed(2) + "s";
+      s.style.animationDelay = (-rnd() * 3).toFixed(2) + "s";
+      b.appendChild(s);
+    }
+  });
+
+  // a roseta solar da folha da esquerda
+  (function () {
+    var g = $("roseta-raios"), d = "";
+    for (var i = 0; i < 16; i++) {
+      var a = i / 16 * Math.PI * 2, r1 = i % 2 ? 22 : 28;
+      d += "M" + f1(Math.cos(a - .16) * 14) + " " + f1(Math.sin(a - .16) * 14) + " L" + f1(Math.cos(a) * r1) + " " + f1(Math.sin(a) * r1) + " L" + f1(Math.cos(a + .16) * 14) + " " + f1(Math.sin(a + .16) * 14) + "Z ";
+    }
+    el("path", { d: d }, g);
+  })();
+
+  // a areia: três camadas de grãos alongados (ladrilhos que se repetem, no eixo do vento)
+  [["n1", 200, 34, .9, 3.4], ["n2", 300, 26, 1.2, 4.6], ["n3", 420, 12, 1.9, 6.5]].forEach(function (c) {
+    var camada = document.querySelector(".neve." + c[0]), t = c[1], fundos = [];
+    for (var i = 0; i < c[2]; i++) {
+      var r = c[3] * (.6 + rnd() * .7), x = (rnd() * t).toFixed(0), y = (rnd() * t).toFixed(0);
+      fundos.push("radial-gradient(" + (r * .8).toFixed(2) + "px " + (r * c[4]).toFixed(2) + "px at " + x + "px " + y + "px, rgba(248,220,170,.95), rgba(240,200,140,.5) 45%, rgba(240,200,140,0))");
+    }
+    camada.style.backgroundImage = fundos.join(",");
+    camada.style.backgroundSize = t + "px " + t + "px";
+    camada.style.setProperty("--t", t + "px");
+  });
+
+  /* ---------- encaixe na tela ---------- */
+  var palco = $("palco");
+  function encaixa() {
+    var s = Math.min(innerWidth / 1440, innerHeight / 900);
+    palco.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+  }
+  encaixa(); addEventListener("resize", encaixa);
+
+  /* ---------- a câmera (requestAnimationFrame) ---------- */
+  // Progressão geométrica sobre a escala, acelerando: p = t^1,8; a tenda vai de 0,86 a 7,6 e sobe
+  // até centrar a porta; o primeiro plano (lanternas, dunas) vai a 30 e sai do quadro; o céu só avança 1,3×.
+  var DUR = 1950, S0 = .86;
+  var longe = $("longe"), mundo = $("mundo"), perto = $("perto"), neveTela = $("neveTela");
+  function quadro(ms) {
+    var t = Math.min(1, Math.max(0, ms / DUR)), p = Math.pow(t, 1.8), q = Math.pow(t, 2.2);
+    mundo.style.transform = "translate(0px," + (-110 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(7.6 / S0, p)).toFixed(4) + ")";
+    perto.style.transform = "translate(0px," + (-60 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(30 / S0, p)).toFixed(4) + ")";
+    perto.style.visibility = t > .62 ? "hidden" : "";
+    longe.style.transform = "translate(0px," + (-36 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(1.3, p)).toFixed(4) + ")";
+    neveTela.style.transform = "scale(" + (1 + 2.2 * q).toFixed(3) + ")";
+    neveTela.style.opacity = (1 - q).toFixed(3);
+  }
+  function repouso() {
+    [mundo, perto, longe].forEach(function (c) { c.style.transform = "scale(" + S0 + ")"; });
+    perto.style.visibility = "";
+    neveTela.style.transform = ""; neveTela.style.opacity = "";
+  }
+  repouso();
+
+  /* ---------- abrir e reiniciar ---------- */
+  var estado = "fechada", timer = 0, laco = 0;
+  var entrada = $("entrada"), loja = $("loja"), botao = $("entrar");
+  var calmo = matchMedia("(prefers-reduced-motion: reduce)");
+  function abrir() {
+    if (estado !== "fechada") return;
+    estado = "abrindo";
+    // o som nasce no clique
+    Som.destravar(); Som.play("catalog:open");
+    document.body.classList.add("abrindo");
+    var reduz = calmo.matches;
+    if (!reduz) {
+      var t0 = performance.now();
+      var passo = function (agora) {
+        if (estado !== "abrindo" || window.__congelado) return;
+        quadro(agora - t0);
+        if (agora - t0 < DUR) laco = requestAnimationFrame(passo);
+      };
+      laco = requestAnimationFrame(passo);
+    }
+    timer = setTimeout(function () {
+      estado = "aberta"; document.body.classList.add("aberta");
+      entrada.setAttribute("aria-hidden", "true");
+      loja.focus({ preventScroll: true });
+    }, reduz ? 1000 : 2150);
+  }
+  function reiniciar() {
+    clearTimeout(timer); cancelAnimationFrame(laco); window.__congelado = false;
+    if (Som.parar) Som.parar();
+    document.body.classList.remove("abrindo", "aberta");
+    entrada.removeAttribute("aria-hidden");
+    repouso();
+    void document.body.offsetWidth;
+    estado = "fechada";
+    botao.focus({ preventScroll: true });
+  }
+  // o clique abre em qualquer lugar da entrada (menos nos IDs, que selecionam)
+  entrada.addEventListener("click", function (e) {
+    if (e.target.closest(".ea-id")) return;
+    abrir();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "r" || e.key === "R") { if (!e.ctrlKey && !e.metaKey && !e.altKey) reiniciar(); return; }
+    if ((e.key === "Enter" || e.key === " ") && estado === "fechada") {
+      if (e.target.closest && e.target.closest(".ea-id")) return;
+      e.preventDefault(); abrir();
+    }
+  });
+
+  // para o QA: congela a abertura no instante ms (câmera e animações CSS juntas, em quadros comparáveis)
+  var DA_ABERTURA = /^(selo-e|selo-d|cordao|tranca|acorda|abre-esq|abre-dir|escurece|acende|some|luz-neve|poca|raios|flash|loja|esmaece|loja-calma)$/;
+  window.__congela = function (ms, clima) {
+    window.__congelado = true; cancelAnimationFrame(laco);
+    if (document.body.classList.contains("abrindo") && !calmo.matches) quadro(ms);
+    document.getAnimations().forEach(function (a) {
+      a.pause();
+      a.currentTime = DA_ABERTURA.test(a.animationName || "") ? ms : (clima == null ? 2600 : clima);
+    });
+  };
+  window.__abrir = abrir; window.__reiniciar = reiniciar; window.__DUR = DUR; window.__quadro = quadro;
+  window.__pronto = true;
+})();
+</script>
+</body>
+</html>
