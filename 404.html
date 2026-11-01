@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Forja</title>
+<!-- F13-T95: o GitHub Pages serve esta página para todo endereço que não existe. O link curto
+     b/<id>/ de uma build cuja página o robô dos cards ainda não fez (ou que saiu do servidor) vai
+     para o app, #build/<id> — e o app diz se ela não existe mais. O resto ganha o "Voltar". -->
+<script>
+(function () {
+  var m = /^(.*\/)b\/([0-9a-f]{6})(?:\/(?:index\.html)?)?$/.exec(location.pathname);
+  // com barra a mais no começo (//forja/b/…), m[1] viraria um endereço de outro site: a raiz é refeita
+  if (m) location.replace("/" + m[1].replace(/^\/+/, "") + "#build/" + m[2]);
+})();
+</script>
+<style>
+  body { margin: 0; padding: 56px 32px; background: #100d0b; color: #d8cbb6; font-family: Georgia, serif; }
+  h1 { font-weight: normal; color: #ffd27a; font-size: 28px; margin: 0 0 16px; }
+  a { color: #ff7a1e; }
+</style>
+</head>
+<body>
+<h1>Esta página não existe na Forja.</h1>
+<p><a id="volta" href="./">Voltar à Forja</a></p>
+<script>
+// no GitHub Pages, a raiz do site é a primeira pasta do endereço (/forja/); fora dele, a raiz
+var pasta = location.pathname.split("/").filter(Boolean)[0];
+document.getElementById("volta").href = /\.github\.io$/.test(location.hostname) && pasta ? "/" + pasta + "/" : "/";
+</script>
+</body>
+</html>

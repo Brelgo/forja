@@ -463,6 +463,35 @@ no topo da grade). O sexto — trocar de dona no meio de um pedido deixa o item 
 rascunho de quem perdeu a vez — é a mesma corrida da T35 com um rascunho da própria
 dona, de gravidade baixa, e fica anotado. Vista falhando cada conserto: O1 a O9.
 
+O card da build no Discord (F13-T95, 31/10/2026), grupo "card do Discord": o molde
+data/robo/card.html desenhado de verdade, com a rede do Data Dragon e do Google Fonts.
+As peças, em 15 casos montados do catálogo: a bigorna com os 3 primeiros Lendários do
+Total sem opcionais; a bota da build (não a peça "Botas"), a evolução de bota; sem
+Lendário, o resto, sem a sentinela; item fora do catálogo, repetido e com nome de
+propriedade ("constructor", "__proto__"), que não é item. O nome curto, comprido,
+enorme, com acentos e com emoji (o corte é feito no JS: sem a 4ª linha escondida e sem
+partir o emoji). O rodapé com autor comprido e sem autor; sem campeão e com um que o
+Data Dragon não tem; HTML no nome e no autor. A rede: sem a folha das fontes, sem o
+arquivo, só sem o itálico da Alegreya, com a folha que nunca responde e com um endereço
+que pendura — o molde abre e o desenho sai no prazo, marcado "sem as fontes". O robô
+data/robo/cards.py numa pasta temporária: a página b/<id>/ escapada, com a imagem e o
+endereço inteiros (o ?v= vem dos bytes do card); a assinatura (refaz só o que mudou); o
+que ele apaga e o que não apaga; a incompleta (tenta de novo, guarda o card que já
+estava, atualiza os textos); cada build por si (a que quebra fica de fora e o Chrome é
+reaberto; a fonte que falha tenta num Chrome novo); o orçamento de tempo; a lista de
+página em página; o molde que não abre (sem Chrome órfão). No "link curto": fora do
+Pages, o curto segue #build/<id>; num GitHub Pages de mentira (pages_falso: a aba busca
+https://brelgo.github.io/forja/… e o roteiro responde com os arquivos desta pasta, a
+página gerada e o 404.html, como o Pages), o Copiar link copia b/<id>/ e fala do card,
+a página e o 404.html levam à pública no app (com barra, sem barra, com index.html e
+com barra a mais no começo), e o endereço errado ganha o Voltar; aberto do disco, o
+caminho antigo. O arnês: a Sessao.envia espera a resposta do próprio pedido (o _anota
+também manda comandos — o diálogo, o Pages de mentira — e subia o número). Duas rodadas
+do cético (Opus xhigh): a 1ª, em três lentes com reverificação, confirmou 13 defeitos —
+o mais grave, uma build publicada com o itemId "constructor" derrubava todas as rodadas
+do robô — e a 2ª, sobre os consertos, achou 5 restos de gravidade baixa; todos
+consertados com checagem. Vista falhando cada peça num mutante: P1 a P46, 47 de 47.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

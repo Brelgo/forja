@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F13-T95 — o card da build (4 conceitos)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<!-- Amostra da F13-T95 (Leo, 31/10/2026: "uns 4 conceitos", inspirados no card de build do Instagram).
+     Tudo lido do catálogo (../../data/catalog.js), das runas (../../data/runas.js), do Data Dragon (o
+     retrato, a arte e as habilidades do campeão, como no app) e de uma build publicada de verdade
+     (a do Ekko, 70e0d5, copiada do servidor). Cada card tem 1200×630, o tamanho da imagem de prévia. -->
+<script src="../../data/catalog.js"></script>
+<script src="../../data/runas.js"></script>
+<style>
+  :root {
+    --ferro-1: #1a1614; --ferro-2: #100d0b; --borda: #443a32; --brasa: #ff7a1e; --brasa-clara: #ffd27a;
+    --brasa-glow: rgba(255,120,30,.55); --ouro: #c9a25b; --ouro-claro: #e9c983; --texto: #d8cbb6; --suave: #8f8074;
+    --tinta: #2a1a0e; --papel: #e8d7b0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0b0908; color: var(--texto); font-family: 'Alegreya', Georgia, serif; padding: 28px; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brasa-clara); font-weight: 600; margin: 0 0 6px; font-size: 26px; }
+  .sub { color: var(--suave); margin: 0 0 22px; }
+  .linha { display: flex; gap: 28px; align-items: flex-start; margin-bottom: 36px; }
+  .rot { font-family: 'Cinzel', serif; color: var(--ouro-claro); font-size: 18px; margin: 0 0 10px; letter-spacing: .04em; }
+  .card { width: 1200px; height: 630px; position: relative; overflow: hidden; flex: none; }
+  .ico { display: block; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.6); }
+  .marca { position: absolute; font-family: 'Cinzel', serif; letter-spacing: .18em; font-size: 15px; color: var(--ouro); }
+  .marca b { color: var(--brasa-clara); font-weight: 700; }
+
+  /* ---------- 1 · Ficha da build (a inspiração do Instagram, na paleta da forja) ---------- */
+  #c1 { background: radial-gradient(ellipse at 80% 20%, #2a201a 0%, #120e0c 60%, #0b0908 100%); }
+  #c1 .fundo { position: absolute; inset: 0 0 0 auto; width: 720px; background-size: cover; background-position: 30% 20%; opacity: .32;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%); }
+  #c1 .topo { position: absolute; left: 34px; top: 26px; display: flex; gap: 20px; align-items: center; }
+  #c1 .retrato { width: 118px; height: 118px; border-radius: 50%; border: 3px solid var(--ouro); box-shadow: 0 0 0 5px #0b0908, 0 0 0 6px var(--borda), 0 0 24px var(--brasa-glow); background-size: cover; }
+  #c1 .nome { font-family: 'Cinzel', serif; font-weight: 700; font-size: 50px; color: var(--ouro-claro); line-height: 1; letter-spacing: .04em; }
+  #c1 .build { font-family: 'Cinzel', serif; font-size: 22px; color: var(--texto); margin-top: 8px; letter-spacing: .06em; text-transform: uppercase; }
+  #c1 .tags { margin-top: 8px; font-size: 18px; color: var(--brasa-clara); font-style: italic; }
+  #c1 .painel { position: absolute; background: rgba(16,13,11,.86); border: 1px solid #6b5333; box-shadow: inset 0 0 0 1px rgba(201,162,91,.18), 0 6px 18px rgba(0,0,0,.6); padding: 12px 14px; }
+  #c1 .painel h3 { margin: 0 0 10px; font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: .14em; color: var(--ouro-claro); font-weight: 600; }
+  #c1 .runas { left: 34px; top: 176px; width: 196px; height: 410px; }
+  #c1 .runas .col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; justify-items: center; }
+  #c1 .fileira { display: flex; gap: 12px; align-items: flex-end; }
+  #c1 .it { text-align: center; width: 92px; font-size: 13px; line-height: 1.15; color: var(--texto); }
+  #c1 .it .ico { margin: 0 auto 6px; }
+  #c1 .hab { text-align: center; font-family: 'Cinzel', serif; font-size: 15px; color: var(--ouro-claro); }
+  #c1 .gt { font-family: 'Cinzel', serif; color: var(--ouro); font-size: 24px; align-self: center; margin-bottom: 18px; }
+
+  /* ---------- 2 · Bigorna (o herói, legível pequeno) ---------- */
+  #c2 { background: linear-gradient(180deg, var(--ferro-1), var(--ferro-2)); }
+  #c2 .arte { position: absolute; left: 0; top: 0; bottom: 0; width: 560px; background-size: cover; background-position: 35% 20%;
+    -webkit-mask-image: linear-gradient(90deg, #000 55%, transparent 100%); mask-image: linear-gradient(90deg, #000 55%, transparent 100%); }
+  #c2 .brasa { position: absolute; left: 0; right: 0; bottom: 0; height: 160px; background: linear-gradient(0deg, rgba(255,90,10,.35), transparent); }
+  #c2 .dir { position: absolute; left: 470px; right: 48px; top: 54px; }
+  #c2 .rotulo { font-family: 'Cinzel', serif; letter-spacing: .3em; font-size: 15px; color: var(--brasa); }
+  #c2 .titulo { font-family: 'Cinzel', serif; font-weight: 700; font-size: 64px; line-height: 1.02; color: #f3e6c8; margin-top: 10px; text-shadow: 0 2px 0 #000, 0 0 30px rgba(255,120,30,.25); }
+  #c2 .quem { font-size: 26px; color: var(--brasa-clara); margin-top: 10px; font-style: italic; }
+  #c2 .bigorna { margin-top: 30px; display: flex; gap: 22px; padding: 18px 22px 22px; background: linear-gradient(180deg, #2b2521, #15110f); border: 1px solid var(--borda); border-radius: 4px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 22px rgba(0,0,0,.6); border-bottom: 3px solid var(--brasa); width: max-content; }
+  #c2 .bigorna .ico { box-shadow: 0 0 0 2px #0b0908, 0 0 0 3px var(--ouro), 0 0 22px var(--brasa-glow); }
+  #c2 .mais { margin-top: 18px; display: flex; gap: 10px; align-items: center; color: var(--suave); font-size: 18px; }
+
+  /* ---------- 3 · Pergaminho da loja (a lista de compras) ---------- */
+  #c3 { background: #3a2716; }
+  #c3 .papel { position: absolute; inset: 22px; background-color: var(--papel); background-size: cover; background-blend-mode: multiply; border-radius: 3px;
+    box-shadow: inset 0 0 60px rgba(90,55,20,.55), 0 0 0 2px #2a1a0e, 0 8px 24px rgba(0,0,0,.6); }
+  #c3 .cab { position: absolute; left: 70px; top: 48px; right: 260px; color: var(--tinta); }
+  #c3 .cab .t { font-family: 'IM Fell English SC', serif; font-size: 56px; line-height: 1; }
+  #c3 .cab .s { font-family: 'IM Fell English', serif; font-style: italic; font-size: 24px; margin-top: 8px; color: #5a3a1e; }
+  #c3 .lista { position: absolute; left: 70px; top: 168px; right: 70px; columns: 2; column-gap: 46px; color: var(--tinta); }
+  #c3 .lin { display: flex; align-items: center; gap: 12px; break-inside: avoid; padding: 6px 0; border-bottom: 1px dashed rgba(42,26,14,.35); font-size: 20px; }
+  #c3 .lin .p { margin-left: auto; font-family: 'IM Fell English', serif; color: #6b3d12; }
+  #c3 .lin .g { font-family: 'IM Fell English SC', serif; font-size: 14px; color: #8a5a28; width: 66px; flex: none; }
+  #c3 .total { position: absolute; left: 70px; right: 70px; bottom: 58px; display: flex; justify-content: space-between; align-items: baseline; color: var(--tinta);
+    font-family: 'IM Fell English SC', serif; font-size: 28px; border-top: 2px solid rgba(42,26,14,.55); padding-top: 10px; }
+  #c3 .selo { position: absolute; right: 70px; top: 40px; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #b3262a, #6d0f12 70%);
+    box-shadow: 0 6px 14px rgba(0,0,0,.45), inset 0 -6px 12px rgba(0,0,0,.35); display: grid; place-items: center; }
+  #c3 .selo div { width: 106px; height: 106px; border-radius: 50%; background-size: cover; filter: sepia(.35) saturate(.85); box-shadow: 0 0 0 4px #8e1a1d, inset 0 0 12px rgba(0,0,0,.5); }
+
+  /* ---------- 4 · Tabuleiro (a build como ela é na forja) ---------- */
+  #c4 { background: linear-gradient(180deg, #1d1815, #0e0b09); }
+  #c4 .cab { position: absolute; left: 34px; top: 24px; right: 34px; display: flex; gap: 16px; align-items: center; }
+  #c4 .cab .r { width: 68px; height: 68px; border-radius: 6px; background-size: cover; box-shadow: 0 0 0 2px var(--ouro), 0 0 14px var(--brasa-glow); }
+  #c4 .cab .t { font-family: 'Cinzel', serif; font-size: 34px; font-weight: 700; color: #f3e6c8; }
+  #c4 .cab .s { font-size: 19px; color: var(--brasa-clara); font-style: italic; }
+  #c4 .tab { position: absolute; left: 34px; right: 34px; top: 116px; bottom: 58px; display: flex; flex-wrap: wrap; gap: 14px; align-content: flex-start; }
+  #c4 .cx { background: linear-gradient(180deg, #2b2521, #15110f); border: 1px solid var(--borda); border-radius: 4px; padding: 8px 10px 10px; }
+  #c4 .cx.prioridade { border-color: var(--brasa); box-shadow: 0 0 12px rgba(255,120,30,.25); }
+  #c4 .cx.opcional { border-style: dashed; opacity: .85; }
+  #c4 .cx h4 { margin: 0 0 8px; font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: .12em; color: var(--ouro-claro); display: flex; gap: 8px; align-items: center; }
+  #c4 .cx h4 span { font-family: 'Alegreya', serif; letter-spacing: .02em; font-size: 12px; color: var(--suave); border: 1px solid var(--borda); border-radius: 3px; padding: 0 5px; }
+  #c4 .cx .its { display: flex; gap: 8px; }
+  #c4 .cx.escolha .its { flex-direction: column; }
+  #c4 .cx.escolha .its .ico:not(:first-child) { opacity: .55; }
+  #c4 .pe { position: absolute; left: 34px; right: 34px; bottom: 16px; display: flex; gap: 18px; align-items: center; color: var(--suave); font-size: 17px; }
+
+  /* ---------- o card como aparece num chat (prévia de link) ---------- */
+  .chat { width: 452px; background: #2b2d31; border-radius: 4px; border-left: 4px solid var(--brasa); padding: 10px 14px 14px; font-family: 'Segoe UI', Arial, sans-serif; color: #dbdee1; flex: none; }
+  .chat .site { font-size: 12px; color: #b5bac1; }
+  .chat .tit { font-size: 16px; font-weight: 600; color: #00a8fc; margin: 4px 0; }
+  .chat .desc { font-size: 14px; line-height: 1.35; margin-bottom: 10px; }
+  .chat img { width: 100%; border-radius: 4px; display: block; }
+  .chat .obs { font-size: 12px; color: #949ba4; margin-top: 8px; font-style: italic; }
+</style>
+</head>
+<body>
+<h1>O card da build — quatro conceitos</h1>
+<p class="sub">A build é a do Ekko publicada no site (70e0d5). Cada card tem 1200×630 (a imagem da prévia); ao lado, o tamanho em que ele aparece num chat.</p>
+<div id="raiz"></div>
+<script>
+const BUILD = {"id": "70e0d5", "nome": "Mage Assasin", "autor": "", "campeao": {"id": "Ekko", "key": "245", "name": "Ekko"}, "modo": "Summoner's Rift", "rota": "selva", "marcadores": [{"t": "tag", "id": "spirit"}, {"t": "tag", "id": "melee"}, {"t": "tag", "id": "damage"}], "descricao": "Assasin AP", "patch": "16.21.1", "caixas": [{"cols": 2, "desc": "", "kind": "comum", "name": "inicial", "rows": 2, "span": 3, "items": [{"nome": "Filhote de Garrabrasa", "note": "", "itemId": "scorchclaw-pup"}, {"nome": "Poção de Vida", "note": "", "itemId": "health-potion"}, {"nome": "Sentinela Invisível", "note": "", "itemId": "stealth-ward"}], "marco": ""}, {"cols": 1, "desc": "", "kind": "comum", "name": "bota", "rows": 1, "span": 4, "items": [{"nome": "Sapatos do Feiticeiro", "note": "", "itemId": "sorcerer-s-shoes"}], "marco": ""}, {"cols": 3, "desc": "", "kind": "prioridade", "name": "Core", "rows": 1, "span": 2, "items": [{"mf": true, "nome": "Aurora e Crepúsculo", "note": "", "itemId": "dusk-and-dawn"}, {"nome": "Dente de Na'Shor", "note": "", "itemId": "nashor-s-tooth"}, {"nome": "Chama Sombria", "note": "", "itemId": "shadowflame"}], "marco": ""}, {"cols": 1, "desc": "", "kind": "opcional", "name": "triket", "rows": 1, "span": 4, "items": [{"nome": "Lente do Oráculo", "note": "", "itemId": "oracle-lens"}], "marco": ""}, {"cols": 1, "desc": "", "kind": "escolha", "name": "4º item", "rows": 3, "span": 4, "items": [{"nome": "Explocinturão Hextec", "note": "", "itemId": "hextech-rocketbelt"}, {"nome": "Ímpeto Cósmico", "note": "", "itemId": "cosmic-drive"}, {"nome": "Pistola Laminar Hextec", "note": "", "itemId": "hextech-gunblade"}], "marco": ""}, {"cols": 1, "desc": "", "kind": "escolha", "name": "5º item", "rows": 3, "span": 4, "items": [{"nome": "Ampulheta de Zhonya", "note": "", "itemId": "zhonya-s-hourglass"}, {"nome": "Véu da Banshee", "note": "", "itemId": "banshee-s-veil"}, {"nome": "Máscara Abissal", "note": "", "itemId": "abyssal-mask"}], "marco": ""}, {"cols": 1, "desc": "", "kind": "escolha", "name": "6º item", "rows": 3, "span": 4, "items": [{"nome": "Cajado do Vazio", "note": "", "itemId": "void-staff"}, {"nome": "Ápice da Tempestade", "note": "", "itemId": "stormsurge"}, {"nome": "Criafendas", "note": "", "itemId": "riftmaker"}], "marco": ""}], "runas": {"slots": ["impacto-repentino", "lembrancas-aterrorizantes", "cacador-de-tesouros"], "primaria": "dominacao", "assinatura": "colheita-sombria", "fragmentos": ["velocidade-de-ataque", "forca-adaptativa", "escalamento-de-vida"], "secundaria": "inspiracao", "secundarios": ["calcados-magicos", "perspicacia-cosmica"]}, "habilidades": ["W", "Q", "E", "Q", "Q", "R", "Q", "E", "Q", "E", "R", "E", "E", "W", "W", "R", "W", "W"]};
+const PATCH = CATALOG.meta.patch;
+const DD = "https://ddragon.leagueoflegends.com/cdn/" + PATCH;
+const porSlug = Object.fromEntries(CATALOG.items.map(i => [i.slug, i]));
+const runas = {}; RUNAS.trilhas.forEach(t => { runas[t.id] = t; t.slots.forEach(s => s.runas.forEach(r => { runas[r.id] = r; })); });
+(RUNAS.fragmentos || []).forEach(f => f.runas.forEach(r => { runas[r.id] = r; }));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const ico = (slug, px) => { const it = porSlug[slug]; return it ? `<img class="ico" src="${it.iconUrl}" width="${px}" height="${px}" alt="" title="${esc(it.namePt)}">` : ""; };
+const ouro = n => Number(n || 0).toLocaleString("pt-BR") + " g";
+const caixa = nome => BUILD.caixas.find(c => (c.name || "").toLowerCase() === nome.toLowerCase());
+const itensDe = c => c ? c.items.map(e => e.itemId) : [];
+// o que a build compra: sem as Opcionais; na Escolha 1, o padrão (o primeiro) — como o "Total (sem opcionais)" do app
+const contados = () => BUILD.caixas.filter(c => c.kind !== "opcional").flatMap(c => c.kind === "escolha" ? c.items.slice(0, 1) : c.items).map(e => e.itemId);
+// a ordem de maximização (Q, W, E até o teto de 5), como o app
+function ordem(h) {
+  const d = ["Q", "W", "E"].map(L => { let n = 0, quinto = 99, prim = 99; h.forEach((x, i) => { if (x !== L) return; n++; if (prim === 99) prim = i; if (n === 5) quinto = i; }); return { L, n, quinto, prim }; })
+    .filter(x => x.n).sort((a, b) => a.quinto - b.quinto || b.n - a.n || a.prim - b.prim);
+  return d.map(x => x.L);
+}
+const nomeRota = { top: "Topo", selva: "Selva", meio: "Meio", atirador: "Atirador", suporte: "Suporte" };
+const linhaQuem = () => [BUILD.campeao && BUILD.campeao.name, nomeRota[BUILD.rota] || BUILD.rota, BUILD.modo].filter(Boolean).join(" · ");
+
+async function montar() {
+  const ch = BUILD.campeao.id;
+  const retrato = `${DD}/img/champion/${ch}.png`;
+  const arte = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${ch}_0.jpg`;
+  let spells = [];
+  try { const j = await fetch(`${DD}/data/pt_BR/champion/${ch}.json`).then(r => r.json()); spells = j.data[ch].spells; } catch (e) { /* sem rede: só as letras */ }
+  const hab = L => { const i = "QWE".indexOf(L); const s = spells[i]; return s ? `<img class="ico" src="${DD}/img/spell/${s.image.full}" width="56" height="56" alt="">` : `<div class="ico" style="width:56px;height:56px;display:grid;place-items:center;background:#2b2521">${L}</div>`; };
+  const ord = ordem(BUILD.habilidades || []);
+  const R = BUILD.runas || {};
+  const rIco = (id, px) => runas[id] ? `<img src="${runas[id].iconUrl}" width="${px}" height="${px}" alt="" title="${esc(runas[id].nome)}">` : "";
+  const ini = itensDe(caixa("inicial")), bota = itensDe(caixa("bota")), core = itensDe(caixa("Core"));
+  const escolhas = BUILD.caixas.filter(c => c.kind === "escolha");
+  const situ = escolhas.flatMap(c => c.items.map(e => e.itemId));
+  const total = contados().reduce((s, sl) => s + (Number((porSlug[sl] || {}).priceGold) || 0), 0);
+  const autor = BUILD.autor || "anônimo";
+  const pe = `<div class="marca" style="right:34px;bottom:20px"><b>FORJA</b> · MONTADOR DE ITENS</div>`;
+
+  const c1 = `<div class="card" id="c1"><div class="fundo" style="background-image:url(${arte})"></div>
+    <div class="topo"><div class="retrato" style="background-image:url(${retrato})"></div>
+      <div><div class="nome">${esc(BUILD.campeao.name).toUpperCase()}</div><div class="build">${esc(BUILD.nome)}</div><div class="tags">${esc([nomeRota[BUILD.rota], BUILD.modo].filter(Boolean).join(" · "))}</div></div></div>
+    <div class="painel runas"><h3>RUNAS</h3>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">${rIco(R.assinatura, 74)}<div>${rIco(R.primaria, 30)}</div></div>
+      <div class="col">${(R.slots || []).map(id => rIco(id, 44)).join("")}${rIco(R.secundaria, 30)}</div>
+      <div class="col" style="margin-top:10px">${(R.secundarios || []).map(id => rIco(id, 40)).join("")}</div>
+      <div style="display:flex;gap:10px;margin-top:12px;justify-content:center">${(R.fragmentos || []).map(id => rIco(id, 26)).join("")}</div></div>
+    <div class="painel" style="left:250px;top:176px;width:330px;height:132px"><h3>ORDEM DAS HABILIDADES</h3>
+      <div class="fileira">${ord.map((L, i) => `<div class="hab">${hab(L)}<div>${L}</div></div>${i < ord.length - 1 ? '<div class="gt">›</div>' : ""}`).join("")}</div></div>
+    <div class="painel" style="left:600px;top:176px;width:566px;height:132px"><h3>ITENS INICIAIS</h3>
+      <div class="fileira">${ini.map(s => `<div class="it" style="width:auto">${ico(s, 56)}</div>`).join("")}</div></div>
+    <div class="painel" style="left:250px;top:326px;width:500px;height:150px"><h3>CORE</h3>
+      <div class="fileira">${core.map(s => `<div class="it">${ico(s, 64)}${esc(porSlug[s].namePt)}</div>`).join("")}</div></div>
+    <div class="painel" style="left:770px;top:326px;width:396px;height:150px"><h3>BOTA</h3>
+      <div class="fileira">${bota.map(s => `<div class="it">${ico(s, 64)}${esc(porSlug[s].namePt)}</div>`).join("")}</div></div>
+    <div class="painel" style="left:250px;top:494px;width:916px;height:92px"><h3>SITUACIONAIS</h3>
+      <div class="fileira" style="gap:9px">${situ.map(s => ico(s, 44)).join("")}</div></div>
+    <div class="marca" style="left:34px;bottom:12px;font-size:13px">por ${esc(autor)} · patch ${esc(BUILD.patch)}</div>
+    <div class="marca" style="right:34px;top:30px"><b>FORJA</b></div></div>`;
+
+  const c2 = `<div class="card" id="c2"><div class="arte" style="background-image:url(${arte})"></div><div class="brasa"></div>
+    <div class="dir"><div class="rotulo">BUILD PUBLICADA NA FORJA</div><div class="titulo">${esc(BUILD.nome)}</div>
+      <div class="quem">${esc(linhaQuem())}</div>
+      <div class="bigorna">${core.map(s => ico(s, 112)).join("")}</div>
+      <div class="mais">${bota.map(s => ico(s, 46)).join("")}${ini.slice(0, 2).map(s => ico(s, 46)).join("")}<span>+ ${escolhas.length} escolhas situacionais</span></div></div>
+    ${pe}<div class="marca" style="left:470px;bottom:20px;font-size:13px">por ${esc(autor)} · patch ${esc(BUILD.patch)}</div></div>`;
+
+  const ordemCompra = [["Inicial", ini], ["Bota", bota], ["Core", core], ...escolhas.map(c => [c.name, c.items.slice(0, 1).map(e => e.itemId)])];
+  const c3 = `<div class="card" id="c3"><div class="papel" style="background-image:url(../../assets/textures/shopitem_papertexture03_psd.png)"></div>
+    <div class="cab"><div class="t">${esc(BUILD.nome)}</div><div class="s">Encomenda para ${esc(linhaQuem())}</div></div>
+    <div class="selo"><div style="background-image:url(${retrato})"></div></div>
+    <div class="lista">${ordemCompra.flatMap(([g, sl]) => sl.map(s => `<div class="lin"><span class="g">${esc(g)}</span>${ico(s, 46)}<span>${esc(porSlug[s].namePt)}</span><span class="p">${ouro(porSlug[s].priceGold)}</span></div>`)).join("")}</div>
+    <div class="total"><span>Total da forja</span><span>${ouro(total)}</span></div>
+    <div class="marca" style="left:70px;bottom:28px;color:#6b3d12;font-size:13px"><b style="color:#8e1a1d">FORJA</b> · por ${esc(autor)} · patch ${esc(BUILD.patch)}</div></div>`;
+
+  const KIND = { comum: "comum", prioridade: "prioridade", opcional: "opcional", escolha: "escolha 1" };
+  const c4 = `<div class="card" id="c4"><div class="cab"><div class="r" style="background-image:url(${retrato})"></div>
+      <div><div class="t">${esc(BUILD.nome)}</div><div class="s">${esc(linhaQuem())}</div></div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">${rIco(R.assinatura, 54)}${rIco(R.secundaria, 30)}</div></div>
+    <div class="tab">${BUILD.caixas.map(c => `<div class="cx ${c.kind}"><h4>${esc(c.name)}<span>${KIND[c.kind] || c.kind}</span></h4><div class="its">${c.items.map(e => ico(e.itemId, c.kind === "escolha" ? 52 : 60)).join("")}</div></div>`).join("")}</div>
+    <div class="pe"><span>Ordem: ${ord.join(" › ")}</span><span>·</span><span>por ${esc(autor)} · patch ${esc(BUILD.patch)}</span></div>${pe}</div>`;
+
+  const conceitos = [
+    ["1 · Ficha da build", "o card do Instagram, na paleta da forja: retrato, runas, ordem das habilidades, iniciais, Core, bota e situacionais", c1],
+    ["2 · Bigorna", "o herói: a arte do campeão, o nome da build grande e o Core na bigorna — pensado para ler pequeno", c2],
+    ["3 · Pergaminho da loja", "a lista de compras no papel da loja, com o preço de cada item e o total, e o selo com o campeão", c3],
+    ["4 · Tabuleiro", "a build como ela é na forja: todas as caixas, com o tipo de cada uma", c4],
+  ];
+  const desc = `${linhaQuem()} — por ${autor} · ${BUILD.descricao || ""}`;
+  document.getElementById("raiz").innerHTML = conceitos.map(([t, d, html], i) => `<p class="rot">${esc(t)} — <span style="font-family:Alegreya;color:#8f8074;letter-spacing:0">${esc(d)}</span></p>
+    <div class="linha">${html}<div class="chat" id="m${i + 1}"><div class="site">Forja · Montador de Itens de LoL</div><div class="tit">${esc(BUILD.nome)}</div><div class="desc">${esc(desc)}</div><img id="mi${i + 1}" alt=""><div class="obs">o tamanho real num chat</div></div></div>`).join("");
+  window.__pronto = true;
+}
+montar();
+</script>
+</body>
+</html>

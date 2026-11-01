@@ -47,6 +47,7 @@ jobs:
             exit 0
           fi
           git commit -m "Robô de patch: $(date -u +%Y-%m-%d)"
+          git pull --rebase   # F13-T95: o robô dos cards também grava no main
           git push
           echo "mudou=true" >> "$GITHUB_OUTPUT"
 

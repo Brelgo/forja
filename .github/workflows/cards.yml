@@ -1,0 +1,63 @@
+# F13-T95 — o robô dos cards (data/robo/cards.py). Autorizado pelo Leo em 31/10/2026: o robô novo
+# a cada 30 min gravando no main ("ok"), com o desenho da Bigorna. Lê as builds publicadas com a
+# chave pública (como o site) e mantém b/<id>/: a página com as etiquetas da prévia do Discord e o
+# card.jpg. Só grava commit quando alguma página mudou.
+name: Robô dos cards
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"   # a cada meia hora, fora da hora cheia (o pico do GitHub, que atrasa e descarta rodadas)
+  workflow_dispatch: {}      # e quando o Leo pedir (Actions → Robô dos cards → Run workflow)
+  push:                      # e quando o molde, o robô ou o catálogo mudam no main
+    branches: [main]
+    paths:
+      - data/robo/card.html
+      - data/robo/cards.py
+      - data/catalog.js
+      - .github/workflows/cards.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: robo-dos-cards
+  cancel-in-progress: false
+
+jobs:
+  cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # a ponta do main quando a rodada começa (a da fila não refaz o que a anterior gravou)
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: O que o robô precisa
+        run: pip install websocket-client==1.8.0
+
+      - name: Os cards
+        timeout-minutes: 17   # o robô para sozinho aos 14 min; isto é a rede de segurança
+        run: python -I data/robo/cards.py
+
+      - name: Grava o que mudou
+        if: success() || failure()   # cada página fica inteira (o index.html por último): grava o que ficou pronto
+        run: |
+          git config user.name "robo-dos-cards"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A b
+          if git diff --cached --quiet; then
+            echo "nada mudou: sem commit"
+            exit 0
+          fi
+          git commit -m "Robô dos cards: $(date -u +%Y-%m-%dT%H:%MZ)"
+          # outra rodada gravou os mesmos cards no meio do caminho (ou a rede falhou): fica para a próxima, sem erro
+          if ! git pull --rebase; then
+            git rebase --abort 2>/dev/null || true
+            echo "::warning title=Cards para a próxima rodada::o envio não deu (o main mudou nos mesmos cards, ou a rede falhou)"
+            exit 0
+          fi
+          git push

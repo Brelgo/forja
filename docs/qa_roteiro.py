@@ -84,8 +84,13 @@ class Placar:
 
 
 # ---------------------------------------------------------------- servidor
+# F13-T95: páginas que o roteiro serve sem gravar no disco (a b/<id>/ que o robô dos cards gera)
+PAGINAS_EXTRAS = {}
+
+
 class Servidor:
-    """Serve a pasta do projeto numa porta livre, só para o roteiro."""
+    """Serve a pasta do projeto numa porta livre, só para o roteiro. Como o GitHub Pages, o
+    endereço que não existe recebe o 404.html da raiz (F13-T95)."""
 
     def __init__(self):
         import http.server
@@ -104,6 +109,30 @@ class Servidor:
                 except ConnectionError:
                     self.close_connection = True   # o Chrome corta conexão à vontade
 
+            def _manda(self, codigo, corpo):
+                self.send_response(codigo)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(corpo)))
+                self.end_headers()
+                if self.command != "HEAD":
+                    self.wfile.write(corpo)
+
+            def do_GET(self):
+                if self.path.startswith("/__pendura"):
+                    time.sleep(6)         # F13-T95: o prazo do molde contra quem não responde
+                    return self._manda(204, b"")
+                extra = PAGINAS_EXTRAS.get(self.path.split("?")[0].split("#")[0])
+                if extra is not None:
+                    return self._manda(200, extra.encode("utf-8"))
+                return super().do_GET()
+
+            def send_error(self, code, message=None, explain=None):
+                pagina = os.path.join(RAIZ, "404.html")
+                if code == 404 and self.command == "GET" and os.path.exists(pagina):
+                    with open(pagina, "rb") as f:
+                        return self._manda(404, f.read())
+                return super().send_error(code, message, explain)
+
         handler = Mudo
         self.httpd = http.server.ThreadingHTTPServer(("127.0.0.1", self.porta), handler)
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
@@ -111,6 +140,38 @@ class Servidor:
 
     def parar(self):
         self.httpd.shutdown()
+
+
+TIPOS = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8",
+         ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".svg": "image/svg+xml",
+         ".mp3": "audio/mpeg", ".woff2": "font/woff2", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8"}
+
+
+def pages_falso(url):
+    """F13-T95: o GitHub Pages de mentira para https://brelgo.github.io/forja/… — os arquivos desta
+    pasta, as páginas de PAGINAS_EXTRAS e, no que não existe, o 404.html da raiz com status 404
+    (como o Pages faz). Com ele, a aba roda o app no endereço do site sem sair do disco."""
+    from urllib.parse import urlsplit, unquote
+    caminho = "/" + unquote(urlsplit(url).path).lstrip("/")      # o Pages junta as barras do começo
+    if caminho in PAGINAS_EXTRAS:
+        return 200, PAGINAS_EXTRAS[caminho].encode("utf-8"), TIPOS[".html"]
+    if caminho.startswith("/forja/"):
+        rel = caminho[len("/forja/"):]
+        if rel == "" or rel.endswith("/"):
+            rel += "index.html"
+        partes = rel.split("/")
+        arq = os.path.join(RAIZ, *partes)
+        if ".." not in partes and os.path.isfile(arq):
+            with open(arq, "rb") as f:
+                return 200, f.read(), TIPOS.get(os.path.splitext(arq)[1].lower(), "application/octet-stream")
+    with open(os.path.join(RAIZ, "404.html"), "rb") as f:
+        return 404, f.read(), TIPOS[".html"]
+
+
+def ligar_site_falso(r):
+    """A aba passa a buscar https://brelgo.github.io/… no pages_falso (CDP Fetch)."""
+    r.site_falso = pages_falso
+    r.envia("Fetch.enable", {"patterns": [{"urlPattern": "https://brelgo.github.io/*", "requestStage": "Request"}]})
 
 
 # ---------------------------------------------------------------- navegador
@@ -145,6 +206,7 @@ class Sessao:
         self.erros = []
         self.rede = []
         self.dialogos = []
+        self.site_falso = None   # F13-T95: ligar_site_falso
         self.envia("Page.enable"); self.envia("Runtime.enable"); self.envia("Log.enable")
         self._barra_eventos()
         self.url = url
@@ -193,7 +255,8 @@ class Sessao:
 
     def envia(self, metodo, params=None):
         self._id += 1
-        self.ws.send(json.dumps({"id": self._id, "method": metodo, "params": params or {}}))
+        meu = self._id   # F13-T95: o _anota também manda comandos (e sobe o _id) enquanto este espera
+        self.ws.send(json.dumps({"id": meu, "method": metodo, "params": params or {}}))
         while True:
             try:
                 msg = json.loads(self.ws.recv())
@@ -201,13 +264,28 @@ class Sessao:
                 # Acontece de verdade: com a lista pública cheia, o renderizador
                 # some por mais de um minuto. Vira falha legível, não pilha.
                 raise RuntimeError("o navegador parou de responder em %s" % metodo)
-            if msg.get("id") == self._id:
+            if msg.get("id") == meu:
                 if "error" in msg:
                     raise RuntimeError(msg["error"])
                 return msg.get("result", {})
             self._anota(msg)
 
     def _anota(self, msg):
+        if msg.get("method") == "Fetch.requestPaused":
+            # F13-T95: o pedido ao site responde aqui (o GitHub Pages de mentira); o resto segue
+            p = msg["params"]
+            self._id += 1
+            if self.site_falso:
+                resposta = self.site_falso(p["request"]["url"])
+                if resposta is None:
+                    return        # o pedido fica parado: um servidor que não responde
+                st, corpo, tipo = resposta
+                self.ws.send(json.dumps({"id": self._id, "method": "Fetch.fulfillRequest", "params": {
+                    "requestId": p["requestId"], "responseCode": st, "responseHeaders": [{"name": "Content-Type", "value": tipo}],
+                    "body": base64.b64encode(corpo).decode("ascii")}}))
+            else:
+                self.ws.send(json.dumps({"id": self._id, "method": "Fetch.continueRequest", "params": {"requestId": p["requestId"]}}))
+            return
         if msg.get("method") == "Page.javascriptDialogOpening":
             # Um diálogo nativo (confirm, alert, "sair sem salvar?") trava a
             # página inteira até alguém responder: o roteiro via só "o navegador
@@ -6071,10 +6149,17 @@ def checar_link_curto(s, p):
         r.clicar('#bi-detail [data-act="link"]', 0.6)
         publica = r.js("({ ult: window.__copiado[window.__copiado.length - 1] || null, base: location.href.split('#')[0] })")
         base = publica["base"]
-        p.conta("link curto", "Copiar link: a não publicada copia o #b=; a publicada (Minhas), a pública (Públicas) e a aberta para ver (forja) copiam o curto; o title diz qual sai",
-                bool(longo) and longo.startswith(base + "#b=") and curto["ult"] == base + "#build/" + ID and "Link curto copiado" in curto["msg"]
-                and publica["ult"] == base + "#build/" + ID and forja_link["ult"] == forja_link["base"] + "#build/" + ID
-                and "#b=" in t_longo and "#build/" + ID in t_curto and "#build/" + ID in forja_link["titulo"],
+        # F13-T95: fora do GitHub Pages (um servidor local) o curto segue #build/<id>; no site (--site) é
+        # a página b/<id>/, falando do card no Discord (o passo l confere o site de mentira)
+        no_site = base.startswith(SITE)
+        marca_curta = ("b/%s/" % ID) if no_site else ("#build/" + ID)
+        fala = lambda txt: ("Discord" in txt) == no_site
+        p.conta("link curto", "Copiar link: a não publicada copia o #b=; a publicada (Minhas), a pública (Públicas) e a aberta para ver (forja) copiam o curto; o title diz qual sai — fora do site #build/<id>, sem falar do card no Discord; no site, b/<id>/",
+                bool(longo) and longo.startswith(base + "#b=") and curto["ult"] == ((SITE + marca_curta) if no_site else base + marca_curta)
+                and "Link curto copiado" in curto["msg"] and fala(curto["msg"])
+                and publica["ult"] == ((SITE + marca_curta) if no_site else base + marca_curta)
+                and forja_link["ult"] == ((SITE + marca_curta) if no_site else forja_link["base"] + marca_curta)
+                and "#b=" in t_longo and marca_curta in t_curto and marca_curta in forja_link["titulo"] and fala(t_curto),
                 "não publicada %r · publicada %r · pública %r · forja %r · títulos %r / %r" % (
                     (longo or "")[:60], curto["ult"], publica["ult"], forja_link["ult"], t_longo[:40], t_curto[:40]))
 
@@ -6093,9 +6178,499 @@ def checar_link_curto(s, p):
                 d0["nome"] == "Sem publicar QA" and str(d0["id"]).startswith("l-") and d0["forja"] and d0["hash"].startswith("#b=") and not d0["temp"]
                 and d1["aba"] == "runas" and d2["aba"] == "build" and d2["lista"] and not erros,
                 "b= %s · runas %s · builds %s · erros %s" % ({k: d0[k] for k in ("nome", "id", "forja", "temp")}, d1["aba"], {k: d2[k] for k in ("aba", "lista")}, erros[:2]))
+
+        # (l) F13-T95: no site, o link b/<id>/. A aba abre o app em https://brelgo.github.io/forja/ — o GitHub
+        # Pages de mentira (pages_falso) responde com os arquivos desta pasta, a página que o robô gera e o
+        # 404.html, como o Pages. O Copiar link de uma pública copia b/<id>/ e fala do card; a página leva à
+        # pública no app; sem página (o robô ainda não passou, ou a build saiu), o 404.html leva também — com
+        # barra, sem barra, com index.html e com barra a mais no começo; outro endereço fica no 404 com o Voltar
+        # (no --site, o Pages de verdade: o mesmo caminho, menos a página gerada, que lá não existe)
+        local = s.url.startswith("http://127.0.0.1")
+        if True:
+            import importlib
+            pasta = os.path.join(RAIZ, "data", "robo")
+            if pasta not in sys.path:
+                sys.path.insert(0, pasta)
+            cards = importlib.import_module("cards")
+            if local:
+                ligar_site_falso(r)
+                PAGINAS_EXTRAS["/forja/b/%s/" % ID] = cards.pagina({"id": ID, "nome": NOME}, {"quem": ""}, "roteiro")
+            url0 = r.url
+            r.url = SITE
+            try:
+                r.abrir("?site=1#builds"); r.entrar()
+                espera("!!document.querySelector('.bi-tab[data-view=\"publicas\"]')", 8)
+                r.clicar('.bi-tab[data-view="publicas"]', 0.6)
+                espera("!!document.querySelector('.bi-row[data-pub=\"%s\"]')" % ID, 8)
+                r.clicar('.bi-row[data-pub="%s"]' % ID, 0.5)
+                t_site = r.js("document.querySelector('#bi-detail [data-act=\"link\"]').title")
+                r.clicar('#bi-detail [data-act="link"]', 0.6)
+                c_site = r.js("({ ult: window.__copiado[window.__copiado.length - 1] || null, msg: (document.getElementById('bd-link-msg') || {}).innerText || '', origem: location.origin })")
+                l1 = None
+                if local:
+                    r.abrir("b/%s/" % ID)
+                    espera("typeof build !== 'undefined' && location.hash === '#build/%s' && build.temp && build.pubOrigem === '%s'" % (ID, ID), 8)
+                    # se a página levou para outro lugar (o 404, sem o app), a tela não existe: vale o endereço
+                    l1 = r.js("document.getElementById('build-editor') ? %s : { hash: location.pathname + location.hash, temp: false, origem: null, aba: null }" % tela)
+                    l1["caminho"] = r.js("location.pathname")
+                vistos = []
+                for falta in ("b/9a1b0f/", "b/9a1b0e", "b/9a1b0d/index.html", "//forja/b/9a1b0c/"):
+                    fid = falta.rstrip("/").replace("/index.html", "")[-6:]
+                    r.envia("Page.navigate", {"url": (SITE + falta) if not falta.startswith("//") else "https://brelgo.github.io" + falta})
+                    espera("location.pathname === '/forja/' && (window.__pedidosServidor || []).some(x => x.includes('id=eq.%s'))" % fid, 8)
+                    vistos.append(r.js("({ url: location.href, caminho: location.pathname, pediu: (window.__pedidosServidor || []).some(x => x.includes('id=eq.%s')) })" % fid))
+                r.abrir("nada/aqui.html")
+                time.sleep(0.4)
+                l3 = r.js("({ caminho: location.pathname, titulo: document.title, h1: (document.querySelector('h1') || {}).textContent || '', volta: (document.getElementById('volta') || {}).href || '' })")
+                # fora do Pages (o servidor local, que também serve o 404.html), o Voltar vai para a raiz
+                l4 = None
+                if local:
+                    r.envia("Page.navigate", {"url": url0 + "nada/aqui.html"})
+                    espera("!!document.getElementById('volta')", 5)
+                    l4 = r.js("(document.getElementById('volta') || {}).href || ''")
+            finally:
+                PAGINAS_EXTRAS.pop("/forja/b/%s/" % ID, None)
+                r.url = url0
+            p.conta("link curto", "no site: o Copiar link de uma pública copia b/<id>/ (a página do card) e o title e o recado falam do card no Discord",
+                    c_site["ult"] == SITE + "b/%s/" % ID and "No Discord" in c_site["msg"] and "b/%s/" % ID in t_site and "Discord" in t_site,
+                    "copiou %r · recado %r · title %r" % (c_site["ult"], c_site["msg"][-80:], t_site[:70]))
+            p.conta("link curto", "no site: a página gerada pelo robô abre a pública no app (#build/<id>); sem página, o 404.html leva ao #build/<id> (com barra, sem barra, com index.html e com barra a mais no começo); outro endereço errado fica no 404 com o Voltar para a raiz do site",
+                    (l1 is None or (l1["hash"] == "#build/" + ID and l1["caminho"] == "/forja/" and l1["temp"] and l1["origem"] == ID and l1["aba"] == "build"))
+                    and len(vistos) == 4 and all(v["caminho"] == "/forja/" and v["url"].startswith(SITE) and v["pediu"] for v in vistos)
+                    and l3["caminho"] == "/forja/nada/aqui.html" and "não existe" in l3["h1"] and l3["volta"] == SITE
+                    and (l4 is None or l4 == url0),
+                    "página %s · sem página %s · errado %s · Voltar fora do Pages %r" % ({k: l1[k] for k in ("caminho", "hash", "temp", "origem")} if l1 else "(no Pages de verdade não há a página do roteiro)", [v["url"][-22:] + (" ok" if v["pediu"] else " sem pedido") for v in vistos], l3, l4))
+
+        # (m) aberto do disco não há página: o curto segue o #build/<id>, sem falar em Discord
+        r.envia("Page.navigate", {"url": "file:///" + os.path.join(RAIZ, "index.html").replace(os.sep, "/").replace(" ", "%20")})
+        espera("typeof linkCurtoDaPublica === 'function'", 10)
+        m1 = r.js("({ link: linkCurtoDaPublica('%s'), titulo: tituloDoLink('%s'), aviso: avisoDoCurto(), base: location.href.split('#')[0] })" % (ID, ID))
+        p.conta("link curto", "caminho antigo: aberto do disco, o curto continua #build/<id> (não há página b/ no disco), e o title e o recado não falam do card no Discord",
+                m1["link"] == m1["base"] + "#build/" + ID and "#build/" + ID in m1["titulo"] and "Discord" not in m1["titulo"] + m1["aviso"],
+                "link %r · title %r · recado %r" % (m1["link"][-30:], m1["titulo"][:60], m1["aviso"][-60:]))
     finally:
         r.fechar()
     _link_curto_lento(s, p, ID, NOME)
+
+
+def _jpeg_tamanho(dados):
+    """(largura, altura) de um JPEG, lida do marcador SOF — sem depender do PIL."""
+    if dados[:2] != b"\xff\xd8":
+        return None
+    i = 2
+    while i + 9 < len(dados):
+        if dados[i] != 0xFF:
+            return None
+        m = dados[i + 1]
+        if m in (0xC0, 0xC1, 0xC2):
+            return (dados[i + 7] << 8 | dados[i + 8], dados[i + 5] << 8 | dados[i + 6])
+        i += 2 + (dados[i + 2] << 8 | dados[i + 3])
+    return None
+
+
+def checar_card(s, p):
+    """F13-T95 (Leo, 31/10/2026: "gostei do 2, a bigorna"): o card da build no Discord. O robô dos
+    cards (data/robo/cards.py) fotografa o molde data/robo/card.html para cada build publicada e
+    escreve b/<id>/: a página com as etiquetas da prévia e o card.jpg. Aqui: as peças que o molde
+    escolhe (a bigorna, a fileira de baixo, a conta do resto), o nome e o autor compridos, a build sem
+    campeão, o nome com HTML; a página gerada (escapada, a imagem com endereço inteiro, o caminho para
+    o #build/<id>); a assinatura (refaz só o que mudou; a incompleta refaz); o que o robô apaga e o
+    que não apaga. As builds são do roteiro, os itens vêm do catálogo; tudo numa pasta temporária —
+    nada vai ao servidor nem ao b/."""
+    print("\n%sCARD DO DISCORD%s" % (AMARELO, FIM))
+    import importlib
+    import shutil
+    import tempfile
+    pasta = os.path.join(RAIZ, "data", "robo")
+    if pasta not in sys.path:
+        sys.path.insert(0, pasta)
+    cards = importlib.import_module("cards")
+    r = Sessao(s.url)
+
+    def espera(expr, limite=10.0):
+        fim = time.time() + limite
+        while time.time() < fim:
+            try:
+                if r.js(expr):
+                    return True
+            except RuntimeError:
+                pass
+            time.sleep(0.2)
+        return False
+
+    try:
+        r.envia("Page.navigate", {"url": s.url + "data/robo/card.html"})
+        espera("typeof window.desenhar === 'function' && typeof CATALOG === 'object'")
+        # (a) as peças: os itens de cada caso vêm do catálogo, pelo tier
+        casos = r.js(r"""(() => {
+          const C = CATALOG.items, T = t => C.filter(i => i.tier === t);
+          const L = T('Lendário'), B = T('Bota'), S = T('Starter'), Co = T('Consumível'), Tr = T('Trinket'), E = T('Épico');
+          const porNome = Object.fromEntries(C.map(i => [i.namePt, i]));
+          const deBota = i => (i.components || []).some(c => (porNome[c.namePt] || {}).tier === 'Bota');
+          const evB = C.find(i => i.tier === 'Evolução' && deBota(i)), evL = C.find(i => i.tier === 'Evolução' && !deBota(i));
+          const cx = (kind, ...its) => ({ kind, items: its.map(i => ({ itemId: typeof i === 'string' ? i : i.slug })) });
+          const pecaDe = (a, b) => (b.components || []).some(c => c.namePt === a.namePt);
+          const botaBase = B.find(b => B.some(o => pecaDe(b, o))), botaFinal = B.find(o => pecaDe(botaBase, o)), outraFinal = B.find(o => o !== botaFinal && pecaDe(botaBase, o));
+          const evBpeca = C.find(i => i.tier === 'Bota' && pecaDe(i, evB));
+          const sl = (...its) => its.map(i => i.slug);
+          const caso = (caixas, bigorna, pequenos, itens, escolhas) => ({ got: escolherItens({ caixas }), want: { bigorna, pequenos, itens, escolhas } });
+          return {
+            ekko: caso([cx('comum', S[0], Co[0], Tr[0]), cx('comum', B[1]), cx('prioridade', L[0], L[1], L[2]), cx('opcional', L[3]),
+                        cx('escolha', L[4], L[5]), cx('escolha', L[6]), cx('escolha', L[7])], sl(L[0], L[1], L[2]), sl(B[1], S[0], Co[0]), 0, 3),
+            opcional_e_escolha: caso([cx('opcional', L[0], L[1]), cx('escolha', L[2], L[3]), cx('comum', L[4])], sl(L[2], L[4]), [], 0, 0),
+            evolucao: caso([cx('comum', evB, evL)], sl(evL), sl(evB), 0, 0),
+            sem_lendario: caso([cx('comum', S[0], E[0], B[0])], sl(E[0]), sl(B[0], S[0]), 0, 0),
+            so_iniciais: caso([cx('comum', S[0], B[0])], sl(S[0], B[0]), [], 0, 0),
+            fora_do_catalogo: caso([cx('comum', 'nao-existe-no-catalogo', L[0])], sl(L[0]), [], 0, 0),
+            itens_a_mais: caso([cx('comum', L[0], L[1], L[2], L[3], L[4], L[5])], sl(L[0], L[1], L[2]), [], 3, 0),
+            repetido: caso([cx('comum', L[0]), cx('comum', L[0], L[1])], sl(L[0], L[1]), [], 0, 0),
+            vazia: caso([], [], [], 0, 0),
+            // F13-T95, cético: o itemId é de quem publica — nome de propriedade herdada não é item
+            prototipo: caso([cx('comum', 'constructor', '__proto__', 'toString', 'valueOf', 'hasOwnProperty')], [], [], 0, 0),
+            prototipo_e_inicial: caso([cx('comum', S[0], 'constructor'), cx('escolha', '__proto__', L[0])], sl(S[0]), [], 0, 1),
+            // a bota da build, não a peça: "Botas" seguida da bota que ela vira mostra a de verdade
+            botas: caso([cx('comum', L[0], botaBase), cx('escolha', botaFinal, outraFinal)], sl(L[0]), sl(botaFinal), 0, 0),
+            bota_e_evolucao: caso([cx('comum', L[0], evBpeca, evB)], sl(L[0]), sl(evB), 0, 0),
+            // sem Lendário, a sentinela não vai para a bigorna
+            sem_lendario_com_sentinela: caso([cx('comum', Tr[0], E[0])], sl(E[0]), [], 0, 0),
+            conta: { got: [contaDoResto(3, 0), contaDoResto(1, 1), contaDoResto(0, 2), contaDoResto(0, 0)], want: ['+ 3 itens', '+ 1 item e 1 escolha', '+ 2 escolhas', ''] },
+          };
+        })()""")
+        errados = {k: v for k, v in casos.items() if v["got"] != v["want"] and not (isinstance(v["got"], dict) and all(v["got"].get(c) == v["want"][c] for c in v["want"]))}
+        p.conta("card do Discord", "as peças: na bigorna os 3 primeiros Lendários do Total (sem Opcional; da Escolha só a 1ª), embaixo a bota da build (não a peça \"Botas\") e 2 iniciais, a conta \"+ N itens e M escolhas\"; a evolução de bota é bota; sem Lendário, o resto (sem a sentinela); item fora do catálogo, repetido e com nome de propriedade (\"constructor\", \"__proto__\") não contam",
+                not errados, "errados: %s" % json.dumps(errados, ensure_ascii=False)[:300] if errados else "%d casos" % len(casos))
+
+        # (b) o desenho: cada build desenhada de verdade, com a foto que o robô tiraria
+        def desenha(build):
+            return r.js("desenhar(%s)" % json.dumps(build, ensure_ascii=False))
+
+        caixas = r.js("""(() => { const L = CATALOG.items.filter(i => i.tier === 'Lendário'), B = CATALOG.items.filter(i => i.tier === 'Bota');
+          return [{ kind: 'comum', items: [{ itemId: B[1].slug }] }, { kind: 'prioridade', items: L.slice(0, 3).map(i => ({ itemId: i.slug })) },
+                  { kind: 'escolha', items: L.slice(3, 5).map(i => ({ itemId: i.slug })) }]; })()""")
+        patch = r.js("CATALOG.meta.patch")
+        base = {"id": "abc124", "nome": "AA AP", "autor": "Brelgo", "campeao": {"id": "Ekko", "name": "Ekko"}, "modo": "Summoner's Rift",
+                "rota": "selva", "patch": patch, "caixas": caixas}
+        curto = desenha(base)
+        longo = desenha(dict(base, nome="Braum Top — Tanque de Teleporte (Tanque protetor · PEEL; rota fora do meta)"))
+        enorme = desenha(dict(base, nome="Forja " * 40))
+        medida = "(() => { const t = document.querySelector('.titulo'); return { txt: t.textContent, alt: t.getBoundingClientRect().height, fs: parseFloat(t.style.fontSize) }; })()"
+        enorme["dom"] = r.js(medida)
+        acentos = desenha(dict(base, nome="Ação Épica Ômega Ânimo Índio Úmido " * 5))
+        acentos["dom"] = r.js(medida)
+        emojis = []
+        for prefixo in ("", "A", "AB", "ABC"):
+            desenha(dict(base, nome=prefixo + "🔥" * 160))
+            emojis.append(r.js(r"""(() => { const t = document.querySelector('.titulo');
+              return { fim: t.textContent.slice(-3), cortado: t.classList.contains('cortado'),
+                       solto: /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(t.textContent) }; })()"""))
+        cabe3 = lambda d: d["alt"] <= 3 * d["fs"] * 1.04 + 2 and d["txt"].endswith("…")
+        p.conta("card do Discord", "o nome: curto fica com a letra cheia (64 px); comprido encolhe e cabe sem cortar; enorme é cortado com \"…\" no fim da 3ª linha, sem a 4ª escondida (os acentos dela vazavam) e sem partir um emoji ao meio — e nada passa do rodapé, com a arte do campeão, as fontes e nenhum ícone quebrado",
+                curto["fonte"] == 64 and curto["cabe"] and longo["fonte"] < 64 and not longo["cortado"] and longo["cabe"]
+                and enorme["cortado"] and enorme["cabe"] and curto["arte"] and longo["arte"] and curto["quebradas"] == 0 and curto["fontes"]
+                and cabe3(enorme["dom"]) and len(enorme["dom"]["txt"]) < len("Forja " * 40) and acentos["cortado"] and cabe3(acentos["dom"])
+                and all(e["cortado"] and not e["solto"] and e["fim"].endswith("…") for e in emojis)
+                and curto["quem"] == "Ekko · Selva · Summoner's Rift",
+                "curto %s · longo %s · enorme %s %r · acentos %s · arte %s · quem %r" % ({k: curto[k] for k in ("fonte", "cabe", "fontes")}, {k: longo[k] for k in ("fonte", "cabe", "cortado")},
+                                                                         {k: enorme[k] for k in ("fonte", "cabe", "cortado")}, enorme["dom"]["txt"][-24:], acentos["dom"], curto["arte"], curto["quem"])
+                + " · emojis %s" % [(e["fim"], e["solto"]) for e in emojis])
+
+        encosta = "(() => { const a = document.querySelector('.pe'), b = document.querySelector('.selo'); return !a || a.getBoundingClientRect().right <= b.getBoundingClientRect().left; })()"
+        a1 = desenha(base); a1["livre"] = r.js(encosta)
+        a2 = desenha(dict(base, autor="Brelgo - criada por Mylon")); a2["livre"] = r.js(encosta)
+        a3 = desenha(dict(base, autor="Brelgo - criada por Mylon, Kennzy, e mais uma turma inteira de amigos da selva")); a3["livre"] = r.js(encosta)
+        a4 = desenha(dict(base, autor="")); a4["texto"] = r.js("document.getElementById('card').innerText")
+        p.conta("card do Discord", "o rodapé: \"por <autor> · patch\"; autor comprido deixa a marca só \"FORJA\" e, se ainda não couber, corta com \"…\" — nunca encosta; sem autor, só o patch (sem \"por\")",
+                a1["selo"] == "FORJA · MONTADOR DE ITENS" and a1["pe"] == "por Brelgo · patch " + patch and a1["livre"] and not a1["rodapeCortado"]
+                and a2["selo"] == "FORJA" and a2["livre"] and a3["selo"] == "FORJA" and a3["livre"] and a3["rodapeCortado"]
+                and a4["pe"] == "patch " + patch and "por " not in a4["texto"].lower(),
+                "curto %s · comprido %s · enorme %s · sem autor %r" % ({k: a1[k] for k in ("selo", "pe", "livre")}, {k: a2[k] for k in ("selo", "livre")},
+                                                                        {k: a3[k] for k in ("selo", "livre", "rodapeCortado")}, a4["pe"]))
+
+        c1 = desenha(dict(base, campeao=None, rota="", modo=""))
+        c1["dom"] = r.js("({ classe: document.getElementById('card').className, esq: document.querySelector('.dir').getBoundingClientRect().left - document.getElementById('card').getBoundingClientRect().left, arte: !!document.querySelector('.arte') })")
+        c2 = desenha(dict(base, campeao={"id": "CampeaoQueNaoExiste", "name": "Ninguém"}))
+        r.js("(() => { window.__inj = 0; return 1; })()")
+        c3 = desenha(dict(base, nome='<img src=x onerror="window.__inj=1">Nome', autor="<b>QA</b>"))
+        time.sleep(0.4)
+        c3["dom"] = r.js("({ inj: window.__inj, titulo: document.querySelector('.titulo').textContent, pe: document.querySelector('.pe').textContent, imgs: document.querySelectorAll('.titulo img, .pe b').length })")
+        p.conta("card do Discord", "sem campeão (ou com um que o Data Dragon não tem): sem arte, o texto vai para a esquerda e nada quebra; nome e autor com HTML saem como texto",
+                not c1["arte"] and "sem-arte" in c1["dom"]["classe"] and c1["dom"]["esq"] == 64 and not c1["dom"]["arte"] and c1["quem"] == "" and c1["cabe"]
+                and not c2["arte"] and c2["quebradas"] == 0 and c2["quem"].startswith("Ninguém")
+                and c3["dom"]["inj"] == 0 and c3["dom"]["titulo"].startswith("<img") and c3["dom"]["imgs"] == 0 and "<b>QA</b>" in c3["dom"]["pe"],
+                "sem campeão %s · inexistente %s · HTML %s" % ({k: c1[k] for k in ("arte", "quem")} | c1["dom"], {k: c2[k] for k in ("arte", "quebradas")}, c3["dom"]))
+
+        # o prazo: um endereço que não responde vira falha em vez de pendurar o desenho (e a rodada inteira)
+        prazo = r.js("Promise.race([carregar('%s__pendura', 400).then(v => ({ v })), new Promise(ok => setTimeout(() => ok({ v: 'pendurou' }), 3000))])" % s.url)
+    finally:
+        r.fechar()
+    rf = Sessao(s.url)
+    fontes = {}
+    try:
+        rf.envia("Network.enable"); rf.envia("Network.setCacheDisabled", {"cacheDisabled": True})
+        for nome, bloqueio in (("css", "*fonts.googleapis.com*"), ("arquivo", "*fonts.gstatic.com*")):
+            rf.envia("Network.setBlockedURLs", {"urls": [bloqueio]})
+            rf.envia("Page.navigate", {"url": s.url + "data/robo/card.html?" + nome})
+            fim = time.time() + 10
+            while time.time() < fim and not rf.js("typeof window.desenhar === 'function'"):
+                time.sleep(0.2)
+            try:
+                d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
+                fontes[nome] = {"fontes": d["fontes"], "cabe": d["cabe"], "erro": None}
+            except RuntimeError as e:
+                fontes[nome] = {"fontes": None, "erro": str(e)[:80]}
+        # só o itálico da Alegreya (a linha "quem") falhando: o card sai incompleto, não com uma linha em
+        # Georgia. Os endereços dos arquivos vêm da própria folha, pedida com o navegador da aba
+        href = re.search(r'<link id="fontes" href="([^"]+)"', open(os.path.join(RAIZ, "data", "robo", "card.html"), encoding="utf-8").read()).group(1).replace("&amp;", "&")
+        folha = urllib.request.urlopen(urllib.request.Request(href, headers={"User-Agent": rf.js("navigator.userAgent")}), timeout=20).read().decode("utf-8")
+        italicos = re.findall(r"font-family: 'Alegreya';\s*font-style: italic;[^}]*?url\((https://[^)]+)\)", folha)
+        rf.envia("Network.setBlockedURLs", {"urls": italicos})
+        rf.envia("Page.navigate", {"url": s.url + "data/robo/card.html?italico"})
+        fim = time.time() + 10
+        while time.time() < fim and not rf.js("typeof window.desenhar === 'function'"):
+            time.sleep(0.2)
+        try:
+            d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
+            fontes["italico"] = {"fontes": d["fontes"], "cabe": d["cabe"], "erro": None, "arquivos": len(italicos)}
+        except RuntimeError as e:
+            fontes["italico"] = {"fontes": None, "erro": str(e)[:80], "arquivos": len(italicos)}
+        # a folha do Google Fonts que nunca responde: o molde abre do mesmo jeito (ela não segura os
+        # scripts) e o desenho sai no prazo, sem as fontes
+        rf.envia("Network.setBlockedURLs", {"urls": []})
+        rf.site_falso = lambda url: None
+        rf.envia("Fetch.enable", {"patterns": [{"urlPattern": "https://fonts.googleapis.com/*", "requestStage": "Request"}]})
+        t0 = time.time()
+        rf.envia("Page.navigate", {"url": s.url + "data/robo/card.html?pendurado"})
+        while time.time() - t0 < 8 and not rf.js("typeof window.desenhar === 'function'"):
+            time.sleep(0.2)
+        abriu = round(time.time() - t0, 1)
+        try:
+            d = rf.js("desenhar(%s)" % json.dumps(base, ensure_ascii=False))
+            fontes["pendurado"] = {"fontes": d["fontes"], "cabe": d["cabe"], "erro": None, "abriu": abriu, "desenhou": round(time.time() - t0, 1)}
+        except RuntimeError as e:
+            fontes["pendurado"] = {"fontes": None, "erro": str(e)[:80], "abriu": abriu}
+    finally:
+        rf.fechar()
+    p.conta("card do Discord", "a rede: sem a folha do Google Fonts, sem o arquivo da fonte, só sem o itálico da Alegreya ou com a folha que nunca responde, o molde abre e o desenho sai no prazo, marcado \"sem as fontes\" (o robô o dá por incompleto); um endereço que não responde vira falha no prazo, sem pendurar o desenho",
+            prazo == {"v": False} and all(f["erro"] is None and f["fontes"] is False for f in fontes.values()) and len(fontes) == 4 and fontes["italico"]["arquivos"] > 0
+            and fontes["pendurado"]["abriu"] < 5 and fontes["pendurado"].get("desenhou", 99) < 40,
+            "prazo %s · sem fontes %s" % (prazo, fontes))
+
+    # (c) a página gerada
+    ass = "f" * 24
+    malvado = {"id": "abc123", "nome": 'Nome "aspas" <script>alert(1)</script>', "autor": "QA", "descricao": "d" * 400}
+    pg = cards.pagina(malvado, {"quem": "Ekko · Selva"}, ass, "0123456789")
+    pg_sem = cards.pagina(dict(malvado, autor="", descricao=""), {"quem": "Ekko"}, ass)
+    desc = re.search(r'<meta property="og:description" content="([^"]*)">', pg)
+    ok_pg = ("<script>alert" not in pg and "&lt;script&gt;" in pg and "&quot;aspas&quot;" in pg
+             and '<meta property="og:image" content="%sb/abc123/card.jpg?v=0123456789">' % cards.SITE in pg
+             and '<meta property="og:url" content="%sb/abc123/">' % cards.SITE in pg
+             and '<meta property="og:image:width" content="1200">' in pg and '<meta name="twitter:card" content="summary_large_image">' in pg
+             and 'url=../../#build/abc123"' in pg and 'location.replace("../../#build/abc123")' in pg and '<meta name="forja:assinatura" content="%s">' % ass in pg
+             and desc is not None and len(desc.group(1)) <= 200 and desc.group(1).startswith("Ekko · Selva · por QA — ddd") and desc.group(1).endswith("…")
+             and '<meta property="og:description" content="Ekko">' in pg_sem)
+    p.conta("card do Discord", "a página b/<id>/: o nome escapado, a imagem e o endereço com o site inteiro (a imagem com ?v= da assinatura), 1200×630, summary_large_image, a descrição de até 200 letras (sem \"por\" quando não há autor) e o caminho para o #build/<id>",
+            ok_pg, "descrição %r · sem autor %r" % (desc.group(1)[:50] if desc else None, re.search(r'og:description" content="([^"]*)"', pg_sem).group(1)))
+
+    # (d) a assinatura: muda com o que o card mostra, não com o que ele não mostra; o \r\n do Windows não conta
+    b0 = {"id": "abc124", "nome": "X", "autor": "", "caixas": [], "engajamentos": 1, "atualizado_em": "a"}
+    s0 = cards.assinatura(b0, "base")
+    tmp = tempfile.mkdtemp(prefix="qa-card-")
+    try:
+        with open(os.path.join(tmp, "lf.txt"), "wb") as f:
+            f.write(b"a\nb\n")
+        with open(os.path.join(tmp, "crlf.txt"), "wb") as f:
+            f.write(b"a\r\nb\r\n")
+        mesmo_texto = cards.ler_texto(os.path.join(tmp, "lf.txt")) == cards.ler_texto(os.path.join(tmp, "crlf.txt"))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    p.conta("card do Discord", "a assinatura muda com o nome, o autor, as caixas e a base (molde, catálogo, robô); não muda com a popularidade nem a hora; o arquivo com \\r\\n (Windows) e com \\n (o robô) dá o mesmo texto",
+            s0 == cards.assinatura(dict(b0, engajamentos=9, atualizado_em="b"), "base") and s0 != cards.assinatura(dict(b0, nome="Y"), "base")
+            and s0 != cards.assinatura(dict(b0, autor="Z"), "base") and s0 != cards.assinatura(dict(b0, caixas=[{"kind": "comum"}]), "base")
+            and s0 != cards.assinatura(b0, "outra base") and mesmo_texto,
+            "assinatura %s · \\r\\n igual %s" % (s0, mesmo_texto))
+
+    # (e) a rodada do robô, numa pasta temporária, com o Chrome de verdade
+    tmp = tempfile.mkdtemp(prefix="qa-cards-")
+    try:
+        os.makedirs(os.path.join(tmp, "abc123"))          # a página de uma build que saiu
+        os.makedirs(os.path.join(tmp, "notas"))           # pasta que não é de build: o robô não mexe
+        with open(os.path.join(tmp, "LEIAME.txt"), "w") as f:
+            f.write("x")
+        bq = {"id": "abc124", "nome": "Card QA", "autor": "roteiro", "campeao": {"id": "Ekko", "name": "Ekko"}, "modo": "Summoner's Rift",
+              "rota": "selva", "patch": patch, "caixas": caixas, "descricao": ""}
+        e0 = cards.rodar([], tmp)
+        sobrou0 = os.path.isdir(os.path.join(tmp, "abc123"))
+        e1 = cards.rodar([bq], tmp)
+        jpg = open(os.path.join(tmp, "abc124", "card.jpg"), "rb").read()
+        tam = _jpeg_tamanho(jpg)
+        gravada = cards.assinatura_gravada(os.path.join(tmp, "abc124"))
+        import hashlib
+        versao_de = lambda pasta: (re.search(r'card\.jpg\?v=([0-9a-f]{10})"', open(os.path.join(tmp, pasta, "index.html"), encoding="utf-8").read()) or [None, None])[1]
+        v1 = versao_de("abc124")
+        e2 = cards.rodar([bq], tmp)
+        e3 = cards.rodar([dict(bq, nome="Card QA novo")], tmp)
+        os.makedirs(os.path.join(tmp, "abc125"))
+        e4 = cards.rodar([dict(bq, nome="Card QA novo")], tmp, so={"abc124"})
+        sobrou4 = os.path.isdir(os.path.join(tmp, "abc125"))
+        bx = dict(bq, id="abc126", campeao={"id": "CampeaoQueNaoExiste", "name": "Ninguém"})
+        e5 = cards.rodar([dict(bq, nome="Card QA novo"), bx], tmp)
+        g5 = cards.assinatura_gravada(os.path.join(tmp, "abc126")) or ""
+        e6 = cards.rodar([dict(bq, nome="Card QA novo"), bx], tmp)
+        jpg6 = open(os.path.join(tmp, "abc126", "card.jpg"), "rb").read()
+        v6 = versao_de("abc126")
+        e7 = cards.rodar([dict(bq, nome="Card QA novo"), dict(bx, nome="Card QA renomeada")], tmp)
+        pg7 = open(os.path.join(tmp, "abc126", "index.html"), encoding="utf-8").read()
+        jpg7 = open(os.path.join(tmp, "abc126", "card.jpg"), "rb").read()
+        v7 = versao_de("abc126")
+        resto = sorted(os.listdir(tmp))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    p.conta("card do Discord", "a rodada do robô: o servidor vazio não apaga nada; a build nova ganha a página e um JPEG 1200×630 com a assinatura (e o ?v= da imagem tirado dos bytes dela); de novo, igual (sem foto); mudou o nome, refaz; a página da build que saiu é apagada, a pasta que não é de build fica; com --so, nada é apagado",
+            not e0["apagadas"] and sobrou0 and e1["novas"] == ["abc124"] and e1["apagadas"] == ["abc123"] and tam == (1200, 630)
+            and v1 == hashlib.sha256(jpg).hexdigest()[:10]
+            and gravada == cards.assinatura(bq, cards.base_da_assinatura()) and e2["iguais"] == 1 and not e2["novas"] and not e2["refeitas"]
+            and e3["refeitas"] == ["abc124"] and sobrou4 and not e4["apagadas"] and "notas" in resto and "LEIAME.txt" in resto,
+            "vazio %s · 1ª %s · %s · igual %s · mudou %s · --so %s · pasta %s" % (
+                e0["apagadas"], {k: e1[k] for k in ("novas", "apagadas")}, tam, e2["iguais"], e3["refeitas"], e4["apagadas"], resto))
+    p.conta("card do Discord", "a build cujo campeão o Data Dragon não deu fica \"incompleta\": ganha a página (o card sem arte), mas com a assinatura marcada — a próxima rodada tenta de novo (e, sem arte outra vez, fica o card que já estava)",
+            e5["incompletas"] == ["abc126"] and "abc126" in e5["novas"] and g5.startswith("incompleta-") and e6["incompletas"] == ["abc126"] and not e6["refeitas"] and e6["iguais"] == 1
+            and e7["incompletas"] == ["abc126"] and '<meta property="og:title" content="Card QA renomeada">' in pg7 and jpg7 == jpg6 and v7 == v6 and v6 is not None,
+            "1ª %s · assinatura %s… · 2ª %s · renomeada: título %s, card igual %s" % ({k: e5[k] for k in ("novas", "incompletas")}, g5[:16], {k: e6[k] for k in ("incompletas", "iguais")},
+                                                                                  "Card QA renomeada" in pg7, jpg7 == jpg6))
+
+    # (f) cada build por si: a que quebra fica de fora, o Chrome é reaberto e as outras seguem; a foto
+    # sem as fontes é incompleta. Um fotógrafo de mentira faz o papel do Chrome (o quebrado continua quebrado)
+    class FotoFalsa:
+        criadas = 0
+        pagina_sem_fonte = None
+
+        def __init__(self):
+            FotoFalsa.criadas += 1
+            self.quebrada = False
+
+        def card(self, b):
+            if self.quebrada:
+                raise RuntimeError("a conversa com o Chrome parou no meio")
+            if b["id"] == "abc201":
+                self.quebrada = True
+                raise RuntimeError("o desenho quebrou")
+            if b["id"] == "abc204":     # a fonte falhou nesta página: nela, falha sempre; num Chrome novo, vem
+                if FotoFalsa.pagina_sem_fonte is None:
+                    FotoFalsa.pagina_sem_fonte = self
+                return {"arte": True, "fontes": self is not FotoFalsa.pagina_sem_fonte, "quebradas": 0, "quem": "QA"}, b"\xff\xd8 card 204"
+            return {"arte": True, "fontes": b["id"] != "abc203", "quebradas": 0, "quem": "QA"}, b"\xff\xd8 card de mentira"
+
+        def fechar(self):
+            pass
+
+    tmp = tempfile.mkdtemp(prefix="qa-cards-")
+    foto_de_verdade = cards.Fotografo
+    cards.Fotografo = FotoFalsa
+    try:
+        try:
+            f1 = cards.rodar([dict(bq, id="abc200"), dict(bq, id="abc201"), dict(bq, id="abc202"), dict(bq, id="abc203"), dict(bq, id="abc204")], tmp)
+            f1_erro = None
+        except Exception as e:
+            f1, f1_erro = {}, "%s: %s" % (type(e).__name__, str(e)[:80])
+        g203 = cards.assinatura_gravada(os.path.join(tmp, "abc203")) or ""
+        feitas = sorted(d for d in os.listdir(tmp) if os.path.exists(os.path.join(tmp, d, "index.html")))
+    finally:
+        cards.Fotografo = foto_de_verdade
+        shutil.rmtree(tmp, ignore_errors=True)
+    p.conta("card do Discord", "a rodada não cai por uma build: a que quebra fica de fora (anotada em falhas), o Chrome é reaberto e as outras seguem; a foto sem as fontes tenta de novo num Chrome novo (a falha fica na página) e, faltando ainda, fica incompleta",
+            f1_erro is None and len(f1.get("falhas", [])) == 1 and f1["falhas"][0].startswith("abc201") and feitas == ["abc200", "abc202", "abc203", "abc204"]
+            and FotoFalsa.criadas == 4 and f1["incompletas"] == ["abc203"] and g203.startswith("incompleta-"),
+            "erro %s · falhas %s · feitas %s · Chromes %d · incompletas %s" % (f1_erro, f1.get("falhas"), feitas, FotoFalsa.criadas, f1.get("incompletas")))
+
+    # (f2) a rede pendurada deixa cada foto lenta: passou do orçamento, o que falta fica para a próxima
+    # rodada (sem apagar a página que já existia) e o que ficou pronto é gravado
+    class FotoLenta:
+        def __init__(self):
+            pass
+
+        def card(self, b):
+            time.sleep(0.4)
+            return {"arte": True, "fontes": True, "quebradas": 0, "quem": "QA"}, b"\xff\xd8 card lento"
+
+        def fechar(self):
+            pass
+
+    tmp = tempfile.mkdtemp(prefix="qa-cards-")
+    os.makedirs(os.path.join(tmp, "abc214"))
+    with open(os.path.join(tmp, "abc214", "index.html"), "w", encoding="utf-8") as f:
+        f.write("a página da rodada anterior")
+    cards.Fotografo = FotoLenta
+    try:
+        o1 = cards.rodar([dict(bq, id="abc21%d" % k) for k in range(5)], tmp, orcamento=1.0)
+        velha = open(os.path.join(tmp, "abc214", "index.html"), encoding="utf-8").read()
+    finally:
+        cards.Fotografo = foto_de_verdade
+        shutil.rmtree(tmp, ignore_errors=True)
+    p.conta("card do Discord", "a rodada tem orçamento de tempo: passou, as builds que faltam ficam para a próxima (anotadas, sem apagar a página que já tinham) e as feitas vão para o commit",
+            bool(o1["adiadas"]) and o1["novas"] + o1["adiadas"] == ["abc21%d" % k for k in range(5)] and o1["adiadas"][-1] == "abc214"
+            and velha == "a página da rodada anterior" and not o1["apagadas"],
+            "feitas %s · adiadas %s · a página antiga %s" % (o1["novas"], o1["adiadas"], "ficou" if velha.startswith("a página") else "sumiu"))
+
+    # (g) a lista vem inteira, de página em página (o servidor corta em 1000, ou menos); resposta torta para tudo
+    import io
+    todas = [{"id": "%06x" % k} for k in range(2500)]
+    respostas = {"modo": "lista"}
+
+    def urlopen_falso(pedido, timeout=None):
+        u = pedido.full_url
+        if respostas["modo"] == "erro":
+            return io.BytesIO(json.dumps({"message": "erro do servidor"}).encode())
+        off = int(re.search(r"offset=(\d+)", u).group(1)) if "offset=" in u else 0
+        lim = int(re.search(r"limit=(\d+)", u).group(1)) if "limit=" in u else 10 ** 9
+        return io.BytesIO(json.dumps(todas[off:off + min(lim, 700)]).encode())
+
+    urlopen_de_verdade = cards.urllib.request.urlopen
+    cards.urllib.request.urlopen = urlopen_falso
+    try:
+        lidas = cards.buscar_publicas()
+        respostas["modo"] = "erro"
+        try:
+            cards.buscar_publicas()
+            torta = "passou"
+        except RuntimeError as e:
+            torta = str(e)[:60]
+    finally:
+        cards.urllib.request.urlopen = urlopen_de_verdade
+    p.conta("card do Discord", "a lista das públicas vem inteira, de página em página, mesmo com o servidor cortando em menos de 1000 (antes, acima de 1000 o robô apagava a página das que ficavam fora); a resposta que não é lista interrompe a rodada",
+            len(lidas) == 2500 and len({b["id"] for b in lidas}) == 2500 and torta.startswith("o servidor não devolveu"),
+            "lidas %d · resposta torta: %s" % (len(lidas), torta))
+
+    # (h) o molde que não abre: o robô desiste com o motivo e não deixa o Chrome aberto
+    tmp = tempfile.mkdtemp(prefix="qa-cards-")
+    procs = []
+    popen_de_verdade, molde_de_verdade, espera_de_verdade = cards.subprocess.Popen, cards.MOLDE, cards.ESPERA_MOLDE
+
+    def popen_anotado(*a, **k):
+        pr = popen_de_verdade(*a, **k)
+        procs.append(pr)
+        return pr
+
+    vazio = os.path.join(tmp, "molde_vazio.html")
+    with open(vazio, "w", encoding="utf-8") as f:
+        f.write("<!doctype html><title>sem desenho</title>")
+    cards.subprocess.Popen, cards.MOLDE, cards.ESPERA_MOLDE = popen_anotado, vazio, 1
+    try:
+        try:
+            cards.Fotografo().fechar()
+            motivo = "abriu"
+        except RuntimeError as e:
+            motivo = str(e)
+        time.sleep(0.5)
+        vivos = [pr for pr in procs if pr.poll() is None]
+    finally:
+        cards.subprocess.Popen, cards.MOLDE, cards.ESPERA_MOLDE = popen_de_verdade, molde_de_verdade, espera_de_verdade
+        for pr in procs:
+            if pr.poll() is None:
+                pr.kill()
+        shutil.rmtree(tmp, ignore_errors=True)
+    p.conta("card do Discord", "o molde que não abre: o robô desiste dizendo o motivo e fecha o Chrome que abriu (nada fica rodando com a porta de depuração aberta)",
+            "não carregou" in motivo and len(procs) == 1 and not vivos,
+            "motivo %r · Chromes abertos %d · ainda vivos %d" % (motivo[:50], len(procs), len(vivos)))
 
 
 def _link_curto_lento(s, p, ID, NOME):
@@ -6272,7 +6847,7 @@ def _link_curto_lento(s, p, ID, NOME):
         r.clicar("#link-btn", 0.6)
         j2 = r.js("({ n: window.__copiado.length, msg: document.getElementById('io-msg').textContent })")
         p.conta("link curto", "Copiar link da forja numa build publicada sem caixas copia o link curto (a recusa \"ainda não tem categorias\" fica só para o #b= da não publicada)",
-                j1["ult"] == j1["base"] + "#build/" + ID and "Link curto copiado" in j1["msg"] and j2["n"] == 0 and "ainda não tem categorias" in j2["msg"],
+                j1["ult"] == ((SITE + "b/%s/" % ID) if j1["base"].startswith(SITE) else j1["base"] + "#build/" + ID) and "Link curto copiado" in j1["msg"] and j2["n"] == 0 and "ainda não tem categorias" in j2["msg"],
                 "publicada %r / %r · não publicada %r" % (j1["ult"], j1["msg"][:50], j2))
 
         # (k) F13-T92, o 1º caso raro do cético: rascunho sujo + link + o VOLTAR do navegador com o
@@ -6413,6 +6988,7 @@ GRUPOS = [
     ("endereço por tela", checar_enderecos),
     ("autor", checar_autor),
     ("link curto", checar_link_curto),
+    ("card do Discord", checar_card),
     ("dislexia", checar_dislexia),
     ("tags somam", checar_tags_somam),
     ("visualização", checar_visualizacao),

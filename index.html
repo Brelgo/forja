@@ -6341,7 +6341,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.94";
+const ATUALIZACAO = "13.95";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -8326,12 +8326,23 @@ function receberBuildDoLink(hash) {
 // F13-T91 (Leo, 30/10/2026): a build publicada leva o link curto, "#build/<id de 6>" — quem abre vê a
 // versão do site, só visualização (o servidor guarda a build). A não publicada continua com a build
 // inteira dentro do #b=: não há onde guardar. A pública aberta para ver também sai pelo curto.
-function linkCurtoDaPublica(id) { return location.href.split("#")[0] + "#build/" + id; }
+// F13-T95 (Leo, 31/10/2026): no site, o curto é o da página da build, "b/<id>/" — a que o Discord lê
+// para montar o card (o robô dos cards, data/robo/cards.py); ela leva ao #build/<id>. Só o GitHub Pages
+// tem essas páginas (e o 404.html que leva a build recém-publicada): aberto do disco ou num servidor
+// local, segue o #build/<id>.
+const linkComCard = () => /\.github\.io$/.test(location.hostname);
+function linkCurtoDaPublica(id) {
+  return linkComCard() ? new URL("b/" + id + "/", location.href).href : location.href.split("#")[0] + "#build/" + id;
+}
 function pubIdDoLink(b) { return b ? (b.pubId || (b.temp && b.pubOrigem) || null) : null; }
 function linkDaBuild(b) { const pub = pubIdDoLink(b); return pub ? linkCurtoDaPublica(pub) : buildParaLink(b); }
 function tituloDoLink(pub) {
-  return pub ? `Copia o link curto da versão publicada (#build/${pub}) — quem abre vê a build do site, só visualização`
+  return pub ? `Copia o link curto da versão publicada (${linkComCard() ? `b/${pub}/` : `#build/${pub}`}) — quem abre vê a build do site, só visualização${linkComCard() ? "; no Discord, ele mostra o card da build" : ""}`
              : "Copia um link com a build inteira dentro (#b=) — quem abre recebe a build na biblioteca";
+}
+function avisoDoCurto() {
+  return "Link curto copiado — quem abrir vê a versão publicada desta build (só visualização)."
+    + (linkComCard() ? " No Discord, ele mostra o card da build — que fica pronto quando o robô dos cards passa (pode levar algumas horas depois de publicar)." : "");
 }
 async function copiarLink(link, aoFalhar) {
   try { await navigator.clipboard.writeText(link); return true; }
@@ -8344,7 +8355,7 @@ function copiarNoResumo(link, curto) {
   copiarLink(link, (l) => { if (box) { box.value = l; box.hidden = false; box.focus(); box.select(); } }).then(ok => {
     if (!msg) return;
     msg.hidden = false;
-    msg.innerHTML = ok ? (curto ? "Link curto copiado — quem abrir vê a versão publicada desta build (só visualização)." : "Link copiado — quem abrir recebe esta build na biblioteca.")
+    msg.innerHTML = ok ? (curto ? avisoDoCurto() : "Link copiado — quem abrir recebe esta build na biblioteca.")
       : "Não deu pra copiar automático: o link está selecionado abaixo, use <b>Ctrl+C</b>.";
   });
 }
@@ -12180,7 +12191,7 @@ function initLibrary() {
     // F13-T91: só o link longo (#b=) leva as caixas; a publicada sai pelo curto, com caixa ou sem
     if (!build.cats.length && !pubIdDoLink(b)) { showIoMsg("Esta build ainda não tem categorias pra levar no link.", true); return; }
     copiarLinkDaBuild(b, (link) => { ta.value = link; ta.focus(); ta.select(); })
-      .then(ok => showIoMsg(ok ? (pubIdDoLink(b) ? "Link curto copiado — quem abrir vê a versão publicada desta build (só visualização)." : "Link copiado — quem abrir recebe esta build na biblioteca.") : "Não deu pra copiar automático — o link está selecionado na caixa, use Ctrl+C.", !ok));
+      .then(ok => showIoMsg(ok ? (pubIdDoLink(b) ? avisoDoCurto() : "Link copiado — quem abrir recebe esta build na biblioteca.") : "Não deu pra copiar automático — o link está selecionado na caixa, use Ctrl+C.", !ok));
   });
 
   document.getElementById("import-btn").addEventListener("click", () => {
