@@ -629,6 +629,8 @@ textos. Vistos falhando, numa cópia da pasta, 11 mutantes: o Salvar que não vi
 Editar que não chama as dicas, o F5 contando como visita, a memória da T101 ignorada, a leva que
 não fica vista, o "quando" ignorado, o clique fora que não fecha, a dica com a entrada de pé, o
 "Sem dicas" que não desliga, o balão que não vira de lado e o balão que não segue o alvo.
+A F13-T104 (02/11/2026) somou a 25ª dica, a da estante de itens da forja (com o Editar): o
+grupo passou a esperar 4 dicas no Editar e 25 nas três resoluções (75 medidas).
 
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar

@@ -7627,7 +7627,7 @@ def checar_dicas(s, p):
     para um leigo"): a dica na hora. "Próxima"/"Entendi" passam, o ×, o Esc e o clique fora fecham (e o
     clique fora segue para onde foi dado); a leva vista não repete; "Sem dicas" desliga as automáticas; o
     "?" mostra as da tela de novo. F13-T103 ("muito pobre de conteúdo"; "deve ensinar os principais
-    funcionamentos do montador"): 24 dicas — as de chegada (até 4 por tela) e as da hora (o primeiro item,
+    funcionamentos do montador"): 24 dicas (25 com a da estante, F13-T104) — as de chegada (até 4 por tela) e as da hora (o primeiro item,
     o Editar ligado, o primeiro Salvar, o Montar, a segunda visita); quem viu as da T101 não as revê.
     O resto do roteiro roda com as dicas desligadas (a barreira da Sessao); aqui elas ligam."""
     print("\n%sDICAS%s" % (AMARELO, FIM))
@@ -7738,12 +7738,12 @@ def checar_dicas(s, p):
         p.conta("dicas", "os momentos: a 2ª visita, o Editar ligado, o primeiro item (na loja e na forja), o primeiro Salvar (na forja e na lista) e o Montar trazem cada um as suas dicas, na hora",
                 m_loja == ["loja.shift", "loja.nucleo", "loja.filtros", "loja.levar", "volta"]
                 and m_forja == ["forja.caixas", "forja.campeao", "forja.ver", "forja.editar"]
-                and m_editar == ["forja.arrastar", "forja.papel", "forja.runashabs"] and m_item == ["loja.faixa"] and m_totais == ["forja.totais"]
+                and m_editar == ["forja.arrastar", "forja.estante", "forja.papel", "forja.runashabs"] and m_item == ["loja.faixa"] and m_totais == ["forja.totais"]
                 and m_salvar == ["forja.salvar"] and m_lista == ["builds.publicar"] and all(x in vistas_lista for x in ("builds.oque", "builds.importar", "builds.publicas"))
                 and m_runas == ["runas.ler", "runas.trilhas"] and m_montar == ["runas.montar"],
                 "%s" % momentos)
 
-        # 6. nas três resoluções, cada uma das 24 dicas (com os momentos valendo) fica inteira na janela e não
+        # 6. nas três resoluções, cada uma das 25 dicas (com os momentos valendo) fica inteira na janela e não
         #    cobre o que aponta; e a "Caixa vazia" da forja (.slot-vazio.dica, de antes) segue intacta
         s.js("Dicas.fechar(); switchTab('build'); showBuildScreen('forja'); window.scrollTo(0, 0); 'ok'")
         time.sleep(0.9)
@@ -7789,7 +7789,7 @@ def checar_dicas(s, p):
         todas = s.js("Dicas.DICAS.map(d => d.id)")
         faltam = [x for x in todas if x not in vistos]
         p.conta("dicas", "nas três resoluções, cada uma das %d dicas fica inteira na janela e não cobre o que aponta; a \"Caixa vazia\" da forja segue intacta com o balão aberto" % len(todas),
-                len(todas) == 24 and not faltam and not ruins and n_medidas == 72
+                len(todas) == 25 and not faltam and not ruins and n_medidas == 75
                 and bool(vazia) and vazia["pos"] == "static" and "url(" not in vazia["bg"] and vazia["w"] <= 90,
                 "%d medidas · faltaram: %s · ruins: %s · caixa vazia %s" % (n_medidas, faltam or "nenhuma", ", ".join(ruins[:6]) or "nenhuma", vazia))
         s.tela(1440, 900)

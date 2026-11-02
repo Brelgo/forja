@@ -9188,7 +9188,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.103";
+const ATUALIZACAO = "13.104";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -18916,7 +18916,7 @@ const EntradaLoja = (function () {
 // uma build. "Próxima"/"Entendi" passam; o ×, o Esc ou qualquer clique fora fecham (o clique segue para onde
 // foi dado). "Sem dicas" desliga todas; o "?" do cabeçalho mostra as da tela de novo.
 // F13-T103 (Leo, 02/11/2026: "acho que tá muito pobre de conteúdo esse tour"; "e a parte de importar? deve
-// ensinar os principais funcionamentos do montador"): 24 dicas, cada uma com o seu id. As "ao chegar" (sem
+// ensinar os principais funcionamentos do montador"): 24 dicas (25 com a da estante, F13-T104), cada uma com o seu id. As "ao chegar" (sem
 // `quando`) aparecem na primeira visita à tela, até 4 por tela; as "na hora" (com `quando`) aparecem quando a
 // pessoa chega àquele momento — o primeiro item na build, o Editar ligado, o primeiro Salvar, a segunda visita.
 // Cada uma vista não volta. Nenhum dado de item aqui: os textos falam do site, não do catálogo.
@@ -18957,6 +18957,9 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
       texto: "Aqui a build soma os atributos de todos os itens, e a conta muda a cada item que entra ou sai. O preço total fica no topo." },
     { id: "forja.arrastar", tela: "forja", alvo: "#build-canvas .build-cat", quando: () => build.editing, titulo: "Arrastar e anotar",
       texto: "Arraste os itens entre as caixas. Dois cliques num item abrem uma anotação sua, que aparece quando alguém passa o mouse." },
+    // F13-T104 (Leo, 02/11/2026: "sim, pode adicionar a dica da estante")
+    { id: "forja.estante", tela: "forja", alvo: "#picker-search", quando: () => build.editing, titulo: "A estante de itens",
+      texto: "Com o Editar ligado, a loja vem até a forja: busque um item aqui e arraste para uma caixa, ou escolha a caixa e clique no item." },
     { id: "forja.papel", tela: "forja", alvo: "#build-canvas .cat-kind", quando: () => build.editing, titulo: "O papel de cada caixa",
       texto: "O selo no canto da caixa muda o que ela faz: <b>Prioridade</b> é o núcleo da build, <b>Opcional</b> fica fora do total, para quando precisar, e <b>Escolha 1</b> guarda trocas para a mesma vaga." },
     { id: "forja.runashabs", tela: "forja", alvo: "#build-habs", quando: () => build.editing, titulo: "Runas e habilidades",
