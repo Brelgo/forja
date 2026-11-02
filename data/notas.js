@@ -6,7 +6,9 @@ window.NOTAS = {
    "add": [
     "Dicas na primeira visita a cada tela, para quem está chegando agora; o \"?\" no topo mostra de novo"
    ],
-   "aj": [],
+   "aj": [
+    "A abertura da loja agora acaba junto com o som da porta"
+   ],
    "rem": []
   },
   {
