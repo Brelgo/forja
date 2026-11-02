@@ -613,6 +613,23 @@ outros sons não baixam "até a abertura fechar" (em vez de "nos 1,5 s depois do
 quadros longos somam no máximo 30% da abertura, na média — a comparação com o comportamento
 antigo (cair 20%) virou ruído com as somas pequenas (137% numa rodada, 84% na seguinte).
 
+O tour que ensina o Montador (F13-T103, 02/11/2026; Leo: "acho que tá muito pobre de conteúdo
+esse tour" e "e a parte de importar? deve ensinar os principais funcionamentos do montador"):
+24 dicas com id — as de chegada (até 4 por tela) e as da hora (o primeiro item, o Editar ligado,
+o primeiro Salvar, o Montar das runas, a segunda visita). O grupo "dicas" foi reescrito: a loja
+abre com as suas 4; "Próxima", o clique fora (que segue para a busca e para a aba Runas), o Esc
+(a leva inteira fica vista; recarregar na mesma aba não traz nada, nem a dica da segunda visita);
+"Sem dicas" e o "?" (as 3 da lista); os momentos, cada um na hora, numa segunda visita limpa
+(loja 4 + a da volta; forja 4; Editar 3; o item na loja; os totais; o Salvar; o Publicar na lista;
+runas 2; o Montar); nas três resoluções, as 24 dicas inteiras na janela, sem cobrir o alvo e com o
+anel em volta dele (72 medidas), e a "Caixa vazia" intacta; a dica mostrada enquanto a tela entra
+animada segue o alvo (a lista de builds sobe: o anel ficava abaixo do Importar — visto na captura,
+consertado); quem viu as dicas da T101 só ganha as novas; menos movimento e nenhum número nos
+textos. Vistos falhando, numa cópia da pasta, 11 mutantes: o Salvar que não vira momento, o
+Editar que não chama as dicas, o F5 contando como visita, a memória da T101 ignorada, a leva que
+não fica vista, o "quando" ignorado, o clique fora que não fecha, a dica com a entrada de pé, o
+"Sem dicas" que não desliga, o balão que não vira de lado e o balão que não segue o alvo.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

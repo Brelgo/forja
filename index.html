@@ -9188,7 +9188,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.102";
+const ATUALIZACAO = "13.103";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -10198,6 +10198,7 @@ function salvarAgora() {
   if (!salvarDeVerdade()) return;
   Som.play("build:save");
   refletirSalvar("salvo");
+  if (window.Dicas) Dicas.momento("salvou");   // F13-T103: levar para fora (e, na lista, publicar)
   renderRevisaoWarning();
   renderLibrary();
   clearTimeout(salvarAgora._t); salvarAgora._t = setTimeout(() => refletirSalvar(), 2500);
@@ -10788,6 +10789,7 @@ function addItemToCategory(itemId, catId, index) {
   // F13-T72: entra, e o recado diz com o que não acumula
   const naoSoma = avisoDepoisDePor(cat, novo);
   if (naoSoma) mostrarAvisoDaBuild(htmlDoAviso(byId[itemId], naoSoma));
+  if (window.Dicas) Dicas.ver();   // F13-T103: o primeiro item na forja mostra os totais
   return true;
 }
 
@@ -12995,6 +12997,7 @@ function renderRunas() {
     btMontar.title = build.id ? "" : "Sem build na bigorna: abra uma build para montar a página de runas dela";
   }
   const montando = runasEstado.modo === "montar";
+  if (montando && window.Dicas) Dicas.ver();   // F13-T103: a primeira vez no Montar
   const tela = document.getElementById("view-runas");
   // Leo, 23/10/2026 (e o nº 29: a pública aberta para ver mudava de runas por
   // aqui): sem o Editar, o Montar mostra a página da build e não muda nada
@@ -15229,6 +15232,7 @@ function initBuildBuilder() {
     build.editing = !!on;
     editToggle.checked = build.editing;
     document.body.classList.toggle("editando", build.editing);
+    if (build.editing && window.Dicas) Dicas.ver();   // F13-T103: o Editar ligado ensina a arrastar, as caixas e as runas
     if (!build.editing) build.selectedCatId = null;
     renderBuildAll();
   };
@@ -16854,6 +16858,7 @@ function toggleItemInBuild(slug) {
   if (r.feito !== "pos" && r.feito !== "tirou") return;
   saveBuild();
   renderBuild();          // já chama refreshInBuildMarks()
+  if (window.Dicas) Dicas.ver();   // F13-T103: o primeiro item mostra a faixa da build
 }
 // Põe ou tira o item na build e diz o que aconteceu, sem som nem recado. F13-T94: a dona aplica por
 // aqui o clique da aba de controle remoto, e quem toca o som e mostra o recado é a aba do clique.
@@ -18907,50 +18912,108 @@ const EntradaLoja = (function () {
 })();
 
 // F13-T101 (Leo, 02/11/2026): a dica na hora — a opção 2 do tour ("o tour não deve ser algo massante",
-// "pensando para um leigo"). Nada de passeio: na primeira vez em cada tela, 1 ou 2 balões apontam o que
-// importa ali, em palavras de quem nunca montou uma build. "Entendi" passa para a próxima; o ×, o Esc ou
-// qualquer clique fora fecham as da tela (o clique segue para onde foi dado). A tela fica vista e não
-// volta; "Sem dicas" desliga todas; o "?" do cabeçalho mostra as da tela de novo.
-// Nenhum dado de item aqui: os textos falam da tela, não do catálogo.
+// "pensando para um leigo"). Nada de passeio: balões apontam o que importa, em palavras de quem nunca montou
+// uma build. "Próxima"/"Entendi" passam; o ×, o Esc ou qualquer clique fora fecham (o clique segue para onde
+// foi dado). "Sem dicas" desliga todas; o "?" do cabeçalho mostra as da tela de novo.
+// F13-T103 (Leo, 02/11/2026: "acho que tá muito pobre de conteúdo esse tour"; "e a parte de importar? deve
+// ensinar os principais funcionamentos do montador"): 24 dicas, cada uma com o seu id. As "ao chegar" (sem
+// `quando`) aparecem na primeira visita à tela, até 4 por tela; as "na hora" (com `quando`) aparecem quando a
+// pessoa chega àquele momento — o primeiro item na build, o Editar ligado, o primeiro Salvar, a segunda visita.
+// Cada uma vista não volta. Nenhum dado de item aqui: os textos falam do site, não do catálogo.
 var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dicas
-  const TELAS = {
-    loja: [
-      { alvo: "#grid .card", titulo: "Veja o que cada item faz",
-        texto: "Cada cartão resume um item. Com o mouse em cima dele, segure <b>Shift</b> para ler a ficha inteira." },
-      { alvo: "#grid .card", titulo: "Clique para levar",
-        texto: "Um clique põe o item na sua build, e outro clique tira. Se o site pedir, ligue o <b>Editar</b>: é a trava que evita mexer sem querer." }
-    ],
-    builds: [
-      { alvo: "#bi-new", titulo: "O que é uma build",
-        texto: "É a lista do que comprar numa partida, do começo ao fim. Comece por <b>Nova build</b>, ou veja as <b>Públicas</b>, feitas por outros jogadores." }
-    ],
-    forja: [
-      { alvo: "#build-canvas .build-cat", titulo: "As caixas da build",
-        texto: "Cada caixa guarda uma parte da build, como os itens do começo ou o principal. Arraste os itens para mudar a ordem ou a caixa." },
-      { alvo: "#edit-switch", titulo: "Editar e Salvar",
-        texto: "Para mexer na build, ligue o <b>Editar</b>. Ao terminar, clique em <b>Salvar</b> (ou Ctrl+S)." }
-    ],
-    runas: [
-      { alvo: "#view-runas .runas-modo[data-modo=montar]", titulo: "Ler ou montar",
-        texto: "Em <b>Ler</b>, você conhece cada runa. Em <b>Montar</b>, escolhe as runas da sua build." }
-    ],
-    calc: [
-      { alvo: "#calc-from-build", titulo: "Quanto dano você aguenta",
-        texto: "Escreva a sua vida e as resistências, ou puxe da build aberta, e veja quanto do dano elas seguram." }
-    ]
-  };
+  const DICAS = [
+    // ---- a loja
+    { id: "loja.shift", tela: "loja", alvo: "#grid .card", titulo: "Veja o que cada item faz",
+      texto: "Cada cartão resume um item. Com o mouse em cima dele, segure <b>Shift</b> para ler a ficha inteira." },
+    { id: "loja.nucleo", tela: "loja", alvo: "#class-tabs", titulo: "AD, AP e Vitalidade",
+      texto: "As abas separam os itens pelo que eles fortalecem: <b>AD</b> é dano de ataque, <b>AP</b> é poder de habilidade e <b>Vitalidade</b> é vida e defesa. <b>Todos</b> mostra a loja inteira." },
+    { id: "loja.filtros", tela: "loja", alvo: "#view-catalog .filters", titulo: "Filtros",
+      texto: "Aqui você filtra por modo de jogo, custo, tipo de dano e muito mais. Cada grupo abre com um clique, e <b>Limpar filtros</b> desfaz tudo." },
+    { id: "loja.levar", tela: "loja", alvo: "#grid .card", titulo: "Clique para levar",
+      texto: "Um clique põe o item na sua build, e outro clique tira. Se o site pedir, ligue o <b>Editar</b>: é a trava que evita mexer sem querer." },
+    { id: "loja.faixa", tela: "loja", alvo: "#catalog-forja-faixa", quando: () => itensNaBuild() > 0, titulo: "A faixa da build",
+      texto: "Esta faixa mostra a build aberta e a caixa onde caem os próximos itens que você clicar. <b>Soltar a caixa</b> para de marcar; a build continua aberta." },
+    { id: "volta", tela: "loja", alvo: "#acess-btn", quando: () => visitas() >= 2, titulo: "Do seu jeito",
+      texto: "Aqui em cima ficam o som, a acessibilidade (letra maior, menos movimento, cores para daltonismo) e as notas do que mudou no site. O <b>?</b> mostra as dicas de novo." },
+    // ---- a lista de builds
+    { id: "builds.oque", tela: "builds", alvo: "#bi-new", titulo: "O que é uma build",
+      texto: "É a lista do que comprar numa partida, do começo ao fim. Comece por <b>Nova build</b>, ou veja as <b>Públicas</b>, feitas por outros jogadores." },
+    { id: "builds.importar", tela: "builds", alvo: "#bi-import", titulo: "Importar",
+      texto: "Tem uma build pronta? O <b>Importar</b> aceita o texto de uma build, copiado daqui ou de um amigo, ou o arquivo de conjuntos de itens exportado do cliente do LoL. Ela vira uma build sua." },
+    { id: "builds.publicas", tela: "builds", alvo: '.bi-tab[data-view="publicas"]', titulo: "Públicas",
+      texto: "Em <b>Públicas</b> estão as builds de outros jogadores. Gostou de uma? <b>Copiar e editar</b> traz ela para as suas." },
+    { id: "builds.publicar", tela: "builds", alvo: '#bi-detail [data-act="publish"]', quando: () => feito("salvou"), titulo: "Publicar",
+      texto: "Quer mostrar uma build? Para publicar, ela precisa de nome, descrição e três marcadores. Publicada, ela ganha um link para mandar a amigos." },
+    // ---- a forja
+    { id: "forja.caixas", tela: "forja", alvo: "#build-canvas .build-cat", titulo: "As caixas da build",
+      texto: "Cada caixa guarda uma parte da build, como os itens do começo ou o principal. Arraste os itens para mudar a ordem ou a caixa." },
+    { id: "forja.campeao", tela: "forja", alvo: "#build-champ-btn", titulo: "Campeão, modo e rota",
+      texto: "Escolha o campeão, o modo de jogo e a rota. Com a rota escolhida, os itens que não servem para ela ficam trancados." },
+    { id: "forja.ver", tela: "forja", alvo: "#apex-switch", titulo: "Ver de outro jeito",
+      texto: "<b>Reembolso</b> mostra os preços com o desconto da runa; <b>Ápice</b>, os itens no máximo; <b>Passiva do Ornn</b>, os itens melhorados pelo Ornn." },
+    { id: "forja.editar", tela: "forja", alvo: "#edit-switch", titulo: "Editar e Salvar",
+      texto: "Para mexer na build, ligue o <b>Editar</b>. Ao terminar, clique em <b>Salvar</b> (ou Ctrl+S)." },
+    { id: "forja.totais", tela: "forja", alvo: "#build-totals", quando: () => itensNaBuild() > 0, titulo: "Os totais",
+      texto: "Aqui a build soma os atributos de todos os itens, e a conta muda a cada item que entra ou sai. O preço total fica no topo." },
+    { id: "forja.arrastar", tela: "forja", alvo: "#build-canvas .build-cat", quando: () => build.editing, titulo: "Arrastar e anotar",
+      texto: "Arraste os itens entre as caixas. Dois cliques num item abrem uma anotação sua, que aparece quando alguém passa o mouse." },
+    { id: "forja.papel", tela: "forja", alvo: "#build-canvas .cat-kind", quando: () => build.editing, titulo: "O papel de cada caixa",
+      texto: "O selo no canto da caixa muda o que ela faz: <b>Prioridade</b> é o núcleo da build, <b>Opcional</b> fica fora do total, para quando precisar, e <b>Escolha 1</b> guarda trocas para a mesma vaga." },
+    { id: "forja.runashabs", tela: "forja", alvo: "#build-habs", quando: () => build.editing, titulo: "Runas e habilidades",
+      texto: "Com o Editar ligado, aparecem a faixa de runas e a grade das habilidades. Escolha as runas e marque em que ordem você sobe cada habilidade." },
+    { id: "forja.salvar", tela: "forja", alvo: "#toggle-io", quando: () => feito("salvou"), titulo: "Levar para fora e trazer de fora",
+      texto: "<b>Exportar / importar</b> copia a build como texto ou link, manda para o cliente do LoL e, do outro lado, importa um texto." },
+    // ---- as runas
+    { id: "runas.ler", tela: "runas", alvo: "#view-runas .runas-modo[data-modo=montar]", titulo: "Ler ou montar",
+      texto: "Em <b>Ler</b>, você conhece cada runa. Em <b>Montar</b>, escolhe as runas da sua build." },
+    { id: "runas.trilhas", tela: "runas", alvo: "#runas-trilhas", titulo: "As trilhas",
+      texto: "Cada cor é uma trilha. Na página de runas, a trilha principal dá a runa de assinatura e as escolhas de baixo; a secundária completa o resto." },
+    { id: "runas.montar", tela: "runas", alvo: "#runas-dona", quando: () => runasEstado.modo === "montar", titulo: "Montar a página",
+      texto: "Aqui você monta a página de runas da build aberta: escolha a trilha principal e as runas. Para mudar, ligue o <b>Editar</b>." },
+    // ---- a calculadora
+    { id: "calc.puxar", tela: "calc", alvo: "#calc-from-build", titulo: "Quanto dano você aguenta",
+      texto: "Escreva a sua vida e as resistências, ou puxe da build aberta, e veja quanto do dano elas seguram." },
+    { id: "calc.efetiva", tela: "calc", alvo: "#view-calc .calc-stat", titulo: "Vida efetiva",
+      texto: "As barras mostram quanto do dano cada resistência segura. A <b>vida efetiva</b> é quanto dano você aguenta de verdade, contando a vida e a resistência juntas." }
+  ];
   const NOME = { loja: "A loja", builds: "Builds", forja: "A forja", runas: "Runas", calc: "Calculadora" };
+  // as dicas da F13-T101 marcavam a tela inteira como vista: quem já viu aquela tela não revê as delas
+  const DA_TELA_ANTIGA = { loja: ["loja.shift", "loja.levar"], builds: ["builds.oque"], forja: ["forja.caixas", "forja.editar"], runas: ["runas.ler"], calc: ["calc.puxar"] };
   // o que cobre a tela: com isto aberto, a dica espera (e some, se já estava)
   const COBRE = "#overlay.show, .marker-dialog:not([hidden]), #mural:not([hidden]), #aba-dona:not([hidden]), #escolher-caixa:not([hidden])";
   let timer = 0, tela = null, fila = [], i = 0, balao = null, anel = null, alvoEl = null, laco = 0;
 
-  function lerVistas() { try { return JSON.parse(localStorage.getItem("dicas.vistas") || "[]"); } catch (e) { return []; } }
-  function marcarVista(t) {
-    const v = lerVistas();
-    if (v.includes(t)) return;
-    v.push(t);
-    try { localStorage.setItem("dicas.vistas", JSON.stringify(v)); } catch (e) { /* sem persistência: volta na próxima visita */ }
+  function lerLista(chave) { try { return JSON.parse(localStorage.getItem(chave) || "[]"); } catch (e) { return []; } }
+  function gravarLista(chave, v) { try { localStorage.setItem(chave, JSON.stringify(v)); } catch (e) { /* sem persistência: volta na próxima visita */ } }
+  function lerVistas() {
+    const v = lerLista("dicas.vistas");
+    let mudou = false;
+    Object.keys(DA_TELA_ANTIGA).forEach(function (t) {
+      const k = v.indexOf(t);
+      if (k < 0) return;
+      v.splice(k, 1);
+      DA_TELA_ANTIGA[t].forEach(function (id) { if (!v.includes(id)) v.push(id); });
+      mudou = true;
+    });
+    if (mudou) gravarLista("dicas.vistas", v);
+    return v;
   }
+  function marcarVista(id) { const v = lerVistas(); if (!v.includes(id)) { v.push(id); gravarLista("dicas.vistas", v); } }
+  function feito(nome) { return lerLista("dicas.feitos").includes(nome); }
+  // um momento da pessoa (o primeiro Salvar): fica guardado e a dica dele aparece onde couber
+  function momento(nome) {
+    const f = lerLista("dicas.feitos");
+    if (!f.includes(nome)) { f.push(nome); gravarLista("dicas.feitos", f); }
+    ver();
+  }
+  // uma visita é uma aba nova: o F5 não conta
+  let nVisitas = 1;
+  try {
+    nVisitas = Number(localStorage.getItem("dicas.visitas")) || 0;
+    if (!sessionStorage.getItem("dicas.sessao")) { nVisitas++; localStorage.setItem("dicas.visitas", String(nVisitas)); sessionStorage.setItem("dicas.sessao", "1"); }
+  } catch (e) { /* sem persistência: sempre a primeira visita */ }
+  function visitas() { return nVisitas; }
+  function itensNaBuild() { return build && build.id ? build.cats.reduce(function (n, c) { return n + c.items.length; }, 0) : 0; }
   function desligadas() { try { return localStorage.getItem("dicas.desligadas") === "1"; } catch (e) { return false; } }
   function telaAtual() {
     const ativa = document.querySelector(".tab-btn.active");
@@ -18964,8 +19027,9 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
     const r = el.getBoundingClientRect();
     return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== "hidden";
   }
+  function vale(d) { try { return !d.quando || !!d.quando(); } catch (e) { return false; } }
 
-  // depois de cada troca de tela (e do fim da entrada): espera a tela assentar e mostra o que ela tiver
+  // depois de cada troca de tela, do fim da entrada e de cada momento: espera a tela assentar e mostra o que ela tiver
   function ver() {
     clearTimeout(timer);
     if (balao && telaAtual() !== tela) fechar();
@@ -18974,14 +19038,16 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
   function mostrarDaTela(pedida) {
     timer = 0;
     const t = telaAtual();
-    if (!t || !TELAS[t] || entradaDePe() || document.querySelector(COBRE)) return false;
-    if (!pedida && (desligadas() || lerVistas().includes(t))) return false;
+    if (!t || !NOME[t] || entradaDePe() || document.querySelector(COBRE)) return false;
+    if (!pedida && desligadas()) return false;
     if (balao && tela === t) return true;
-    fechar();
-    const lista = TELAS[t].filter(function (d) { return visivel(document.querySelector(d.alvo)); });
+    const vistas = pedida ? [] : lerVistas();
+    const lista = DICAS.filter(function (d) { return d.tela === t && !vistas.includes(d.id) && vale(d) && visivel(document.querySelector(d.alvo)); });
     if (!lista.length) return false;
+    fechar();
     tela = t; fila = lista; i = 0;
-    if (!pedida) marcarVista(t);   // visto ao aparecer: sair da tela no meio não traz de volta
+    // a leva fica vista ao aparecer: fechar no meio (o ×, o Esc, o clique fora, outra tela) não a traz de volta
+    if (!pedida) lista.forEach(function (d) { marcarVista(d.id); });
     desenhar();
     return true;
   }
@@ -19000,8 +19066,6 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
       anel.className = "dn-anel";
       anel.setAttribute("aria-hidden", "true");
       document.body.append(anel, balao);
-      addEventListener("resize", posicionar);
-      addEventListener("scroll", posicionar, true);
       document.addEventListener("pointerdown", foraDoBalao, true);
       document.addEventListener("keydown", teclaDaDica);
     }
@@ -19012,6 +19076,7 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
       + '<button type="button" class="dn-sem" title="Não mostrar mais dicas sozinhas (o ? do topo ainda mostra)">Sem dicas</button>'
       + '<button type="button" class="dn-ok">' + (i + 1 < fila.length ? "Próxima" : "Entendi") + '</button></div>'
       + '<i class="dn-seta" aria-hidden="true"></i>';
+    ultimo = "";
     balao.querySelector(".dn-x").addEventListener("click", fechar);
     balao.querySelector(".dn-ok").addEventListener("click", proxima);
     balao.querySelector(".dn-sem").addEventListener("click", function () {
@@ -19021,34 +19086,42 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
     posicionar();
   }
 
-  // o balão ao lado do alvo: à direita se couber, senão à esquerda, embaixo ou em cima; sempre dentro da janela
+  // o balão ao lado do alvo: à direita se couber, senão à esquerda, embaixo ou em cima; sempre dentro da janela.
+  // F13-T103: e segue o alvo a cada quadro enquanto está aberto — a tela que entra animada (a chuva da lista de
+  // builds, a forja que sobe) move o alvo depois do primeiro quadro, e o anel ficava no lugar antigo. Só mexe no
+  // estilo quando o alvo ou a janela mudam; o fechar() cancela.
+  let ultimo = "";
   function posicionar() {
-    if (!balao) return;
-    if (laco) return;
-    laco = requestAnimationFrame(function () {
-      laco = 0;
-      if (!balao || !alvoEl) return;
-      if (!alvoEl.isConnected) { const novo = document.querySelector(fila[i].alvo); if (novo) alvoEl = novo; else { fechar(); return; } }
-      const r = alvoEl.getBoundingClientRect(), m = 6, gap = 16;
-      const fora = r.bottom < 0 || r.top > innerHeight || r.right < 0 || r.left > innerWidth;
-      balao.hidden = fora; anel.hidden = fora;
-      if (fora) return;
-      Object.assign(anel.style, { left: (r.left - m) + "px", top: (r.top - m) + "px", width: (r.width + 2 * m) + "px", height: (r.height + 2 * m) + "px" });
-      const bw = balao.offsetWidth, bh = balao.offsetHeight;
-      let lado = "direita", x = r.right + m + gap, y = r.top + r.height / 2 - bh / 2;
-      if (x + bw > innerWidth - 12) {
-        if (r.left - m - gap - bw >= 12) { lado = "esquerda"; x = r.left - m - gap - bw; }
-        else if (r.bottom + m + gap + bh <= innerHeight - 12) { lado = "baixo"; x = r.left + r.width / 2 - bw / 2; y = r.bottom + m + gap; }
-        else { lado = "cima"; x = r.left + r.width / 2 - bw / 2; y = r.top - m - gap - bh; }
-      }
-      x = Math.max(12, Math.min(innerWidth - bw - 12, x));
-      y = Math.max(12, Math.min(innerHeight - bh - 12, y));
-      balao.className = "dn-balao lado-" + lado;
-      Object.assign(balao.style, { left: Math.round(x) + "px", top: Math.round(y) + "px" });
-      const seta = balao.querySelector(".dn-seta");
-      if (lado === "direita" || lado === "esquerda") { seta.style.top = Math.max(12, Math.min(bh - 26, r.top + r.height / 2 - y - 7)) + "px"; seta.style.left = lado === "direita" ? "" : "auto"; }
-      else { seta.style.left = Math.max(12, Math.min(bw - 26, r.left + r.width / 2 - x - 7)) + "px"; seta.style.top = lado === "baixo" ? "" : "auto"; }
-    });
+    if (!balao || laco) return;
+    laco = requestAnimationFrame(acompanhar);
+  }
+  function acompanhar() {
+    laco = 0;
+    if (!balao || !alvoEl) return;
+    laco = requestAnimationFrame(acompanhar);
+    if (!alvoEl.isConnected) { const novo = document.querySelector(fila[i].alvo); if (novo) alvoEl = novo; else { fechar(); return; } }
+    const r = alvoEl.getBoundingClientRect(), m = 6, gap = 16;
+    const chave = [i, r.left, r.top, r.width, r.height, innerWidth, innerHeight].join();
+    if (chave === ultimo) return;
+    ultimo = chave;
+    const fora = r.bottom < 0 || r.top > innerHeight || r.right < 0 || r.left > innerWidth;
+    balao.hidden = fora; anel.hidden = fora;
+    if (fora) return;
+    Object.assign(anel.style, { left: (r.left - m) + "px", top: (r.top - m) + "px", width: (r.width + 2 * m) + "px", height: (r.height + 2 * m) + "px" });
+    const bw = balao.offsetWidth, bh = balao.offsetHeight;
+    let lado = "direita", x = r.right + m + gap, y = r.top + r.height / 2 - bh / 2;
+    if (x + bw > innerWidth - 12) {
+      if (r.left - m - gap - bw >= 12) { lado = "esquerda"; x = r.left - m - gap - bw; }
+      else if (r.bottom + m + gap + bh <= innerHeight - 12) { lado = "baixo"; x = r.left + r.width / 2 - bw / 2; y = r.bottom + m + gap; }
+      else { lado = "cima"; x = r.left + r.width / 2 - bw / 2; y = r.top - m - gap - bh; }
+    }
+    x = Math.max(12, Math.min(innerWidth - bw - 12, x));
+    y = Math.max(12, Math.min(innerHeight - bh - 12, y));
+    balao.className = "dn-balao lado-" + lado;
+    Object.assign(balao.style, { left: Math.round(x) + "px", top: Math.round(y) + "px" });
+    const seta = balao.querySelector(".dn-seta");
+    if (lado === "direita" || lado === "esquerda") { seta.style.top = Math.max(12, Math.min(bh - 26, r.top + r.height / 2 - y - 7)) + "px"; seta.style.left = lado === "direita" ? "" : "auto"; }
+    else { seta.style.left = Math.max(12, Math.min(bw - 26, r.left + r.width / 2 - x - 7)) + "px"; seta.style.top = lado === "baixo" ? "" : "auto"; }
   }
 
   function proxima() {
@@ -19062,15 +19135,15 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
     laco = 0;
     if (balao) { balao.remove(); anel.remove(); }
     balao = anel = alvoEl = null;
-    removeEventListener("resize", posicionar);
-    removeEventListener("scroll", posicionar, true);
     document.removeEventListener("pointerdown", foraDoBalao, true);
     document.removeEventListener("keydown", teclaDaDica);
     tela = null; fila = []; i = 0;
   }
   // o "?" do cabeçalho: as dicas desta tela de novo, mesmo vistas ou desligadas
   function mostrar() { clearTimeout(timer); fechar(); return mostrarDaTela(true); }
-  return { ver: ver, mostrar: mostrar, fechar: fechar, TELAS: TELAS, aberta: function () { return balao ? { tela: tela, i: i, total: fila.length } : null; } };
+  return { ver: ver, mostrar: mostrar, fechar: fechar, momento: momento, DICAS: DICAS,
+           atual: function () { return balao ? fila[i] : null; },
+           aberta: function () { return balao ? { tela: tela, i: i, total: fila.length, id: fila[i].id } : null; } };
 })();
 
 // ---------------- init ----------------

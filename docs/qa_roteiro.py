@@ -7624,29 +7624,36 @@ def _link_curto_lento(s, p, ID, NOME):
 # ---------------------------------------------------------------- principal
 def checar_dicas(s, p):
     """F13-T101 (Leo, 02/11/2026: a opção 2 do tour — "o tour não deve ser algo massante", "pensando
-    para um leigo"): a dica na hora. Na primeira visita a cada tela, 1 ou 2 balões sem escurecer nada;
-    "Próxima"/"Entendi" passam, o ×, o Esc e o clique fora fecham (e o clique fora segue para onde foi
-    dado); a tela vista não repete; "Sem dicas" desliga as automáticas; o "?" mostra as da tela de novo.
+    para um leigo"): a dica na hora. "Próxima"/"Entendi" passam, o ×, o Esc e o clique fora fecham (e o
+    clique fora segue para onde foi dado); a leva vista não repete; "Sem dicas" desliga as automáticas; o
+    "?" mostra as da tela de novo. F13-T103 ("muito pobre de conteúdo"; "deve ensinar os principais
+    funcionamentos do montador"): 24 dicas — as de chegada (até 4 por tela) e as da hora (o primeiro item,
+    o Editar ligado, o primeiro Salvar, o Montar, a segunda visita); quem viu as da T101 não as revê.
     O resto do roteiro roda com as dicas desligadas (a barreira da Sessao); aqui elas ligam."""
     print("\n%sDICAS%s" % (AMARELO, FIM))
     s.tela(1440, 900)
-    s.js("sessionStorage.setItem('qa.dicas', '1'); 'ok'")
+    s.js("sessionStorage.setItem('qa.dicas', '1'); sessionStorage.removeItem('dicas.sessao'); 'ok'")
     s.limpar_memoria()
-    estado = "({ ab: Dicas.aberta(), h3: (document.querySelector('.dn-balao h3') || {}).textContent || '', vistas: localStorage.getItem('dicas.vistas'), des: localStorage.getItem('dicas.desligadas') })"
+    estado = "({ ab: Dicas.aberta(), h3: (document.querySelector('.dn-balao h3') || {}).textContent || '', vistas: JSON.parse(localStorage.getItem('dicas.vistas') || '[]'), des: localStorage.getItem('dicas.desligadas') })"
+    ab = lambda r: (r["ab"] or {}).get("id")
+
+    def passa_todas():
+        return s.js("""(async () => { const v = []; for (let k = 0; k < 12 && Dicas.aberta(); k++) { v.push(Dicas.aberta().id);
+          document.querySelector('.dn-ok').click(); await new Promise(r => setTimeout(r, 120)); } return v; })()""")
     try:
-        # 1. a entrada de pé não mostra dica; ao fechar, a primeira da loja aparece (1 de 2) e a loja fica vista
+        # 1. a entrada de pé não mostra dica; ao fechar, as 4 da loja aparecem, uma de cada vez, e a leva fica vista
         pre = s.js("({ de_pe: document.documentElement.classList.contains('com-entrada'), dica: !!document.querySelector('.dn-balao'), des: localStorage.getItem('dicas.desligadas') })")
         time.sleep(0.9)
         pre2 = s.js("!!document.querySelector('.dn-balao')")
         s.entrar()
         time.sleep(1.0)
         a = s.js(estado)
-        p.conta("dicas", "com a entrada de pé nenhuma dica aparece; ao fechar, a 1ª da loja (1 de 2) aparece e a loja fica vista",
-                pre["de_pe"] and not pre["dica"] and not pre2 and pre["des"] is None and a["ab"] == {"tela": "loja", "i": 0, "total": 2}
-                and a["vistas"] == '["loja"]',
+        p.conta("dicas", "com a entrada de pé nenhuma dica aparece; ao fechar, a 1ª das 4 da loja aparece e a leva fica vista",
+                pre["de_pe"] and not pre["dica"] and not pre2 and pre["des"] is None and a["ab"] == {"tela": "loja", "i": 0, "total": 4, "id": "loja.shift"}
+                and a["vistas"] == ["loja.shift", "loja.nucleo", "loja.filtros", "loja.levar"],
                 "antes %s/%s · depois %s" % (pre, pre2, a))
 
-        # 2. "Próxima" passa; o clique fora (na aba Runas) fecha a da loja E chega à aba, que mostra a sua
+        # 2. "Próxima" passa; o clique fora fecha e segue (a busca ganha o foco; a aba Runas abre e mostra a dela)
         s.clicar(".dn-ok", 0.4)
         b1 = s.js(estado)
         s.clicar("#search-input", 0.4)
@@ -7656,11 +7663,11 @@ def checar_dicas(s, p):
         s.clicar('.tab-btn[data-tab="runas"]', 1.2)
         b2 = s.js("Object.assign(%s, { aba: document.querySelector('.tab-btn.active').dataset.tab })" % estado)
         p.conta("dicas", "\"Próxima\" passa para a 2ª; o clique fora do balão fecha a dica e segue para onde foi dado (a busca ganha o foco; a aba Runas abre e mostra a dela)",
-                b1["ab"] == {"tela": "loja", "i": 1, "total": 2} and b0["ab"] is None and b0["foco"] == "search-input"
-                and b2["aba"] == "runas" and b2["ab"] == {"tela": "runas", "i": 0, "total": 1},
+                ab(b1) == "loja.nucleo" and b0["ab"] is None and b0["foco"] == "search-input"
+                and b2["aba"] == "runas" and b2["ab"] == {"tela": "runas", "i": 0, "total": 2, "id": "runas.ler"},
                 "%s · %s · %s" % (b1, b0, b2))
 
-        # 3. o Esc fecha; recarregando, a tela vista não repete
+        # 3. o Esc fecha (a leva inteira fica vista); recarregando na mesma aba, nada volta
         s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
         s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
         time.sleep(0.3)
@@ -7673,8 +7680,9 @@ def checar_dicas(s, p):
         s.js("switchTab('runas'); 'ok'")
         time.sleep(1.0)
         c3 = s.js(estado)
-        p.conta("dicas", "o Esc fecha; recarregando, a loja e as runas (já vistas) não mostram dica de novo",
-                c1["ab"] is None and c2["ab"] is None and c3["ab"] is None and c3["vistas"] == '["loja","runas"]', "%s · %s · %s" % (c1, c2, c3))
+        p.conta("dicas", "o Esc fecha a leva inteira (a 2ª das runas também fica vista); recarregando na mesma aba (a mesma visita), a loja e as runas não mostram nada",
+                c1["ab"] is None and c2["ab"] is None and c3["ab"] is None and "runas.trilhas" in c3["vistas"] and "volta" not in c3["vistas"],
+                "%s · %s · %s" % (c1, c2, c3))
 
         # 4. "Sem dicas" desliga as automáticas; o "?" ainda mostra as da tela
         s.js("switchTab('calc'); 'ok'")
@@ -7687,34 +7695,75 @@ def checar_dicas(s, p):
         d3 = s.js(estado)
         s.clicar("#dicas-btn", 0.5)
         d4 = s.js(estado)
-        p.conta("dicas", "\"Sem dicas\" fecha e desliga as automáticas (a lista de builds, nunca vista, fica sem); o \"?\" mostra a dela mesmo assim",
-                d1["ab"] == {"tela": "calc", "i": 0, "total": 1} and d2["ab"] is None and d2["des"] == "1" and d3["ab"] is None
-                and d4["ab"] == {"tela": "builds", "i": 0, "total": 1} and "O que é uma build" in d4["h3"],
-                "%s · %s · %s · %s" % (d1, d2, d3, d4))
-
-        # 5. o × fecha; a forja tem as duas dela; em cada tela, nas três resoluções, o balão fica inteiro na
-        #    janela e não cobre o que aponta
         s.clicar(".dn-x", 0.3)
         x_fecha = s.js("Dicas.aberta() === null")
+        p.conta("dicas", "\"Sem dicas\" fecha e desliga as automáticas (a lista de builds, nunca vista, fica sem); o \"?\" mostra as dela (3) mesmo assim; o × fecha",
+                ab(d1) == "calc.puxar" and d2["ab"] is None and d2["des"] == "1" and d3["ab"] is None
+                and d4["ab"] == {"tela": "builds", "i": 0, "total": 3, "id": "builds.oque"} and x_fecha,
+                "%s · %s · %s · %s · × %s" % (d1, d2, d3, d4, x_fecha))
+
+        # 5. os momentos: com tudo ligado de novo e uma aba nova (a 2ª visita), cada dica da hora chega no seu momento
+        s.js("localStorage.removeItem('dicas.desligadas'); localStorage.removeItem('dicas.vistas'); sessionStorage.removeItem('dicas.sessao'); 'ok'")
+        s.abrir()
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(1.0)
+        m_loja = passa_todas()
         s.nova_build()
-        # o balão não pega carona em classe que já existia: a "Caixa vazia" da forja é .slot-vazio.dica
-        s.js("Dicas.mostrar(); 'ok'")
-        time.sleep(0.3)
-        vazia = s.js("(() => { const v = document.querySelector('.build-cat .slot-vazio.dica'); const c = v && getComputedStyle(v); return v ? { pos: c.position, bg: c.backgroundImage.slice(0, 20), w: Math.round(v.getBoundingClientRect().width) } : null; })()")
-        s.js("Dicas.fechar(); 'ok'")
+        time.sleep(0.4)
+        m_forja = passa_todas()
+        s.clicar("#edit-switch", 1.2)
+        m_editar = passa_todas()
+        s.js("Dicas.fechar(); switchTab('catalog'); window.scrollTo(0, 0); build.selectedCatId = build.cats[0].id; renderBuildAll(); 'ok'")
+        time.sleep(1.0)
+        s.clicar("#grid .card", 1.2)
+        m_item = passa_todas()
+        s.js("switchTab('build'); showBuildScreen('forja'); window.scrollTo(0, 0); 'ok'")
+        time.sleep(1.2)
+        m_totais = passa_todas()
+        s.clicar("#save-btn", 1.2)
+        m_salvar = passa_todas()
+        s.js("showBuildScreen('lista'); 'ok'")
+        time.sleep(1.2)
+        m_lista = passa_todas()
+        # as 3 de chegada da lista já passaram: a nova_build atravessa a lista, e o clique no "+ Nova build" fecha a leva
+        vistas_lista = s.js("JSON.parse(localStorage.getItem('dicas.vistas') || '[]')")
+        s.js("switchTab('runas'); 'ok'")
+        time.sleep(1.0)
+        m_runas = passa_todas()
+        s.clicar('.runas-modo[data-modo="montar"]', 1.2)
+        m_montar = passa_todas()
+        momentos = {"loja (2ª visita)": m_loja, "forja": m_forja, "Editar": m_editar, "item na loja": m_item, "forja com item": m_totais,
+                    "Salvar": m_salvar, "lista": m_lista, "runas": m_runas, "Montar": m_montar}
+        p.conta("dicas", "os momentos: a 2ª visita, o Editar ligado, o primeiro item (na loja e na forja), o primeiro Salvar (na forja e na lista) e o Montar trazem cada um as suas dicas, na hora",
+                m_loja == ["loja.shift", "loja.nucleo", "loja.filtros", "loja.levar", "volta"]
+                and m_forja == ["forja.caixas", "forja.campeao", "forja.ver", "forja.editar"]
+                and m_editar == ["forja.arrastar", "forja.papel", "forja.runashabs"] and m_item == ["loja.faixa"] and m_totais == ["forja.totais"]
+                and m_salvar == ["forja.salvar"] and m_lista == ["builds.publicar"] and all(x in vistas_lista for x in ("builds.oque", "builds.importar", "builds.publicas"))
+                and m_runas == ["runas.ler", "runas.trilhas"] and m_montar == ["runas.montar"],
+                "%s" % momentos)
+
+        # 6. nas três resoluções, cada uma das 24 dicas (com os momentos valendo) fica inteira na janela e não
+        #    cobre o que aponta; e a "Caixa vazia" da forja (.slot-vazio.dica, de antes) segue intacta
+        s.js("Dicas.fechar(); switchTab('build'); showBuildScreen('forja'); window.scrollTo(0, 0); 'ok'")
+        time.sleep(0.9)
+        vazia = s.js("(() => { Dicas.mostrar(); const v = document.querySelector('.build-cat .slot-vazio.dica'); const c = v && getComputedStyle(v); const r = v ? { pos: c.position, bg: c.backgroundImage.slice(0, 20), w: Math.round(v.getBoundingClientRect().width) } : null; Dicas.fechar(); return r; })()")
         mede = r"""(async () => {
           const out = []; if (!Dicas.mostrar()) return ['nada'];
-          for (let k = 0; k < 4 && Dicas.aberta(); k++) {
+          for (let k = 0; k < 12 && Dicas.aberta(); k++) {
             await new Promise(r => setTimeout(r, 120));
-            const a = Dicas.aberta(), b = document.querySelector('.dn-balao').getBoundingClientRect();
-            const alvo = document.querySelector(Dicas.TELAS[a.tela][a.i].alvo).getBoundingClientRect();
+            const d = Dicas.atual(), b = document.querySelector('.dn-balao').getBoundingClientRect();
+            const alvo = document.querySelector(d.alvo).getBoundingClientRect();
             const cobre = !(b.right <= alvo.left || b.left >= alvo.right || b.bottom <= alvo.top || b.top >= alvo.bottom);
             const dentro = b.left >= 0 && b.top >= 0 && b.right <= innerWidth && b.bottom <= innerHeight;
-            out.push(a.tela + a.i + (dentro ? '' : ':fora') + (cobre ? ':cobre' : ''));
+            const an = document.querySelector('.dn-anel').getBoundingClientRect();
+            const torto = Math.abs(an.left - alvo.left + 6) > 2 || Math.abs(an.top - alvo.top + 6) > 2;
+            out.push(d.id + (dentro ? '' : ':fora') + (cobre ? ':cobre' : '') + (torto ? ':anel' : ''));
             document.querySelector('.dn-ok').click();
           }
           return out; })()"""
-        ruins, vistos = [], []
+        ruins, vistos = [], set()
+        n_medidas = 0
         for w, h in ((1440, 900), (1920, 1080), (1600, 900)):
             s.tela(w, h)
             for passo in ("switchTab('catalog')", "switchTab('build'); showBuildScreen('lista')", "switchTab('build'); showBuildScreen('forja')",
@@ -7722,31 +7771,55 @@ def checar_dicas(s, p):
                 s.js("Dicas.fechar(); window.scrollTo(0, 0); %s; 'ok'" % passo)
                 time.sleep(0.9)
                 r = s.js(mede)
-                vistos += r
+                n_medidas += len(r)
+                vistos |= {x.split(":")[0] for x in r}
                 ruins += ["%dx%d %s" % (w, h, x) for x in r if ":" in x or x == "nada"]
-        p.conta("dicas", "o × fecha; nas três resoluções, cada uma das 7 dicas (loja 2, builds 1, forja 2, runas 1, calculadora 1) fica inteira na janela e não cobre o que aponta",
-                x_fecha and not ruins and len(vistos) == 21, "× %s · %d medidas · ruins: %s" % (x_fecha, len(vistos), ", ".join(ruins[:6]) or "nenhuma"))
-        p.conta("dicas", "com a dica aberta, a \"Caixa vazia\" da forja (.slot-vazio.dica, de antes) segue no lugar e sem o papel do balão",
-                bool(vazia) and vazia["pos"] == "static" and "url(" not in vazia["bg"] and vazia["w"] <= 90, "%s" % vazia)
+        # a tela que entra animada (a forja sobe ao trocar de aba) move o alvo depois do primeiro quadro: o anel
+        # e o balão seguem — mostrada logo na troca, a dica está no lugar quando a tela assenta
+        s.tela(1440, 900)
+        s.js("Dicas.fechar(); switchTab('catalog'); 'ok'")
+        time.sleep(0.8)
+        segue = s.js("""(async () => { switchTab('build'); showBuildScreen('lista'); Dicas.mostrar(); const d0 = Dicas.atual();
+          await new Promise(r => setTimeout(r, 1300)); const d = Dicas.atual(); if (!d) return null;
+          const a = document.querySelector('.dn-anel').getBoundingClientRect(), t = document.querySelector(d.alvo).getBoundingClientRect();
+          return { id: d.id, dx: Math.round(a.left - t.left + 6), dy: Math.round(a.top - t.top + 6) }; })()""")
+        s.js("Dicas.fechar(); 'ok'")
+        p.conta("dicas", "a dica mostrada enquanto a tela ainda entra animada segue o alvo: quando a tela assenta, o anel está em volta dele",
+                bool(segue) and abs(segue["dx"]) <= 2 and abs(segue["dy"]) <= 2, "%s" % segue)
+        todas = s.js("Dicas.DICAS.map(d => d.id)")
+        faltam = [x for x in todas if x not in vistos]
+        p.conta("dicas", "nas três resoluções, cada uma das %d dicas fica inteira na janela e não cobre o que aponta; a \"Caixa vazia\" da forja segue intacta com o balão aberto" % len(todas),
+                len(todas) == 24 and not faltam and not ruins and n_medidas == 72
+                and bool(vazia) and vazia["pos"] == "static" and "url(" not in vazia["bg"] and vazia["w"] <= 90,
+                "%d medidas · faltaram: %s · ruins: %s · caixa vazia %s" % (n_medidas, faltam or "nenhuma", ", ".join(ruins[:6]) or "nenhuma", vazia))
         s.tela(1440, 900)
 
-        # 6. menos movimento para o anel; e nenhum número nos textos (dado de item não entra em dica)
+        # 7. quem viu as dicas da T101 (que marcavam a tela inteira) só ganha as novas
+        s.js("Dicas.fechar(); localStorage.setItem('dicas.vistas', JSON.stringify(['loja', 'forja', 'builds', 'runas', 'calc'])); switchTab('catalog'); 'ok'")
+        time.sleep(1.0)
+        mig = passa_todas()
+        mig_v = s.js("JSON.parse(localStorage.getItem('dicas.vistas'))")
+        p.conta("dicas", "quem já tinha visto as dicas da T101 não as revê: na loja só chegam as novas, e a memória antiga vira a das dicas",
+                mig == ["loja.nucleo", "loja.filtros", "loja.faixa", "volta"] and "loja" not in mig_v and "loja.shift" in mig_v and "calc.puxar" in mig_v,
+                "%s · %s" % (mig, mig_v))
+
+        # 8. menos movimento para o anel; e nenhum número nos textos (dado de item não entra em dica)
         s.js("Dicas.fechar(); switchTab('catalog'); document.body.classList.add('ac-movimento'); Dicas.mostrar(); 'ok'")
         time.sleep(0.3)
         anim = s.js("getComputedStyle(document.querySelector('.dn-anel')).animationName")
         s.js("Dicas.fechar(); document.body.classList.remove('ac-movimento'); 'ok'")
-        # o pedido do sistema (prefers-reduced-motion) também para o anel
         s.envia("Emulation.setEmulatedMedia", {"features": [{"name": "prefers-reduced-motion", "value": "reduce"}]})
         s.js("Dicas.mostrar(); 'ok'")
         time.sleep(0.3)
         anim_sis = s.js("getComputedStyle(document.querySelector('.dn-anel')).animationName")
         s.envia("Emulation.setEmulatedMedia", {"features": []})
         s.js("Dicas.fechar(); 'ok'")
-        digitos = s.js("Object.values(Dicas.TELAS).flat().filter(d => /\\d/.test(d.titulo + d.texto.replace(/Ctrl\\+S/g, ''))).map(d => d.titulo)")
+        digitos = s.js("Dicas.DICAS.filter(d => /\\d/.test(d.titulo + d.texto.replace(/Ctrl\\+S|Escolha 1/g, ''))).map(d => d.id)")
         p.conta("dicas", "com \"Menos movimento\" (o da loja e o do sistema) o anel não pulsa; nenhum texto de dica traz número (nada de dado de item)",
                 anim == "none" and anim_sis == "none" and digitos == [], "anel %s / sistema %s · com número: %s" % (anim, anim_sis, digitos))
     finally:
         s.js("try { Dicas.fechar(); sessionStorage.removeItem('qa.dicas'); localStorage.setItem('dicas.desligadas', '1'); } catch (e) {} 'ok'")
+        s.envia("Emulation.setEmulatedMedia", {"features": []})
         s.tela(1440, 900)
 
 
