@@ -6,7 +6,8 @@ window.NOTAS = {
    "add": [
     "Dicas na primeira visita a cada tela, para quem está chegando agora; o \"?\" no topo mostra de novo",
     "O tour ensina o Montador inteiro: dicas ao chegar em cada tela e na hora de cada coisa nova (importar, editar, salvar, publicar)",
-    "Uma dica para a estante de itens da forja, que traz a loja para dentro da build"
+    "Uma dica para a estante de itens da forja, que traz a loja para dentro da build",
+    "A aba Mapa: a mesa de guerra, com o mapa de Summoner's Rift — a roda aproxima, arrastar move"
    ],
    "aj": [
     "A abertura da loja agora acaba junto com o som da porta"
