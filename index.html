@@ -3908,6 +3908,54 @@ html.com-entrada { overflow: hidden; }
 html.com-entrada .card-burst { animation: none; }
 body.na-loja .entrada { display: none; }
 
+/* F13-T101 (Leo, 02/11/2026: a opção 2 do tour — "o tour não deve ser algo massante", "pensando para
+   um leigo"): a dica na hora. Na primeira visita a cada tela, 1 ou 2 balões, sem escurecer nada; somem
+   com "Entendi", com o × ou com qualquer clique fora deles (o clique segue para onde foi dado). O balão
+   veste a tela: pergaminho na loja, nas runas e na calculadora; ferro na forja. */
+.dn-anel { position: fixed; z-index: 900; pointer-events: none; border-radius: 8px;
+  box-shadow: 0 0 0 2px var(--loja-latao-claro), 0 0 18px 3px rgba(213,179,90,.55); animation: dn-pulsa 1.8s ease-in-out infinite; }
+body.forja .dn-anel { box-shadow: 0 0 0 2px var(--forja-brasa), 0 0 20px 4px var(--forja-brasa-glow); }
+@keyframes dn-pulsa { 50% { opacity: .55; } }
+.dn-balao { position: fixed; z-index: 901; width: 300px; max-width: calc(100vw - 24px); box-sizing: border-box; padding: 12px 14px 11px;
+  background: var(--tex-02) center/cover, var(--loja-papel); color: var(--loja-tinta);
+  border: 1px solid var(--loja-papel-borda); border-radius: 4px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.55), inset 0 0 26px rgba(120,80,30,.35); }
+.dn-balao[hidden] { display: none; }
+.dn-x { position: absolute; top: 4px; right: 6px; width: 26px; height: 26px; border: 0; background: none; padding: 0;
+  font-size: 18px; line-height: 1; cursor: pointer; color: var(--loja-tinta-suave); }
+.dn-sec { font: 600 10.5px/1 var(--loja-gravado); letter-spacing: .14em; text-transform: uppercase; color: var(--loja-cera); margin-bottom: 6px; }
+.dn-balao h3 { margin: 0 22px 5px 0; font: 400 17px/1.15 var(--loja-titulos); color: inherit; }
+.dn-balao p { margin: 0; font: 400 13.5px/1.42 var(--loja-texto); }
+.dn-pe { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.dn-conta { margin-right: auto; font: 400 12px var(--loja-texto); opacity: .75; }
+.dn-sem { border: 0; background: none; padding: 0; font: 400 13px var(--loja-texto); text-decoration: underline; cursor: pointer; color: var(--loja-tinta-suave); }
+.dn-ok { padding: 6px 14px; font: 600 12px var(--loja-gravado); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; border-radius: 3px;
+  color: var(--loja-cera-texto); background: linear-gradient(var(--loja-cera), var(--loja-cera-borda));
+  border: 1px solid var(--loja-cera-sombra); box-shadow: 0 2px 0 var(--loja-cera-sombra); }
+.dn-seta { position: absolute; width: 14px; height: 14px; transform: rotate(45deg); background: var(--loja-papel); border: 1px solid var(--loja-papel-borda); }
+.dn-balao.lado-direita .dn-seta { left: -8px; border-top: 0; border-right: 0; }
+.dn-balao.lado-esquerda .dn-seta { right: -8px; border-bottom: 0; border-left: 0; }
+.dn-balao.lado-baixo .dn-seta { top: -8px; border-bottom: 0; border-right: 0; }
+.dn-balao.lado-cima .dn-seta { bottom: -8px; border-top: 0; border-left: 0; }
+body.forja .dn-balao { background: linear-gradient(160deg, var(--forja-placa-1), var(--forja-placa-2)); color: var(--forja-texto);
+  border-color: var(--forja-placa-borda); box-shadow: 0 10px 28px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05), inset 0 -2px 10px rgba(255,120,30,.10); }
+body.forja .dn-balao::before, body.forja .dn-balao::after { content: ""; position: absolute; top: 7px; width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #8a7a6c, var(--forja-rebite) 60%, #2a221d); }
+body.forja .dn-balao::before { left: 7px; } body.forja .dn-balao::after { right: 34px; }
+body.forja .dn-sec { color: var(--forja-brasa); }
+body.forja .dn-balao h3 { color: var(--forja-titulo); }
+body.forja .dn-x, body.forja .dn-sem { color: var(--forja-texto-suave); }
+body.forja .dn-ok { color: #1a0d04; background: linear-gradient(var(--forja-brasa-clara), var(--forja-brasa)); border-color: #a24a0c; box-shadow: 0 0 10px var(--forja-brasa-glow); }
+body.forja .dn-seta { background: var(--forja-placa-1); border-color: var(--forja-placa-borda); }
+body.ac-leitura .dn-balao { width: 340px; }
+body.ac-leitura .dn-balao h3 { font-size: 19px; }
+body.ac-leitura .dn-balao p { font-size: 15.5px; }
+body.ac-brilho .dn-anel { box-shadow: 0 0 0 2px var(--loja-latao-claro); }
+body.ac-brilho.forja .dn-anel { box-shadow: 0 0 0 2px var(--forja-brasa); }
+@media (prefers-reduced-motion: reduce) { .dn-anel { animation: none; } }
+/* o botão "?" do cabeçalho: as dicas da tela de novo */
+.dicas-btn .dicas-sim { font: 700 15px/1 var(--loja-gravado); }
+
 /* menos movimento (do sistema): sem câmera; a arte de cada região diz o que esmaece no tema dela */
 @media (prefers-reduced-motion: reduce) {
   .en-dica { animation: none !important; opacity: 1; }
@@ -7993,6 +8041,10 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <!-- F12-T5 (Leo, 18/09/2026): acessibilidade. Quatro interruptores, cada um
            resolvendo uma barreira que o app cria. -->
       <!-- F13-T80 (Leo, 17/10/2026: "um ícone que contém os nossos patch notes"): o mural da loja -->
+      <!-- F13-T101: as dicas da tela, de novo (a opção 2 do tour) -->
+      <button type="button" id="dicas-btn" class="som-btn dicas-btn" aria-label="Dicas desta tela" title="Dicas desta tela — mostra de novo os balões de ajuda">
+        <span class="dicas-sim" aria-hidden="true">?</span>
+      </button>
       <button type="button" id="notas-btn" class="som-btn notas-btn" aria-label="Notas de atualização" aria-haspopup="dialog" aria-expanded="false" title="Notas de atualização — o que mudou e o que vem por aí">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4z"/><path d="M6 4a2 2 0 0 0-2 2v2h2M9 9h7M9 12h7M9 15h5"/></svg>
         <span class="nb-num" data-atualizacao></span>
@@ -9130,7 +9182,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.100";
+const ATUALIZACAO = "13.101";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -13882,6 +13934,7 @@ function switchTab(tab) {
   if (tab === "calc" && typeof renderCalc === "function") renderCalc();
   if (tab === "runas") renderRunas();
   marcarRota();   // F13-T81
+  if (window.Dicas) Dicas.ver();    // F13-T101 (o módulo mora num script de baixo)
 }
 
 // ---------------- checagem de modo de jogo ----------------
@@ -14031,6 +14084,7 @@ function showBuildScreen(tela) {
   if (tela === "lista") { if (!biSelected) biSelected = build.id; renderBuildIndex(); if (abrindoLista) chuvaDeEntrada(index); }
   else renderBuildAll();
   marcarRota();   // F13-T81
+  if (window.Dicas) Dicas.ver();    // F13-T101 (o módulo mora num script de baixo)
 }
 
 // ---------------- Aba Públicas (Fase 8, T4) ----------------
@@ -18816,8 +18870,176 @@ const EntradaLoja = (function () {
     var raiz = $("entrada");
     if (raiz) raiz.classList.add("fechada");
     document.documentElement.classList.remove("com-entrada");
+    if (window.Dicas) Dicas.ver();   // F13-T101: a loja aberta é a primeira tela que a dica conhece
   }
   return { montar: montar, abrir: abrir, fechar: fechar, DUR: DUR, FIM: FIM, REGIOES: REGIOES, regiao: function () { return regiao; } };
+})();
+
+// F13-T101 (Leo, 02/11/2026): a dica na hora — a opção 2 do tour ("o tour não deve ser algo massante",
+// "pensando para um leigo"). Nada de passeio: na primeira vez em cada tela, 1 ou 2 balões apontam o que
+// importa ali, em palavras de quem nunca montou uma build. "Entendi" passa para a próxima; o ×, o Esc ou
+// qualquer clique fora fecham as da tela (o clique segue para onde foi dado). A tela fica vista e não
+// volta; "Sem dicas" desliga todas; o "?" do cabeçalho mostra as da tela de novo.
+// Nenhum dado de item aqui: os textos falam da tela, não do catálogo.
+var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dicas
+  const TELAS = {
+    loja: [
+      { alvo: "#grid .card", titulo: "Veja o que cada item faz",
+        texto: "Cada cartão resume um item. Com o mouse em cima dele, segure <b>Shift</b> para ler a ficha inteira." },
+      { alvo: "#grid .card", titulo: "Clique para levar",
+        texto: "Um clique põe o item na sua build, e outro clique tira. Se o site pedir, ligue o <b>Editar</b>: é a trava que evita mexer sem querer." }
+    ],
+    builds: [
+      { alvo: "#bi-new", titulo: "O que é uma build",
+        texto: "É a lista do que comprar numa partida, do começo ao fim. Comece por <b>Nova build</b>, ou veja as <b>Públicas</b>, feitas por outros jogadores." }
+    ],
+    forja: [
+      { alvo: "#build-canvas .build-cat", titulo: "As caixas da build",
+        texto: "Cada caixa guarda uma parte da build, como os itens do começo ou o principal. Arraste os itens para mudar a ordem ou a caixa." },
+      { alvo: "#edit-switch", titulo: "Editar e Salvar",
+        texto: "Para mexer na build, ligue o <b>Editar</b>. Ao terminar, clique em <b>Salvar</b> (ou Ctrl+S)." }
+    ],
+    runas: [
+      { alvo: "#view-runas .runas-modo[data-modo=montar]", titulo: "Ler ou montar",
+        texto: "Em <b>Ler</b>, você conhece cada runa. Em <b>Montar</b>, escolhe as runas da sua build." }
+    ],
+    calc: [
+      { alvo: "#calc-from-build", titulo: "Quanto dano você aguenta",
+        texto: "Escreva a sua vida e as resistências, ou puxe da build aberta, e veja quanto do dano elas seguram." }
+    ]
+  };
+  const NOME = { loja: "A loja", builds: "Builds", forja: "A forja", runas: "Runas", calc: "Calculadora" };
+  // o que cobre a tela: com isto aberto, a dica espera (e some, se já estava)
+  const COBRE = "#overlay.show, .marker-dialog:not([hidden]), #mural:not([hidden]), #aba-dona:not([hidden]), #escolher-caixa:not([hidden])";
+  let timer = 0, tela = null, fila = [], i = 0, balao = null, anel = null, alvoEl = null, laco = 0;
+
+  function lerVistas() { try { return JSON.parse(localStorage.getItem("dicas.vistas") || "[]"); } catch (e) { return []; } }
+  function marcarVista(t) {
+    const v = lerVistas();
+    if (v.includes(t)) return;
+    v.push(t);
+    try { localStorage.setItem("dicas.vistas", JSON.stringify(v)); } catch (e) { /* sem persistência: volta na próxima visita */ }
+  }
+  function desligadas() { try { return localStorage.getItem("dicas.desligadas") === "1"; } catch (e) { return false; } }
+  function telaAtual() {
+    const ativa = document.querySelector(".tab-btn.active");
+    const aba = ativa ? ativa.dataset.tab : "catalog";
+    if (aba === "build") return buildScreen === "forja" ? "forja" : "builds";
+    return { catalog: "loja", runas: "runas", calc: "calc" }[aba] || null;
+  }
+  function entradaDePe() { return document.documentElement.classList.contains("com-entrada"); }
+  function visivel(el) {
+    if (!el || !el.isConnected) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== "hidden";
+  }
+
+  // depois de cada troca de tela (e do fim da entrada): espera a tela assentar e mostra o que ela tiver
+  function ver() {
+    clearTimeout(timer);
+    if (balao && telaAtual() !== tela) fechar();
+    timer = setTimeout(function () { mostrarDaTela(false); }, 650);
+  }
+  function mostrarDaTela(pedida) {
+    timer = 0;
+    const t = telaAtual();
+    if (!t || !TELAS[t] || entradaDePe() || document.querySelector(COBRE)) return false;
+    if (!pedida && (desligadas() || lerVistas().includes(t))) return false;
+    if (balao && tela === t) return true;
+    fechar();
+    const lista = TELAS[t].filter(function (d) { return visivel(document.querySelector(d.alvo)); });
+    if (!lista.length) return false;
+    tela = t; fila = lista; i = 0;
+    if (!pedida) marcarVista(t);   // visto ao aparecer: sair da tela no meio não traz de volta
+    desenhar();
+    return true;
+  }
+
+  function desenhar() {
+    const d = fila[i];
+    alvoEl = document.querySelector(d.alvo);
+    if (!visivel(alvoEl)) { proxima(); return; }
+    if (!balao) {
+      balao = document.createElement("div");
+      balao.className = "dn-balao";
+      balao.setAttribute("role", "dialog");
+      balao.setAttribute("aria-label", "Dica");
+      balao.setAttribute("aria-live", "polite");
+      anel = document.createElement("div");
+      anel.className = "dn-anel";
+      anel.setAttribute("aria-hidden", "true");
+      document.body.append(anel, balao);
+      addEventListener("resize", posicionar);
+      addEventListener("scroll", posicionar, true);
+      document.addEventListener("pointerdown", foraDoBalao, true);
+      document.addEventListener("keydown", teclaDaDica);
+    }
+    const conta = fila.length > 1 ? (i + 1) + " de " + fila.length + " nesta tela" : "";
+    balao.innerHTML = '<button type="button" class="dn-x" aria-label="Fechar as dicas">×</button>'
+      + '<div class="dn-sec">Dica · ' + NOME[tela] + '</div><h3>' + d.titulo + '</h3><p>' + d.texto + '</p>'
+      + '<div class="dn-pe"><span class="dn-conta">' + conta + '</span>'
+      + '<button type="button" class="dn-sem" title="Não mostrar mais dicas sozinhas (o ? do topo ainda mostra)">Sem dicas</button>'
+      + '<button type="button" class="dn-ok">' + (i + 1 < fila.length ? "Próxima" : "Entendi") + '</button></div>'
+      + '<i class="dn-seta" aria-hidden="true"></i>';
+    balao.querySelector(".dn-x").addEventListener("click", fechar);
+    balao.querySelector(".dn-ok").addEventListener("click", proxima);
+    balao.querySelector(".dn-sem").addEventListener("click", function () {
+      try { localStorage.setItem("dicas.desligadas", "1"); } catch (e) { /* vale só nesta visita */ }
+      fechar();
+    });
+    posicionar();
+  }
+
+  // o balão ao lado do alvo: à direita se couber, senão à esquerda, embaixo ou em cima; sempre dentro da janela
+  function posicionar() {
+    if (!balao) return;
+    if (laco) return;
+    laco = requestAnimationFrame(function () {
+      laco = 0;
+      if (!balao || !alvoEl) return;
+      if (!alvoEl.isConnected) { const novo = document.querySelector(fila[i].alvo); if (novo) alvoEl = novo; else { fechar(); return; } }
+      const r = alvoEl.getBoundingClientRect(), m = 6, gap = 16;
+      const fora = r.bottom < 0 || r.top > innerHeight || r.right < 0 || r.left > innerWidth;
+      balao.hidden = fora; anel.hidden = fora;
+      if (fora) return;
+      Object.assign(anel.style, { left: (r.left - m) + "px", top: (r.top - m) + "px", width: (r.width + 2 * m) + "px", height: (r.height + 2 * m) + "px" });
+      const bw = balao.offsetWidth, bh = balao.offsetHeight;
+      let lado = "direita", x = r.right + m + gap, y = r.top + r.height / 2 - bh / 2;
+      if (x + bw > innerWidth - 12) {
+        if (r.left - m - gap - bw >= 12) { lado = "esquerda"; x = r.left - m - gap - bw; }
+        else if (r.bottom + m + gap + bh <= innerHeight - 12) { lado = "baixo"; x = r.left + r.width / 2 - bw / 2; y = r.bottom + m + gap; }
+        else { lado = "cima"; x = r.left + r.width / 2 - bw / 2; y = r.top - m - gap - bh; }
+      }
+      x = Math.max(12, Math.min(innerWidth - bw - 12, x));
+      y = Math.max(12, Math.min(innerHeight - bh - 12, y));
+      balao.className = "dn-balao lado-" + lado;
+      Object.assign(balao.style, { left: Math.round(x) + "px", top: Math.round(y) + "px" });
+      const seta = balao.querySelector(".dn-seta");
+      if (lado === "direita" || lado === "esquerda") { seta.style.top = Math.max(12, Math.min(bh - 26, r.top + r.height / 2 - y - 7)) + "px"; seta.style.left = lado === "direita" ? "" : "auto"; }
+      else { seta.style.left = Math.max(12, Math.min(bw - 26, r.left + r.width / 2 - x - 7)) + "px"; seta.style.top = lado === "baixo" ? "" : "auto"; }
+    });
+  }
+
+  function proxima() {
+    i++;
+    if (i < fila.length) desenhar(); else fechar();
+  }
+  function foraDoBalao(ev) { if (balao && !balao.contains(ev.target)) fechar(); }
+  function teclaDaDica(ev) { if (ev.key === "Escape" && balao) fechar(); }
+  function fechar() {
+    if (laco) cancelAnimationFrame(laco);
+    laco = 0;
+    if (balao) { balao.remove(); anel.remove(); }
+    balao = anel = alvoEl = null;
+    removeEventListener("resize", posicionar);
+    removeEventListener("scroll", posicionar, true);
+    document.removeEventListener("pointerdown", foraDoBalao, true);
+    document.removeEventListener("keydown", teclaDaDica);
+    tela = null; fila = []; i = 0;
+  }
+  // o "?" do cabeçalho: as dicas desta tela de novo, mesmo vistas ou desligadas
+  function mostrar() { clearTimeout(timer); fechar(); return mostrarDaTela(true); }
+  return { ver: ver, mostrar: mostrar, fechar: fechar, TELAS: TELAS, aberta: function () { return balao ? { tela: tela, i: i, total: fila.length } : null; } };
 })();
 
 // ---------------- init ----------------
@@ -18946,6 +19168,9 @@ function init() {
   if (!entraDireto) { document.documentElement.classList.add("com-entrada"); EntradaLoja.montar(); Som.preparar("catalog:open"); }
   document.querySelectorAll("[data-patch]").forEach(el => el.textContent = CATALOG.meta.patch || "");
   document.querySelectorAll("[data-atualizacao]").forEach(el => el.textContent = ATUALIZACAO);
+  // F13-T101: o "?" mostra as dicas da tela de novo. O pointerdown não fecha a que ele mesmo abre:
+  // o clique de fora fecha no pointerdown, e o "?" abre no click, depois.
+  document.getElementById("dicas-btn").addEventListener("click", () => Dicas.mostrar());
   // o pergaminho da placa (o papiro em Shurima) sorteia a textura, como todo papel da loja
   setPaper(document.querySelector("#entrada .en-pergaminho"), randomPaper());
   function entrarNaLoja(imediato) {

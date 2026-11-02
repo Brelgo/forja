@@ -578,6 +578,24 @@ pré-carregamento de volta no clique (82 áudios criados), os raios girando por 
 meio da abertura) e o conserto inteiro desfeito (as quatro; a soma dos longos fica igual ao
 comportamento antigo). O teto de 200 ms sozinho não separa: o de antes também passa nele.
 
+As dicas na hora (F13-T101, 02/11/2026; a opção 2 do tour — Leo: "o tour não deve ser algo
+massante", "pensando para um leigo"). O roteiro inteiro roda com elas desligadas: a barreira
+da Sessao grava "dicas.desligadas" em toda carga, menos quando a aba tem "qa.dicas" no
+sessionStorage — um balão aberto por cima de um botão comeria o clique de verdade dos outros
+grupos. O grupo "dicas" liga e confere: com a entrada de pé nenhuma dica aparece, e ao fechar a
+1ª da loja aparece (1 de 2) e a loja fica vista; "Próxima" passa; o clique fora do balão fecha e
+segue para onde foi dado (a busca ganha o foco; a aba Runas abre e mostra a sua); o Esc fecha;
+recarregando, as telas vistas não repetem; "Sem dicas" desliga as automáticas e o "?" ainda
+mostra as da tela; o × fecha; nas três resoluções (1440×900, 1920×1080, 1600×900) cada uma das
+7 dicas fica inteira na janela e não cobre o que aponta; a "Caixa vazia" da forja, que já usava a
+classe .dica, segue intacta com o balão aberto (o primeiro desenho do balão usava .dica e a
+transformava em balão — a medida pegou); com "Menos movimento" (o da loja e o do sistema) o anel
+não pulsa; e nenhum texto de dica traz número. Vistos falhando, cada um num mutante: a dica com
+a entrada de pé, o clique fora que não fecha, a tela vista que volta, o "Sem dicas" que não
+desliga, o estilo do balão de volta na classe antiga, o balão que não vira de lado (cobre o
+que aponta) e o anel pulsando com o menos movimento do sistema. A regra própria do anel
+para o "Menos movimento" da loja saiu: o mutante mostrou que a regra geral já o parava.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

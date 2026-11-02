@@ -124,3 +124,13 @@ As três texturas são papel amassado quase branco; nunca usadas cruas. Aplicaç
 - **Noxus — o arsenal da praça** (F13-T99, `docs/amostras/fase13-t99-entrada-noxus.html`): torre de pedra negra com merlões de ponta de ferro, estandartes carmim rasgados, vitrine de armas em grade, portão de ferro com o ferrolho que corre e solta faíscas, céu de fuligem com o sol vermelho; cai cinza e sobem brasas. A chapa de ferro da placa e a etiqueta ficam por cima da cinza (camada própria, com a mesma câmera); o primeiro plano (braseiros, frades com corrente) passa na frente dela.
 - **Shurima — a tenda das relíquias** (F13-T99, `docs/amostras/fase13-t99-entrada-shurima.html`): tenda de lona listrada entre colunas de arenito, o disco solar partido no alto do portal (sem a lasca no chão), a mesa e os jarros de relíquias, lanternas de latão, dunas e ruínas no poente; a areia corre no vento. A placa é a tábua com o papiro.
 - **O sorteio** (F13-T99): cada visita sorteia uma das três regiões (o Freljord, Noxus, Shurima), com a mesma porta, câmera, dica e placa (as mesmas classes e textos); cada região é um molde (`<template>`) e só a sorteada é montada. `?entrada=freljord|noxus|shurima` força uma (o roteiro e as capturas).
+
+## As dicas na hora — o tour (Fase 13, T101 — 02/11/2026)
+
+O Leo escolheu a opção 2 entre duas amostras (`docs/screenshots/fase13-t101-tour-opcoes.png`, `docs/amostras_tour.py`): nada de passeio guiado ("o tour não deve ser algo massante", "pensando para um leigo"). Na primeira visita a cada tela, 1 ou 2 balões apontam o que importa ali, sem escurecer nada.
+
+- **O balão veste a tela:** pergaminho da loja (a textura 02, tinta ferrogálica, rubrica em vermelho de cera, botão de lacre) na loja, nas runas e na calculadora; placa de ferro com rebites e o botão em brasa na forja e na lista de builds.
+- **O anel:** contorno de latão (brasa, na forja) em volta do que a dica aponta, pulsando devagar; parado com "Menos movimento"; sem o halo com "Menos brilho".
+- **A seta** sai do lado do balão voltado para o alvo; o balão fica à direita do alvo se couber, senão à esquerda, embaixo ou em cima, sempre inteiro na janela e sem cobrir o alvo.
+- **Os textos** são de quem nunca montou uma build: o que fazer, não o nome da função. Nenhum número, nenhum dado de item.
+- **Os botões:** "Próxima"/"Entendi" (o lacre), "Sem dicas" (sublinhado discreto), o × no canto. O "?" redondo do cabeçalho, ao lado das notas, mostra as dicas da tela de novo.
