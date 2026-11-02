@@ -632,6 +632,12 @@ não fica vista, o "quando" ignorado, o clique fora que não fecha, a dica com a
 A F13-T104 (02/11/2026) somou a 25ª dica, a da estante de itens da forja (com o Editar): o
 grupo passou a esperar 4 dicas no Editar e 25 nas três resoluções (75 medidas).
 
+Os dados do mapa (F13-T105, 02/11/2026; item 9 do roteiro). Fora do navegador, o grupo "mapa":
+o data/mapa.js decodifica na grade inteira (295 × 296, uma célula por bit) com proporções de mapa
+(parede 35%, arbusto 2,2%), e, com o LoL instalado, o data/gerar_mapa.py gerado de novo sobre o jogo
+dá o mesmo arquivo (visto falhando com um bit trocado numa cópia). O encaixe da grade sobre o
+map11.png foi medido uma vez, no navegador: o melhor ajuste fica a menos de 2 px dos limites da grade.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

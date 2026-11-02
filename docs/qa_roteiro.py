@@ -27,6 +27,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import urllib.request
@@ -4743,7 +4744,7 @@ def checar_entrada_loja(s, p):
       new MutationObserver(() => window.__entT.push([performance.now(), e.className])).observe(e, { attributes: true, attributeFilter: ['class'] });
       // F13-T102: a cada quadro da abertura, a opacidade da entrada e a escala da câmera (o último antes de fechar)
       window.__entQ = []; const q = () => { if (e.classList.contains('fechada')) return;
-        if (e.classList.contains('saindo')) { const m = document.getElementById('en-mundo'), sc = m && /scale\(([\d.]+)\)/.exec(m.style.transform);
+        if (e.classList.contains('saindo')) { const m = document.getElementById('en-mundo'), sc = m && /scale\\(([\\d.]+)\\)/.exec(m.style.transform);
           window.__entQ.push([performance.now(), +getComputedStyle(e).opacity, sc ? +sc[1] : null]); }
         requestAnimationFrame(q); };
       requestAnimationFrame(q);
@@ -7823,6 +7824,39 @@ def checar_dicas(s, p):
         s.tela(1440, 900)
 
 
+def checar_mapa(p):
+    """F13-T105: o data/mapa.js (a forma de Summoner's Rift para o mapa da build) — gerado do jogo pelo
+    data/gerar_mapa.py, nunca à mão. Sem navegador: o arquivo decodifica no tamanho da grade, as proporções
+    de parede e arbusto são de mapa, e, com o LoL instalado, gerar de novo dá o mesmo arquivo."""
+    print("\n%sMAPA%s" % (AMARELO, FIM))
+    caminho = os.path.join(RAIZ, "data", "mapa.js")
+    txt = open(caminho, encoding="utf-8").read()
+    corpo = txt[txt.index("{"):txt.rindex("}") + 1]
+    campo = lambda k: re.search(r"\b%s: *([^,\n]+)" % k, corpo).group(1).strip().strip("\"'")
+    nx, nz, cel = int(campo("nx")), int(campo("nz")), float(campo("celula"))
+    n = nx * nz
+    conta = {}
+    for k in ("paredes", "arbustos", "soPasso"):
+        b = base64.b64decode(re.search(r'%s: *"([^"]*)"' % k, corpo).group(1))
+        conta[k] = (len(b), sum(bin(x).count("1") for x in b))
+    tam_ok = all(t_ == (n + 7) // 8 for t_, _ in conta.values())
+    par, arb = conta["paredes"][1] / float(n), conta["arbustos"][1] / float(n)
+    p.conta("mapa", "o data/mapa.js decodifica na grade inteira (uma célula por bit) e tem proporções de mapa: parede 25–45%, arbusto 1–4%",
+            "GERADO por data/gerar_mapa.py" in txt and tam_ok and 0.25 <= par <= 0.45 and 0.01 <= arb <= 0.04 and cel == 50.0,
+            "%d × %d de %.0f · parede %.1f%% · arbusto %.1f%% · %s" % (nx, nz, cel, 100 * par, 100 * arb, conta))
+    wad = r"C:\Riot Games\League of Legends\Game\DATA\FINAL\Maps\Shipping\Map11.wad.client"
+    if not os.path.exists(wad):
+        print("  %s(sem o LoL nesta máquina: a conferência com o jogo fica de fora)%s" % (CINZA, FIM))
+        return
+    tmp = os.path.join(tempfile.mkdtemp(), "mapa.js")
+    r = subprocess.run([sys.executable, "-X", "utf8", "-c",
+                        "import sys; sys.argv=['x']; sys.path.insert(0, %r); import gerar_mapa as g; g.SAIDA=%r; g.main()" % (os.path.join(RAIZ, "data"), tmp)],
+                       capture_output=True, text=True, encoding="utf-8")
+    igual = os.path.exists(tmp) and open(tmp, encoding="utf-8").read() == txt
+    p.conta("mapa", "gerado de novo do jogo instalado, o data/mapa.js sai igual (está em dia com o mapa do patch)",
+            r.returncode == 0 and igual, (r.stdout + r.stderr).strip().splitlines()[-1][:120] if (r.stdout + r.stderr).strip() else "sem saída")
+
+
 GRUPOS = [
     ("catálogo", checar_catalogo),
     ("ficha", checar_ficha),
@@ -7907,6 +7941,10 @@ def main():
             checar_robo_regra(p)
         except Exception as e:
             p.conta("robô", "a regra rodou até o fim", False, "%s: %s" % (type(e).__name__, str(e)[:110]))
+        try:
+            checar_mapa(p)
+        except Exception as e:
+            p.conta("mapa", "o grupo rodou até o fim", False, "%s: %s" % (type(e).__name__, str(e)[:110]))
 
     s = Sessao(url)
     try:

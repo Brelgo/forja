@@ -1,0 +1,27 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Mapa: a grade</title>
+<!-- F13-T105: a prova do data/mapa.js — paredes, arbustos e o que só para o passo, desenhados por cima do
+     map11.png do Data Dragon nos limites da própria grade. Amostra; nada disto é código do app. -->
+<style>body{margin:0;background:#120c08;color:#e8d3a2;font:14px Georgia,serif;padding:12px}
+canvas{display:block;border:1px solid #443a32;margin-top:8px}.leg span{display:inline-block;margin-right:16px}
+.leg i{display:inline-block;width:12px;height:12px;margin-right:5px;vertical-align:-2px}</style></head><body>
+<div class="leg"><span><i style="background:rgba(230,30,30,.55)"></i>parede (a visão não passa)</span><span><i style="background:rgba(0,230,90,.9)"></i>arbusto</span><span><i style="background:rgba(0,170,255,.9)"></i>só para o passo (borda transparente, torres, inibidores, nexo)</span></div>
+<canvas id="c" width="900" height="900"></canvas>
+<script src="../../data/mapa.js"></script>
+<script>
+const G = window.MAPA, L = 900, c = document.getElementById("c"), x = c.getContext("2d");
+const bit = (b64) => { const s = atob(b64); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+const parede = bit(G.paredes), arbusto = bit(G.arbustos), passo = bit(G.soPasso);
+const W = G.nx * G.celula, H = G.nz * G.celula, img = new Image();
+img.onload = () => {
+  x.drawImage(img, 0, 0, L, L);
+  const cw = G.celula / W * L, ch = G.celula / H * L;
+  for (let z = 0; z < G.nz; z++) for (let k = 0; k < G.nx; k++) {
+    const i = z * G.nx + k, f = parede(i) ? "rgba(230,30,30,.55)" : arbusto(i) ? "rgba(0,230,90,.9)" : passo(i) ? "rgba(0,170,255,.9)" : null;
+    if (!f) continue;
+    x.fillStyle = f; x.fillRect(k * cw, L - (z + 1) * ch, cw + .3, ch + .3);
+  }
+};
+const FONTES = { dd: "https://ddragon.leagueoflegends.com/cdn/16.21.1/img/map/map11.png",
+  cd: "https://raw.communitydragon.org/latest/game/assets/maps/info/map11/2dlevelminimap_base_baron1.png" };
+img.src = FONTES[new URLSearchParams(location.search).get("img") || "dd"];
+</script></body></html>
