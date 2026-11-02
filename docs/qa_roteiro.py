@@ -6384,7 +6384,7 @@ def checar_enderecos(s, p):
     # a aba Builds abre na tela em que se estava (a lista ou a forja): começa na lista
     s.js("(() => { showBuildScreen('lista'); switchTab('catalog'); return 1; })()"); time.sleep(0.3)
     passos = {}
-    for aba, nome in (("build", "builds"), ("runas", "runas"), ("calc", "calculadora"), ("catalog", "catalogo")):
+    for aba, nome in (("build", "builds"), ("runas", "runas"), ("mapa", "mapa"), ("calc", "calculadora"), ("catalog", "catalogo")):
         s.clicar('.tab-btn[data-tab="%s"]' % aba, 0.5)
         passos[nome] = s.js(tela)["hash"]
     s.clicar('.tab-btn[data-tab="build"]', 0.5)
@@ -6396,8 +6396,8 @@ def checar_enderecos(s, p):
     volta2 = s.js(tela)
     s.js("history.forward(); 1"); time.sleep(0.6)
     avanca = s.js(tela)
-    p.conta("endereço por tela", "o endereço acompanha a aba (#builds, #runas, #calculadora, #catalogo, #forja); o voltar e o avançar do navegador trocam de tela",
-            passos == {"builds": "#builds", "runas": "#runas", "calculadora": "#calculadora", "catalogo": "#catalogo"}
+    p.conta("endereço por tela", "o endereço acompanha a aba (#builds, #runas, #mapa, #calculadora, #catalogo, #forja); o voltar e o avançar do navegador trocam de tela",
+            passos == {"builds": "#builds", "runas": "#runas", "mapa": "#mapa", "calculadora": "#calculadora", "catalogo": "#catalogo"}
             and forja["hash"] == "#forja" and forja["forja"] and volta1["hash"] == "#builds" and volta1["aba"] == "build" and not volta1["forja"]
             and volta2["hash"] == "#catalogo" and volta2["aba"] == "catalog" and avanca["hash"] == "#builds" and avanca["aba"] == "build",
             "abas %s · forja %s · voltar %s, %s · avançar %s" % (passos, forja, volta1, volta2, avanca))
@@ -7744,7 +7744,7 @@ def checar_dicas(s, p):
                 and m_runas == ["runas.ler", "runas.trilhas"] and m_montar == ["runas.montar"],
                 "%s" % momentos)
 
-        # 6. nas três resoluções, cada uma das 25 dicas (com os momentos valendo) fica inteira na janela e não
+        # 6. nas três resoluções, cada uma das 26 dicas (com os momentos valendo) fica inteira na janela e não
         #    cobre o que aponta; e a "Caixa vazia" da forja (.slot-vazio.dica, de antes) segue intacta
         s.js("Dicas.fechar(); switchTab('build'); showBuildScreen('forja'); window.scrollTo(0, 0); 'ok'")
         time.sleep(0.9)
@@ -7768,7 +7768,7 @@ def checar_dicas(s, p):
         for w, h in ((1440, 900), (1920, 1080), (1600, 900)):
             s.tela(w, h)
             for passo in ("switchTab('catalog')", "switchTab('build'); showBuildScreen('lista')", "switchTab('build'); showBuildScreen('forja')",
-                          "switchTab('runas')", "switchTab('calc')"):
+                          "switchTab('runas')", "switchTab('mapa')", "switchTab('calc')"):
                 s.js("Dicas.fechar(); window.scrollTo(0, 0); %s; 'ok'" % passo)
                 time.sleep(0.9)
                 r = s.js(mede)
@@ -7790,7 +7790,7 @@ def checar_dicas(s, p):
         todas = s.js("Dicas.DICAS.map(d => d.id)")
         faltam = [x for x in todas if x not in vistos]
         p.conta("dicas", "nas três resoluções, cada uma das %d dicas fica inteira na janela e não cobre o que aponta; a \"Caixa vazia\" da forja segue intacta com o balão aberto" % len(todas),
-                len(todas) == 25 and not faltam and not ruins and n_medidas == 75
+                len(todas) == 26 and not faltam and not ruins and n_medidas == 78
                 and bool(vazia) and vazia["pos"] == "static" and "url(" not in vazia["bg"] and vazia["w"] <= 90,
                 "%d medidas · faltaram: %s · ruins: %s · caixa vazia %s" % (n_medidas, faltam or "nenhuma", ", ".join(ruins[:6]) or "nenhuma", vazia))
         s.tela(1440, 900)
@@ -7857,6 +7857,159 @@ def checar_mapa(p):
             r.returncode == 0 and igual, (r.stdout + r.stderr).strip().splitlines()[-1][:120] if (r.stdout + r.stderr).strip() else "sem saída")
 
 
+def checar_mesa(s, p):
+    """F13-T107 (Leo, 02/11/2026: a opção A da F13-T106, e "é para ser uma aba à parte, como a calculadora"):
+    a mesa de guerra — o mapa de Summoner's Rift na aba Mapa, com o balão "Novidade" (a adição mais recente);
+    o endereço #mapa; a linha de quem é o mapa (a build aberta; a de ARAM avisa); o map11.png do patch do
+    catálogo; a roda aproxima em volta do cursor sem rolar a página; o arrasto move sem deixar o mapa sair da
+    janela; + − 0 e as setas; "Mapa inteiro"; nas três resoluções, a janela inteira na tela."""
+    print("\n%sMESA DE GUERRA%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+    s.nova_build()
+    s.js("switchTab('mapa'); 'ok'")
+    time.sleep(0.6)
+    est = "Mesa.estado()"
+
+    def mouse(tipo, x, y, **k):
+        d = {"type": tipo, "x": x, "y": y}
+        d.update(k)
+        s.envia("Input.dispatchMouseEvent", d)
+
+    def janela():
+        return s.js("(() => { const r = document.getElementById('mesa-janela').getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; })()")
+
+    def ponto_no_mapa(px, py):   # o ponto do mapa (0..1) sob um ponto da janela
+        e = s.js(est)
+        return ((px - e["x"]) / (e["lado"] * e["z"]), (py - e["y"]) / (e["lado"] * e["z"]))
+
+    abre_mapa = "(() => { switchTab('mapa'); window.scrollTo(0, 0); return 1; })()"
+    try:
+        # 1. a aba: o clique abre a tela do mapa e o endereço vira #mapa; o balão "Novidade" mora nela (e só nela);
+        #    a linha diz de quem é o mapa — e a build de ARAM avisa que o mapa é o de Summoner's Rift
+        s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
+        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')];
+          return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
+                   aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
+                   ondeNov: n.map(x => x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : '?'),
+                   novTxt: n.map(x => x.textContent.trim()), novVis: n.every(x => x.getBoundingClientRect().width > 0),
+                   dona: document.getElementById('mesa-dona').textContent.trim(), nome: build.name,
+                   src: document.getElementById('mesa-img').src, patch: CATALOG.meta.patch, w: document.getElementById('mesa-img').naturalWidth }; })()""")
+        modos = s.js("[...document.getElementById('build-mode').options].map(o => o.value)")
+        aram = next((m for m in modos if "ARAM" in m), None)
+        s.js("switchTab('build'); showBuildScreen('forja'); 'ok'")
+        time.sleep(0.5)
+        s.clicar("#edit-switch", 0.6)   # o modo só muda com o Editar (Leo, 23/10/2026)
+        s.js("(() => { const sel = document.getElementById('build-mode'); sel.value = %s; sel.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % json.dumps(aram))
+        time.sleep(0.4)
+        s.js(abre_mapa)
+        time.sleep(0.5)
+        dona_aram = s.js("document.getElementById('mesa-dona').textContent.trim()")
+        s.js("switchTab('build'); (() => { const sel = document.getElementById('build-mode'); sel.value = ''; sel.dispatchEvent(new Event('change', { bubbles: true })); })(); 'ok'")
+        time.sleep(0.4)
+        s.js(abre_mapa)
+        time.sleep(0.5)
+        j = janela()
+        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa), com o balão \"Novidade\" — um só, nela; a linha diz de qual build é o mapa e, na de ARAM, que o mapa é o de Summoner's Rift; o map11.png do patch, numa janela quadrada",
+                a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["mapa"] and a["novTxt"] == ["Novidade"] and a["novVis"]
+                and a["nome"] in a["dona"] and "ARAM" in dona_aram and "Summoner's Rift" in dona_aram
+                and a["src"].endswith("/cdn/%s/img/map/map11.png" % a["patch"]) and a["w"] > 0 and abs(j["w"] - j["h"]) < 1.5,
+                "%s · ARAM: %s · janela %s" % (a, dona_aram, j))
+
+        # 2. a roda aproxima em volta do cursor e a página não rola; fora do mapa, a roda rola a página
+        s.js(abre_mapa + "; Mesa.inteiro(); window.scrollTo(0, 60); 'ok'")   # um pouco rolada: a roda para cima teria para onde rolar
+        time.sleep(0.3)
+        j = janela()
+        cx, cy = j["x"] + j["w"] * 0.3, j["y"] + j["h"] * 0.6
+        antes_pt = ponto_no_mapa(cx - j["x"], cy - j["y"])
+        y0 = s.js("scrollY")
+        mouse("mouseMoved", cx, cy)
+        mouse("mouseWheel", cx, cy, deltaX=0, deltaY=-100)
+        time.sleep(0.3)
+        e1 = s.js(est)
+        depois_pt = ponto_no_mapa(cx - j["x"], cy - j["y"])
+        y1 = s.js("scrollY")
+        mouse("mouseWheel", j["x"] + j["w"] + 400, cy, deltaX=0, deltaY=300)
+        time.sleep(0.4)
+        y2 = s.js("scrollY")
+        p.conta("mesa", "a roda no mapa aproxima (~1,2× por clique) em volta do cursor — o ponto sob ele não sai do lugar — e a página não rola; fora do mapa, a roda rola a página",
+                1.15 < e1["z"] < 1.3 and abs(antes_pt[0] - depois_pt[0]) < 0.003 and abs(antes_pt[1] - depois_pt[1]) < 0.003 and y1 == y0 and y2 > y1,
+                "zoom %s · ponto %s → %s · rolagem %s → %s → %s" % (e1, antes_pt, depois_pt, y0, y1, y2))
+
+        # 3. o arrasto move junto com o mouse; puxado além da borda, o mapa para na borda
+        s.js(abre_mapa + "; Mesa.inteiro(); 'ok'")
+        time.sleep(0.3)
+        j = janela()
+        cx, cy = j["x"] + j["w"] / 2, j["y"] + j["h"] / 2
+        for _ in range(4):
+            mouse("mouseWheel", cx, cy, deltaX=0, deltaY=-100)
+        time.sleep(0.3)
+        e2 = s.js(est)
+        mouse("mouseMoved", cx, cy)
+        mouse("mousePressed", cx, cy, button="left", buttons=1, clickCount=1)
+        mouse("mouseMoved", cx - 20, cy - 10, buttons=1)
+        mouse("mouseMoved", cx - 40, cy - 30, buttons=1)
+        mouse("mouseReleased", cx - 40, cy - 30, button="left", buttons=0, clickCount=1)
+        time.sleep(0.3)
+        e3 = s.js(est)
+        # de um canto ao outro sem sair da janela (o Chrome do roteiro não repassa o movimento de fora dela;
+        # com o mouse de verdade, a captura segue fora — conferido no navegador embutido): com o mapa
+        # aproximado, isso já puxa além da borda. Uma pausa entre os gestos e o movimento em passos, como a mão
+        time.sleep(0.7)
+        ax, ay, bx, by = j["x"] + 12, j["y"] + 12, j["x"] + j["w"] - 12, j["y"] + j["h"] - 12
+        mouse("mouseMoved", ax, ay)
+        mouse("mousePressed", ax, ay, button="left", buttons=1, clickCount=1)
+        for k in range(1, 11):
+            mouse("mouseMoved", ax + (bx - ax) * k / 10, ay + (by - ay) * k / 10, buttons=1)
+        mouse("mouseReleased", bx, by, button="left", buttons=0, clickCount=1)
+        time.sleep(0.3)
+        e4 = s.js(est)
+        sel = s.js("String(getSelection()).length")
+        p.conta("mesa", "o arrasto move o mapa junto com o mouse; puxado além da borda, ele para na borda (o canto não entra na janela) e nada fica selecionado",
+                e2["z"] > 2 and abs((e3["x"] - e2["x"]) + 40) < 1.5 and abs((e3["y"] - e2["y"]) + 30) < 1.5 and e4["x"] == 0 and e4["y"] == 0 and sel == 0,
+                "%s → %s → %s · seleção %s" % (e2, e3, e4, sel))
+
+        # 4. o teclado (+ − 0 e as setas, com a janela em foco); o zoom para em 6×; "Mapa inteiro" volta
+        s.js("document.getElementById('mesa-janela').focus(); Mesa.inteiro(); 'ok'")
+        tecla = lambda k, cod: (s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": k, "code": cod}), s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": k, "code": cod}))
+        for _ in range(12):
+            tecla("+", "Equal")
+        e5 = s.js(est)
+        tecla("ArrowLeft", "ArrowLeft")
+        e6 = s.js(est)
+        tecla("0", "Digit0")
+        e7 = s.js(est)
+        tecla("+", "Equal")
+        s.clicar("#mesa-inteiro", 0.3)
+        e8 = s.js(est)
+        p.conta("mesa", "com a janela em foco, + aproxima até 6× e não passa, a seta move, 0 volta ao mapa inteiro; o botão \"Mapa inteiro\" também",
+                abs(e5["z"] - 6) < 1e-6 and e6["x"] > e5["x"] and e7["z"] == 1 and e7["x"] == 0 and e8["z"] == 1 and e8["x"] == 0 and e8["y"] == 0,
+                "%s · %s · %s · %s" % (e5, e6, e7, e8))
+
+        # 5. o link direto #mapa abre na tela do mapa
+        s.abrir("?r=107#mapa")   # endereço novo: trocar só o # não recarrega o documento
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.4)
+        d = s.js("({ aba: document.querySelector('.tab-btn.active').dataset.tab, vis: !document.getElementById('view-mapa').classList.contains('hidden'), hash: location.hash })")
+        p.conta("mesa", "o link direto #mapa abre na tela do mapa", d["aba"] == "mapa" and d["vis"] and d["hash"] == "#mapa", "%s" % d)
+
+        # 6. nas três resoluções: a janela do mapa, quadrada, cabe inteira na tela (do topo), sem rolagem de lado
+        ruins = []
+        for w, h in ((1440, 900), (1920, 1080), (1600, 900)):
+            s.tela(w, h)
+            time.sleep(0.4)
+            s.js(abre_mapa)
+            time.sleep(0.3)
+            m = s.js("(() => { const a = document.getElementById('mesa').getBoundingClientRect(), j = document.getElementById('mesa-janela').getBoundingClientRect(); return { dir: a.right, larg: innerWidth, alt: innerHeight, rola: document.documentElement.scrollWidth > innerWidth + 1, w: j.width, h: j.height, fundo: j.bottom }; })()")
+            if m["dir"] > m["larg"] or m["rola"] or abs(m["w"] - m["h"]) > 1.5 or m["w"] < 340 or m["fundo"] > m["alt"]:
+                ruins.append("%dx%d %s" % (w, h, m))
+        p.conta("mesa", "nas três resoluções a janela do mapa é quadrada e cabe inteira na tela, sem rolagem de lado", not ruins, ", ".join(ruins) or "ok")
+    finally:
+        s.tela(1440, 900)
+
+
 GRUPOS = [
     ("catálogo", checar_catalogo),
     ("ficha", checar_ficha),
@@ -7903,6 +8056,7 @@ GRUPOS = [
     ("entrada", checar_entrada),
     ("entrada da loja", checar_entrada_loja),
     ("dicas", checar_dicas),
+    ("mesa de guerra", checar_mesa),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
     ("acessibilidade", checar_acessibilidade),

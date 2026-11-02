@@ -638,6 +638,19 @@ o data/mapa.js decodifica na grade inteira (295 × 296, uma célula por bit) com
 dá o mesmo arquivo (visto falhando com um bit trocado numa cópia). O encaixe da grade sobre o
 map11.png foi medido uma vez, no navegador: o melhor ajuste fica a menos de 2 px dos limites da grade.
 
+A mesa de guerra, a aba Mapa (F13-T107, 02/11/2026; Leo: "é para ser uma aba à parte, como a
+calculadora" e o balão "Novidade" na adição mais recente). O grupo "mesa de guerra": o clique na aba abre
+a mesa (#mapa), com um balão "Novidade" só, nela; a linha de quem é o mapa (a build de ARAM avisa); o
+map11.png do patch numa janela quadrada; a roda (mouseWheel de verdade) aproxima ~1,2× em volta do cursor —
+o ponto sob ele não sai do lugar — e a página não rola, e fora do mapa a roda rola a página; o arrasto move
+junto e para na borda; + até 6×, a seta, o 0 e o "Mapa inteiro"; o link direto #mapa; nas três resoluções a
+janela inteira na tela. O Chrome do roteiro não repassa o movimento que sai da janela durante o arrasto (com
+o mouse de verdade, a captura segue — conferido no navegador embutido): o teste da borda vai de um canto ao
+outro por dentro. Vistos falhando, numa cópia: a roda rolando a página (o primeiro teste girava para cima com
+a página no topo e não via nada — passou a rolar antes), o mapa saindo da janela, a ARAM sem aviso, sem o
+balão, o zoom fora do cursor, sem teto e o #mapa sem rota. O primeiro balão animava a sombra: a checagem da
+entrada (T97) mediu 80% da thread principal parada; com o halo de opacidade, 4 ms por segundo.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

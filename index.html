@@ -4580,6 +4580,47 @@ body:not(.editando) .build-totals.show { display: none; }
 .build-cat .cat-total { bottom: 9px; }
 .build-cat:has(.cat-stats.show) .cat-total { position: static; margin: 0 10px 10px auto; display: inline-block; align-self: flex-end; }
 
+.mapa-view { max-width: 1440px; margin: 0 auto; padding: 24px 32px 40px; }
+@media (min-width: 2100px) { .mapa-view { max-width: 2000px; } }
+.tab-btn[data-tab] { position: relative; }
+.novidade { position: absolute; top: -11px; right: -8px; padding: 2px 6px 1px; border-radius: 9px; pointer-events: none;
+  font: 700 8.5px/1.2 var(--loja-gravado); letter-spacing: .1em; text-transform: uppercase; color: #1a0d04;
+  background: linear-gradient(var(--forja-brasa-clara), var(--forja-brasa)); border: 1px solid #a24a0c;
+  box-shadow: 0 0 8px var(--forja-brasa-glow), 0 1px 2px rgba(0,0,0,.6); }
+/* o pulso é um halo por cima que só muda a opacidade (anda na placa de vídeo): a sombra animada repintava a
+   página a cada quadro, até por trás da entrada — o roteiro mediu 80% da thread principal parada */
+.novidade::after { content: ""; position: absolute; inset: -3px; border-radius: inherit; box-shadow: 0 0 12px 2px var(--forja-brasa-glow);
+  opacity: 0; animation: novidade-pulsa 2.4s ease-in-out infinite; }
+@keyframes novidade-pulsa { 50% { opacity: 1; } }
+html.com-entrada .novidade::after, body.ac-brilho .novidade::after { animation: none; }
+body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
+@media (prefers-reduced-motion: reduce) { .novidade::after { animation: none; } }
+.mesa { margin: 0; padding: 16px 18px 18px; background: linear-gradient(160deg, var(--forja-placa-1), var(--forja-placa-2));
+  border: 1px solid var(--forja-placa-borda); border-radius: 4px; box-shadow: 0 8px 22px rgba(0,0,0,.5), inset 0 -2px 10px rgba(255,120,30,.08); }
+.mesa-cab { display: flex; align-items: baseline; gap: 14px; }
+.mesa-tit { margin: 0; font: 400 24px var(--loja-titulos); color: var(--forja-titulo); }
+.mesa-leg { color: var(--forja-texto-suave); font: italic 13px var(--loja-texto); }
+.mesa-dona { margin-left: auto; color: var(--forja-texto-suave); font: 13px var(--loja-texto); }
+.mesa-dona b { color: var(--forja-titulo); font-weight: 600; }
+.mesa-abas { display: flex; gap: 6px; margin-top: 12px; }
+.mesa-aba { padding: 6px 14px; font: 600 11px var(--loja-gravado); letter-spacing: .12em; text-transform: uppercase; border-radius: 3px 3px 0 0;
+  background: none; color: var(--forja-texto-suave); border: 1px solid var(--forja-placa-borda); border-bottom: 0; cursor: pointer; }
+.mesa-aba.ativa { background: var(--forja-placa-1); color: var(--forja-titulo); border-color: var(--forja-brasa); }
+.mesa-aba:disabled { opacity: .45; cursor: default; }
+.mesa-palco { display: flex; gap: 16px; align-items: flex-start; padding-top: 10px; border-top: 1px solid var(--forja-placa-borda); }
+.mesa-moldura { flex: none; padding: 6px; background: #0c0907; border: 1px solid var(--forja-placa-borda); border-radius: 3px; box-shadow: inset 0 0 0 1px #000; }
+.mesa-janela { position: relative; width: max(340px, min(820px, 56vw, calc(100vh - 260px))); aspect-ratio: 1; overflow: hidden; cursor: grab; touch-action: none; outline: none; }
+.mesa-janela:focus-visible { box-shadow: 0 0 0 2px var(--forja-brasa); }
+.mesa-janela.arrastando { cursor: grabbing; }
+.mesa-mapa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 0 0; will-change: transform; }
+.mesa-mapa img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; image-rendering: auto; }
+.mesa-ferr { flex: 1; min-width: 200px; max-width: 300px; }
+.mesa-ferr-tit { font: 600 10.5px var(--loja-gravado); letter-spacing: .14em; text-transform: uppercase; color: var(--forja-brasa); margin: 2px 0 8px; }
+.mesa-dica { margin: 0 0 12px; color: var(--forja-texto-suave); font: italic 13px/1.4 var(--loja-texto); }
+.mesa-btn { padding: 7px 12px; font: 600 11px var(--loja-gravado); letter-spacing: .1em; text-transform: uppercase; border-radius: 3px; cursor: pointer;
+  background: var(--forja-molde-2); color: var(--forja-texto); border: 1px solid var(--forja-placa-borda); }
+.mesa-btn:hover, .mesa-btn:focus-visible { border-color: var(--forja-brasa); color: var(--forja-titulo); }
+.mesa-zoom { display: block; margin-top: 8px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); }
 .build-totals { display: none; margin-bottom: 16px; padding: 12px 18px 12px 30px; position: relative;
   background: linear-gradient(180deg, var(--forja-placa-1), var(--forja-placa-2)); border: 1px solid var(--forja-placa-borda); border-radius: 3px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 40px rgba(0,0,0,.45), 0 6px 14px rgba(0,0,0,.55); }
@@ -8020,6 +8061,9 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <button class="tab-btn active" data-tab="catalog">Catálogo</button>
       <button class="tab-btn" data-tab="build">Builds<span class="tab-count" id="build-tab-count"></span></button>
       <button class="tab-btn" data-tab="runas">Runas<span class="tab-count" id="runas-tab-count"></span></button>
+      <!-- F13-T107: a aba do mapa. O balão "Novidade" mora sempre na adição mais recente do Montador
+           (Leo, 02/11/2026); quando entrar a próxima, ele passa para ela -->
+      <button class="tab-btn" data-tab="mapa">Mapa<span class="novidade" title="A adição mais recente do Montador">Novidade</span></button>
       <button class="tab-btn" data-tab="calc">Calculadora</button>
       <!-- F13-T51 (Leo, 18/10/2026): a plaqueta da bigorna, pendurada sob a aba
            Builds — diz de qualquer tela qual build está aberta e em que estado.
@@ -8379,6 +8423,37 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
     <div id="build-canvas" class="build-canvas"></div>
   </div>
   </div><!-- /build-editor -->
+</div>
+
+<!-- ============ ABA MAPA (F13-T107) ============ -->
+<!-- Leo, 02/11/2026: a mesa de guerra (a opção A da F13-T106) é "uma aba à parte, como a calculadora". O
+     mapa de Summoner's Rift; as marcas (as próximas tarefas) ficam na build aberta. -->
+<div id="view-mapa" class="mapa-view hidden">
+  <section id="mesa" class="mesa" aria-label="Mapa de Summoner's Rift">
+    <div class="mesa-cab">
+      <h2 class="mesa-tit">A mesa de guerra</h2>
+      <span class="mesa-leg">o mapa de Summoner's Rift — visão, a primeira volta da selva e o farm</span>
+      <span id="mesa-dona" class="mesa-dona"></span>
+    </div>
+    <div class="mesa-abas" role="tablist" aria-label="O que o mapa mostra">
+      <button type="button" class="mesa-aba ativa" role="tab" aria-selected="true">Visão</button>
+      <button type="button" class="mesa-aba" role="tab" aria-selected="false" disabled title="Em breve: a primeira volta da selva">Selva</button>
+      <button type="button" class="mesa-aba" role="tab" aria-selected="false" disabled title="Em breve: as rotas de farm">Farm</button>
+    </div>
+    <div class="mesa-palco">
+      <div class="mesa-moldura">
+        <div id="mesa-janela" class="mesa-janela" tabindex="0" role="application" aria-label="Mapa de Summoner's Rift — a roda do mouse aproxima, arrastar move; + e − aproximam, as setas movem, 0 volta ao mapa inteiro">
+          <div id="mesa-mapa" class="mesa-mapa"><img id="mesa-img" alt="" draggable="false"></div>
+        </div>
+      </div>
+      <div class="mesa-ferr">
+        <div class="mesa-ferr-tit">O mapa</div>
+        <p class="mesa-dica">A roda do mouse aproxima e afasta, em volta do ponto onde ele está. Arraste para mover.</p>
+        <button type="button" id="mesa-inteiro" class="mesa-btn">Mapa inteiro</button>
+        <span id="mesa-zoom" class="mesa-zoom" aria-live="polite"></span>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- ============ ABA CALCULADORA ============ -->
@@ -9188,7 +9263,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.104";
+const ATUALIZACAO = "13.107";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -11817,6 +11892,92 @@ function renderBuildTotals() {
 
 // Adicionar item NÃO re-renderiza o seletor: se re-renderizasse, a lista
 // voltaria ao topo a cada clique, obrigando a rolar de novo.
+// F13-T107 (Leo, 02/11/2026): a mesa de guerra — o mapa de Summoner's Rift, na aba Mapa ("uma aba à
+// parte, como a calculadora"; o visual é o da opção A da F13-T106). O map11.png do Data Dragon, do patch do
+// catálogo, cobre os limites da grade do jogo (data/mapa.js, F13-T105). Aqui: o zoom em volta do cursor (a
+// roda; + e −) e o arrasto (o mouse; as setas), sem deixar o mapa sair da janela; a linha que diz de qual
+// build são as marcas. As sentinelas, a névoa e o resto chegam nas próximas.
+const Mesa = (function () {
+  const MAX = 6, PASSO = 1.25;
+  let z = 1, x = 0, y = 0, montada = false, arraste = null;
+  const el = (id) => document.getElementById(id);
+  function lado() { return el("mesa-janela").clientWidth || 1; }
+  // o mapa sempre cobre a janela: o canto não entra
+  function prender() {
+    const L = lado(), m = L - L * z;
+    x = Math.min(0, Math.max(m, x));
+    y = Math.min(0, Math.max(m, y));
+  }
+  function aplicar() {
+    prender();
+    el("mesa-mapa").style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) scale(" + z.toFixed(4) + ")";
+    el("mesa-zoom").textContent = z > 1.001 ? "Aproximado " + (Math.round(z * 10) / 10).toString().replace(".", ",") + "×" : "";
+  }
+  // aproxima ou afasta em volta de um ponto da janela (px, py), que fica parado sob o cursor
+  function zoom(fator, px, py) {
+    const novo = Math.min(MAX, Math.max(1, z * fator));
+    if (novo === z) return;
+    x = px - (px - x) * (novo / z);
+    y = py - (py - y) * (novo / z);
+    z = novo;
+    aplicar();
+  }
+  function inteiro() { z = 1; x = 0; y = 0; aplicar(); }
+  function montar() {
+    montada = true;
+    const janela = el("mesa-janela");
+    el("mesa-img").src = "https://ddragon.leagueoflegends.com/cdn/" + CATALOG.meta.patch + "/img/map/map11.png";
+    el("mesa-img").alt = "Summoner's Rift";
+    janela.addEventListener("wheel", (ev) => {
+      ev.preventDefault();   // a roda no mapa é do mapa: a página não rola
+      const r = janela.getBoundingClientRect();
+      // proporcional ao giro: um clique da roda (~100) aproxima ~1,2×; o touchpad, em passos pequenos, não dispara
+      const d = ev.deltaMode === 1 ? ev.deltaY * 33 : ev.deltaY;
+      zoom(Math.exp(Math.max(-300, Math.min(300, -d)) * 0.002), ev.clientX - r.left, ev.clientY - r.top);
+    }, { passive: false });
+    janela.addEventListener("pointerdown", (ev) => {
+      if (ev.button !== 0) return;
+      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y };
+      janela.setPointerCapture(ev.pointerId);
+      janela.classList.add("arrastando");
+    });
+    janela.addEventListener("pointermove", (ev) => {
+      if (!arraste || ev.pointerId !== arraste.id) return;
+      x = arraste.x + ev.clientX - arraste.px;
+      y = arraste.y + ev.clientY - arraste.py;
+      aplicar();
+    });
+    const solta = (ev) => { if (arraste && ev.pointerId === arraste.id) { arraste = null; janela.classList.remove("arrastando"); } };
+    janela.addEventListener("pointerup", solta);
+    janela.addEventListener("pointercancel", solta);
+    janela.addEventListener("keydown", (ev) => {
+      const L = lado(), d = L / 10;
+      if (ev.key === "+" || ev.key === "=") zoom(PASSO, L / 2, L / 2);
+      else if (ev.key === "-" || ev.key === "_") zoom(1 / PASSO, L / 2, L / 2);
+      else if (ev.key === "0") inteiro();
+      else if (ev.key === "ArrowLeft") { x += d; aplicar(); }
+      else if (ev.key === "ArrowRight") { x -= d; aplicar(); }
+      else if (ev.key === "ArrowUp") { y += d; aplicar(); }
+      else if (ev.key === "ArrowDown") { y -= d; aplicar(); }
+      else return;
+      ev.preventDefault();
+    });
+    el("mesa-inteiro").addEventListener("click", inteiro);
+    addEventListener("resize", () => { if (!el("view-mapa").classList.contains("hidden")) aplicar(); });
+  }
+  // ao abrir a aba (e a cada render da build, com a aba aberta): o mapa e de quem ele é
+  function mostrar() {
+    if (el("view-mapa").classList.contains("hidden")) return;
+    if (!montada) montar();
+    const dona = el("mesa-dona");
+    if (!build.id) dona.textContent = "sem build aberta — o mapa é só para ver";
+    else if (!rotaPossivel(build.mode)) dona.innerHTML = "<b>" + esc(build.name || "Build") + "</b> é de " + esc(build.mode) + ": este é o mapa de Summoner's Rift";
+    else dona.innerHTML = "o mapa de <b>" + esc(build.name || "Build") + "</b>";
+    aplicar();
+  }
+  return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; } };
+})();
+
 function renderBuild() {
   renderCategories();
   renderBuildTotals();
@@ -11825,6 +11986,7 @@ function renderBuild() {
   renderLibrary();
   renderModeWarning();
   renderModeSelect();
+  Mesa.mostrar();   // F13-T107
   document.body.classList.toggle("cat-selected", !!getCat(build.selectedCatId));
   if (typeof refreshInBuildMarks === "function") refreshInBuildMarks();
 }
@@ -13795,7 +13957,7 @@ function initRunas() {
 // trocam de tela; dá para favoritar e mandar o link. Os # de captura e o #b= dos links de build
 // continuam valendo: o app só escreve o endereço depois que a carga termina.
 const ROTAS_DE_TELA = { catalogo: { tab: "catalog" }, builds: { tab: "build", tela: "lista" }, forja: { tab: "build", tela: "forja" },
-  runas: { tab: "runas" }, calculadora: { tab: "calc" } };
+  runas: { tab: "runas" }, mapa: { tab: "mapa" }, calculadora: { tab: "calc" } };
 let rotaPronta = false, aplicandoRota = false;
 // F13-T91 (Leo, 30/10/2026; inspiração: os endereços do cblow.xyz): "#build/<id de 6>" abre direto a
 // build publicada, só visualização. Com # e não /, para seguir abrindo do disco e sem 404 no Pages.
@@ -13809,7 +13971,7 @@ function rotaDaTela() {
   // a pública que o link abriu: enquanto ela está na forja, o endereço é o dela (recarregar reabre)
   if (tab === "build" && buildScreen === "forja" && build.temp && linkCurto.aberto && build.pubOrigem === linkCurto.aberto) return "build/" + linkCurto.aberto;
   if (tab === "build") return buildScreen === "forja" ? "forja" : "builds";
-  return { catalog: "catalogo", runas: "runas", calc: "calculadora" }[tab] || "catalogo";
+  return { catalog: "catalogo", runas: "runas", mapa: "mapa", calc: "calculadora" }[tab] || "catalogo";
 }
 function marcarRota() {
   if (!rotaPronta || aplicandoRota) return;
@@ -13924,6 +14086,7 @@ function switchTab(tab) {
   document.getElementById("view-build").classList.toggle("hidden", tab !== "build");
   document.getElementById("view-calc").classList.toggle("hidden", tab !== "calc");
   document.getElementById("view-runas").classList.toggle("hidden", tab !== "runas");
+  document.getElementById("view-mapa").classList.toggle("hidden", tab !== "mapa");   // F13-T107
   document.getElementById("catalog-controls").classList.toggle("hidden", tab !== "catalog");
   // Sair da loja, entrar na forja (Fase 3, T1): o fundo escurece e a vista sobe.
   // Na volta, a loja desce e o papel clareia.
@@ -13931,7 +14094,7 @@ function switchTab(tab) {
   const entrandoNaForja = tab === "build" && !estavaNaForja;
   const saindoDaForja = tab !== "build" && estavaNaForja;
   document.body.classList.toggle("forja", tab === "build");
-  const telaDaVez = { calc: "view-calc", runas: "view-runas" }[tab] || "view-catalog";
+  const telaDaVez = { calc: "view-calc", runas: "view-runas", mapa: "view-mapa" }[tab] || "view-catalog";
   const alvo = entrandoNaForja ? document.getElementById("view-build")
     : saindoDaForja ? document.getElementById(telaDaVez) : null;
   if (alvo) {
@@ -13942,6 +14105,7 @@ function switchTab(tab) {
   if (tab === "build") { if (buildScreen === "lista") renderBuildIndex(); else renderBuildAll(); }
   if (tab === "calc" && typeof renderCalc === "function") renderCalc();
   if (tab === "runas") renderRunas();
+  if (tab === "mapa") Mesa.mostrar();   // F13-T107
   marcarRota();   // F13-T81
   if (window.Dicas) Dicas.ver();    // F13-T101 (o módulo mora num script de baixo)
 }
@@ -18973,13 +19137,16 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
       texto: "Cada cor é uma trilha. Na página de runas, a trilha principal dá a runa de assinatura e as escolhas de baixo; a secundária completa o resto." },
     { id: "runas.montar", tela: "runas", alvo: "#runas-dona", quando: () => runasEstado.modo === "montar", titulo: "Montar a página",
       texto: "Aqui você monta a página de runas da build aberta: escolha a trilha principal e as runas. Para mudar, ligue o <b>Editar</b>." },
+    // ---- o mapa (F13-T107)
+    { id: "mapa.mesa", tela: "mapa", alvo: "#mesa-janela", titulo: "A mesa de guerra",
+      texto: "O mapa de Summoner's Rift, para planejar a partida. A roda do mouse aproxima e afasta; arraste para mover." },
     // ---- a calculadora
     { id: "calc.puxar", tela: "calc", alvo: "#calc-from-build", titulo: "Quanto dano você aguenta",
       texto: "Escreva a sua vida e as resistências, ou puxe da build aberta, e veja quanto do dano elas seguram." },
     { id: "calc.efetiva", tela: "calc", alvo: "#view-calc .calc-stat", titulo: "Vida efetiva",
       texto: "As barras mostram quanto do dano cada resistência segura. A <b>vida efetiva</b> é quanto dano você aguenta de verdade, contando a vida e a resistência juntas." }
   ];
-  const NOME = { loja: "A loja", builds: "Builds", forja: "A forja", runas: "Runas", calc: "Calculadora" };
+  const NOME = { loja: "A loja", builds: "Builds", forja: "A forja", runas: "Runas", mapa: "Mapa", calc: "Calculadora" };
   // as dicas da F13-T101 marcavam a tela inteira como vista: quem já viu aquela tela não revê as delas
   const DA_TELA_ANTIGA = { loja: ["loja.shift", "loja.levar"], builds: ["builds.oque"], forja: ["forja.caixas", "forja.editar"], runas: ["runas.ler"], calc: ["calc.puxar"] };
   // o que cobre a tela: com isto aberto, a dica espera (e some, se já estava)
@@ -19022,7 +19189,7 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
     const ativa = document.querySelector(".tab-btn.active");
     const aba = ativa ? ativa.dataset.tab : "catalog";
     if (aba === "build") return buildScreen === "forja" ? "forja" : "builds";
-    return { catalog: "loja", runas: "runas", calc: "calc" }[aba] || null;
+    return { catalog: "loja", runas: "runas", mapa: "mapa", calc: "calc" }[aba] || null;
   }
   function entradaDePe() { return document.documentElement.classList.contains("com-entrada"); }
   function visivel(el) {
