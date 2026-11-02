@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "02/11/2026",
+   "add": [
+    "Dicas na primeira visita a cada tela, para quem está chegando agora; o \"?\" no topo mostra de novo"
+   ],
+   "aj": [],
+   "rem": []
+  },
+  {
    "data": "01/11/2026",
    "add": [
     "A nova entrada da loja: o posto de troca do Freljord, com as portas que se abrem e a câmera que entra",
