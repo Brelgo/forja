@@ -4621,6 +4621,20 @@ body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
   background: var(--forja-molde-2); color: var(--forja-texto); border: 1px solid var(--forja-placa-borda); }
 .mesa-btn:hover, .mesa-btn:focus-visible { border-color: var(--forja-brasa); color: var(--forja-titulo); }
 .mesa-zoom { display: block; margin-top: 8px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); }
+.mesa-nevoa { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.mesa-marcas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.mesa-ferras { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.mesa-ferra { display: flex; align-items: center; gap: 9px; width: 100%; padding: 6px 10px; border-radius: 3px; cursor: pointer; text-align: left;
+  font: 600 11px var(--loja-gravado); letter-spacing: .08em; text-transform: uppercase; color: var(--forja-texto);
+  background: var(--forja-molde-2); border: 1px solid var(--forja-placa-borda); }
+.mesa-ferra img { width: 24px; height: 24px; border-radius: 3px; border: 1px solid #000; flex: none; }
+.mesa-ferra small { margin-left: auto; font: italic 11px var(--loja-texto); letter-spacing: 0; text-transform: none; color: var(--forja-texto-suave); }
+.mesa-ferra[aria-checked="true"] { background: linear-gradient(var(--forja-brasa-clara), var(--forja-brasa)); color: #1a0d04; border-color: #a24a0c; }
+.mesa-ferra[aria-checked="true"] small { color: #3a1a05; }
+.mesa-ferra:disabled { opacity: .45; cursor: default; }
+.mesa-opt { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; color: var(--forja-texto); font: 13px var(--loja-texto); cursor: pointer; }
+.mesa-conta { margin: 4px 0 14px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); min-height: 1em; }
+.mesa-pode-btn { margin-top: 6px; }
 .build-totals { display: none; margin-bottom: 16px; padding: 12px 18px 12px 30px; position: relative;
   background: linear-gradient(180deg, var(--forja-placa-1), var(--forja-placa-2)); border: 1px solid var(--forja-placa-borda); border-radius: 3px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 40px rgba(0,0,0,.45), 0 6px 14px rgba(0,0,0,.55); }
@@ -8443,10 +8457,19 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
     <div class="mesa-palco">
       <div class="mesa-moldura">
         <div id="mesa-janela" class="mesa-janela" tabindex="0" role="application" aria-label="Mapa de Summoner's Rift — a roda do mouse aproxima, arrastar move; + e − aproximam, as setas movem, 0 volta ao mapa inteiro">
-          <div id="mesa-mapa" class="mesa-mapa"><img id="mesa-img" alt="" draggable="false"></div>
+          <div id="mesa-mapa" class="mesa-mapa"><img id="mesa-img" alt="" draggable="false"><canvas id="mesa-nevoa" class="mesa-nevoa" aria-hidden="true"></canvas></div>
+          <svg id="mesa-marcas" class="mesa-marcas" aria-hidden="true"></svg>
         </div>
       </div>
       <div class="mesa-ferr">
+        <!-- F13-T108: as sentinelas. O raio e o ícone vêm do catálogo (Sentinela Invisível, Sentinela de Controle) -->
+        <div class="mesa-ferr-tit">Pôr no mapa</div>
+        <div id="mesa-ferras" class="mesa-ferras" role="radiogroup" aria-label="O que o clique põe"></div>
+        <p id="mesa-pode" class="mesa-dica"></p>
+        <div class="mesa-ferr-tit">Mostrar</div>
+        <label class="mesa-opt"><input type="checkbox" id="mesa-nevoa-on"> Névoa de guerra</label>
+        <label class="mesa-opt"><input type="checkbox" id="mesa-raio-on"> Raio em ciano</label>
+        <p id="mesa-conta" class="mesa-conta" aria-live="polite"></p>
         <div class="mesa-ferr-tit">O mapa</div>
         <p class="mesa-dica">A roda do mouse aproxima e afasta, em volta do ponto onde ele está. Arraste para mover.</p>
         <button type="button" id="mesa-inteiro" class="mesa-btn">Mapa inteiro</button>
@@ -8635,6 +8658,7 @@ aplicarCamadaDoRobo(window.CATALOG, window.ATUALIZACAO_PATCH, window.ROBO);
 <script src="data/habilidades.js"></script>
 <script src="data/servidor.js"></script>
 <script src="data/ganho_sons.js"></script>
+<script src="data/mapa.js"></script>
 <script>
 // ============================================================
 // Som — módulo único de áudio (Fase 4). docs/mapa_de_audio.md é a régua.
@@ -9263,7 +9287,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.107";
+const ATUALIZACAO = "13.108";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -9404,7 +9428,7 @@ function newBuildId() {
 }
 
 function snapshotActive() {
-  return { id: build.id, name: build.name, cats: comNomes(build.cats), patch: build.patch || CATALOG.meta.patch, revisao: build.revisao || null, temp: !!build.temp, pubOrigem: build.pubOrigem || null, layout: layoutValido(build.layout), seq: build.seq, mode: build.mode, rota: rotaValida(build.rota), masterwork: !!build.masterwork, champion: build.champion || null, markers: normMarkers(build.markers), desc: build.desc || "", runas: normRunas(build.runas), habilidades: normHabilidades(build.habilidades), fav: !!build.fav, updatedAt: build.updatedAt || 0, pubId: build.pubId || null, pubVersao: build.pubVersao || 0, pubEm: build.pubEm || 0, pubPatch: build.pubPatch || "", pubAssinatura: build.pubAssinatura || "" };
+  return { id: build.id, name: build.name, cats: comNomes(build.cats), patch: build.patch || CATALOG.meta.patch, revisao: build.revisao || null, temp: !!build.temp, pubOrigem: build.pubOrigem || null, layout: layoutValido(build.layout), seq: build.seq, mode: build.mode, rota: rotaValida(build.rota), masterwork: !!build.masterwork, champion: build.champion || null, markers: normMarkers(build.markers), desc: build.desc || "", runas: normRunas(build.runas), habilidades: normHabilidades(build.habilidades), mapa: normMapa(build.mapa), fav: !!build.fav, updatedAt: build.updatedAt || 0, pubId: build.pubId || null, pubVersao: build.pubVersao || 0, pubEm: build.pubEm || 0, pubPatch: build.pubPatch || "", pubAssinatura: build.pubAssinatura || "" };
 }
 
 // Em modo Editar as alterações ficam em rascunho (Leo, 14/09/2026): saveBuild() só
@@ -9468,6 +9492,17 @@ const HAB_GERAL = (window.HABILIDADES && window.HABILIDADES.regraGeral) || null;
 // o que fugia da regra comum (o 6º rank do Udyr, o R fora do 6/11/16) em toda
 // importação, cópia e publicação. Sem ponto no 19 e no 20 ficam as 18 casas de
 // sempre: a build que já existia grava e assina igual.
+// F13-T108: as marcas do mapa da build — por enquanto, as sentinelas da aba Visão, em unidades do jogo.
+// Só o que é de Summoner's Rift e cabe no mapa; um teto para um texto torto não encher a build.
+const MAPA_TIPOS = ["sentinela", "controle"], MAPA_MAX = 40;
+function normMapa(m) {
+  const lim = window.MAPA ? [MAPA.min[0], MAPA.min[1], MAPA.min[0] + MAPA.nx * MAPA.celula, MAPA.min[1] + MAPA.nz * MAPA.celula] : [0, 0, 15000, 15000];
+  const visao = (m && Array.isArray(m.visao) ? m.visao : []).filter(v => v && MAPA_TIPOS.includes(v.t)
+    && Number.isFinite(Number(v.x)) && Number.isFinite(Number(v.z))
+    && v.x >= lim[0] && v.x <= lim[2] && v.z >= lim[1] && v.z <= lim[3])
+    .slice(0, MAPA_MAX).map(v => ({ t: v.t, x: Math.round(Number(v.x)), z: Math.round(Number(v.z)) }));
+  return { visao };
+}
 function normHabilidades(h) {
   const out = Array(HAB_NIVEIS_TOPO).fill(null);
   if (Array.isArray(h)) h.slice(0, HAB_NIVEIS_TOPO).forEach((L, i) => { if (HAB_LETRAS.includes(L)) out[i] = L; });
@@ -9549,6 +9584,9 @@ function assinaturaDaBuild(b) {
     name: b.name || "", desc: b.desc || "", mode: b.mode || "", rota: rotaValida(b.rota), masterwork: !!b.masterwork,
     champion: b.champion && b.champion.key ? String(b.champion.key) : null,
     markers: normMarkers(b.markers), runas: normRunas(b.runas), habilidades: normHabilidades(b.habilidades),
+    // F13-T108: as marcas do mapa contam como mudança da build (a assinatura só as leva quando existem:
+    // as builds de antes, sem o campo, não passam a dizer "Há alterações")
+    ...(normMapa(b.mapa).visao.length ? { mapa: normMapa(b.mapa) } : {}),
     layout: layoutValido(b.layout), cats: comNomes(b.cats || []),
   }));
 }
@@ -10504,6 +10542,7 @@ function loadBuild() {
           desc: typeof b.desc === "string" ? b.desc : "",
           runas: b.runas || null,   // normalizada quando a build vira ativa
           habilidades: b.habilidades || null,
+          mapa: b.mapa || null,   // F13-T108: as sentinelas (normalizadas quando a build vira ativa)
           fav: !!b.fav,
           updatedAt: Number(b.updatedAt) || 0,
           pubId: b.pubId || null, pubVersao: Number(b.pubVersao) || 0, pubEm: Number(b.pubEm) || 0, pubPatch: b.pubPatch || "", pubAssinatura: b.pubAssinatura || "",
@@ -10573,6 +10612,7 @@ function copiarParaBigorna(b) {
   build.desc = typeof b.desc === "string" ? b.desc : "";
   build.runas = normRunas(b.runas);
   build.habilidades = normHabilidades(b.habilidades);
+  build.mapa = normMapa(b.mapa);   // F13-T108
   build.fav = !!b.fav;
   build.updatedAt = Number(b.updatedAt) || 0;
   build.pubId = b.pubId || null; build.pubVersao = Number(b.pubVersao) || 0; build.pubEm = Number(b.pubEm) || 0; build.pubPatch = b.pubPatch || ""; build.pubAssinatura = b.pubAssinatura || "";
@@ -10598,7 +10638,7 @@ function copiarParaBigorna(b) {
 function zerarBuild() {
   Object.assign(build, {
     id: null, name: "", cats: [], seq: 1, mode: "", rota: "", masterwork: false, champion: null,
-    markers: normMarkers(null), desc: "", runas: normRunas(null), habilidades: normHabilidades(null),
+    markers: normMarkers(null), desc: "", runas: normRunas(null), habilidades: normHabilidades(null), mapa: normMapa(null),
     fav: false, updatedAt: 0, pubId: null, pubVersao: 0, pubEm: 0, pubPatch: "", pubAssinatura: "",
     patch: CATALOG.meta.patch, revisao: null, temp: false, pubOrigem: null, layout: "tabuleiro", selectedCatId: null,
   });
@@ -10647,6 +10687,7 @@ function createNewBuild(name, cats, mode, champion, markers) {
     desc: "",
     runas: normRunas(null),
     habilidades: normHabilidades(null),
+    mapa: normMapa(null),   // F13-T108
     fav: false,
     updatedAt: Date.now(),
     patch: CATALOG.meta.patch,
@@ -11896,12 +11937,185 @@ function renderBuildTotals() {
 // parte, como a calculadora"; o visual é o da opção A da F13-T106). O map11.png do Data Dragon, do patch do
 // catálogo, cobre os limites da grade do jogo (data/mapa.js, F13-T105). Aqui: o zoom em volta do cursor (a
 // roda; + e −) e o arrasto (o mouse; as setas), sem deixar o mapa sair da janela; a linha que diz de qual
-// build são as marcas. As sentinelas, a névoa e o resto chegam nas próximas.
+// build são as marcas.
+// F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de guerra,
+// revelando o alcance e o que ela revela e o que não revela"; "o raio de visão deve ser equivalente à escala
+// do tamanho, e uma opção permitindo ver exatamente o raio da visão como um círculo ciano"): as sentinelas
+// da aba Visão. O clique põe a do botão escolhido; o clique numa sentinela a tira; arrastar só move o mapa.
+// O raio e o ícone são os do catálogo (o raio, lido do texto do item: se o texto não disser, a ferramenta
+// some e a tela diz que falta). A visão de cada sentinela é por célula da grade: a parede barra a linha, e o
+// arbusto só se vê de dentro dele (Gerador, fundamentos/visao_mecanica.md §1.3). Mexer pede o Editar, como
+// toda a build; as marcas são da build aberta.
 const Mesa = (function () {
   const MAX = 6, PASSO = 1.25;
-  let z = 1, x = 0, y = 0, montada = false, arraste = null;
+  let z = 1, x = 0, y = 0, montada = false, arraste = null, ferra = "sentinela", aviso = "";
   const el = (id) => document.getElementById(id);
   function lado() { return el("mesa-janela").clientWidth || 1; }
+
+  // ---- as sentinelas, do catálogo: o item, o ícone e o raio (o número que o texto do item diz)
+  const FERRAS = {
+    sentinela: { slug: "stealth-ward", nome: "Sentinela", campo: "notes", re: /raio de visão de ([\d.]+)/ },
+    controle: { slug: "control-ward", nome: "Sentinela de Controle", campo: "mechanics", re: /visão num raio de ([\d.]+)/ },
+  };
+  function ferraDoCatalogo(k) {
+    const f = FERRAS[k], it = byId[f.slug];
+    const txt = it ? JSON.stringify(it[f.campo] || "") + " " + JSON.stringify(it) : "";
+    const m = it && f.re.exec(String(it[f.campo] || "")) || (it && f.re.exec(txt));
+    return { item: it || null, raio: m ? Number(m[1].replace(/\./g, "")) : null };
+  }
+  const G = window.MAPA, T = G ? G.celula : 50, LX = G ? G.nx * T : 1, LZ = G ? G.nz * T : 1;
+  const bits = (b64) => { const s = atob(b64 || ""); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+  const parede = G ? bits(G.paredes) : () => 0, arbusto = G ? bits(G.arbustos) : () => 0, soPasso = G ? bits(G.soPasso) : () => 0;
+  const celDe = (wx, wz) => [Math.floor((wx - G.min[0]) / T), Math.floor((wz - G.min[1]) / T)];
+  const chao = (k, w) => k >= 0 && w >= 0 && k < G.nx && w < G.nz && !parede(w * G.nx + k) && !soPasso(w * G.nx + k);
+  // as células que uma sentinela em (wx, wz) vê até o raio r: a linha até a célula não cruza parede; o arbusto
+  // só de dentro dele. Cada célula leva a distância (para a névoa abrir de dentro para fora)
+  function visao(wx, wz, r) {
+    const [cx, cz] = celDe(wx, wz), n = Math.ceil(r / T), naMoita = arbusto(cz * G.nx + cx), out = [];
+    for (let dz = -n; dz <= n; dz++) for (let dx = -n; dx <= n; dx++) {
+      const d2 = (dx * dx + dz * dz) * T * T;
+      if (d2 > r * r) continue;
+      const k = cx + dx, w = cz + dz;
+      if (k < 0 || w < 0 || k >= G.nx || w >= G.nz) continue;
+      const i = w * G.nx + k;
+      if (parede(i) || (arbusto(i) && !naMoita)) continue;
+      const passos = Math.max(Math.abs(dx), Math.abs(dz));
+      let livre = true;
+      for (let s = 1; s < passos && livre; s++) {
+        if (parede(Math.round(cz + dz * s / passos) * G.nx + Math.round(cx + dx * s / passos))) livre = false;
+      }
+      if (livre) out.push([k, w, Math.sqrt(d2)]);
+    }
+    return out;
+  }
+  // o clique numa parede escorrega para o chão mais perto (como o jogo faz ao pôr a sentinela)
+  function noChao(wx, wz) {
+    const [cx, cz] = celDe(wx, wz);
+    for (let d = 0; d <= 4; d++) for (let dz = -d; dz <= d; dz++) for (let dx = -d; dx <= d; dx++) {
+      if (Math.max(Math.abs(dx), Math.abs(dz)) !== d || !chao(cx + dx, cz + dz)) continue;
+      return d === 0 ? [wx, wz] : [G.min[0] + (cx + dx + .5) * T, G.min[1] + (cz + dz + .5) * T];
+    }
+    return null;
+  }
+  const paraTela = (wx, wz) => [(wx - G.min[0]) / LX * lado(), (1 - (wz - G.min[1]) / LZ) * lado()];   // em px do mapa sem zoom
+
+  // ---- a névoa: um véu esfumado feito aqui (sem imagem de fora — o canvas fica legível), recortado pela visão
+  const NEVOA_RES = 1024;
+  let veu = null, anima = 0, abrindo = null;
+  function fazerVeu() {
+    const c = document.createElement("canvas"); c.width = c.height = NEVOA_RES;
+    const g = c.getContext("2d");
+    g.fillStyle = "rgba(10,14,26,.72)"; g.fillRect(0, 0, NEVOA_RES, NEVOA_RES);
+    // nuvens: manchas grandes e suaves, com semente fixa (a mesma névoa toda vez)
+    let s = 7;
+    const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    g.filter = "blur(26px)";
+    for (let k = 0; k < 90; k++) {
+      const r = 40 + rnd() * 120;
+      g.fillStyle = rnd() < .5 ? "rgba(120,140,170,.10)" : "rgba(0,0,8,.16)";
+      g.beginPath(); g.arc(rnd() * NEVOA_RES, rnd() * NEVOA_RES, r, 0, 7); g.fill();
+    }
+    g.filter = "none";
+    return c;
+  }
+  function desenharNevoa() {
+    const cv = el("mesa-nevoa");
+    const on = el("mesa-nevoa-on").checked && !!G;
+    cv.hidden = !on;
+    if (!on) return;
+    if (cv.width !== NEVOA_RES) { cv.width = cv.height = NEVOA_RES; }
+    if (!veu) veu = fazerVeu();
+    const g = cv.getContext("2d"), cel = T / LX * NEVOA_RES, agora = performance.now();
+    g.globalCompositeOperation = "source-over"; g.filter = "none";
+    g.clearRect(0, 0, NEVOA_RES, NEVOA_RES);
+    g.drawImage(veu, 0, 0);
+    const furo = document.createElement("canvas"); furo.width = furo.height = NEVOA_RES;
+    const f = furo.getContext("2d"); f.fillStyle = "#fff";
+    let falta = false;
+    marcas().forEach((v, i) => {
+      const r = raioDe(v.t);
+      if (!r) return;
+      // a névoa sendo expulsa: a recém-posta abre de dentro para fora em ~0,45 s
+      let ate = r;
+      if (abrindo && abrindo.i === i) { const p = Math.min(1, (agora - abrindo.t0) / 450); ate = r * (1 - Math.pow(1 - p, 3)); if (p < 1) falta = true; }
+      visao(v.x, v.z, r).forEach(([k, w, d]) => {
+        if (d > ate) return;
+        f.beginPath(); f.arc((k + .5) * cel, NEVOA_RES - (w + .5) * cel, cel * .95, 0, 7); f.fill();
+      });
+    });
+    g.globalCompositeOperation = "destination-out"; g.filter = "blur(" + Math.max(2, cel * .7).toFixed(1) + "px)";
+    g.drawImage(furo, 0, 0);
+    g.globalCompositeOperation = "source-over"; g.filter = "none";
+    if (falta) anima = requestAnimationFrame(desenharNevoa); else { anima = 0; abrindo = null; }
+  }
+
+  // ---- as marcas por cima (fora do zoom: o ícone fica do mesmo tamanho; o raio cresce com o mapa)
+  function marcas() { return build.id ? normMapa(build.mapa).visao : []; }
+  function raioDe(t) { return ferraDoCatalogo(t).raio; }
+  function desenharMarcas() {
+    const svg = el("mesa-marcas"), L = lado(), raioOn = el("mesa-raio-on").checked;
+    let h = "";
+    marcas().forEach((v) => {
+      const [px, py] = paraTela(v.x, v.z), sx = x + px * z, sy = y + py * z, r = raioDe(v.t);
+      if (raioOn && r) h += '<circle class="mm-raio" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (r / LX * L * z).toFixed(1) + '" fill="none" stroke="#3ee8ff" stroke-width="1.6" stroke-dasharray="6 4" opacity=".95"/>';
+      const ic = ferraDoCatalogo(v.t).item;
+      h += '<g class="mm-sent ' + v.t + '" transform="translate(' + sx.toFixed(1) + ',' + sy.toFixed(1) + ')">'
+        + '<circle r="11" fill="' + (v.t === "controle" ? "#d8434b" : "#e8c35a") + '" stroke="#1a0d04" stroke-width="2"/>'
+        + (ic ? '<image href="' + esc(ic.iconUrl) + '" x="-8" y="-8" width="16" height="16" style="clip-path: circle(8px)"/>' : "") + "</g>";
+    });
+    svg.setAttribute("viewBox", "0 0 " + L + " " + L);
+    svg.innerHTML = h;
+    const n = marcas(), s = n.filter(v => v.t === "sentinela").length, c = n.length - s;
+    el("mesa-conta").textContent = n.length ? [s ? s + (s === 1 ? " sentinela" : " sentinelas") : "", c ? c + (c === 1 ? " de controle" : " de controle") : ""].filter(Boolean).join(" · ") : "";
+  }
+
+  // ---- o clique: pôr ou tirar (com o Editar, numa build de Summoner's Rift)
+  function podeMexer() {
+    if (!build.id) return "Abra uma build para pôr sentinelas: as marcas ficam guardadas nela.";
+    if (!rotaPossivel(build.mode)) return "Esta build é de " + build.mode + ": as sentinelas são de Summoner's Rift.";
+    if (!G) return "Falta o data/mapa.js: sem a forma do mapa, a visão não se calcula.";
+    return "";
+  }
+  function clicarNoMapa(cx, cy) {
+    const motivo = podeMexer();
+    if (motivo) return;
+    if (!build.editing) { chamarEditar(); return; }
+    const L = lado(), mx = (cx - x) / z, my = (cy - y) / z;   // px do mapa sem zoom
+    const lista = normMapa(build.mapa).visao;
+    // em cima de uma sentinela (até 12 px na tela): tira
+    const perto = lista.findIndex(v => { const [px, py] = paraTela(v.x, v.z); return Math.hypot((px - mx) * z, (py - my) * z) <= 12; });
+    if (perto >= 0) { lista.splice(perto, 1); build.mapa = { visao: lista }; abrindo = null; mudou(); return; }
+    if (!raioDe(ferra)) return;
+    if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas por build."; return; }
+    const lugar = noChao(G.min[0] + mx / L * LX, G.min[1] + (1 - my / L) * LZ);
+    if (!lugar) { el("mesa-conta").textContent = "Aí não: escolha um ponto do chão."; return; }
+    lista.push({ t: ferra, x: Math.round(lugar[0]), z: Math.round(lugar[1]) });
+    build.mapa = normMapa({ visao: lista });
+    const reduz = document.body.classList.contains("ac-movimento") || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+    abrindo = reduz ? null : { i: build.mapa.visao.length - 1, t0: performance.now() };
+    mudou();
+  }
+  function mudou() {
+    saveBuild();
+    if (anima) cancelAnimationFrame(anima);
+    desenharNevoa();
+    desenharMarcas();
+  }
+  function desenharFerras() {
+    const caixa = el("mesa-ferras"), motivo = podeMexer();
+    caixa.innerHTML = Object.keys(FERRAS).map(k => {
+      const f = ferraDoCatalogo(k);
+      const falta = !f.raio;
+      return '<button type="button" class="mesa-ferra" role="radio" data-ferra="' + k + '" aria-checked="' + (ferra === k && !falta) + '"'
+        + (falta || motivo ? " disabled" : "") + (falta ? ' title="O catálogo não diz o raio de visão deste item"' : "") + ">"
+        + (f.item ? '<img src="' + esc(f.item.iconUrl) + '" alt="">' : "") + esc(f.item ? f.item.namePt : FERRAS[k].nome)
+        + "<small>" + (falta ? "sem raio no catálogo" : "raio " + f.raio) + "</small></button>";
+    }).join("");
+    const pode = el("mesa-pode");
+    if (motivo) pode.innerHTML = esc(motivo);
+    else if (!build.editing) pode.innerHTML = 'Para pôr e tirar, ligue o <b>Editar</b>. <button type="button" class="mesa-btn mesa-pode-btn" data-ligar-editar>Ligar Editar</button>';
+    else pode.textContent = "Clique no mapa para pôr; clique numa sentinela para tirar. Arrastar move o mapa.";
+  }
   // o mapa sempre cobre a janela: o canto não entra
   function prender() {
     const L = lado(), m = L - L * z;
@@ -11912,6 +12126,7 @@ const Mesa = (function () {
     prender();
     el("mesa-mapa").style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) scale(" + z.toFixed(4) + ")";
     el("mesa-zoom").textContent = z > 1.001 ? "Aproximado " + (Math.round(z * 10) / 10).toString().replace(".", ",") + "×" : "";
+    if (montada) desenharMarcas();
   }
   // aproxima ou afasta em volta de um ponto da janela (px, py), que fica parado sob o cursor
   function zoom(fator, px, py) {
@@ -11937,19 +12152,44 @@ const Mesa = (function () {
     }, { passive: false });
     janela.addEventListener("pointerdown", (ev) => {
       if (ev.button !== 0) return;
-      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y };
+      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y, longe: false };
       janela.setPointerCapture(ev.pointerId);
       janela.classList.add("arrastando");
     });
     janela.addEventListener("pointermove", (ev) => {
       if (!arraste || ev.pointerId !== arraste.id) return;
+      if (Math.hypot(ev.clientX - arraste.px, ev.clientY - arraste.py) > 4) arraste.longe = true;
       x = arraste.x + ev.clientX - arraste.px;
       y = arraste.y + ev.clientY - arraste.py;
       aplicar();
     });
     const solta = (ev) => { if (arraste && ev.pointerId === arraste.id) { arraste = null; janela.classList.remove("arrastando"); } };
-    janela.addEventListener("pointerup", solta);
+    janela.addEventListener("pointerup", (ev) => {
+      if (arraste && ev.pointerId === arraste.id && !arraste.longe) {
+        const r = janela.getBoundingClientRect();
+        x = arraste.x; y = arraste.y; aplicar();   // o clique não arrasta
+        clicarNoMapa(ev.clientX - r.left, ev.clientY - r.top);
+      }
+      solta(ev);
+    });
     janela.addEventListener("pointercancel", solta);
+    el("mesa-pode").addEventListener("click", (ev) => { if (ev.target.closest("[data-ligar-editar]")) ligarEdicao(true); });
+    el("mesa-ferras").addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-ferra]");
+      if (!b || b.disabled) return;
+      ferra = b.dataset.ferra;
+      desenharFerras();
+    });
+    // a névoa e o raio são do jeito de ver de cada um: ficam no navegador, não na build
+    [["mesa-nevoa-on", "mesa.nevoa"], ["mesa-raio-on", "mesa.raio"]].forEach(([id, chave]) => {
+      let v = "1";
+      try { v = localStorage.getItem(chave) || "1"; } catch (e) { /* padrão: ligado */ }
+      el(id).checked = v === "1";
+      el(id).addEventListener("change", () => {
+        try { localStorage.setItem(chave, el(id).checked ? "1" : "0"); } catch (e) { /* vale só nesta visita */ }
+        desenharNevoa(); desenharMarcas();
+      });
+    });
     janela.addEventListener("keydown", (ev) => {
       const L = lado(), d = L / 10;
       if (ev.key === "+" || ev.key === "=") zoom(PASSO, L / 2, L / 2);
@@ -11973,9 +12213,12 @@ const Mesa = (function () {
     if (!build.id) dona.textContent = "sem build aberta — o mapa é só para ver";
     else if (!rotaPossivel(build.mode)) dona.innerHTML = "<b>" + esc(build.name || "Build") + "</b> é de " + esc(build.mode) + ": este é o mapa de Summoner's Rift";
     else dona.innerHTML = "o mapa de <b>" + esc(build.name || "Build") + "</b>";
+    desenharFerras();
+    if (!anima) desenharNevoa();
     aplicar();
   }
-  return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; } };
+  return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; },
+           visao: visao, raio: raioDe, paraTela: paraTela };
 })();
 
 function renderBuild() {
@@ -14222,6 +14465,7 @@ function buildResumo(b) {
     desc: isActive ? (build.desc || "") : (b.desc || ""),
     runas: isActive ? build.runas : (b.runas || null),
     habilidades: isActive ? build.habilidades : (b.habilidades || null),
+    mapa: normMapa(isActive ? build.mapa : b.mapa),   // F13-T108
     masterwork: isActive ? !!build.masterwork : !!b.masterwork,   // F13-T37: o texto do lote escreve o MESTRE FORJADOR
     // F13-T64 (nº 44): a visualização de uma pública mostra o favorito da pública, não o da cópia de passagem
     fav: (isActive ? build.temp : b.temp) ? favoritosIds().includes((isActive ? build.pubOrigem : b.pubOrigem) || "") : (isActive ? !!build.fav : !!b.fav),
@@ -14865,6 +15109,7 @@ function duplicateBuild(id) {
   // descrição e o layout eram copiados. Achado pela caçada de bugs.
   build.runas = normRunas(JSON.parse(JSON.stringify(d.runas || null)));
   build.habilidades = normHabilidades(JSON.parse(JSON.stringify(d.habilidades || null)));
+  build.mapa = normMapa(JSON.parse(JSON.stringify(d.mapa)));   // F13-T108: a cópia leva as sentinelas
   build.masterwork = mestre;
   gravarBuild();
   // F13-T71: a forja foi desenhada pelo createNewBuild, antes de tudo isto —
@@ -19139,7 +19384,7 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
       texto: "Aqui você monta a página de runas da build aberta: escolha a trilha principal e as runas. Para mudar, ligue o <b>Editar</b>." },
     // ---- o mapa (F13-T107)
     { id: "mapa.mesa", tela: "mapa", alvo: "#mesa-janela", titulo: "A mesa de guerra",
-      texto: "O mapa de Summoner's Rift, para planejar a partida. A roda do mouse aproxima e afasta; arraste para mover." },
+      texto: "O mapa de Summoner's Rift, para planejar a partida: ponha sentinelas e veja o que cada uma enxerga. A roda do mouse aproxima e afasta; arraste para mover." },
     // ---- a calculadora
     { id: "calc.puxar", tela: "calc", alvo: "#calc-from-build", titulo: "Quanto dano você aguenta",
       texto: "Escreva a sua vida e as resistências, ou puxe da build aberta, e veja quanto do dano elas seguram." },

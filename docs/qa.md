@@ -651,6 +651,19 @@ a página no topo e não via nada — passou a rolar antes), o mapa saindo da ja
 balão, o zoom fora do cursor, sem teto e o #mapa sem rota. O primeiro balão animava a sombra: a checagem da
 entrada (T97) mediu 80% da thread principal parada; com o halo de opacidade, 4 ms por segundo.
 
+As sentinelas (F13-T108, 02/11/2026). O grupo "sentinelas": as duas ferramentas levam o ícone do
+catálogo e o raio que o texto do item diz; sem o Editar o clique não põe nada e a mesa oferece o "Ligar
+Editar"; com ele, o clique de verdade põe a sentinela onde foi dado e a build fica "não salva"; a névoa
+(lida no canvas) abre ali e segue fechada atrás da parede dentro do raio e longe — o ponto atrás da parede
+é achado na própria grade, com folga de 2 células da área vista (a borda esfumada vaza uma); o raio ciano
+no tamanho da escala e dobrando com o zoom 2×; arrastar não põe e o clique na sentinela a tira; a de
+Controle com a sua cor e o clique na parede escorregando para o chão; o arbusto (de fora não se vê, de
+dentro sim); a névoa e o raio desligados e lembrados ao recarregar; salva, a sentinela volta; duplicar
+leva. O grupo achou um defeito de verdade: o loadBuild copiava os campos da biblioteca um a um e deixava o
+mapa de fora (a sentinela sumia ao recarregar). Vistos falhando, numa cópia, 9 mutantes: a parede que não
+barra, o arbusto visto de fora, a sentinela na parede, pôr sem o Editar, o raio sem o zoom, o carregar sem
+o mapa, o duplicar sem as sentinelas, arrastar pondo e o raio que o texto não diz.
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

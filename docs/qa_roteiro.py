@@ -8010,6 +8010,174 @@ def checar_mesa(s, p):
         s.tela(1440, 900)
 
 
+def checar_sentinelas(s, p):
+    """F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de
+    guerra, revelando o alcance e o que ela revela e o que não revela"; "o raio de visão deve ser equivalente
+    à escala… um círculo ciano"): as sentinelas na aba Mapa. O raio e o ícone vêm do catálogo; sem o Editar
+    nada muda; o clique põe e tira, arrastar só move; a névoa abre na visão de verdade (a parede barra, o
+    arbusto só de dentro); o raio em ciano acompanha o zoom; a névoa e o raio se desligam (lembrado); as marcas
+    ficam na build (salvar, recarregar, duplicar)."""
+    print("\n%sSENTINELAS%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+    s.nova_build()
+    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+    time.sleep(0.8)
+
+    def mouse(tipo, x, y, **k):
+        d = {"type": tipo, "x": x, "y": y}
+        d.update(k)
+        s.envia("Input.dispatchMouseEvent", d)
+
+    def clique(x, y):
+        mouse("mouseMoved", x, y)
+        mouse("mousePressed", x, y, button="left", buttons=1, clickCount=1)
+        mouse("mouseReleased", x, y, button="left", buttons=0, clickCount=1)
+        time.sleep(0.7)
+
+    jan = lambda: s.js("(() => { const r = document.getElementById('mesa-janela').getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width }; })()")
+    # o ponto da tela de uma posição do jogo, e a opacidade da névoa nela (0–255)
+    tela_de = "(wx, wz) => { const e = Mesa.estado(), p = Mesa.paraTela(wx, wz), r = document.getElementById('mesa-janela').getBoundingClientRect(); return [r.left + e.x + p[0] * e.z, r.top + e.y + p[1] * e.z]; }"
+    alfa = """(wx, wz) => { const cv = document.getElementById('mesa-nevoa'); if (cv.hidden) return -1;
+      const L = cv.width, u = (wx - MAPA.min[0]) / (MAPA.nx * MAPA.celula), v = 1 - (wz - MAPA.min[1]) / (MAPA.nz * MAPA.celula);
+      return cv.getContext('2d').getImageData(Math.floor(u * L), Math.floor(v * L), 1, 1).data[3]; }"""
+    # achado na grade, perto do centro: um ponto de chão aberto (5×5 livres), um ponto de chão atrás de parede dentro
+    # do raio (que a sentinela não vê) e uma parede a poucos passos
+    achar = """(() => { const G = MAPA, T = G.celula, b = (s) => { const t = atob(s); return (i) => (t.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+      const par = b(G.paredes), arb = b(G.arbustos), sp = b(G.soPasso), w = (k) => G.min[0] + (k + .5) * T, zz = (z) => G.min[1] + (z + .5) * T;
+      const livre = (k, z) => !par(z * G.nx + k) && !arb(z * G.nx + k) && !sp(z * G.nx + k);
+      const r = Mesa.raio('sentinela'), n = Math.ceil(r / T);
+      for (let d = 0; d < 120; d += 2) for (let k = 147 - d; k <= 147 + d; k += 2) for (const z of [148 - d, 148 + d]) {
+        let ok = k > 3 && z > 3 && k < G.nx - 3 && z < G.nz - 3;
+        for (let a = -2; a <= 2 && ok; a++) for (let c = -2; c <= 2 && ok; c++) if (!livre(k + a, z + c)) ok = false;
+        if (!ok) continue;
+        const vis = new Set(Mesa.visao(w(k), zz(z), r).map(c => c[0] + ',' + c[1]));
+        let atras = null, parede = null;
+        for (let dz = -n; dz <= n && !atras; dz++) for (let dx = -n; dx <= n && !atras; dx++) { const kk = k + dx, z2 = z + dz;
+          if ((dx * dx + dz * dz) * T * T > (r * .8) * (r * .8) || !livre(kk, z2)) continue;
+          let folga = true; for (let a = -2; a <= 2 && folga; a++) for (let c = -2; c <= 2 && folga; c++) if (vis.has((kk + a) + ',' + (z2 + c))) folga = false;
+          if (folga) atras = [w(kk), zz(z2)]; }   // sem célula vista a 2 de distância: a borda esfumada não chega
+        for (let e = 3; e < 10 && !parede; e++) for (const [a, c] of [[e, 0], [-e, 0], [0, e], [0, -e]]) { const kk = k + a, z2 = z + c; if (!parede && par(z2 * G.nx + kk)) parede = [w(kk), zz(z2), kk, z2]; }
+        if (atras && parede) return { chao: [w(k), zz(z), k, z], atras, parede, r };
+      }
+      return null; })()"""
+
+    try:
+        # 1. as ferramentas: o ícone e o raio do catálogo (o número que o texto do item diz)
+        f = s.js("""(() => { const it = (sl) => CATALOG.items.find(i => i.slug === sl);
+          const txt = (sl) => JSON.stringify(it(sl)); const m1 = /raio de visão de ([\\d.]+)/.exec(txt('stealth-ward')), m2 = /visão num raio de ([\\d.]+)/.exec(txt('control-ward'));
+          return { raios: [Mesa.raio('sentinela'), Mesa.raio('controle')], doTexto: [m1 && Number(m1[1].replace(/\\./g, '')), m2 && Number(m2[1].replace(/\\./g, ''))],
+                   icones: [...document.querySelectorAll('#mesa-ferras img')].map(i => i.src), doCat: [it('stealth-ward').iconUrl, it('control-ward').iconUrl],
+                   rotulos: [...document.querySelectorAll('#mesa-ferras small')].map(x => x.textContent) }; })()""")
+        p.conta("sentinelas", "as duas ferramentas levam o ícone do catálogo e o raio que o texto do item diz (Sentinela Invisível e Sentinela de Controle)",
+                f["raios"] == f["doTexto"] and all(f["raios"]) and f["icones"] == f["doCat"] and f["rotulos"] == ["raio %d" % r for r in f["raios"]], "%s" % f)
+
+        # 2. sem o Editar, o clique não muda nada e a mesa oferece o "Ligar Editar"
+        a = s.js(achar)
+        x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, a["chao"][0], a["chao"][1]))
+        clique(x1, y1)
+        sem = s.js("({ n: build.mapa.visao.length, editing: build.editing, btn: !!document.querySelector('#mesa-pode [data-ligar-editar]') })")
+        s.clicar("#mesa-pode [data-ligar-editar]", 0.6)
+        ligado = s.js("build.editing")
+        p.conta("sentinelas", "sem o Editar, o clique no mapa não põe nada e a mesa oferece o \"Ligar Editar\", que liga",
+                sem == {"n": 0, "editing": False, "btn": True} and ligado is True, "%s · depois %s" % (sem, ligado))
+
+        # 3. com o Editar, o clique (de verdade) põe a sentinela onde foi dado; a build fica "não salva"; a névoa abre
+        #    ali e continua fechada atrás da parede, dentro do raio, e longe
+        x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, a["chao"][0], a["chao"][1]))
+        clique(x1, y1)
+        time.sleep(0.6)
+        v = s.js("({ m: build.mapa.visao, sujo: rascunho.sujo, svg: document.querySelectorAll('#mesa-marcas .mm-sent').length, ic: (document.querySelector('#mesa-marcas image') || {}).getAttribute && document.querySelector('#mesa-marcas image').getAttribute('href') })")
+        al = s.js("(() => { const f = %s; return { aqui: f(%r, %r), atras: %s, longe: f(MAPA.min[0] + 400, MAPA.min[1] + MAPA.nz * MAPA.celula - 400) }; })()"
+                  % (alfa, a["chao"][0], a["chao"][1], ("f(%r, %r)" % tuple(a["atras"])) if a["atras"] else "null"))
+        m = v["m"][0] if v["m"] else {}
+        p.conta("sentinelas", "com o Editar, o clique põe a sentinela onde foi dado (a menos de uma célula) e a build fica \"não salva\"; a névoa abre ali e segue fechada atrás da parede (dentro do raio) e longe",
+                len(v["m"]) == 1 and m.get("t") == "sentinela" and abs(m["x"] - a["chao"][0]) <= 50 and abs(m["z"] - a["chao"][1]) <= 50 and v["sujo"] and v["svg"] == 1
+                and v["ic"] == s.js("CATALOG.items.find(i => i.slug === 'stealth-ward').iconUrl")
+                and al["aqui"] is not None and al["aqui"] < 70 and al["atras"] is not None and al["atras"] > 120 and al["longe"] > 120,
+                "%s · névoa %s · ponto atrás %s" % (v, al, a["atras"]))
+
+        # 4. o raio em ciano: no mapa inteiro tem o tamanho do raio na escala do mapa; aproximado 2×, dobra
+        rr = lambda: s.js("(() => { const c = document.querySelector('#mesa-marcas .mm-raio'); return c ? Number(c.getAttribute('r')) : null; })()")
+        r1 = rr()
+        esperado = s.js("Mesa.raio('sentinela') / (MAPA.nx * MAPA.celula) * Mesa.estado().lado")
+        j = jan()
+        s.js("(() => { const j = document.getElementById('mesa-janela'), r = j.getBoundingClientRect(); for (let k = 0; k < 4; k++) j.dispatchEvent(new WheelEvent('wheel', { deltaY: -86.6, clientX: r.left + r.width / 2, clientY: r.top + r.width / 2, bubbles: true, cancelable: true })); return 1; })()")
+        time.sleep(0.3)
+        z2 = s.js("Mesa.estado().z")
+        r2 = rr()
+        s.js("Mesa.inteiro(); 'ok'")
+        p.conta("sentinelas", "o raio em ciano tem o tamanho do raio na escala do mapa e cresce junto com o zoom",
+                r1 is not None and abs(r1 - esperado) < 0.6 and r2 is not None and abs(r2 - r1 * z2) < 1, "r %s (esperado %.1f) · zoom %.2f → %s" % (r1, esperado, z2, r2))
+
+        # 5. arrastar não põe; o clique numa sentinela a tira
+        s.js("(() => { const j = document.getElementById('mesa-janela'), r = j.getBoundingClientRect(); j.dispatchEvent(new WheelEvent('wheel', { deltaY: -200, clientX: r.left + 100, clientY: r.top + 100, bubbles: true, cancelable: true })); return 1; })()")
+        time.sleep(0.6)
+        x0, y0 = jan()["x"] + 200, jan()["y"] + 200
+        mouse("mouseMoved", x0, y0)
+        mouse("mousePressed", x0, y0, button="left", buttons=1, clickCount=1)
+        for k in range(1, 6):
+            mouse("mouseMoved", x0 + 8 * k, y0 + 6 * k, buttons=1)
+        mouse("mouseReleased", x0 + 40, y0 + 30, button="left", buttons=0, clickCount=1)
+        time.sleep(0.6)
+        n_arr = s.js("build.mapa.visao.length")
+        s.js("Mesa.inteiro(); 'ok'")
+        time.sleep(0.7)
+        x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, m["x"], m["z"]))
+        clique(x1, y1)
+        n_tira = s.js("build.mapa.visao.length")
+        p.conta("sentinelas", "arrastar move o mapa e não põe sentinela; o clique numa sentinela a tira", n_arr == 1 and n_tira == 0, "depois de arrastar %s · depois do clique %s" % (n_arr, n_tira))
+
+        # 6. a Sentinela de Controle; e o clique numa parede escorrega para o chão
+        s.clicar('#mesa-ferras [data-ferra="controle"]', 0.4)
+        xw, yw = s.js("(%s)(%r, %r)" % (tela_de, a["parede"][0], a["parede"][1]))
+        clique(xw, yw)
+        c = s.js("""(() => { const v = build.mapa.visao[0]; if (!v) return null; const G = MAPA, k = Math.floor((v.x - G.min[0]) / G.celula), z = Math.floor((v.z - G.min[1]) / G.celula);
+          const t = atob(G.paredes), i = z * G.nx + k; return { t: v.t, parede: (t.charCodeAt(i >> 3) >> (i & 7)) & 1, dist: Math.hypot(v.x - %r, v.z - %r), cor: document.querySelector('#mesa-marcas .mm-sent.controle circle').getAttribute('fill') }; })()""" % (a["parede"][0], a["parede"][1]))
+        p.conta("sentinelas", "a Sentinela de Controle se põe com a sua cor; o clique numa parede escorrega para o chão mais perto (não fica na parede)",
+                bool(c) and c["t"] == "controle" and c["parede"] == 0 and c["dist"] <= 250 and c["cor"] == "#d8434b", "%s" % c)
+
+        # 7. o arbusto: de fora não se vê dentro; de dentro, sim (a regra, pela própria grade)
+        mt = s.js("""(() => { const G = MAPA, T = G.celula, b = (s) => { const t = atob(s); return (i) => (t.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+          const par = b(G.paredes), arb = b(G.arbustos), w = (k) => G.min[0] + (k + .5) * T, zz = (z) => G.min[1] + (z + .5) * T;
+          for (let z = 5; z < G.nz - 5; z++) for (let k = 5; k < G.nx - 5; k++) {
+            if (!arb(z * G.nx + k)) continue;
+            for (let d = 3; d <= 6; d++) { const fk = k + d; if (arb(z * G.nx + fk) || par(z * G.nx + fk)) continue;
+              let limpo = true; for (let s2 = k + 1; s2 < fk; s2++) if (par(z * G.nx + s2)) limpo = false;
+              if (!limpo) continue;
+              const ve = (wx, wz) => Mesa.visao(wx, wz, Mesa.raio('sentinela')).some(c => c[0] === k && c[1] === z);
+              return { de_fora: ve(w(fk), zz(z)), de_dentro: ve(w(k), zz(z)), moita: [k, z] }; } }
+          return null; })()""")
+        p.conta("sentinelas", "o arbusto: a sentinela de fora não vê dentro dele; a de dentro vê", bool(mt) and mt["de_fora"] is False and mt["de_dentro"] is True, "%s" % mt)
+
+        # 8. a névoa e o raio se desligam, e ficam desligados ao recarregar
+        s.clicar("#mesa-raio-on", 0.3)
+        s.clicar("#mesa-nevoa-on", 0.3)
+        d1 = s.js("({ raios: document.querySelectorAll('#mesa-marcas .mm-raio').length, nevoa: document.getElementById('mesa-nevoa').hidden })")
+        s.js("salvarAgora(); 'ok'")   # o Salvar da forja (o Ctrl+S chama o mesmo)
+        time.sleep(0.4)
+        s.abrir("?r=108#mapa")
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.8)
+        d2 = s.js("({ raioOn: document.getElementById('mesa-raio-on').checked, nevoaOn: document.getElementById('mesa-nevoa-on').checked, nevoa: document.getElementById('mesa-nevoa').hidden, n: build.mapa.visao.length, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
+        p.conta("sentinelas", "a névoa e o raio em ciano se desligam (o raio some, a névoa some) e continuam desligados ao recarregar; salva, a sentinela volta com a build",
+                d1 == {"raios": 0, "nevoa": True} and d2 == {"raioOn": False, "nevoaOn": False, "nevoa": True, "n": 1, "marcas": 1}, "%s · %s" % (d1, d2))
+        s.js("(() => { ['mesa-raio-on', 'mesa-nevoa-on'].forEach(id => { const c = document.getElementById(id); if (!c.checked) c.click(); }); return 1; })()")
+
+        # 9. duplicar a build leva as sentinelas
+        s.js("switchTab('build'); showBuildScreen('forja'); 'ok'")
+        time.sleep(0.5)
+        s.js("duplicateBuild(build.id); 'ok'")
+        time.sleep(0.8)
+        dup = s.js("({ nome: build.name, m: build.mapa.visao })")
+        p.conta("sentinelas", "duplicar a build leva as sentinelas", "(cópia)" in dup["nome"] and len(dup["m"]) == 1 and dup["m"][0]["t"] == "controle", "%s" % dup)
+    finally:
+        s.js("try { ['mesa-raio-on', 'mesa-nevoa-on'].forEach(id => localStorage.setItem(id === 'mesa-raio-on' ? 'mesa.raio' : 'mesa.nevoa', '1')); } catch (e) {} 'ok'")
+        s.tela(1440, 900)
+
+
 GRUPOS = [
     ("catálogo", checar_catalogo),
     ("ficha", checar_ficha),
@@ -8057,6 +8225,7 @@ GRUPOS = [
     ("entrada da loja", checar_entrada_loja),
     ("dicas", checar_dicas),
     ("mesa de guerra", checar_mesa),
+    ("sentinelas", checar_sentinelas),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
     ("acessibilidade", checar_acessibilidade),
