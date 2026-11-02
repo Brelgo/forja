@@ -596,6 +596,23 @@ desliga, o estilo do balão de volta na classe antiga, o balão que não vira de
 que aponta) e o anel pulsando com o menos movimento do sistema. A regra própria do anel
 para o "Menos movimento" da loja saiu: o mutante mostrou que a regra geral já o parava.
 
+A entrada casada com o som (F13-T102, 02/11/2026; Leo: "a duração da animação não é muito
+sincronizada com o som" e "pega a duração do áudio e sincronize para a duração da animação").
+O open_catalog dura 1,13 s e a cena, 2,15 s. Agora os primeiros 300 ms correm no tempo do som (a
+tranca e o começo das folhas casam com os golpes aos 150 e 300 ms) e o resto da cena — as
+animações finitas do CSS (playbackRate) e a câmera (o mesmo relógio da cena) — acelera pela
+razão tirada da duração do áudio lida no clique (Som.duracao): o esmaecer acaba junto com o
+som. Novas no grupo "entrada da loja": em cada região, a abertura fecha entre o fim do som (a
+duração decodificada do próprio arquivo pelo roteiro) e 120 ms depois, com a câmera no fim do
+zoom e a cena já esmaecida no último quadro; e, no Freljord, com um som fingido de 1,7 s, ela
+fecha aos ~1,75 s (a duração vem do arquivo, não de um número escrito). Vistos falhando, numa
+cópia da pasta (desde a T102 os mutantes não rodam na pasta do Leo: ele testou a entrada com um
+mutante aplicado e viu a versão antiga): a duração escrita em vez da lida, a câmera no tempo
+antigo e as animações do CSS no tempo antigo. Duas da T100 mudaram com a abertura curta: os
+outros sons não baixam "até a abertura fechar" (em vez de "nos 1,5 s depois do clique"), e os
+quadros longos somam no máximo 30% da abertura, na média — a comparação com o comportamento
+antigo (cair 20%) virou ruído com as somas pequenas (137% numa rodada, 84% na seguinte).
+
 **Publicação órfã** (F13-T34, bug nº 42; servidor simulado, espera encurtada) —
 com a publicação no ar, a build não se exclui (lista, forja, lote); despublicar
 durante o "Atualizar publicação" espera; publicar durante uma exclusão no ar

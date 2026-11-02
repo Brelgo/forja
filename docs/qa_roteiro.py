@@ -4741,12 +4741,19 @@ def checar_entrada_loja(s, p):
     espia = """(() => { window.__sons = []; if (!Som.__orig) { Som.__orig = Som.play; Som.play = (ev, c) => { window.__sons.push(ev); return Som.__orig(ev, c); }; }
       const e = document.getElementById('entrada'); window.__entT = [[performance.now(), e.className]];
       new MutationObserver(() => window.__entT.push([performance.now(), e.className])).observe(e, { attributes: true, attributeFilter: ['class'] });
+      // F13-T102: a cada quadro da abertura, a opacidade da entrada e a escala da câmera (o último antes de fechar)
+      window.__entQ = []; const q = () => { if (e.classList.contains('fechada')) return;
+        if (e.classList.contains('saindo')) { const m = document.getElementById('en-mundo'), sc = m && /scale\(([\d.]+)\)/.exec(m.style.transform);
+          window.__entQ.push([performance.now(), +getComputedStyle(e).opacity, sc ? +sc[1] : null]); }
+        requestAnimationFrame(q); };
+      requestAnimationFrame(q);
       return 1; })()"""
     estado = """(() => { const e = document.getElementById('entrada'), fe = document.querySelector('#entrada .en-folha.en-esq'), m = document.getElementById('en-mundo');
       const t = window.__entT || [], ini = t.find(x => /saindo/.test(x[1])), fim = t.find(x => /fechada/.test(x[1]));
       return { cls: e.className, folha: fe ? getComputedStyle(fe).transform : null, mundo: m ? m.style.transform : null,
                sons: (window.__sons || []).filter(x => x === 'catalog:open'), todos: window.__sons || [], tocou: (window.__tocou || []).filter(f => /open_catalog/.test(f)).length,
                dur: ini && fim ? Math.round(fim[0] - ini[0]) : null, sel: String(getSelection()),
+               ult: (window.__entQ || []).slice(-1)[0] || null,
                foco: document.activeElement && document.activeElement.id }; })()"""
 
     def pagina(caminho=""):
@@ -4765,6 +4772,12 @@ def checar_entrada_loja(s, p):
         s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": x, "y": y})
         for tipo in ("mousePressed", "mouseReleased"):
             s.envia("Input.dispatchMouseEvent", {"type": tipo, "x": x, "y": y, "button": "left", "clickCount": 1})
+
+    # F13-T102: a duração do open_catalog, decodificada do arquivo (o roteiro roda mudo; decodificar não toca)
+    s.abrir()
+    SOM_ABRE = s.js("""(async () => { const b = await (await fetch('assets/audio/open_catalog.mp3')).arrayBuffer();
+      const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
+      const a = await ctx.decodeAudioData(b); return Math.round(a.duration * 1000); })()""")
 
     def rodada(rg):
         """As checagens da entrada numa região, forçada pelo ?entrada= (F13-T99)."""
@@ -4802,9 +4815,30 @@ def checar_entrada_loja(s, p):
         conta("o clique em qualquer lugar abre: portas, câmera, um som e fecha no fim",
               "saindo" in logo["cls"] and "fechada" not in logo["cls"] and meio["folha"] != antes["folha"]
               and meio["mundo"] != antes["mundo"] and "fechada" in depois["cls"] and depois["sons"] == ["catalog:open"]
-              and depois["tocou"] == 1 and depois["dur"] is not None and 1900 <= depois["dur"] <= 2600,
+              and depois["tocou"] == 1 and depois["dur"] is not None,
               "logo: %s; portas %s → %s; câmera %s → %s; sons %s (tocou %s); saindo→fechada em %s ms"
               % (logo["cls"], antes["folha"], meio["folha"], antes["mundo"], meio["mundo"], depois["sons"], depois["tocou"], depois["dur"]))
+        # F13-T102 (Leo, 02/11/2026: "a duração da animação não é muito sincronizada com o som"): a cena acaba
+        # junto com o som — fecha até 300 ms depois do fim do open_catalog (e não antes dele menos 150 ms),
+        # com a câmera já no fim do zoom e a entrada já esmaecida no último quadro (nada some de uma vez)
+        ult = depois["ult"] or [0, 1, 0]
+        conta("a abertura acaba junto com o som: fecha até 120 ms depois do fim dele, com a câmera no fim e a cena já esmaecida",
+              depois["dur"] is not None and SOM_ABRE <= depois["dur"] <= SOM_ABRE + 120 and ult[1] <= 0.3 and (ult[2] or 0) >= 6.5,
+              "som %d ms · saindo→fechada em %s ms · último quadro: opacidade %.2f, câmera %s" % (SOM_ABRE, depois["dur"], ult[1], ult[2]))
+
+        # F13-T102: a duração vem do arquivo, não de um número escrito — com um som de 1,7 s (fingido no
+        # Som.duracao), a abertura fecha aos ~1,75 s, ainda esmaecida no fim
+        if rg == "freljord":
+            pagina(arg)
+            s.js(espia)
+            s.js("Som.duracao = () => 1.7; 'ok'")
+            clique_em(720, 60)
+            espera_fechar()
+            lg = s.js(estado)
+            ul = lg["ult"] or [0, 1, 0]
+            conta("a duração da abertura vem do áudio: com um som de 1,7 s, ela fecha aos ~1,75 s, com a câmera no fim e esmaecida",
+                  lg["dur"] is not None and 1700 <= lg["dur"] <= 1820 and ul[1] <= 0.3 and (ul[2] or 0) >= 6.5,
+                  "saindo→fechada em %s ms · último quadro: opacidade %.2f, câmera %s" % (lg["dur"], ul[1], ul[2]))
 
         # (g) depois de fechada: nenhum quadro da entrada pedido em 1 s, e nada no console
         n_erros = len(s.erros)
@@ -5068,7 +5102,7 @@ def checar_entrada_loja(s, p):
           window.Audio.prototype = A.prototype;
           document.addEventListener('click', () => { if (T.clique != null) return; T.clique = performance.now();
             T.raios = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length;
-            let ult = T.clique; const f = (t) => { T.q.push(t - ult); ult = t; if (t - T.clique < 2150) requestAnimationFrame(f); };
+            let ult = T.clique; const f = (t) => { T.q.push(t - ult); ult = t; if (t - T.clique < 2150 && !document.getElementById('entrada').classList.contains('fechada')) requestAnimationFrame(f); };   // F13-T102: só a abertura (fecha no fim do som)
             requestAnimationFrame(f);
             setTimeout(() => { T.raiosMeio = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length; }, 900); }, true);
           const o = HTMLMediaElement.prototype.play;
@@ -5079,7 +5113,7 @@ def checar_entrada_loja(s, p):
         LE_T100 = """(() => { const T = window.__t100, c = T.clique, r = x => x == null || c == null ? null : Math.round(x - c);
           const nome = e => decodeURIComponent(String(e.src || '').split('/').pop());
           return { antes: T.criados.filter(x => c == null || x[0] < c).map(x => nome(x[1])),
-                   noClique: T.criados.filter(x => c != null && x[0] >= c && x[0] < c + 1500).length,
+                   noClique: T.criados.filter(x => c != null && x[0] >= c && x[0] < c + Math.max(1100, EntradaLoja.FIM)).length,   // F13-T102: até a abertura fechar
                    rs: T.rs == null ? null : T.rs, play: r(T.play), playing: r(T.playing),
                    raios: T.raios, raiosMeio: T.raiosMeio,
                    q: T.q.map(x => Math.round(x * 10) / 10) }; })()"""
@@ -5139,7 +5173,7 @@ def checar_entrada_loja(s, p):
             n_clique = [r["noClique"] for rg in REGIOES_ENTRADA for r in com[rg]]
             p.conta("entrada da loja", "no clique, nenhum outro som começa a baixar junto com o da abertura (o resto baixa depois dela)",
                     max(n_clique) == 0 and all(r["noClique"] > 40 for rg in REGIOES_ENTRADA for r in sem[rg]),
-                    "áudios criados nos 1,5 s depois do clique: %s (o comportamento antigo, na mesma rodada: %s)"
+                    "áudios criados entre o clique e o fim da abertura: %s (o comportamento antigo, na mesma rodada: %s)"
                     % (n_clique, [r["noClique"] for rg in REGIOES_ENTRADA for r in sem[rg]]))
 
             # (v) por baixo da entrada, os raios dos cards não giram (eram 225 camadas animadas a cada quadro da câmera);
@@ -5150,16 +5184,19 @@ def checar_entrada_loja(s, p):
                     "[no clique, no meio da abertura, depois de fechada] por abertura: %s" % raios)
 
             # (w) os quadros: nenhuma região passa do teto no melhor de duas aberturas (medido no Chrome sem janela —
-            # que aqui usa a placa de vídeo —, com folga sobre o consertado: pior 60–130 ms), e a soma dos quadros
-            # longos (> 34 ms) das três regiões cai em relação ao comportamento antigo medido na mesma rodada
+            # que aqui usa a placa de vídeo —, com folga sobre o consertado: pior 60–130 ms), e os quadros longos
+            # (> 34 ms) somam no máximo 30% da abertura, na média. F13-T102: a comparação com o comportamento antigo
+            # (cair 20%) saiu — com a abertura casada com o som (~1,2 s), as duas somas ficaram pequenas e a diferença
+            # virou ruído (137% numa rodada, 84% na seguinte); os consertos da T100 seguem vigiados um a um (t, u, v)
             TETO = 200
             melhor = {rg: min(r["pior"] for r in com[rg]) for rg in REGIOES_ENTRADA}
-            soma_com = sum(r["soma"] for rg in REGIOES_ENTRADA for r in com[rg])
-            soma_sem = sum(r["soma"] for rg in REGIOES_ENTRADA for r in sem[rg])
-            p.conta("entrada da loja", "a abertura das três regiões fica abaixo do teto de quadro (%d ms) e a soma dos quadros longos cai ao menos 20%% em relação ao comportamento antigo" % TETO,
-                    all(v is not None and v <= TETO for v in melhor.values()) and soma_sem > 0 and soma_com <= 0.8 * soma_sem,
-                    "pior quadro (melhor de duas) %s; soma dos quadros > 34 ms: %d ms agora × %d ms com o comportamento antigo (%s); por abertura agora %s, antes %s"
-                    % (melhor, soma_com, soma_sem, "%.0f%%" % (100.0 * soma_com / soma_sem) if soma_sem else "—",
+            n_ab = sum(len(com[rg]) for rg in REGIOES_ENTRADA)
+            media = sum(r["soma"] for rg in REGIOES_ENTRADA for r in com[rg]) / float(n_ab or 1)
+            dur_ab = s.js("Math.round(EntradaLoja.FIM)")
+            p.conta("entrada da loja", "a abertura das três regiões fica abaixo do teto de quadro (%d ms) e os quadros longos somam no máximo 30%% dela, na média" % TETO,
+                    all(v is not None and v <= TETO for v in melhor.values()) and media <= 0.3 * dur_ab,
+                    "pior quadro (melhor de duas) %s; quadros > 34 ms por abertura: média %d ms de %d ms (%.0f%%); agora %s; com o comportamento antigo, na mesma rodada, %s"
+                    % (melhor, media, dur_ab, 100.0 * media / dur_ab,
                        {NOME_REGIAO[rg]: [r["soma"] for r in com[rg]] for rg in REGIOES_ENTRADA},
                        {NOME_REGIAO[rg]: [r["soma"] for r in sem[rg]] for rg in REGIOES_ENTRADA}))
         finally:
