@@ -4,7 +4,8 @@ window.NOTAS = {
   {
    "data": "02/11/2026",
    "add": [
-    "Dicas na primeira visita a cada tela, para quem está chegando agora; o \"?\" no topo mostra de novo"
+    "Dicas na primeira visita a cada tela, para quem está chegando agora; o \"?\" no topo mostra de novo",
+    "O tour ensina o Montador inteiro: dicas ao chegar em cada tela e na hora de cada coisa nova (importar, editar, salvar, publicar)"
    ],
    "aj": [
     "A abertura da loja agora acaba junto com o som da porta"
