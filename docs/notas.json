@@ -1,7 +1,7 @@
 {
  "_comentario": "Fonte das notas de atualização (F13-T80; docs/gerar_notas.py → data/notas.js). Daqui em diante cada tarefa leva no commit uma linha 'Notas: Adicionado|Ajustado|Removido — <frase para quem usa>' (escolha do Leo, 25/10/2026). 'antigas' são as tarefas de antes disso, classificadas uma vez para o Leo conferir. 'internas' são as tarefas que não mudaram nada para quem usa (a F13-T96, a amostra da entrada escolhida; a entrada chega na F13-T97). 'embreve' é o roteiro na língua de quem usa (sem número de tarefa nem data prometida) — muda quando a fila muda.",
  "desde": "2026-10-22",
- "internas": ["F13-T96", "F13-T105"],
+ "internas": ["F13-T96", "F13-T105", "F13-T106"],
  "antigas": {
   "F13-T58": [["Adicionado", "A ordem de habilidades segue as regras do jogo: em que nível cada ponto pode entrar, e as exceções de campeão."]],
   "F13-T55": [["Adicionado", "A ficha do item mostra a receita em árvore (ou como conta de somar), em que itens ele vira e, em \"Exibir detalhes\", a análise de custo e as notas."]],

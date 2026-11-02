@@ -134,3 +134,13 @@ O Leo escolheu a opção 2 entre duas amostras (`docs/screenshots/fase13-t101-to
 - **A seta** sai do lado do balão voltado para o alvo; o balão fica à direita do alvo se couber, senão à esquerda, embaixo ou em cima, sempre inteiro na janela e sem cobrir o alvo.
 - **Os textos** são de quem nunca montou uma build: o que fazer, não o nome da função. Nenhum número, nenhum dado de item.
 - **Os botões:** "Próxima"/"Entendi" (o lacre), "Sem dicas" (sublinhado discreto), o × no canto. O "?" redondo do cabeçalho, ao lado das notas, mostra as dicas da tela de novo.
+
+## O mapa da build — a mesa de guerra (Fase 13, T106 — 02/11/2026)
+
+O Leo escolheu a opção A entre duas amostras (`docs/screenshots/fase13-t106-mapa-opcoes.png`, `docs/amostras/fase13-t106-mapa.js`): o mapa é **uma seção da forja**, "A mesa de guerra", entre a barra da build e os filtros, recolhível. (A B era o mapa grande aberto por cima da forja.)
+
+- **A placa:** ferro da forja (o degradê das placas, a borda, o brilho de brasa embaixo); título em IM Fell, legenda em itálico; "recolher" no canto.
+- **As abas:** Visão · Selva · Farm, gravadas em Cinzel; a ativa em ferro com a borda em brasa.
+- **O mapa:** o `map11.png` do Data Dragon numa moldura escura, fixo (azul embaixo, vermelho em cima); por cima, a névoa — um véu azul-escuro com a arte de névoa do próprio jogo (o `fogofwaroverlay.png` do Community Dragon) — recortada pela visão de cada sentinela, com a borda esfumada.
+- **As marcas:** sentinela em latão (a de controle em vermelho), o raio em ciano tracejado; as marcas numeradas da rota em disco de ferro com o número em brasa, ligadas por um tracejado em brasa.
+- **As ferramentas:** à direita do mapa — "Pôr no mapa" (a ativa em brasa) e "Mostrar" (os interruptores).
