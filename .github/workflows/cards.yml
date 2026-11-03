@@ -8,6 +8,8 @@ on:
   schedule:
     - cron: "7,37 * * * *"   # a cada meia hora, fora da hora cheia (o pico do GitHub, que atrasa e descarta rodadas)
   workflow_dispatch: {}      # e quando o Leo pedir (Actions → Robô dos cards → Run workflow)
+  repository_dispatch:       # F13-T109: e na hora em que uma build é publicada, atualizada ou apagada — o gatilho
+    types: [build-publicada] # avisar_cards_* do Supabase chama a API do GitHub com o token que o Leo guardou no Vault
   push:                      # e quando o molde, o robô ou o catálogo mudam no main
     branches: [main]
     paths:
