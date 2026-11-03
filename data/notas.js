@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "03/11/2026",
+   "add": [
+    "Card do Discord na hora: publicou, o card fica pronto em cerca de um minuto, e a placa avisa quando já dá para colar o link"
+   ],
+   "aj": [],
+   "rem": []
+  },
+  {
    "data": "02/11/2026",
    "add": [
     "Dicas na primeira visita a cada tela, para quem está chegando agora; o \"?\" no topo mostra de novo",
