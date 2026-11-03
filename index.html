@@ -5103,6 +5103,16 @@ body.editando .save-wrap { display: inline-flex; }
 body.remota #ml-ligar, body.remota #rd-ligar { display: none; }   /* o Editar daqui não liga: a faixa tem o "Usar esta aba" */
 #pub-dialog .md-panel:focus { outline: none; }
 #pub-dialog .pub-demora { display: block; margin-top: 10px; font-size: .92em; opacity: .85; }
+/* F13-T109: o card do Discord sendo forjado (a brasa pulsa) e, depois, pronto (a brasa acesa) */
+#pub-dialog .pub-card { display: block; margin-top: 10px; font-size: .92em; }
+#pub-dialog .pub-card::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; vertical-align: 1px;
+  background: var(--forja-brasa); box-shadow: 0 0 8px var(--forja-brasa-glow); }
+#pub-dialog .pub-card[data-estado="forjando"]::before { animation: dn-pulsa 1.1s ease-in-out infinite; }
+#pub-dialog .pub-card[data-estado="pronto"] { color: var(--forja-brasa-clara); }
+#pub-dialog .pub-card[data-estado="pronto"]::before { background: var(--forja-brasa-clara); box-shadow: 0 0 10px var(--forja-brasa), 0 0 3px var(--forja-brasa-clara); }
+#pub-dialog .pub-card[data-estado="demorou"] { opacity: .85; }
+#pub-dialog .pub-card[data-estado="demorou"]::before { background: var(--forja-tracejado); box-shadow: none; }
+@media (prefers-reduced-motion: reduce) { #pub-dialog .pub-card::before { animation: none !important; } }
 #pub-dialog.aguardando .md-title::after { content: "…"; animation: pub-pontos 1.2s steps(4) infinite; display: inline-block; width: 1.2em; text-align: left; }
 @keyframes pub-pontos { 0% { clip-path: inset(0 100% 0 0); } 100% { clip-path: inset(0 0 0 0); } }
 #pub-dialog.sucesso .md-panel { border-top-color: #4d8b3a; box-shadow: 0 20px 50px rgba(0,0,0,.8), 0 0 24px rgba(77,139,58,.45); }
@@ -9287,7 +9297,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.108";
+const ATUALIZACAO = "13.109";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -11307,7 +11317,7 @@ function tituloDoLink(pub) {
 }
 function avisoDoCurto() {
   return "Link curto copiado — quem abrir vê a versão publicada desta build (só visualização)."
-    + (linkComCard() ? " No Discord, ele mostra o card da build — que fica pronto quando o robô dos cards passa (pode levar algumas horas depois de publicar)." : "");
+    + (linkComCard() ? " No Discord, ele mostra o card da build — que fica pronto um ou dois minutos depois de publicar (a placa da publicação avisa quando sai)." : "");
 }
 async function copiarLink(link, aoFalhar) {
   try { await navigator.clipboard.writeText(link); return true; }
@@ -11324,6 +11334,62 @@ function copiarNoResumo(link, curto) {
       : "Não deu pra copiar automático: o link está selecionado abaixo, use <b>Ctrl+C</b>.";
   });
 }
+
+// F13-T109 (Leo, 03/11/2026: "acho bom ter alguma coisa para notificar que o card do ID está pronto"):
+// depois de publicar, a página vigia a b/<id>/ do site até o robô dos cards terminar — a página que
+// aparece (publicação nova) ou o ?v= da imagem que muda (atualização). Colar o link no Discord antes
+// disso faz ele guardar a prévia sem o card. Só no GitHub Pages (linkComCard): do disco não há card.
+const CardPronto = (() => {
+  const cfg = { espera: 8000, limite: 4 * 60000 };   // de 8 em 8 s, por até 4 min (o roteiro encurta)
+  const vigias = new Map();   // pubId → a vez da vigia: publicar de novo troca a vigia
+  let vez = 0;
+  // o ?v= do card na página b/<id>/ ("" se ela não tiver); null sem página (ou sem rede)
+  async function versao(id) {
+    try {
+      const r = await fetch(new URL("b/" + id + "/?t=" + Date.now(), location.href).href, { cache: "no-store" });
+      if (!r.ok) return null;
+      const m = /card\.jpg\?v=([0-9a-f]+)/.exec(await r.text());
+      return m ? m[1] : "";
+    } catch (e) { return null; }
+  }
+  const TEXTOS = {
+    forjando: "Card do Discord: o robô está forjando — costuma levar um minuto. Cole o link no Discord depois deste aviso (antes, o Discord guarda a prévia sem o card).",
+    pronto: "Card do Discord pronto — já pode colar o link.",
+    novo: "O card ainda não saiu — o robô de meia em meia hora o faz.",
+    igual: "O card não mudou: se o que você mudou não aparece nele (marcadores, layout), o de antes continua valendo; se aparece, o robô de meia em meia hora o refaz.",
+  };
+  function linha(id, estado) {
+    const classe = estado === "forjando" || estado === "pronto" ? estado : "demorou";
+    return `<span class="pub-card" data-card="${esc(id)}" data-estado="${classe}">${TEXTOS[estado]}</span>`;
+  }
+  // troca a linha na placa, se a placa ainda é a desta publicação
+  function mostrar(id, estado) {
+    const el = document.getElementById("pub-dialog").hidden ? null
+      : [...document.querySelectorAll("#pub-text .pub-card")].find(x => x.dataset.card === id);
+    if (el) el.outerHTML = linha(id, estado);
+    return !!el;
+  }
+  // antes: o ?v= de antes de publicar (null: não havia página — publicação nova)
+  function vigiar(id, nome, antes) {
+    const minha = ++vez, fim = Date.now() + cfg.limite;
+    vigias.set(id, minha);
+    const passo = async () => {
+      if (vigias.get(id) !== minha) return;
+      const v = await versao(id);
+      if (vigias.get(id) !== minha) return;
+      if (v !== null && v !== antes) {
+        vigias.delete(id);
+        // placa fechada: o recado na faixa da tela
+        if (!mostrar(id, "pronto")) mostrarAvisoDaBuild(`Card do Discord de <b>${esc(nome)}</b> pronto — já pode colar o link.`);
+        return;
+      }
+      if (Date.now() >= fim) { vigias.delete(id); mostrar(id, antes === null ? "novo" : "igual"); return; }
+      setTimeout(passo, cfg.espera);
+    };
+    setTimeout(passo, cfg.espera);
+  }
+  return { cfg, versao, linha, vigiar };
+})();
 
 // ---------------- Servidor das builds publicadas (Fase 8, T2) ----------------
 // Supabase via REST: a chave pública só enxerga a view builds_publicas e as
@@ -11441,6 +11507,8 @@ async function publicarBuild(id) {
       p_runas: normRunas(d.runas), p_habilidades: normHabilidades(d.habilidades),
       p_rota: rotaValida(d.rota),   // F13-T69 (docs/servidor/rota.sql)
     };
+    // F13-T109: o card de antes, lido enquanto o servidor publica (o robô só começa depois)
+    const comCard = linkComCard(), cardAntes = comCard && d.pubId ? CardPronto.versao(d.pubId) : null;
     let r;
     const publicar = async (ps) => {
       try { return await Servidor.rpc("publicar_build", ps); }
@@ -11480,8 +11548,12 @@ async function publicarBuild(id) {
     const guardou = gravarMetadados(library.builds.find(x => x.id === id),
       { pubId: r.id, pubVersao: r.versao, pubEm: Date.now(), pubPatch: CATALOG.meta.patch, patch: CATALOG.meta.patch, revisao: null, pubAssinatura: enviada });
     Som.play("build:save");
+    // publicada de novo com outro ID (a de antes sumiu do servidor): o card é novo
+    const antes = comCard && cardAntes && r.id === d.pubId ? await cardAntes : null;
     mostrarPub("Build publicada com sucesso", `ID da build: <b class="pub-id">${esc(r.id)}</b> · versão <b>${r.versao}</b>`
+      + (comCard ? CardPronto.linha(r.id, "forjando") : "")
       + (guardou ? "" : `<span class="pub-demora">Mas o navegador recusou a gravação aqui: o ID não ficou guardado nesta biblioteca — anote <b class="pub-id">${esc(r.id)}</b>.</span>`), "sucesso");
+    if (comCard) CardPronto.vigiar(r.id, d.name, antes);
     if (buildScreen === "lista") renderBuildIndex(); else renderBuildAll();
   } catch (e) {
     mostrarPub("Não deu para publicar", esc(e.message || "erro desconhecido"), "erro");

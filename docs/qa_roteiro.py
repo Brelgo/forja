@@ -6780,6 +6780,185 @@ def checar_link_curto(s, p):
     _link_curto_lento(s, p, ID, NOME)
 
 
+def checar_card_pronto(s, p):
+    """F13-T109 (Leo, 03/11/2026): o card na hora. (1) Sem navegador: o robô dos cards acorda com o
+    aviso do Supabase (repository_dispatch "build-publicada"), e o supabase.sql tem a função e os três
+    gatilhos — o de update só pelas colunas de conteúdo (os contadores mudam a cada visita) — e nenhum
+    token escrito. (2) Na aba, no GitHub Pages de mentira (pages_falso), o aviso "card pronto" ("acho
+    bom ter alguma coisa para notificar que o card do ID está pronto"): a placa diz que o robô está
+    forjando e troca para pronto quando a página b/<id>/ aparece (nova) ou o ?v= do card muda
+    (atualização); com a placa fechada, o recado vai na faixa da tela; sem mudança até o limite, a
+    placa diz por quê; do servidor local, nada disso aparece. Servidor das builds SIMULADO: nenhum
+    publicar_build sai deste navegador."""
+    print("\n%sCARD PRONTO%s" % (AMARELO, FIM))
+    yml = open(os.path.join(RAIZ, ".github", "workflows", "cards.yml"), encoding="utf-8").read()
+    on = yml.split("\njobs:")[0]
+    p.conta("card pronto", "o robô dos cards acorda com o aviso do Supabase (repository_dispatch, tipo build-publicada), e as rodadas de antes continuam (meia hora, pedido e push)",
+            bool(re.search(r"\n  repository_dispatch:\s*(#[^\n]*)?\n\s+types:\s*\[\s*build-publicada\s*\]", on))
+            and "schedule:" in on and "workflow_dispatch:" in on and "push:" in on,
+            "on: %s" % " ".join(re.findall(r"\n  ([a-z_]+):", on)))
+    sql = open(os.path.join(RAIZ, "docs", "servidor", "supabase.sql"), encoding="utf-8").read()
+    gat = {m.group(1): m.group(2) for m in re.finditer(r"create trigger (avisar_cards_\w+) (after [^\n]*?) on public\.builds\s*\n\s*for each row execute function public\.avisar_robo_dos_cards\(\);", sql)}
+    upd = re.match(r"after update of (.*)$", gat.get("avisar_cards_ao_mudar", ""))
+    cols = {c.strip() for c in upd.group(1).split(",")} if upd else set()
+    conteudo = {"nome", "descricao", "campeao", "modo", "marcadores", "caixas", "patch", "autor", "layout", "runas", "habilidades", "rota"}
+    fn = re.search(r"create or replace function public\.avisar_robo_dos_cards\(\).*?end \$\$;", sql, re.S)
+    fn = fn.group(0) if fn else ""
+    p.conta("card pronto", "o supabase.sql tem a função que avisa o robô (o token do Vault, a API do GitHub, erro engolido, sem execução para o público) e os três gatilhos; o de update só pelas colunas de conteúdo",
+            gat.get("avisar_cards_ao_publicar") == "after insert" and gat.get("avisar_cards_ao_apagar") == "after delete" and cols == conteudo
+            and "vault.decrypted_secrets where name = 'github_cards'" in fn and "repos/Brelgo/forja/dispatches" in fn and "'build-publicada'" in fn
+            and "exception when others then" in fn and "security definer" in fn
+            and "revoke all on function public.avisar_robo_dos_cards() from public, anon, authenticated;" in sql,
+            "gatilhos %s · colunas a mais %s, a menos %s · função %s" % (sorted(gat), sorted(cols - conteudo), sorted(conteudo - cols), "achada" if fn else "NÃO ACHADA"))
+    vazou = []
+    for raiz, pastas, arqs in os.walk(RAIZ):
+        pastas[:] = [d for d in pastas if d not in (".git", "node_modules")]
+        for a in arqs:
+            if os.path.splitext(a)[1].lower() in (".html", ".js", ".py", ".sql", ".md", ".yml", ".json", ".txt"):
+                try:
+                    x = open(os.path.join(raiz, a), encoding="utf-8", errors="ignore").read()
+                except OSError:
+                    continue
+                if re.search(r"github_pat_[A-Za-z0-9_]{20,}|\bgh[pousr]_[A-Za-z0-9]{30,}", x):
+                    vazou.append(os.path.relpath(os.path.join(raiz, a), RAIZ))
+    p.conta("card pronto", "nenhum token do GitHub escrito no repositório (ele mora só no Vault)", not vazou, ", ".join(vazou[:3]))
+
+    ID, NOVO, NOME = "c0ffee", "c0ffef", "Card Pronto QA"
+    falso = r"""(() => {
+      window.__resposta = { id: '%s', versao: 1 }; window.__pubs = 0; window.__pedidosB = [];
+      const f = window.fetch;
+      window.fetch = function (u, ...a) {
+        const t = String(u && u.url || u);
+        if (/\/forja\/b\//.test(t)) window.__pedidosB.push(t);
+        if (!t.includes('supabase.co')) return f.call(this, u, ...a);
+        const ok = (c) => Promise.resolve(new Response(JSON.stringify(c), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+        if (t.includes('publicar_build')) { window.__pubs++; return ok(window.__resposta); }
+        return ok(t.includes('/rpc/') ? null : []);
+      };
+    })();""" % ID
+    r = Sessao(s.url)
+
+    def espera(expr, limite=8.0):
+        fim = time.time() + limite
+        while time.time() < fim:
+            try:
+                if r.js(expr):
+                    return True
+            except RuntimeError:
+                pass
+            time.sleep(0.2)
+        return False
+
+    def pagina(versao):
+        PAGINAS_EXTRAS["/forja/b/%s/" % ID] = cards.pagina({"id": ID, "nome": NOME}, {"quem": ""}, "roteiro", versao)
+
+    estado = """(() => { const c = document.querySelector('#pub-text .pub-card'), h = document.getElementById('edit-hint');
+      return { placa: !document.getElementById('pub-dialog').hidden, card: c ? c.dataset.card : null, estado: c ? c.dataset.estado : null,
+        texto: c ? c.innerText : '', faixa: h && h.classList.contains('show') ? h.innerText : '', pubs: window.__pubs, b: window.__pedidosB.length,
+        faixaVista: h ? Number(getComputedStyle(h).opacity) : 0 }; })()"""
+
+    def publicar():
+        r.js("(() => { biSelected = build.id; renderBuildIndex(); return 1; })()")
+        time.sleep(0.3)
+        r.clicar('#bi-detail [data-act="publish"]', 0.6)
+        espera("document.getElementById('pub-dialog').classList.contains('sucesso')", 5)
+
+    import importlib
+    pasta = os.path.join(RAIZ, "data", "robo")
+    if pasta not in sys.path:
+        sys.path.insert(0, pasta)
+    cards = importlib.import_module("cards")
+    local = s.url.startswith("http://127.0.0.1")
+    url0 = r.url
+    try:
+        r.envia("Page.addScriptToEvaluateOnNewDocument", {"source": falso})
+        r.tela(1600, 900)
+        if not local:
+            p.conta("card pronto", "na aba (só com o GitHub Pages de mentira, da pasta)", True, "pulado no --site")
+            return
+        ligar_site_falso(r)
+        PAGINAS_EXTRAS.pop("/forja/b/%s/" % ID, None)
+        r.url = SITE
+        r.abrir("?cardpronto=1#builds"); r.entrar()
+        r.nova_build()
+        r.js("""(() => { CardPronto.cfg.espera = 250; CardPronto.cfg.limite = 2500;
+          build.name = '%s'; build.desc = 'descrição do roteiro';
+          build.markers = normMarkers(MARCADORES.slice(0, MAX_MARCADORES).map(m => ({ t: 'tag', id: m.id })));
+          build.cats[0].items = [{ itemId: CATALOG.items.find(i => i.tier === 'Lendário').slug, note: '' }];
+          gravarBuild(); showBuildScreen('lista'); return 1; })()""" % NOME)
+        time.sleep(0.5)
+
+        # (a) publicação nova: forjando enquanto não há página; pronto quando ela aparece
+        publicar()
+        a0 = r.js(estado)
+        time.sleep(1.0)
+        a1 = r.js(estado)
+        pagina("aaa111")
+        espera("(document.querySelector('#pub-text .pub-card') || { dataset: {} }).dataset.estado === 'pronto'", 4)
+        a2 = r.js(estado)
+        p.conta("card pronto", "publicação nova: a placa diz que o robô está forjando (e para colar no Discord depois do aviso) enquanto a página b/<id>/ não existe, e troca para \"pronto\" quando ela aparece",
+                a0["placa"] and a0["card"] == ID and a0["estado"] == "forjando" and "forjando" in a0["texto"] and "Discord" in a0["texto"]
+                and a1["estado"] == "forjando" and a1["b"] >= 2
+                and a2["placa"] and a2["estado"] == "pronto" and "pronto" in a2["texto"],
+                "logo %s · 1 s depois %s (%d leituras da b/) · com a página %s" % (a0["estado"], a1["estado"], a1["b"], a2["estado"]))
+        r.clicar("#pub-close", 0.3)
+
+        # (b) atualização com a placa fechada: o ?v= de antes não conta; o novo dá o recado na faixa
+        publicar()
+        b0 = r.js(estado)
+        r.clicar("#pub-close", 0.3)
+        time.sleep(1.0)
+        b1 = r.js(estado)
+        pagina("bbb222")
+        espera("document.getElementById('edit-hint').classList.contains('show')", 4)
+        time.sleep(0.5)   # a faixa entra com transição de 0,25 s
+        b2 = r.js(estado)
+        p.conta("card pronto", "atualização: o card de antes (o mesmo ?v=) não vale como pronto; com a placa fechada, o ?v= novo dá o recado na faixa da tela, com o nome da build",
+                b0["estado"] == "forjando" and not b1["placa"] and not b1["faixa"]
+                and "Card do Discord de %s pronto" % NOME in b2["faixa"] and b2["faixaVista"] > 0.9,
+                "logo %s · fechada, 1 s depois: faixa %r · com o ?v= novo: faixa %r (opacidade %.2f)" % (b0["estado"], b1["faixa"][:40], b2["faixa"][:70], b2["faixaVista"]))
+
+        # (c) atualização que não muda o card: no limite, a placa diz que o de antes continua valendo
+        publicar()
+        espera("(document.querySelector('#pub-text .pub-card') || { dataset: {} }).dataset.estado === 'demorou'", 5)
+        c1 = r.js(estado)
+        r.clicar("#pub-close", 0.3)
+        # (d) publicada de novo com outro ID (a de antes sumiu do servidor): sem página, "ainda não saiu"
+        r.js("window.__resposta = { id: '%s', versao: 1 }; 1" % NOVO)
+        publicar()
+        espera("(document.querySelector('#pub-text .pub-card') || { dataset: {} }).dataset.estado === 'demorou'", 5)
+        d1 = r.js(estado)
+        r.clicar("#pub-close", 0.3)
+        p.conta("card pronto", "sem mudança até o limite: na atualização, a placa diz que o card de antes continua valendo (ou o robô refaz); na publicação com ID novo e sem página, que o card ainda não saiu",
+                c1["card"] == ID and c1["estado"] == "demorou" and "não mudou" in c1["texto"]
+                and d1["card"] == NOVO and d1["estado"] == "demorou" and "ainda não saiu" in d1["texto"],
+                "atualização %s %r · ID novo %s %s %r" % (c1["estado"], c1["texto"][:30], d1["card"], d1["estado"], d1["texto"][:30]))
+
+        # (e) caminho antigo: do servidor local (fora do Pages) não há card — nem linha, nem leitura da b/
+        r.url = url0
+        r.abrir("?cardlocal=1#builds"); r.entrar()
+        r.js("window.__resposta = { id: '%s', versao: 1 }; 1" % ID)
+        r.nova_build()
+        r.js("""(() => { build.name = '%s'; build.desc = 'descrição do roteiro';
+          build.markers = normMarkers(MARCADORES.slice(0, MAX_MARCADORES).map(m => ({ t: 'tag', id: m.id })));
+          build.cats[0].items = [{ itemId: CATALOG.items.find(i => i.tier === 'Lendário').slug, note: '' }];
+          gravarBuild(); showBuildScreen('lista'); return 1; })()""" % NOME)
+        time.sleep(0.5)
+        publicar()
+        time.sleep(0.8)
+        e1 = r.js(estado)
+        p.conta("card pronto", "caminho antigo: fora do GitHub Pages (servidor local, disco) a publicação continua como era — sem a linha do card e sem ler a b/",
+                e1["placa"] and e1["pubs"] == 1 and e1["card"] is None and e1["b"] == 0,
+                "placa %s · publicações %d · linha %s · leituras da b/ %d" % (e1["placa"], e1["pubs"], e1["card"], e1["b"]))
+        r.clicar("#pub-close", 0.3)
+        if r.erros:
+            p.conta("card pronto", "sem erro no console da aba", False, "; ".join(map(str, r.erros[:2])))
+    finally:
+        PAGINAS_EXTRAS.pop("/forja/b/%s/" % ID, None)
+        r.url = url0
+        r.fechar()
+
+
 def _jpeg_tamanho(dados):
     """(largura, altura) de um JPEG, lida do marcador SOF — sem depender do PIL."""
     if dados[:2] != b"\xff\xd8":
@@ -8189,6 +8368,7 @@ GRUPOS = [
     ("autor", checar_autor),
     ("link curto", checar_link_curto),
     ("card do Discord", checar_card),
+    ("card pronto", checar_card_pronto),
     ("dislexia", checar_dislexia),
     ("tags somam", checar_tags_somam),
     ("visualização", checar_visualizacao),

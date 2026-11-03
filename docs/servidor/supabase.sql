@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Montador de Itens de LoL — servidor das builds publicadas
 -- O banco INTEIRO, na forma de hoje, num arquivo só (F13-T87, 26/10/2026;
--- o limite por IP desde a F13-T88).
+-- o limite por IP desde a F13-T88; o card na hora desde a F13-T109).
 --
 -- Cole este arquivo inteiro no SQL Editor do Supabase e clique em Run.
 -- Serve para as duas coisas:
@@ -324,6 +324,52 @@ grant execute on function public.publicar_build(text, text, jsonb, text, jsonb, 
 grant execute on function public.apagar_build(text, text) to anon, authenticated;
 grant execute on function public.registrar_evento(text, text) to anon, authenticated;
 grant execute on function public.peso_evento(text), public.inicio_semana() to anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- 5b. O card na hora (F13-T109, 02/11/2026; a etapa 3 do card do Discord): publicar,
+-- atualizar ou apagar uma build avisa o robô dos cards no GitHub (repository_dispatch
+-- "build-publicada"), e o card fica pronto em um ou dois minutos — antes esperava a
+-- rodada de meia em meia hora, que o GitHub atrasa por horas. O token do GitHub mora no
+-- Vault com o nome github_cards e quem o guarda é o Leo (SQL Editor:
+-- select vault.create_secret('<token>', 'github_cards');) — nunca aparece aqui, na
+-- página nem no repositório. Sem o token, o gatilho não faz nada. O aviso nunca trava a
+-- publicação: qualquer erro é engolido. O update só dispara pelas colunas de conteúdo —
+-- os contadores (visualizacoes, copias) mudam a cada visita e não chamam o robô.
+-- ---------------------------------------------------------------------
+create extension if not exists pg_net;
+
+create or replace function public.avisar_robo_dos_cards() returns trigger
+language plpgsql security definer set search_path = public, extensions as $$
+declare
+  v_token text; v_id text;
+begin
+  v_id := case when tg_op = 'DELETE' then old.id else new.id end;
+  begin
+    select decrypted_secret into v_token from vault.decrypted_secrets where name = 'github_cards' limit 1;
+    if coalesce(v_token, '') = '' then return null; end if;
+    perform net.http_post(
+      url := 'https://api.github.com/repos/Brelgo/forja/dispatches',
+      body := jsonb_build_object('event_type', 'build-publicada', 'client_payload', jsonb_build_object('id', v_id, 'acao', lower(tg_op))),
+      headers := jsonb_build_object('Authorization', 'Bearer ' || v_token, 'Accept', 'application/vnd.github+json',
+                                    'X-GitHub-Api-Version', '2022-11-28', 'User-Agent', 'forja-robo-dos-cards', 'Content-Type', 'application/json'),
+      timeout_milliseconds := 5000);
+  exception when others then
+    return null;
+  end;
+  return null;
+end $$;
+
+revoke all on function public.avisar_robo_dos_cards() from public, anon, authenticated;
+
+drop trigger if exists avisar_cards_ao_publicar on public.builds;
+create trigger avisar_cards_ao_publicar after insert on public.builds
+  for each row execute function public.avisar_robo_dos_cards();
+drop trigger if exists avisar_cards_ao_mudar on public.builds;
+create trigger avisar_cards_ao_mudar after update of nome, descricao, campeao, modo, marcadores, caixas, patch, autor, layout, runas, habilidades, rota on public.builds
+  for each row execute function public.avisar_robo_dos_cards();
+drop trigger if exists avisar_cards_ao_apagar on public.builds;
+create trigger avisar_cards_ao_apagar after delete on public.builds
+  for each row execute function public.avisar_robo_dos_cards();
 
 -- ---------------------------------------------------------------------
 -- 6. Confere (rode à parte, se quiser):
