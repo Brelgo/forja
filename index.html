@@ -5618,6 +5618,9 @@ svg.en-runas-marco { left: -40px; top: 760px; width: 120px; height: 140px; overf
 body.ac-movimento .entrada.saindo .en-fresta-meio, body.ac-movimento .entrada.saindo .en-fresta-chao { opacity: 0; }
 body.ac-movimento .entrada.saindo .en-tranca { animation: en-esmaece .4s ease both !important; }
 body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.saindo .en-folha.en-dir { animation: en-esmaece .55s ease both !important; }
+/* F13-T111: a camada da placa (por cima da neve/areia, como a de Noxus) só pega o clique na própria placa */
+.en-palco-placa, .en-palco-placa .en-mundo-placa { pointer-events: none; }
+.en-palco-placa .en-placa-grupo { pointer-events: auto; }
 </style>
   <div class="en-palco" id="en-palco">
 
@@ -6116,7 +6119,20 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <div class="en-tranca" aria-hidden="true"></div>
       <div class="en-raios" aria-hidden="true"></div>
       <div class="en-luz-fachada" aria-hidden="true"></div>
+    </div>
+  </div>
 
+  <!-- a nevasca e o clima, na tela -->
+  <div class="en-neve-tela" id="en-neveTela" aria-hidden="true">
+    <div class="en-nevoa"></div>
+    <div class="en-rajada en-r1"></div><div class="en-rajada en-r2"></div>
+    <div class="en-neve en-n1"></div><div class="en-neve en-n2"></div><div class="en-neve en-n3"></div>
+  </div>
+  <!-- a placa por cima do clima (F13-T111, como em Noxus): o mesmo palco e a mesma câmera do mundo, numa
+       camada própria depois da .en-neve-tela — o clima não passa por cima do texto; o primeiro plano
+       vem junto, depois da placa (na câmera ele passa na frente dela) -->
+  <div class="en-palco en-palco-placa">
+    <div class="en-camada en-mundo en-mundo-placa">
       <!-- ===== A PLACA, pendurada do braço do poste cravado na neve ===== -->
       <div class="en-placa-grupo" id="en-placa">
         <i class="en-corda en-e" aria-hidden="true"></i><i class="en-corda en-d" aria-hidden="true"></i>
@@ -6165,13 +6181,6 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
         </g>
       </svg>
     </div>
-  </div>
-
-  <!-- a nevasca e o clima, na tela -->
-  <div class="en-neve-tela" id="en-neveTela" aria-hidden="true">
-    <div class="en-nevoa"></div>
-    <div class="en-rajada en-r1"></div><div class="en-rajada en-r2"></div>
-    <div class="en-neve en-n1"></div><div class="en-neve en-n2"></div><div class="en-neve en-n3"></div>
   </div>
   <div class="en-vinheta" aria-hidden="true"></div>
   <div class="en-grao" aria-hidden="true"></div>
@@ -7527,6 +7536,9 @@ body.ac-movimento .en-faisca, body.ac-movimento .en-veio, body.ac-movimento .en-
 body.ac-movimento .entrada.saindo .en-fresta-meio, body.ac-movimento .entrada.saindo .en-fresta-chao { animation: none !important; opacity: 0; }
 body.ac-movimento .entrada.saindo .en-tranca, body.ac-movimento .entrada.saindo .en-selo i, body.ac-movimento .entrada.saindo svg.en-cordao { animation: en-esmaece .4s ease both !important; }
 body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.saindo .en-folha.en-dir { animation: en-esmaece .55s ease both !important; }
+/* F13-T111: a camada da placa (por cima da neve/areia, como a de Noxus) só pega o clique na própria placa */
+.en-palco-placa, .en-palco-placa .en-mundo-placa { pointer-events: none; }
+.en-palco-placa .en-placa-grupo { pointer-events: auto; }
 </style>
   <div class="en-palco" id="en-palco">
 
@@ -7986,7 +7998,21 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <div class="en-selo" aria-hidden="true"><i class="en-e"></i><i class="en-d"></i></div>
       <div class="en-raios" aria-hidden="true"></div>
       <div class="en-luz-fachada" aria-hidden="true"></div>
+    </div>
+  </div>
 
+  <!-- a areia que o vento leva, na tela -->
+  <div class="en-neve-tela" id="en-neveTela" aria-hidden="true">
+    <div class="en-nevoa"></div>
+    <div class="en-rajada en-r1"></div><div class="en-rajada en-r2"></div>
+    <div class="en-veio en-v1"></div><div class="en-veio en-v2"></div><div class="en-veio en-v3"></div>
+    <div class="en-neve en-n1"></div><div class="en-neve en-n2"></div><div class="en-neve en-n3"></div>
+  </div>
+  <!-- a placa por cima do clima (F13-T111, como em Noxus): o mesmo palco e a mesma câmera do mundo, numa
+       camada própria depois da .en-neve-tela — o clima não passa por cima do texto; o primeiro plano
+       vem junto, depois da placa (na câmera ele passa na frente dela) -->
+  <div class="en-palco en-palco-placa">
+    <div class="en-camada en-mundo en-mundo-placa">
       <!-- ===== A PLACA, pendurada do braço da lança cravada na areia ===== -->
       <div class="en-placa-grupo" id="en-placa">
         <i class="en-corda en-e" aria-hidden="true"></i><i class="en-corda en-d" aria-hidden="true"></i>
@@ -8063,14 +8089,6 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
         </g>
       </svg>
     </div>
-  </div>
-
-  <!-- a areia que o vento leva, na tela -->
-  <div class="en-neve-tela" id="en-neveTela" aria-hidden="true">
-    <div class="en-nevoa"></div>
-    <div class="en-rajada en-r1"></div><div class="en-rajada en-r2"></div>
-    <div class="en-veio en-v1"></div><div class="en-veio en-v2"></div><div class="en-veio en-v3"></div>
-    <div class="en-neve en-n1"></div><div class="en-neve en-n2"></div><div class="en-neve en-n3"></div>
   </div>
   <div class="en-vinheta" aria-hidden="true"></div>
   <div class="en-grao" aria-hidden="true"></div>
@@ -9297,7 +9315,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.109";
+const ATUALIZACAO = "13.111";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 

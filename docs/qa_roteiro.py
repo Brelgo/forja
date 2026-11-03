@@ -5085,13 +5085,30 @@ def checar_entrada_loja(s, p):
                        propria: !!(rg && document.getElementById(marcas[rg])) }; })()""" % json.dumps(MARCA_REGIAO))
             vistas.append(v["rg"])
             if not (v["rg"] in REGIOES_ENTRADA and v["estilos"] == 1 and v["moldes"] == 0 and v["propria"] and not v["outras"]
-                    and v["palcos"] == (2 if v["rg"] == "noxus" else 1)):
+                    and v["palcos"] == 2):   # F13-T111: o palco do mundo e o da placa, nas três
                 ruins.append(v)
         repetidas = [i for i in range(1, len(vistas)) if vistas[i] == vistas[i - 1]]
         p.conta("entrada da loja", "sem o parâmetro, a região é sorteada a cada carga (12 cargas dão pelo menos duas regiões) e nunca repete a da visita anterior",
                 len(set(vistas)) >= 2 and not repetidas, "regiões vistas: %s; repetidas em seguida nas cargas %s" % (vistas, repetidas or "nenhuma"))
         p.conta("entrada da loja", "só a região sorteada está montada (um tema, um <style>, nenhum molde sobrando, nada das outras)",
                 not ruins, "%s" % (ruins[:2] or "12 de 12 cargas com uma região só"))
+
+        # (t) F13-T111 (anotado na T99): a neve do Freljord e a areia de Shurima passavam por cima da placa. Nas
+        # três regiões, a placa mora na camada .en-palco-placa, que vem DEPOIS da .en-neve-tela (pinta por
+        # cima dela), com o primeiro plano junto; a camada só pega o clique na placa
+        placas = []
+        for rg in REGIOES_ENTRADA:
+            s.abrir("?entrada=%s" % rg)
+            time.sleep(0.6)
+            placas.append(s.js("""(() => { const e = document.getElementById('entrada'), p = document.getElementById('en-placa'), t = document.getElementById('en-neveTela');
+              const camada = p && p.closest('.en-palco-placa'), perto = document.getElementById('en-perto');
+              return { rg: e.dataset.regiao, camada: !!camada, depois: !!(t && camada && (t.compareDocumentPosition(camada) & Node.DOCUMENT_POSITION_FOLLOWING)),
+                       perto: !!(perto && camada && camada.contains(perto)),
+                       clique: camada ? [getComputedStyle(camada).pointerEvents, getComputedStyle(p).pointerEvents] : null }; })()"""))
+        p.conta("entrada da loja", "a neve e a areia não passam por cima da placa: nas três regiões a placa está na camada própria, depois do clima, com o primeiro plano junto; a camada só pega o clique na placa",
+                [x["rg"] for x in placas] == list(REGIOES_ENTRADA)
+                and all(x["camada"] and x["depois"] and x["perto"] and x["clique"] == ["none", "auto"] for x in placas),
+                "; ".join("%s: camada %s, depois do clima %s, primeiro plano %s, clique %s" % (x["rg"], x["camada"], x["depois"], x["perto"], x["clique"]) for x in placas))
 
         # F13-T100 (Leo, 01/11/2026: "o som está mal sincronizado com a animação de abertura" — chegava tarde;
         # "tem vezes que os frames pulam"). Uma sonda própria em cada carga: o relógio do clique, os elementos de
