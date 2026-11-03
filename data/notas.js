@@ -6,7 +6,9 @@ window.NOTAS = {
    "add": [
     "Card do Discord na hora: publicou, o card fica pronto em cerca de um minuto, e a placa avisa quando já dá para colar o link"
    ],
-   "aj": [],
+   "aj": [
+    "Entrada da loja: a neve do Freljord e a areia de Shurima não passam mais por cima da placa de boas-vindas"
+   ],
    "rem": []
   },
   {
