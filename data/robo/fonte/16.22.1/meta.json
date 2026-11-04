@@ -1,0 +1,19 @@
+{
+ "patch": "16.22.1",
+ "lido_em": "2026-11-04T20:26:56Z",
+ "wiki": {
+  "pagina": "Module:ItemData/data",
+  "revid": 4092074,
+  "revisao_de": "2026-11-03T21:25:43Z",
+  "sha256": "c65e5de7b82fe65b672f4eee01ac193a76fa5dc8a109628d9005f70f54492a13",
+  "itens": 334
+ },
+ "ddragon": {
+  "versao": "16.22.1",
+  "itens": 863
+ },
+ "avisos_do_leitor": [
+  "chave repetida 'nickname' na linha 3626 (vale a última, como no Lua)"
+ ],
+ "primeira_foto": "2026-11-04T20:26:56Z"
+}
