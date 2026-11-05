@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forja · Entrada de Águas de Sentina</title>
+<!-- F13-T116 (amostra; Leo, 03/11/2026: "eu escolho... Águas de Sentina"; 05/11: "só a amostra"):
+     "O empório do cais" — a entrada de Águas de Sentina no molde de Noxus e Shurima (T99). Mesmo esqueleto
+     (palco 1440×900, camadas da câmera, vão 600–840 × 404–790, folhas em CSS 3D, trava, interior com o lojista,
+     clarão, painel da loja, placa com as classes da integração); a arte própria, em SVG/CSS: um armazém de tábuas
+     sobre o píer à noite, o farol girando ao longe, mastros, garoa, lampiões, cordas entre os cabeços de amarração.
+     Só a textura de papel do projeto, por caminho relativo. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --papel: #e5d3ad;
+  --tinta: #2c1d12;
+  --tinta-suave: #5a4630;
+  --lampiao: #ffb35a;
+  --lampiao-claro: #ffe2a8;
+  --latao: #c8963e;
+  --mar: #0d2a3a;
+  --titulos: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --texto: 'Alegreya', Georgia, serif;
+  --gravado: 'Cinzel', Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: #03070b; overflow: hidden; color: var(--tinta); font-family: var(--texto); }
+
+/* ============ A CENA ============ */
+.entrada { position: fixed; inset: 0; overflow: hidden; cursor: pointer; background: #040a10; }
+.palco { position: absolute; left: 50%; top: 50%; width: 1440px; height: 900px; transform-origin: 50% 50%; }
+/* três camadas de câmera (paralaxe): longe (céu, farol, a cidade nas encostas, os mastros), mundo (o empório), perto (lampiões, cabeços) */
+.camada { position: absolute; inset: 0; transform-origin: 720px 597px; transform: scale(.86); will-change: transform; }
+.camada > * { position: absolute; }
+.longe, .perto { pointer-events: none; }
+
+/* o céu de tempestade que passa: azul-petróleo, nuvens baixas, o reflexo da cidade em baixo */
+.ceu { left: -900px; top: -700px; width: 3240px; height: 2000px;
+  background:
+    radial-gradient(ellipse 1000px 260px at 1500px 1320px, rgba(255,150,70,.20), transparent 70%),
+    radial-gradient(ellipse 600px 200px at 400px 1300px, rgba(255,140,60,.14), transparent 70%),
+    linear-gradient(180deg, #02060a 0, #050d16 420px, #0a1826 760px, #102438 1040px, #18324a 1240px, #1e3a52 1330px, #0b1c2a 1420px, #061019 1600px); }
+.nuvens { left: -900px; top: -700px; width: 3240px; height: 2000px; }
+.nuvens i { position: absolute; display: block; border-radius: 50%; filter: blur(30px);
+  background: radial-gradient(ellipse at 50% 50%, rgba(30,50,70,.75), rgba(20,36,52,.4) 50%, transparent 72%);
+  animation: nuvem 60s linear infinite; }
+@keyframes nuvem { 0% { transform: translateX(0); opacity: 0; } 12% { opacity: .9; } 85% { opacity: .8; } 100% { transform: translateX(var(--vx, 700px)); opacity: 0; } }
+/* o mar ao longe, com o brilho da cidade tremendo nele */
+.mar { left: -900px; top: 760px; width: 3240px; height: 540px;
+  background:
+    repeating-linear-gradient(180deg, rgba(150,190,220,.05) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, #0f2638 0, #0a1c2a 40%, #06121c 100%); }
+.reflexo { left: -900px; top: 770px; width: 3240px; height: 160px; mix-blend-mode: screen; pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 5px, rgba(255,170,80,.22) 5px 7px, transparent 7px 13px),
+    radial-gradient(ellipse 500px 60px at 1500px 20px, rgba(255,160,70,.5), transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 100% at 74% 0, #000, transparent 75%);
+          mask-image: radial-gradient(ellipse 60% 100% at 74% 0, #000, transparent 75%);
+  animation: tremeluz 3s ease-in-out infinite alternate; }
+@keyframes tremeluz { from { transform: translateX(-6px) scaleY(.96); opacity: .8; } to { transform: translateX(6px) scaleY(1.04); opacity: 1; } }
+svg.porto { left: -900px; top: -700px; width: 3240px; height: 2000px; overflow: visible; }
+/* o farol no promontório: a lente acesa e o facho que gira */
+.facho { left: -230px; top: 384px; width: 0; height: 0; pointer-events: none; }
+.facho i { position: absolute; left: 0; top: -60px; width: 1500px; height: 120px; transform-origin: 0 50%; mix-blend-mode: screen; filter: blur(6px);
+  background: linear-gradient(90deg, rgba(255,240,200,.55), rgba(255,220,160,.18) 40%, transparent 85%);
+  clip-path: polygon(0 46%, 100% 0, 100% 100%, 0 54%); animation: gira 9s linear infinite; }
+@keyframes gira { 0% { transform: rotate(-18deg) scaleX(.2); opacity: 0; } 10% { opacity: 1; } 40% { transform: rotate(10deg) scaleX(1); opacity: 1; }
+  60% { transform: rotate(24deg) scaleX(.4); opacity: 0; } 100% { transform: rotate(24deg) scaleX(.2); opacity: 0; } }
+.lente { left: -244px; top: 370px; width: 28px; height: 28px; border-radius: 50%; mix-blend-mode: screen;
+  background: radial-gradient(circle, #fff8e0, rgba(255,220,150,.6) 40%, transparent 70%); animation: pisca 9s linear infinite; }
+@keyframes pisca { 0%,8% { opacity: .5; } 20%,40% { opacity: 1; } 60%,100% { opacity: .5; } }
+
+svg.fundo { left: -600px; top: -400px; width: 2640px; height: 1700px; overflow: visible; }
+svg.frente { left: -600px; top: -400px; width: 2640px; height: 1700px; overflow: visible; }
+/* os lampiões pendurados no beiral, balançando com o vento do mar */
+.lampiao { width: 40px; height: 120px; transform-origin: 20px 0; pointer-events: none; animation: balanco 4.6s ease-in-out infinite; }
+.lampiao.p1 { left: 540px; top: 200px; } .lampiao.p2 { left: 860px; top: 200px; animation-duration: 5.3s; animation-delay: -2s; }
+.lampiao.p3 { left: 250px; top: 300px; animation-duration: 4.1s; animation-delay: -1.2s; }
+@keyframes balanco { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+.lampiao svg { position: absolute; inset: 0; width: 40px; height: 120px; overflow: visible; }
+.lampiao .luz { position: absolute; left: 20px; top: 96px; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255,180,90,.42), rgba(255,140,60,.14) 35%, transparent 65%); animation: tremula 2.6s steps(8) infinite; }
+.janela-halo { width: 150px; height: 130px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,170,80,.36), transparent 70%); animation: respira 4.6s ease-in-out infinite; }
+.janela-halo.j1 { left: 980px; top: 250px; } .janela-halo.j2 { left: 1140px; top: 250px; animation-delay: -1.9s; }
+.vitrine-brilho { left: 150px; top: 440px; width: 270px; height: 310px; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 60% 55% at 50% 60%, rgba(255,170,80,.34), rgba(255,120,40,.1) 60%, transparent 85%); animation: respira 3.9s ease-in-out infinite; }
+@keyframes respira { 0%,100% { opacity: .74; } 45% { opacity: 1; } 70% { opacity: .84; } }
+
+/* ============ A PORTA ============ */
+/* o vão: 240×386, de x 600 a 840, y 404 a 790 */
+.vao { left: 600px; top: 404px; width: 240px; height: 386px; perspective: 820px; perspective-origin: 50% 46%; }
+.interior { position: absolute; inset: 0; overflow: hidden; background: #3a1c08; }
+.interior svg { display: block; width: 100%; height: 100%; }
+.interior .acende { position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(ellipse 70% 55% at 50% 30%, #fff0d0, rgba(255,190,110,.6) 45%, rgba(255,140,60,0) 80%); mix-blend-mode: screen; }
+.folha { position: absolute; top: 0; width: 120px; height: 386px; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform; }
+.folha.esq { left: 0; transform-origin: 0 50%; }
+.folha.dir { right: 0; transform-origin: 100% 50%; }
+/* tábuas de convés na vertical, lavadas de sal, com as cavilhas de madeira e o alcatrão nas juntas */
+.tabuas { position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.45), transparent 20%, transparent 74%, rgba(255,140,60,.10) 92%, rgba(255,160,80,.2)),
+    radial-gradient(circle at 50% 50%, #8a6a44 0 1.6px, #2a1a0c 2.6px, transparent 3.2px) 9px 18px / 24px 64px,
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(10,6,2,.8) 22px 24px, rgba(255,230,190,.06) 24px 25px),
+    repeating-linear-gradient(180deg, rgba(255,240,220,.025) 0 1px, transparent 1px 5px),
+    radial-gradient(ellipse 30px 60px at 70% 40%, rgba(200,220,220,.06), transparent 70%),
+    linear-gradient(90deg, #2a1a0e, #4a3220 30%, #3e2a1a 68%, #24160b); }
+.folha.esq .tabuas { box-shadow: inset 0 0 0 5px #120b05, inset 0 0 0 7px #5a4028, inset -3px 0 0 7px #0d0804; }
+.folha.dir .tabuas { box-shadow: inset 0 0 0 5px #120b05, inset 0 0 0 7px #5a4028, inset 3px 0 0 7px #0d0804; }
+/* as cintas de ferro escuro com rebites, e a ponta em âncora */
+.cinta { position: absolute; height: 16px; width: 112px;
+  background:
+    radial-gradient(circle at 50% 50%, #b8a690 0 1.6px, #1a1410 2.6px, transparent 3.2px) 10px 0 / 22px 100% repeat-x,
+    linear-gradient(180deg, #4a4440 0, #2a2522 45%, #141110 100%);
+  box-shadow: 0 3px 3px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,240,220,.14); }
+.folha.esq .cinta { left: -6px; clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%); }
+.folha.dir .cinta { right: -6px; clip-path: polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%); }
+.cinta.c1 { top: 36px; } .cinta.c2 { top: 250px; } .cinta.c3 { top: 338px; }
+.suporte { position: absolute; top: 188px; width: 22px; height: 50px; border-radius: 3px;
+  background: radial-gradient(circle at 50% 6px, #b8a690 0 1.7px, transparent 2.5px), radial-gradient(circle at 50% 44px, #b8a690 0 1.7px, transparent 2.5px), linear-gradient(90deg, #1a1410, #4a4440 50%, #1a1410);
+  box-shadow: 0 2px 3px rgba(0,0,0,.6); }
+.folha.esq .suporte { left: 46px; } .folha.dir .suporte { right: 58px; }
+/* a argola de corda trançada presa num olhal de latão */
+.argola { position: absolute; top: 262px; width: 34px; height: 36px; }
+.folha.esq .argola { right: 14px; } .folha.dir .argola { left: 14px; }
+.argola::before { content: ""; position: absolute; left: 10px; top: -6px; width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f0c878, #6a4a18 75%); box-shadow: 0 1px 2px rgba(0,0,0,.8); }
+.argola::after { content: ""; position: absolute; left: 1px; top: 4px; width: 32px; height: 32px; border-radius: 50%;
+  border: 5px dotted #c8a060; box-shadow: 0 3px 3px rgba(0,0,0,.6), inset 0 0 0 1px #5a3a14; }
+/* meio timão de latão em cada folha: fechada, a porta mostra o timão inteiro */
+.meia { position: absolute; top: 58px; width: 64px; height: 136px; overflow: hidden; filter: drop-shadow(0 3px 2px rgba(0,0,0,.7)); }
+.folha.esq .meia { right: 0; } .folha.dir .meia { left: 0; }
+.folha .sombra { position: absolute; inset: 0; background: #050302; opacity: 0; }
+.folha .borda { position: absolute; top: 0; height: 100%; width: 18px; background: linear-gradient(90deg, #120b05, #5a4028, #0d0804); }
+.folha.esq .borda { right: 0; transform-origin: 100% 50%; transform: rotateY(-90deg); }
+.folha.dir .borda { left: 0; transform-origin: 0 50%; transform: rotateY(90deg); }
+/* a luz da taverna pela fresta: fina, apagada onde o timão atravessa (y 462–598) */
+.fresta-meio { left: 718px; top: 404px; width: 4px; height: 386px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,150,60,0), rgba(255,180,100,.72) 12%, rgba(255,210,140,.88) 64%, rgba(255,150,60,.6));
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 13%, rgba(0,0,0,.1) 15.6%, rgba(0,0,0,.1) 51%, #000 55.5%, #000 100%);
+          mask-image: linear-gradient(180deg, #000 0, #000 13%, rgba(0,0,0,.1) 15.6%, rgba(0,0,0,.1) 51%, #000 55.5%, #000 100%);
+  filter: blur(1.5px); mix-blend-mode: screen; }
+.fresta-chao { left: 596px; top: 783px; width: 248px; height: 14px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255,200,130,.95), rgba(255,130,50,.5) 45%, transparent 75%);
+  filter: blur(2px); mix-blend-mode: screen; }
+/* a tranca: um remo velho de madeira com ferragem, atravessado nos grampos */
+.tranca { left: 632px; top: 600px; width: 160px; height: 26px; border-radius: 12px 4px 4px 12px;
+  background:
+    linear-gradient(90deg, transparent 0 calc(100% - 16px), #2a2522 calc(100% - 16px)),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 1px, transparent 1px 9px),
+    linear-gradient(180deg, #a07a4a, #7a5a34 40%, #5a4024 75%, #3a2814);
+  box-shadow: 0 7px 9px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,240,210,.3), inset 0 -2px 0 rgba(0,0,0,.5); }
+.tranca::after { content: ""; position: absolute; left: 50px; top: -22px; width: 14px; height: 26px; border-radius: 7px 7px 3px 3px;
+  background: radial-gradient(circle at 40% 30%, #ffe2a8 0 2px, transparent 4px), linear-gradient(90deg, #6a4a18, #e0b060 45%, #6a4a18);
+  box-shadow: 0 2px 2px rgba(0,0,0,.6); }
+.tranca::before { content: ""; position: absolute; right: -10px; top: -6px; width: 16px; height: 38px; border-radius: 3px;
+  background: linear-gradient(90deg, #1a1410, #4a4440 50%, #1a1410); box-shadow: 0 3px 3px rgba(0,0,0,.6); }
+svg.bainha { left: 432px; top: 568px; width: 186px; height: 84px; overflow: visible; pointer-events: none; }
+.grampo-frente { width: 22px; height: 48px; top: 590px; border-radius: 3px; pointer-events: none;
+  background: radial-gradient(circle at 50% 6px, #b8a690 0 1.7px, transparent 2.5px), radial-gradient(circle at 50% 42px, #b8a690 0 1.7px, transparent 2.5px), linear-gradient(90deg, #1a1410, #4a4440 50%, #1a1410);
+  box-shadow: 0 2px 3px rgba(0,0,0,.6); }
+.grampo-frente.g1 { left: 646px; } .grampo-frente.g2 { left: 760px; }
+/* as lascas de madeira e os pingos que saltam quando o remo corre */
+.faiscas-trinco { left: 648px; top: 612px; width: 0; height: 0; pointer-events: none; }
+.faiscas-trinco i { position: absolute; left: 0; top: 0; width: 3px; height: 3px; border-radius: 50%; background: #e8f4ff;
+  box-shadow: 0 0 4px 1px rgba(160,210,255,.8); opacity: 0; }
+
+/* a luz que sai pela porta e deita nas tábuas molhadas */
+.luz-neve { left: 420px; top: 760px; width: 600px; height: 200px; pointer-events: none; opacity: .3; border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 50% 30%, rgba(255,170,90,.7), rgba(255,110,40,.26) 50%, transparent 78%);
+  mix-blend-mode: screen; }
+.poca { left: 360px; top: 792px; width: 720px; height: 360px; pointer-events: none; opacity: .5; transform-origin: 50% 0;
+  clip-path: polygon(33% 0, 67% 0, 100% 100%, 0 100%);
+  background: radial-gradient(ellipse 60% 85% at 50% 0, rgba(255,200,130,.95), rgba(255,120,50,.42) 45%, transparent 82%);
+  mix-blend-mode: screen; transform: scaleY(.3); }
+.raios { left: 270px; top: 200px; width: 900px; height: 800px; pointer-events: none; opacity: 0;
+  background:
+    radial-gradient(ellipse 30% 40% at 50% 50%, rgba(255,210,150,.85), rgba(255,140,70,.25) 55%, transparent 80%),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,190,120,.18) 0 4deg, transparent 4deg 11deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0, rgba(0,0,0,.6) 35%, transparent 70%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 0, rgba(0,0,0,.6) 35%, transparent 70%);
+  mix-blend-mode: screen; }
+
+/* ============ OS LAMPIÕES DO CAIS (camada de perto) ============ */
+.poste { width: 140px; height: 340px; top: 560px; transform: scale(1.12); transform-origin: 50% 100%; }
+.poste.l1 { left: 395px; } .poste.l2 { left: 905px; }
+.poste svg { position: absolute; inset: 0; width: 140px; height: 340px; overflow: visible; }
+.halo { position: absolute; left: 70px; top: 120px; width: 540px; height: 540px; margin: -270px 0 0 -270px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,170,80,.36), rgba(255,120,40,.13) 32%, rgba(255,100,30,.05) 52%, transparent 66%);
+  animation: tremula 2.4s steps(9) infinite; }
+.l2 .halo { animation-duration: 2s; animation-delay: -.7s; }
+@keyframes tremula { 0% { opacity: .82; } 13% { opacity: .95; } 27% { opacity: .78; } 41% { opacity: 1; } 55% { opacity: .86; } 70% { opacity: .97; } 84% { opacity: .8; } 100% { opacity: .9; } }
+.chamas { position: absolute; left: 70px; top: 140px; width: 0; height: 0; }
+.ch { position: absolute; bottom: -4px; transform-origin: 50% 100%; mix-blend-mode: screen; filter: blur(1.2px);
+  animation: chama .8s ease-in-out infinite alternate; }
+.ch::before { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; aspect-ratio: 1; border-radius: 0 50% 50% 50%; transform: rotate(45deg); transform-origin: 50% 50%;
+  background: radial-gradient(circle at 62% 62%, #fff4d8 0, #ffd080 24%, #ff8a2a 52%, #c03a0a 74%, rgba(140,30,5,0) 86%); }
+.ch.f1 { left: -14px; width: 28px; height: 28px; }
+.ch.f2 { left: -8px; width: 16px; height: 16px; animation-duration: .6s; animation-delay: -.3s; }
+.ch.f2::before { background: radial-gradient(circle at 62% 62%, #fffbe8 0, #ffe6a0 30%, #ffae4a 55%, rgba(255,110,30,0) 80%); }
+@keyframes chama { 0% { transform: scale(1, 1.5) skewX(-6deg); } 40% { transform: scale(.9, 1.8) skewX(-10deg); } 100% { transform: scale(1.04, 1.6) skewX(-3deg); } }
+.luz-fachada { left: 0; top: 0; width: 1440px; height: 900px; pointer-events: none; mix-blend-mode: soft-light;
+  background:
+    radial-gradient(ellipse 400px 340px at 465px 680px, rgba(255,150,70,.9), transparent 70%),
+    radial-gradient(ellipse 400px 340px at 975px 680px, rgba(255,150,70,.9), transparent 70%);
+  animation: tremula 2.8s steps(7) infinite; }
+
+/* ============ A PLACA (tábua pintada pendurada por cabos de um lais de verga) ============ */
+.placa-grupo { left: 1024px; top: 384px; width: 360px; transform-origin: 50% 0; animation: balanca 5.6s ease-in-out infinite; cursor: default; }
+@keyframes balanca { 0%,100% { transform: rotate(-1.4deg); } 50% { transform: rotate(1.5deg); } }
+/* o cabo: a corda torcida descendo do lais */
+.corrente { position: absolute; top: -4px; width: 8px; height: 38px; border-radius: 4px;
+  background: repeating-linear-gradient(160deg, #c8a878 0 3px, #7a5a34 3px 5px, #4a3418 5px 7px);
+  filter: drop-shadow(1px 2px 1px rgba(0,0,0,.6)); }
+.corrente.e { left: 36px; } .corrente.d { right: 36px; }
+.entrada-placa { position: relative; margin-top: 32px; padding: 16px 18px 18px; border-radius: 6px; text-align: center;
+  border: 2px solid #120b05;
+  background:
+    radial-gradient(circle at 14px 14px, #e8c070 0 2.4px, #5a3a14 3.6px, transparent 4.6px),
+    radial-gradient(circle at calc(100% - 14px) 14px, #e8c070 0 2.4px, #5a3a14 3.6px, transparent 4.6px),
+    radial-gradient(circle at 14px calc(100% - 14px), #e8c070 0 2.4px, #5a3a14 3.6px, transparent 4.6px),
+    radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), #e8c070 0 2.4px, #5a3a14 3.6px, transparent 4.6px),
+    radial-gradient(ellipse 70% 60% at 0% 100%, rgba(255,150,70,.18), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 34px, rgba(10,6,2,.6) 34px 36px, rgba(255,230,190,.06) 36px 37px),
+    repeating-linear-gradient(91deg, rgba(255,240,220,.035) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, #2c4a52, #213a42 50%, #182c33);
+  box-shadow: 0 20px 30px rgba(0,0,0,.72), inset 0 0 0 4px #0d1a1e, inset 0 0 0 6px #c8963e, inset 0 0 0 7px #4a3010; }
+.entrada-titulo { margin: 4px 0 12px; font-family: var(--titulos); font-weight: 400; font-size: 44px; line-height: 1; letter-spacing: .03em;
+  color: #f4e6c4; text-shadow: 0 2px 0 #000, 0 0 16px rgba(255,170,80,.3); }
+.pergaminho { position: relative; padding: 14px 15px 13px; transform: rotate(.8deg);
+  background-color: var(--papel); background-image: url("../../assets/textures/shopitem_papertexture02_psd.png");
+  background-size: 420px; background-blend-mode: multiply; color: var(--tinta);
+  box-shadow: 0 3px 6px rgba(0,0,0,.6), inset 0 0 18px rgba(110,70,30,.28), inset 0 0 50px rgba(40,20,0,.08);
+  clip-path: polygon(0 1%, 7% 0, 22% 1.2%, 41% .2%, 63% 1%, 84% 0, 100% 1.4%, 99.4% 30%, 100% 62%, 99.2% 99%, 78% 100%, 55% 98.8%, 31% 100%, 12% 99%, .6% 100%, 0 70%, .8% 38%); }
+.pergaminho .cravo { position: absolute; top: 6px; width: 9px; height: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f0c878, #5a3a14 70%); box-shadow: 0 1px 1px rgba(0,0,0,.6); }
+.pergaminho .cravo.e { left: 7px; } .pergaminho .cravo.d { right: 7px; }
+.entrada-hobby { margin: 0 0 10px; font-style: italic; font-size: 17px; line-height: 1.3; color: var(--tinta); }
+.entrada-contato { margin: 0; padding-top: 9px; border-top: 1px dashed rgba(60,40,20,.38);
+  font-family: var(--gravado); font-size: 13.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-suave); line-height: 1.75; }
+.entrada-contato .ea-rot { display: block; font-size: 13.5px; font-weight: 600; letter-spacing: .2em; margin-bottom: 1px; }
+.entrada-contato .ea-canal { display: block; white-space: nowrap; }
+.entrada-contato .ea-id { font-family: var(--texto); font-size: 19px; font-weight: 700; letter-spacing: .02em; text-transform: none;
+  color: var(--tinta); user-select: all; -webkit-user-select: all; cursor: text; margin-left: 4px; border-bottom: 1px dotted rgba(44,29,18,.35); }
+.entrada-contato .ea-id:hover { border-bottom-color: #a0601a; color: #7a4a10; }
+/* a etiqueta da versão: uma plaqueta de latão presa por cordinhas */
+.etiqueta { position: relative; width: 340px; margin: 18px auto 0; padding: 7px 14px 8px; border-radius: 3px; text-align: center;
+  border: 2px solid #2a1a06; transform-origin: 50% -18px; animation: balanca2 4.2s ease-in-out infinite;
+  background:
+    radial-gradient(ellipse 40% 70% at 78% 30%, rgba(255,240,200,.22), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255,245,230,.04) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #a87a30, #8a5e1e 60%, #6a4412);
+  box-shadow: 0 8px 14px rgba(0,0,0,.6), inset 0 0 0 2px #3a2408, inset 0 1px 0 2px rgba(255,230,170,.2); }
+.etiqueta::before, .etiqueta::after { content: ""; position: absolute; top: -20px; width: 5px; height: 20px; border-radius: 3px;
+  background: repeating-linear-gradient(160deg, #c8a878 0 2px, #7a5a34 2px 4px); }
+.etiqueta::before { left: 36px; } .etiqueta::after { right: 36px; }
+@keyframes balanca2 { 0%,100% { transform: rotate(1.4deg); } 50% { transform: rotate(-1.6deg); } }
+.entrada-nota .nw { white-space: nowrap; }
+.entrada-nota { margin: 0; font-style: italic; font-size: 16px; color: #fff4dc; line-height: 1.3; text-shadow: 0 1px 0 #3a2408; }
+
+/* ============ SOBRE A CENA (tela, não mundo) ============ */
+/* a garoa que o vento do mar empurra (n1, n2: traços finos) e os borrifos (n3, n4) */
+.neve { position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; pointer-events: none; will-change: transform; }
+.neve.n1 { animation: cai 2.4s linear infinite; opacity: .5; }
+.neve.n2 { animation: cai 1.5s linear infinite; opacity: .6; }
+.neve.n3 { animation: cai 6s linear infinite; opacity: .5; mix-blend-mode: screen; }
+.neve.n4 { animation: cai 9s linear infinite; opacity: .4; filter: blur(1px); }
+@keyframes cai { from { transform: rotate(16deg) translateY(calc(var(--t) * -1)); } to { transform: rotate(16deg) translateY(0); } }
+/* a cerração do mar rente ao píer e os rolos que atravessam */
+.nevoa { position: absolute; left: -20%; right: -20%; bottom: -4%; height: 46%; pointer-events: none;
+  background:
+    radial-gradient(ellipse 30% 40% at 20% 70%, rgba(90,120,140,.20), transparent 70%),
+    radial-gradient(ellipse 34% 36% at 70% 80%, rgba(80,110,130,.18), transparent 70%),
+    linear-gradient(180deg, transparent, rgba(30,50,64,.26) 60%, rgba(20,36,48,.4));
+  animation: nevoa 14s ease-in-out infinite alternate; }
+@keyframes nevoa { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
+.rajada { position: absolute; left: -60%; width: 90%; height: 240px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(120,150,170,.18), transparent 70%); filter: blur(18px);
+  animation: rajada 13s linear infinite; }
+.rajada.r1 { top: 30%; } .rajada.r2 { top: 62%; animation-duration: 17s; animation-delay: -7s; height: 300px; }
+@keyframes rajada { 0% { transform: translate(0, 0) rotate(3deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: .8; } 100% { transform: translate(190%, 6vh) rotate(3deg); opacity: 0; } }
+.vinheta { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 76% at 50% 56%, transparent 50%, rgba(2,4,8,.7) 100%); }
+.grao { position: absolute; inset: 0; pointer-events: none; opacity: .3; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+.flash { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 55%, #fff4dc, #ffcc8a 45%, #e0803a 100%); }
+.dica { position: absolute; left: 0; right: 0; bottom: 16px; margin: 0; text-align: center; pointer-events: none;
+  font-family: var(--texto); font-style: italic; font-size: 14px; letter-spacing: .04em; color: rgba(238,228,210,.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,.7); animation: dica-chega 1.2s ease 1.4s both, dica-pulsa 4s ease-in-out 2.6s infinite; }
+@keyframes dica-chega { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dica-pulsa { 0%,100% { opacity: 1; } 50% { opacity: .62; } }
+.btn-entrar { position: absolute; left: 50%; bottom: 50px; transform: translateX(-50%); padding: 8px 22px; cursor: pointer;
+  font-family: var(--titulos); font-size: 17px; letter-spacing: .08em; color: #fff4dc; background: #1f4a56;
+  border: 1px solid #0d1a1e; border-radius: 2px; box-shadow: 0 3px 0 #0d1a1e, 0 6px 12px rgba(0,0,0,.5); opacity: 0; }
+.btn-entrar:focus-visible { opacity: 1; outline: 2px solid var(--lampiao); outline-offset: 3px; }
+
+/* a loja (placeholder: na integração é o app) */
+.loja { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  visibility: hidden; opacity: 0;
+  background:
+    radial-gradient(ellipse 900px 520px at 50% 40%, rgba(255,190,110,.14), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 10px, rgba(0,0,0,.09) 10px 11px),
+    repeating-linear-gradient(180deg, transparent 0 118px, rgba(0,0,0,.45) 118px 120px),
+    linear-gradient(180deg, #3b2617, #2a1a0f 60%, #21130a); }
+.loja h2 { margin: 0; font-family: var(--titulos); font-weight: 400; font-size: 64px; color: #e8d3a2; text-shadow: 0 2px 0 #1a0d05; letter-spacing: .03em; }
+.loja p { margin: 0; font-family: var(--texto); font-style: italic; font-size: 15px; color: #b89a66; }
+.loja .atalho { position: absolute; right: 18px; bottom: 14px; font-family: var(--gravado); font-size: 11px; letter-spacing: .2em; color: #8a6e48; text-transform: uppercase; }
+
+/* ============ A ABERTURA ============ */
+body.abrindo .entrada { cursor: default; }
+body.abrindo .tranca { animation: tranca .42s cubic-bezier(.5,0,.3,1) both; }
+@keyframes tranca { 0% { transform: translateX(0); } 14% { transform: translateX(7px) translateY(-1px); } 24% { transform: translateX(4px); }
+  82% { transform: translateX(-192px); } 91% { transform: translateX(-181px); } 100% { transform: translateX(-186px); } }
+body.abrindo .grampo-frente { animation: some .12s linear .26s both; }
+body.abrindo .faiscas-trinco i { animation: faisca-trinco .5s cubic-bezier(.2,.7,.4,1) both; }
+@keyframes faisca-trinco { 0% { opacity: 0; transform: translate(0, 0); } 8% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--fx), var(--fy)); } }
+/* o timão de latão gira um quarto de volta quando a porta destrava */
+body.abrindo .timao-acorda { animation: acorda .6s ease-out both; }
+@keyframes acorda { 0% { stroke: #e8b050; stroke-width: 2; opacity: .6; } 30% { stroke: #fff0c8; stroke-width: 4.4; opacity: 1; } 100% { stroke: #f0c070; stroke-width: 2.4; opacity: .9; } }
+body.abrindo .folha.esq { animation: abre-esq 1.25s cubic-bezier(.55,.02,.2,1) .26s both; }
+body.abrindo .folha.dir { animation: abre-dir 1.25s cubic-bezier(.55,.02,.2,1) .26s both; }
+@keyframes abre-esq { 0% { transform: rotateY(0); } 7% { transform: rotateY(-1.2deg); } 100% { transform: rotateY(82deg); } }
+@keyframes abre-dir { 0% { transform: rotateY(0); } 7% { transform: rotateY(1.2deg); } 100% { transform: rotateY(-82deg); } }
+body.abrindo .folha .sombra { animation: escurece 1.25s ease-in .26s both; }
+@keyframes escurece { to { opacity: .66; } }
+body.abrindo .interior .acende { animation: acende 1.1s ease-out .3s both; }
+@keyframes acende { to { opacity: 1; } }
+body.abrindo .fresta-meio { animation: some .3s ease .32s both; }
+@keyframes some { to { opacity: 0; } }
+body.abrindo .luz-neve { animation: luz-neve .6s ease-out .02s both; }
+@keyframes luz-neve { to { opacity: 1; transform: scale(1.25, 1.1); } }
+body.abrindo .poca { animation: poca 1.1s cubic-bezier(.3,.6,.3,1) .05s both; }
+@keyframes poca { to { opacity: 1; transform: scaleY(1); } }
+body.abrindo .raios { animation: raios 1.4s ease-out .4s both; }
+@keyframes raios { 0% { opacity: 0; transform: scale(.6); } 100% { opacity: .95; transform: scale(1.15); } }
+body.abrindo .dica { animation: some .3s ease both; }
+body.abrindo .placa-grupo, body.abrindo .etiqueta, body.abrindo .lampiao { animation-play-state: paused; }
+body.abrindo .flash { animation: flash .45s ease-in 1.4s both; }
+@keyframes flash { from { opacity: 0; } to { opacity: 1; } }
+body.abrindo .loja { animation: loja .42s ease-out 1.68s both; }
+@keyframes loja { 0% { visibility: visible; opacity: 0; transform: scale(1.04); } 100% { visibility: visible; opacity: 1; transform: none; } }
+body.aberta .entrada { visibility: hidden; }
+.neve-tela { position: absolute; inset: 0; pointer-events: none; transform-origin: 50% 60%; will-change: transform, opacity;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.4) 0, rgba(0,0,0,.6) 20%, #000 46%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.4) 0, rgba(0,0,0,.6) 20%, #000 46%); }
+.raios, .poca, .luz-neve, .flash, .interior .acende, .fresta-meio { will-change: transform, opacity; }
+
+@media (prefers-reduced-motion: reduce) {
+  .neve, .nevoa, .rajada, .nuvens i, .reflexo, .facho i, .lente, .halo, .luz-fachada, .ch, .placa-grupo, .etiqueta, .lampiao, .lampiao .luz, .janela-halo, .vitrine-brilho, .dica { animation: none !important; }
+  .facho { display: none; }
+  .neve.n3, .neve.n4 { display: none; }
+  .dica { opacity: 1; }
+  body.abrindo .dica { opacity: 0 !important; visibility: hidden; }
+  body.abrindo .neve-tela, body.abrindo .raios, body.abrindo .flash, body.abrindo .poca, body.abrindo .luz-neve, body.abrindo .timao-acorda, body.abrindo .faiscas-trinco i { animation: none !important; }
+  body.abrindo .fresta-meio, body.abrindo .fresta-chao { animation: none !important; opacity: 0; }
+  body.abrindo .tranca, body.abrindo .grampo-frente, body.abrindo svg.bainha { animation: esmaece .4s ease both !important; }
+  body.abrindo .folha.esq, body.abrindo .folha.dir { animation: esmaece .55s ease both !important; }
+  body.abrindo .loja { animation: loja-calma .45s ease .5s both !important; }
+}
+@keyframes esmaece { to { opacity: 0; } }
+@keyframes loja-calma { 0% { visibility: visible; opacity: 0; } 100% { visibility: visible; opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div id="entrada" class="entrada" role="dialog" aria-modal="true" aria-label="Entrada da loja — o empório do cais, em Águas de Sentina">
+  <div class="palco" id="palco">
+
+    <!-- ===== LONGE: o céu de tempestade, o farol, a cidade nas encostas, os mastros e o mar ===== -->
+    <div class="camada longe" id="longe" aria-hidden="true">
+      <div class="ceu"></div>
+      <div class="nuvens" id="nuvens"></div>
+      <div class="mar"></div>
+      <div class="reflexo"></div>
+      <svg class="porto" viewBox="-900 -700 3240 2000">
+        <defs>
+          <linearGradient id="gEncosta" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1622"/><stop offset="1" stop-color="#0d1c2a"/></linearGradient>
+          <linearGradient id="gCasa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060d14"/><stop offset="1" stop-color="#08121b"/></linearGradient>
+          <filter id="brilhoJan" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- a encosta da cidade, à direita, e o promontório do farol, à esquerda -->
+        <path id="encosta" d="" fill="url(#gEncosta)"/>
+        <g id="casas" fill="url(#gCasa)"></g>
+        <g id="janelas-porto" fill="#ffa64a" filter="url(#brilhoJan)"></g>
+        <!-- o farol -->
+        <path d="M-262 400 L-252 330 H-236 L-226 400Z" fill="#0a141e"/>
+        <path d="M-258 330 H-230 V316 H-258Z M-262 316 H-226 L-244 300Z" fill="#0a141e"/>
+        <path d="M-256 360 H-232 M-259 380 H-229" stroke="#1a2a3a" stroke-width="3"/>
+        <!-- os navios no porto: cascos, mastros e o cordame -->
+        <g id="navios" fill="#050b11" stroke="#050b11"></g>
+      </svg>
+      <div class="facho"><i></i></div>
+      <div class="lente"></div>
+    </div>
+
+    <!-- ===== MUNDO: o empório do cais ===== -->
+    <div class="camada mundo" id="mundo">
+      <svg class="fundo" viewBox="-600 -400 2640 1700" aria-hidden="true">
+        <defs>
+          <pattern id="tabuado" patternUnits="userSpaceOnUse" x="0" y="0" width="200" height="26">
+            <rect width="200" height="26" fill="#3a2a1c"/>
+            <path d="M0 .5H200" stroke="#0e0904" stroke-width="2.2"/>
+            <path d="M0 2.6H200" stroke="#7a5e44" stroke-width="1" opacity=".35"/>
+            <path d="M140 0V26" stroke="#0e0904" stroke-width="2"/>
+            <circle cx="10" cy="13" r="1.6" fill="#1a1008"/><circle cx="150" cy="13" r="1.6" fill="#1a1008"/>
+          </pattern>
+          <pattern id="tabuadoB" patternUnits="userSpaceOnUse" x="70" y="0" width="200" height="26">
+            <rect width="200" height="26" fill="#32241a"/>
+            <path d="M0 .5H200" stroke="#0e0904" stroke-width="2.2"/>
+            <path d="M0 2.6H200" stroke="#6e5440" stroke-width="1" opacity=".3"/>
+            <path d="M90 0V26" stroke="#0e0904" stroke-width="2"/>
+          </pattern>
+          <filter id="sal" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".004 .06" numOctaves="3" seed="5" result="t"/>
+            <feColorMatrix in="t" values="0 0 0 0 .55  0 0 0 0 .6  0 0 0 0 .62  0 0 0 2 -1.1"/>
+          </filter>
+          <filter id="manchas" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".01 .025" numOctaves="3" seed="11" result="t"/>
+            <feColorMatrix in="t" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.4 -1"/>
+          </filter>
+          <linearGradient id="gPier" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1e14"/><stop offset=".5" stop-color="#1a130c"/><stop offset="1" stop-color="#0c0805"/></linearGradient>
+          <linearGradient id="gLatao" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6a4a18"/><stop offset=".5" stop-color="#f0c878"/><stop offset="1" stop-color="#6a4a18"/></linearGradient>
+          <linearGradient id="gTelhado" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1410"/><stop offset="1" stop-color="#0c0906"/></linearGradient>
+          <radialGradient id="gVitrine" cx=".5" cy=".6" r=".7"><stop offset="0" stop-color="#ffd890"/><stop offset=".35" stop-color="#d0803a"/><stop offset=".72" stop-color="#5a2a10"/><stop offset="1" stop-color="#1a0c06"/></radialGradient>
+          <radialGradient id="gJanela" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#ffe0a0"/><stop offset=".5" stop-color="#e08a3a"/><stop offset="1" stop-color="#3a1a08"/></radialGradient>
+          <linearGradient id="gSombraTopo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".5" stop-color="#000" stop-opacity=".1"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+          <filter id="borrao6"><feGaussianBlur stdDeviation="6"/></filter>
+          <clipPath id="cParede"><path d="M96 800 V332 L270 228 L440 332 V250 L720 92 L1000 250 V300 L1150 210 L1340 300 V800Z"/></clipPath>
+          <!-- o timão de latão: o aro, oito raios com manetes e o cubo (desenho próprio) -->
+          <g id="timao">
+            <circle r="44" fill="none" stroke-width="9"/>
+            <circle r="18" stroke-width="6"/>
+            <path d="M0 -18 V-62 M0 18 V62 M-18 0 H-62 M18 0 H62 M-13 -13 L-44 -44 M13 13 L44 44 M-13 13 L-44 44 M13 -13 L44 -44" stroke-width="6" fill="none"/>
+          </g>
+          <!-- a âncora do letreiro -->
+          <path id="ancora" d="M0 -70 a10 10 0 1 1 .1 0Z M-4 -52 H4 V-40 H24 V-32 H4 V40 Q20 36 32 18 L24 14 L40 4 L44 26 L38 22 Q22 50 0 56 Q-22 50 -38 22 L-44 26 L-40 4 L-24 14 L-32 18 Q-20 36 -4 40 V-32 H-24 V-40 H-4Z"/>
+          <!-- um barril, de pé -->
+          <g id="barril"><path d="M-26 0 Q-32 -40 -26 -80 H26 Q32 -40 26 0Z" fill="#4a3220" stroke="#0e0904" stroke-width="2"/>
+            <path d="M-29 -16 H29 M-31 -64 H31" stroke="#2a2522" stroke-width="5"/><path d="M-10 -80 Q-14 -40 -10 0 M10 -80 Q14 -40 10 0" stroke="#2a1a0e" stroke-width="1.5" fill="none"/></g>
+        </defs>
+
+        <!-- o píer: tábuas que fogem para o fundo, a água escura aparecendo nas frestas -->
+        <rect x="-600" y="780" width="2640" height="520" fill="url(#gPier)"/>
+        <g id="tabuas-pier" fill="none" stroke="#070402" stroke-width="2.2"></g>
+        <g id="tabuas-luz" fill="none" stroke="#6a5038" stroke-width="1" opacity=".35"></g>
+        <g id="pocas" fill="#1a3040" opacity=".55"></g>
+
+        <!-- ===== a fachada: o armazém de tábuas com o frontão alto no meio, a ala da loja à esquerda,
+             o sobrado à direita ===== -->
+        <g clip-path="url(#cParede)">
+          <rect x="80" y="80" width="1280" height="730" fill="url(#tabuadoB)"/>
+          <rect x="440" y="80" width="560" height="730" fill="url(#tabuado)"/>
+          <rect x="80" y="80" width="1280" height="730" filter="url(#sal)" opacity=".18"/>
+          <rect x="80" y="80" width="1280" height="730" filter="url(#manchas)" opacity=".6"/>
+          <rect x="80" y="240" width="1280" height="120" fill="url(#gSombraTopo)"/>
+          <path d="M440 300 V800 M1000 300 V800" stroke="#000" stroke-width="30" opacity=".35" filter="url(#borrao6)"/>
+        </g>
+        <!-- os pilares de canto (troncos de mastro reaproveitados) -->
+        <g id="pilares"></g>
+        <!-- os telhados de tábua alcatroada, com o beiral e as telhas que faltam -->
+        <path d="M420 262 L720 80 L1020 262 L1020 280 L720 100 L420 280Z" fill="url(#gTelhado)" stroke="#050302" stroke-width="2"/>
+        <path d="M76 346 L270 216 L460 346 L460 364 L270 236 L76 364Z" fill="url(#gTelhado)" stroke="#050302" stroke-width="2"/>
+        <path d="M980 312 L1150 198 L1360 312 L1360 330 L1150 218 L980 330Z" fill="url(#gTelhado)" stroke="#050302" stroke-width="2"/>
+        <path id="telhado-juntas" d="" fill="none" stroke="#2a1e14" stroke-width="1.2" opacity=".8"/>
+        <!-- o letreiro sobre a porta: a âncora de latão numa tábua com o nome apagado -->
+        <rect x="610" y="296" width="220" height="44" rx="3" fill="#2c4a52" stroke="#0d1a1e" stroke-width="3"/>
+        <rect x="616" y="302" width="208" height="32" fill="none" stroke="#c8963e" stroke-width="1.5" opacity=".7"/>
+        <use href="#ancora" transform="translate(720 220) scale(.9)" fill="url(#gLatao)" stroke="#3a2408" stroke-width="2"/>
+        <use href="#ancora" transform="translate(720 220) scale(.9)" class="timao-acorda" fill="none" stroke="#f0c070" stroke-width="2" opacity=".6"/>
+        <!-- o umbral da porta: o portal de vigas pesadas, como a amurada de um navio -->
+        <g id="umbral"></g>
+        <!-- as janelas acesas do sobrado e a vitrine da loja -->
+        <g id="janelas"></g>
+        <g id="vitrine">
+          <rect x="150" y="440" width="270" height="300" fill="url(#gVitrine)"/>
+          <g id="mercadorias"></g>
+          <rect x="150" y="440" width="270" height="300" fill="none" stroke="#1a1008" stroke-width="14"/>
+          <path d="M285 440 V740 M150 590 H420" stroke="#1a1008" stroke-width="7"/>
+          <rect x="138" y="732" width="294" height="20" fill="#4a3220" stroke="#0e0904" stroke-width="2"/>
+          <!-- o toldo listrado, rasgado na ponta -->
+          <path d="M130 440 L440 440 L456 402 L114 402Z" fill="#2c4a52" stroke="#0d1a1e" stroke-width="2"/>
+          <path id="toldo-listras" d="" fill="#c8b890" opacity=".75"/>
+          <path id="toldo-franja" d="" fill="#2c4a52" stroke="#0d1a1e" stroke-width="1.5"/>
+        </g>
+        <!-- as redes de pesca e as boias penduradas na ala, a corda enrolada -->
+        <g id="redes" fill="none" stroke="#5a4a38" stroke-width="1.4" opacity=".75"></g>
+        <!-- o lais de verga que sai do sobrado e segura a placa -->
+        <path d="M1150 360 H1312 M1180 360 L1150 400 M1312 360 l10 -6" stroke="#2a1a0e" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M1150 357 H1310" stroke="#8a6a44" stroke-width="2" opacity=".6"/>
+        <!-- barris e caixotes junto da parede -->
+        <g id="carga-fundo"></g>
+      </svg>
+
+      <div class="janela-halo j1" aria-hidden="true"></div><div class="janela-halo j2" aria-hidden="true"></div>
+      <div class="vitrine-brilho" aria-hidden="true"></div>
+      <div class="lampiao p1" aria-hidden="true"></div><div class="lampiao p2" aria-hidden="true"></div><div class="lampiao p3" aria-hidden="true"></div>
+
+      <!-- ===== A PORTA ===== -->
+      <div class="vao" id="vao">
+        <div class="interior" aria-hidden="true">
+          <!-- o empório por dentro: garrafas, mapas, um baú; o lojista de chapéu e cachimbo atrás do balcão -->
+          <svg viewBox="0 0 240 386" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id="gInt" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#ffe2b0"/><stop offset=".35" stop-color="#d0803a"/><stop offset=".75" stop-color="#5a2a10"/><stop offset="1" stop-color="#2a1206"/></radialGradient>
+            </defs>
+            <rect width="240" height="386" fill="url(#gInt)"/>
+            <g fill="#3a1a08">
+              <rect x="6" y="70" width="70" height="5"/><rect x="164" y="70" width="70" height="5"/>
+              <rect x="6" y="140" width="70" height="5"/><rect x="164" y="140" width="70" height="5"/>
+              <rect x="6" y="210" width="70" height="5"/><rect x="164" y="210" width="70" height="5"/>
+            </g>
+            <g fill="#2a1206">
+              <path d="M12 70 v-20 q0 -6 4 -8 v-6 h4 v6 q4 2 4 8 v20Z M32 70 v-14 q0 -6 6 -6 q6 0 6 6 v14Z M52 70 v-24 q0 -4 3 -5 v-5 h3 v5 q3 1 3 5 v24Z"/>
+              <path d="M170 70 v-18 h22 v18Z M198 70 v-26 q0 -4 3 -5 v-5 h3 v5 q3 1 3 5 v26Z M214 70 q8 -18 16 0Z"/>
+              <path d="M14 140 v-22 h30 v22Z M50 140 v-16 q8 -10 16 0 v16Z M168 140 q10 -20 20 0Z M196 140 v-24 h8 v24Z M210 140 v-14 h18 v14Z"/>
+              <path d="M10 210 v-26 h40 v26Z M56 210 v-12 h14 v12Z M168 210 v-18 q12 -12 24 0 v18Z M200 210 v-24 h28 v24Z"/>
+            </g>
+            <!-- um mapa pregado na parede -->
+            <path d="M96 60 h48 v40 h-48Z" fill="#e8d0a0" opacity=".7"/><path d="M100 70 q10 8 20 0 t20 6 M104 88 l6 -6 l8 8" stroke="#7a4a20" stroke-width="1.2" fill="none"/>
+            <!-- o lojista: chapéu de aba larga, o casaco, o cachimbo com a fumacinha -->
+            <g>
+              <path d="M78 300 Q80 214 98 196 Q106 184 120 182 Q134 184 142 196 Q160 214 162 300Z" fill="#2a1206"/>
+              <path d="M96 170 Q120 160 144 170 Q140 196 120 202 Q100 196 96 170Z" fill="#1a0a04"/>
+              <path d="M84 168 Q120 150 156 168 Q150 174 120 172 Q90 174 84 168Z M102 166 Q100 150 110 148 Q120 144 130 148 Q140 150 138 166Z" fill="#140803"/>
+              <path d="M128 192 h18 v6 h-4 v6 h-6 v-6 h-8Z" fill="#140803"/>
+              <circle cx="144" cy="194" r="2.4" fill="#ffb35a"/>
+              <path d="M144 188 q-4 -10 2 -18 q6 -8 0 -16" stroke="#fff0d0" stroke-width="1.6" fill="none" opacity=".35"/>
+            </g>
+            <!-- o balcão de tábuas com a balança de latão e as moedas -->
+            <rect x="0" y="292" width="240" height="94" fill="#3a1a08"/>
+            <rect x="0" y="292" width="240" height="8" fill="#7a5a34"/>
+            <rect x="0" y="292" width="240" height="2" fill="#ffe0a0" opacity=".6"/>
+            <path d="M28 292 v-30 M14 262 h28 M14 262 l-6 14 h12Z M42 262 l-6 14 h12Z" stroke="#e0b060" stroke-width="2" fill="none"/>
+            <g fill="#ffd070"><circle cx="196" cy="288" r="4"/><circle cx="206" cy="289" r="4"/><circle cx="201" cy="283" r="4"/></g>
+          </svg>
+          <div class="acende"></div>
+        </div>
+        <div class="folha esq">
+          <div class="borda"></div>
+          <div class="tabuas"></div>
+          <div class="cinta c1"></div><div class="cinta c2"></div><div class="cinta c3"></div>
+          <svg class="meia" viewBox="-64 -68 64 136"><use href="#timao" fill="#8a5e1e" stroke="url(#gLatao)"/><use href="#timao" class="timao-acorda" fill="none" stroke="#f0c070" opacity=".4"/></svg>
+          <div class="suporte"></div>
+          <div class="argola"></div>
+          <div class="sombra"></div>
+        </div>
+        <div class="folha dir">
+          <div class="borda"></div>
+          <div class="tabuas"></div>
+          <div class="cinta c1"></div><div class="cinta c2"></div><div class="cinta c3"></div>
+          <svg class="meia" viewBox="0 -68 64 136"><use href="#timao" fill="#8a5e1e" stroke="url(#gLatao)"/><use href="#timao" class="timao-acorda" fill="none" stroke="#f0c070" opacity=".4"/></svg>
+          <div class="suporte"></div>
+          <div class="argola"></div>
+          <div class="sombra"></div>
+        </div>
+      </div>
+      <div class="fresta-meio" aria-hidden="true"></div>
+      <div class="fresta-chao" aria-hidden="true"></div>
+      <div class="tranca" aria-hidden="true"></div>
+      <div class="grampo-frente g1" aria-hidden="true"></div>
+      <div class="grampo-frente g2" aria-hidden="true"></div>
+      <div class="faiscas-trinco" id="faiscasTrinco" aria-hidden="true"></div>
+      <div class="raios" aria-hidden="true"></div>
+      <div class="luz-fachada" aria-hidden="true"></div>
+      <!-- a bainha do remo na parede -->
+      <svg class="bainha" viewBox="432 568 186 84" aria-hidden="true">
+        <rect x="440" y="598" width="166" height="32" rx="2" fill="#000" opacity=".55" transform="translate(2 4)"/>
+        <rect x="440" y="598" width="166" height="32" rx="2" fill="#2a1a0e" stroke="#0e0904" stroke-width="2"/>
+        <rect x="445" y="603" width="156" height="22" fill="none" stroke="#5a4028" stroke-width="1.5"/>
+        <path d="M441 599.5 H605" stroke="#8a6a44" stroke-width="1" opacity=".5"/>
+        <g fill="#2a2522" stroke="#0e0904" stroke-width="1.5"><rect x="462" y="590" width="14" height="48" rx="1.5"/><rect x="560" y="590" width="14" height="48" rx="1.5"/><rect x="600" y="593" width="8" height="42" rx="1.5"/></g>
+        <path d="M469 593.2 a1.8 1.8 0 1 0 .1 0Z M469 631.2 a1.8 1.8 0 1 0 .1 0Z M567 593.2 a1.8 1.8 0 1 0 .1 0Z M567 631.2 a1.8 1.8 0 1 0 .1 0Z" fill="#b8a690"/>
+      </svg>
+
+      <!-- ===== A PLACA: tábua pintada pendurada por dois cabos no lais de verga ===== -->
+      <div class="placa-grupo" id="placa">
+        <i class="corrente e" aria-hidden="true"></i><i class="corrente d" aria-hidden="true"></i>
+        <div class="entrada-placa">
+          <h1 class="entrada-titulo">Bem Vindo(a)!</h1>
+          <div class="pergaminho">
+            <i class="cravo e" aria-hidden="true"></i><i class="cravo d" aria-hidden="true"></i>
+            <p class="entrada-hobby">Este é um projeto feito por hobby sem fins lucrativos.</p>
+            <p class="entrada-contato"><span class="ea-rot">Meus Contatos</span>
+              <span class="ea-canal"><span class="ea-nome">League of Legends</span> <b class="ea-id" title="Riot ID — clique para selecionar">Brelgo#RPG</b></span>
+              <span class="ea-canal"><span class="ea-nome">Discord</span> <b class="ea-id" title="Clique para selecionar">brelgo</b></span>
+            </p>
+          </div>
+        </div>
+        <div class="etiqueta">
+          <p class="entrada-nota"><span class="nw">League of Legends</span> · <span class="nw">Atualização <span data-atualizacao></span></span> · <span class="nw">patch <span data-patch></span></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PERTO: os postes de lampião, os cabeços de amarração com a corda e a carga (passam mais rápido) ===== -->
+    <div class="camada perto" id="perto" aria-hidden="true">
+      <div class="poste l1"></div>
+      <div class="poste l2"></div>
+      <svg class="frente" viewBox="-600 -400 2640 1700">
+        <defs>
+          <linearGradient id="gCabeco" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0c0a08"/><stop offset=".35" stop-color="#3a3430"/><stop offset=".6" stop-color="#24201c"/><stop offset="1" stop-color="#080605"/></linearGradient>
+        </defs>
+        <path d="M-600 912 L330 930 L330 1300 L-600 1300Z" fill="#160f09"/>
+        <path d="M-600 912 L330 930" stroke="#6a5038" stroke-width="3" opacity=".5"/>
+        <path d="M1180 930 L2040 906 L2040 1300 L1180 1300Z" fill="#160f09"/>
+        <path d="M1180 930 L2040 906" stroke="#6a5038" stroke-width="3" opacity=".5"/>
+        <g id="cabecos"></g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- a garoa, os borrifos e a cerração, na tela -->
+  <div class="neve-tela" id="neveTela" aria-hidden="true">
+    <div class="nevoa"></div>
+    <div class="rajada r1"></div><div class="rajada r2"></div>
+    <div class="neve n1"></div><div class="neve n2"></div><div class="neve n3"></div><div class="neve n4"></div>
+  </div>
+  <div class="vinheta" aria-hidden="true"></div>
+  <div class="grao" aria-hidden="true"></div>
+  <div class="flash" aria-hidden="true"></div>
+  <p class="dica" aria-hidden="true">(Clique em qualquer local para abrir)</p>
+  <button id="entrar" class="btn-entrar" type="button">Entrar na loja</button>
+</div>
+
+<!-- a loja: placeholder (na integração é o app de verdade) -->
+<main class="loja" id="loja" tabindex="-1" aria-label="O Catálogo">
+  <h2>O Catálogo</h2>
+  <p>aqui entra a loja de verdade</p>
+  <span class="atalho">R · voltar à porta</span>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  var semente = 20261103;
+  function rnd() { semente = (semente * 1664525 + 1013904223) >>> 0; return semente / 4294967296; }
+  function el(tag, at, pai) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (pai) pai.appendChild(e); return e; }
+  function $(id) { return document.getElementById(id); }
+  function f1(n) { return n.toFixed(1); }
+  function oval(cx, cy, rx, ry) { return "M" + f1(cx - rx) + " " + f1(cy) + "a" + f1(rx) + " " + f1(ry) + " 0 1 0 " + f1(2 * rx) + " 0a" + f1(rx) + " " + f1(ry) + " 0 1 0 " + f1(-2 * rx) + " 0Z"; }
+
+  /* ---------- o que na integração vem do app (CATALOG.meta.patch e ATUALIZACAO) ---------- */
+  var ATUALIZACAO = "13.114", CATALOG = { meta: { patch: "16.21.1" } };
+  document.querySelectorAll("[data-patch]").forEach(function (e) { e.textContent = CATALOG.meta.patch || ""; });
+  document.querySelectorAll("[data-atualizacao]").forEach(function (e) { e.textContent = ATUALIZACAO; });
+
+  /* ---------- o som (na integração é o módulo Som do app; aqui, um substituto mínimo) ---------- */
+  var Som = window.Som || (function () {
+    var audio = null, destravado = false;
+    return {
+      destravar: function () { destravado = true; try { audio = audio || new Audio("../../assets/audio/open_catalog.mp3"); audio.preload = "auto"; } catch (e) {} },
+      play: function (evento) {
+        if (!destravado || evento !== "catalog:open" || !audio) return;
+        try { audio.currentTime = 0; audio.volume = .8; var p = audio.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+      },
+      parar: function () { if (audio) try { audio.pause(); audio.currentTime = 0; } catch (e) {} }
+    };
+  })();
+
+  /* ---------- o desenho gerado ---------- */
+
+  // as nuvens baixas que passam
+  (function () {
+    var f = $("nuvens");
+    [[200, -200, 900, 0], [1200, -100, 1000, -20], [2200, -260, 800, -38], [-400, 80, 700, -12], [1700, 120, 900, -50]].forEach(function (p) {
+      var i = document.createElement("i");
+      i.style.left = p[0] + "px"; i.style.top = p[1] + "px"; i.style.width = p[2] + "px"; i.style.height = (p[2] * .32) + "px";
+      i.style.animationDelay = p[3] + "s"; i.style.setProperty("--vx", (600 + rnd() * 500).toFixed(0) + "px");
+      f.appendChild(i);
+    });
+  })();
+
+  // a cidade nas encostas: barracos empilhados com telhados tortos, janelas acesas; o promontório do farol
+  (function () {
+    var enc = "M900 780 Q1080 600 1300 560 Q1520 500 1760 430 Q2000 380 2340 360 V780Z M-900 780 V420 Q-600 400 -400 410 Q-300 400 -200 420 Q-120 470 -40 560 Q60 700 160 780Z";
+    $("encosta").setAttribute("d", enc);
+    var dc = "", jan = ["", "", ""];
+    function casa(x, base, w, h) {
+      var inc = (rnd() - .5) * 10;
+      dc += "M" + f1(x) + " " + f1(base) + "V" + f1(base - h) + "L" + f1(x + w / 2 + inc) + " " + f1(base - h - w * .45) + "L" + f1(x + w) + " " + f1(base - h) + "V" + f1(base) + "Z";
+      for (var j = 0; j < 3; j++) {
+        if (rnd() < .45) continue;
+        var jx = x + 4 + rnd() * (w - 12), jy = base - h + 6 + rnd() * (h - 14), op = rnd();
+        jan[op < .35 ? 0 : op < .7 ? 1 : 2] += "M" + f1(jx) + " " + f1(jy) + "h5v6h-5Z";
+      }
+    }
+    // a encosta da direita, de baixo para cima
+    for (var linha = 0; linha < 9; linha++) {
+      var base = 770 - linha * 44;
+      for (var x = 960 + linha * 90 + rnd() * 40; x < 2340; x += 40 + rnd() * 40) {
+        var yb = base - Math.max(0, (x - 1000) * .06 - linha * 4);
+        casa(x, yb, 30 + rnd() * 28, 22 + rnd() * 26);
+      }
+    }
+    // poucas, no pé do promontório
+    for (var x2 = -860; x2 < 60; x2 += 50 + rnd() * 50) casa(x2, 780 - Math.max(0, (x2 + 200) * -.2) * .3, 28 + rnd() * 24, 18 + rnd() * 20);
+    el("path", { d: dc }, $("casas"));
+    [.45, .7, .95].forEach(function (o, i) { el("path", { d: jan[i], opacity: o }, $("janelas-porto")); });
+    // os navios: cascos baixos, mastros, vergas e o cordame
+    var g = $("navios");
+    [[150, 790, 1], [540, 796, .8], [1720, 792, 1.1], [2080, 796, .7], [-560, 794, .9]].forEach(function (n) {
+      var x = n[0], y = n[1], s = n[2], d = "M" + f1(x - 120 * s) + " " + f1(y - 18 * s) + "L" + f1(x + 130 * s) + " " + f1(y - 24 * s) + "L" + f1(x + 100 * s) + " " + f1(y) + "L" + f1(x - 100 * s) + " " + f1(y) + "Z";
+      el("path", { d: d, stroke: "none" }, g);
+      var m = "", c = "";
+      [-50, 10, 70].forEach(function (mx, i) {
+        var top = y - (220 - i * 30) * s;
+        m += "M" + f1(x + mx * s) + " " + f1(y - 20 * s) + "V" + f1(top);
+        m += "M" + f1(x + mx * s - 40 * s) + " " + f1(top + 40 * s) + "H" + f1(x + mx * s + 40 * s) + "M" + f1(x + mx * s - 30 * s) + " " + f1(top + 90 * s) + "H" + f1(x + mx * s + 30 * s);
+        c += "M" + f1(x + mx * s) + " " + f1(top) + "L" + f1(x - 120 * s) + " " + f1(y - 18 * s) + "M" + f1(x + mx * s) + " " + f1(top) + "L" + f1(x + 130 * s) + " " + f1(y - 24 * s);
+      });
+      el("path", { d: m, "stroke-width": f1(3.2 * s), fill: "none" }, g);
+      el("path", { d: c, "stroke-width": f1(.9 * s), fill: "none", opacity: .7 }, g);
+    });
+  })();
+
+  // o píer: as tábuas que fogem para o fundo (juntas convergindo no meio da porta) e as poças de garoa
+  (function () {
+    var VX = 720, VY = 560, dL = "", dLL = "", dP = "";
+    // tábuas compridas no sentido do fundo: linhas que convergem
+    for (var c = -40; c <= 40; c++) {
+      var u = c * 34 / (788 - VY);
+      dL += "M" + f1(VX + u * (788 - VY)) + " 788L" + f1(VX + u * (1300 - VY)) + " 1300";
+      dLL += "M" + f1(VX + u * (788 - VY) + 2) + " 788L" + f1(VX + u * (1300 - VY) + 3) + " 1300";
+    }
+    // as emendas das tábuas, desencontradas
+    var y = 790, passo = 16, k = 0;
+    while (y < 1300) {
+      for (var c2 = -40; c2 < 40; c2++) {
+        if ((c2 + k) % 3) continue;
+        var u0 = c2 * 34 / (788 - VY), u1 = (c2 + 1) * 34 / (788 - VY);
+        dL += "M" + f1(VX + u0 * (y - VY)) + " " + f1(y) + "L" + f1(VX + u1 * (y - VY)) + " " + f1(y);
+      }
+      passo *= 1.3; y += passo; k++;
+    }
+    for (var p = 0; p < 18; p++) {
+      var px = -400 + rnd() * 2240, py = 820 + rnd() * 420;
+      if (px > 560 && px < 880 && py < 880) continue;
+      dP += oval(px, py, 30 + rnd() * 80, 4 + rnd() * 8);
+    }
+    el("path", { d: dL }, $("tabuas-pier"));
+    el("path", { d: dLL }, $("tabuas-luz"));
+    el("path", { d: dP }, $("pocas"));
+  })();
+
+  // os pilares de mastro, as juntas dos telhados, o umbral de vigas
+  (function () {
+    var g = $("pilares");
+    [[422, 270], [1000, 260], [80, 350], [1340, 316], [960, 320]].forEach(function (p) {
+      var x = p[0], topo = p[1];
+      el("path", { d: "M" + (x - 12) + " 800 V" + topo + " H" + (x + 12) + " V800Z", fill: "#2a1e14", stroke: "#0e0904", "stroke-width": 2 }, g);
+      el("path", { d: "M" + (x - 6) + " 800 V" + topo, stroke: "#6a5038", "stroke-width": 1.5, opacity: .5 }, g);
+      el("path", { d: "M" + (x - 14) + " " + (topo + 60) + " h28 M" + (x - 14) + " " + (topo + 300) + " h28", stroke: "#2a2522", "stroke-width": 6 }, g);
+    });
+    var dj = "";
+    for (var t = .08; t < 1; t += .09) {
+      dj += "M" + f1(420 + 300 * t) + " " + f1(262 - 182 * t + 8) + "l0 10 M" + f1(1020 - 300 * t) + " " + f1(262 - 182 * t + 8) + "l0 10";
+      dj += "M" + f1(76 + 194 * t) + " " + f1(346 - 130 * t + 8) + "l0 10 M" + f1(460 - 190 * t) + " " + f1(346 - 130 * t + 8) + "l0 10";
+      dj += "M" + f1(980 + 170 * t) + " " + f1(312 - 114 * t + 8) + "l0 10 M" + f1(1360 - 210 * t) + " " + f1(312 - 114 * t + 8) + "l0 10";
+    }
+    $("telhado-juntas").setAttribute("d", dj);
+    var u = $("umbral");
+    el("path", { d: "M560 800 V380 H880 V800 H840 V404 H600 V800Z", fill: "#3a2818", stroke: "#0e0904", "stroke-width": 2.5 }, u);
+    el("path", { d: "M548 392 H892 V372 H548Z", fill: "#4a3220", stroke: "#0e0904", "stroke-width": 2.5 }, u);
+    el("path", { d: "M570 800 V390 M870 800 V390 M552 382 H888", stroke: "#8a6a44", "stroke-width": 1.4, opacity: .5 }, u);
+    var dr = "";
+    for (var yy = 420; yy < 790; yy += 46) dr += oval(580, yy, 3, 3) + oval(860, yy, 3, 3);
+    el("path", { d: dr, fill: "#b8a690" }, u);
+  })();
+
+  // as janelas do sobrado, as mercadorias da vitrine, o toldo, as redes e as boias
+  (function () {
+    var g = $("janelas");
+    [[1050, 290], [1210, 290]].forEach(function (j) {
+      el("rect", { x: j[0] - 34, y: j[1] - 30, width: 68, height: 74, fill: "url(#gJanela)", stroke: "#1a1008", "stroke-width": 7 }, g);
+      el("path", { d: "M" + j[0] + " " + (j[1] - 30) + " V" + (j[1] + 44) + " M" + (j[0] - 34) + " " + (j[1] + 6) + " H" + (j[0] + 34), stroke: "#1a1008", "stroke-width": 4 }, g);
+      el("path", { d: "M" + (j[0] - 44) + " " + (j[1] - 34) + " h20 v82 h-20Z M" + (j[0] + 24) + " " + (j[1] - 34) + " h20 v82 h-20Z", fill: "#2c4a52", stroke: "#0d1a1e", "stroke-width": 2 }, g);
+    });
+    // a escotilha redonda no frontão
+    el("circle", { cx: 720, cy: 158, r: 22, fill: "url(#gJanela)", stroke: "url(#gLatao)", "stroke-width": 6 }, g);
+    el("path", { d: "M698 158 H742 M720 136 V180", stroke: "#3a2408", "stroke-width": 2 }, g);
+    var m = $("mercadorias"), dm = "";
+    for (var k = 0; k < 7; k++) { var kx = 168 + k * 36; dm += "M" + (kx - 6) + " 590 v-24 q0 -5 3 -7 v-8 h6 v8 q3 2 3 7 v24Z"; }
+    dm += "M170 740 v-36 h58 v36Z M236 740 v-24 q14 -14 28 0 v24Z M300 740 v-44 h40 v44Z M350 740 v-30 h50 v30Z";
+    el("path", { d: dm, fill: "#3a1a08" }, m);
+    el("path", { d: "M176 726 h46 M306 716 h28", stroke: "#c8963e", "stroke-width": 2 }, m);
+    var ls = "", fr = "";
+    for (var x = 130; x < 440; x += 34) ls += "M" + x + " 440 L" + (x + 17) + " 440 L" + f1(x + 17 - 16 * (x - 285) / 155 * .1 - 1) + " 402 L" + f1(x - 16 * (x - 285) / 155 * .1 - 1) + " 402Z";
+    for (var y2 = 130; y2 < 440; y2 += 17) fr += "M" + y2 + " 440 q8.5 " + f1(10 + rnd() * 6) + " 17 0Z";
+    $("toldo-listras").setAttribute("d", ls);
+    $("toldo-franja").setAttribute("d", fr);
+    var r = $("redes"), dr = "";
+    for (var i = 0; i < 9; i++) dr += "M" + (96 + i * 8) + " 380 Q" + (100 + i * 8) + " 460 " + (92 + i * 9) + " 540";
+    for (var j2 = 0; j2 < 8; j2++) dr += "M94 " + (390 + j2 * 20) + " Q120 " + (396 + j2 * 20) + " 168 " + (388 + j2 * 20);
+    el("path", { d: dr }, r);
+    el("circle", { cx: 130, cy: 560, r: 14, fill: "#c8b890", stroke: "#8a2a1a", "stroke-width": 6, opacity: .9 }, r);
+    el("circle", { cx: 445, cy: 500, r: 12, fill: "#c8b890", stroke: "#8a2a1a", "stroke-width": 5, opacity: .9 }, r);
+    // barris e caixotes junto da parede
+    var cf = $("carga-fundo");
+    [[480, 790, .7], [520, 790, .62], [930, 790, .7]].forEach(function (b) { el("use", { href: "#barril", transform: "translate(" + b[0] + " " + b[1] + ") scale(" + b[2] + ")" }, cf); });
+    el("path", { d: "M960 790 v-56 h70 v56Z M980 734 v-40 h56 v40Z", fill: "#4a3220", stroke: "#0e0904", "stroke-width": 2 }, cf);
+    el("path", { d: "M960 790 l70 -56 M960 734 l70 56 M980 694 l56 40", stroke: "#2a1a0e", "stroke-width": 2 }, cf);
+  })();
+
+  // os lampiões pendurados no beiral
+  document.querySelectorAll(".lampiao").forEach(function (b) {
+    b.innerHTML = '<div class="luz"></div><svg viewBox="0 0 40 120">' +
+      '<path d="M20 0 V64" stroke="#1a1410" stroke-width="2" stroke-dasharray="4 2"/>' +
+      '<path d="M10 70 H30 L28 64 H12Z" fill="#2a2522"/>' +
+      '<path d="M10 70 H30 L28 104 H12Z" fill="#ffcf7a" stroke="#1a1410" stroke-width="2.4" opacity=".95"/>' +
+      '<path d="M20 70 V104 M14 70 L13 104 M26 70 L27 104" stroke="#1a1410" stroke-width="1.4"/>' +
+      '<path d="M9 104 H31 V110 H9Z" fill="#2a2522"/><circle cx="20" cy="90" r="4" fill="#fff6d8"/></svg>';
+  });
+
+  // os postes de lampião do cais (perto): poste de madeira com o braço de ferro e a lanterna a óleo
+  document.querySelectorAll(".poste").forEach(function (b, bi) {
+    b.innerHTML =
+      '<div class="halo"></div>' +
+      '<svg viewBox="0 0 140 340">' +
+      '<defs><linearGradient id="gMadeiraP' + bi + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a1008"/><stop offset=".45" stop-color="#5a4028"/><stop offset=".7" stop-color="#3a2818"/><stop offset="1" stop-color="#120b05"/></linearGradient>' +
+      '<radialGradient id="gChaoP' + bi + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffa050" stop-opacity=".45"/><stop offset="1" stop-color="#ff8030" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse cx="70" cy="336" rx="120" ry="20" fill="url(#gChaoP' + bi + ')"/>' +
+      '<rect x="62" y="176" width="16" height="160" fill="url(#gMadeiraP' + bi + ')"/>' +
+      '<g fill="#2a2522"><rect x="58" y="200" width="24" height="6"/><rect x="58" y="300" width="24" height="6"/></g>' +
+      '<path d="M50 336 h40 l-6 -8 h-28Z" fill="#2a1a0e"/>' +
+      '<path d="M46 172 H94 L88 112 H52Z" fill="#ffcf7a" fill-opacity=".85" stroke="#120f0c" stroke-width="3"/>' +
+      '<path d="M58 172 L56 112 M70 172 V112 M82 172 L84 112" stroke="#120f0c" stroke-width="2"/>' +
+      '<path d="M44 172 H96 V180 H44Z M48 112 H92 L70 92Z" fill="#2a2522" stroke="#080605" stroke-width="2"/>' +
+      '<path d="M70 92 V80 M64 80 a6 6 0 1 0 12 0 a6 6 0 1 0 -12 0" stroke="#2a2522" stroke-width="3" fill="none"/>' +
+      '</svg>' +
+      '<div class="chamas"><i class="ch f1"></i><i class="ch f2"></i></div>';
+  });
+
+  // os cabeços de amarração do primeiro plano e a corda grossa entre eles; caixotes e uma rede
+  (function () {
+    var g = $("cabecos");
+    function cabeco(x, base, h) {
+      el("ellipse", { cx: x, cy: base + 6, rx: 46, ry: 10, fill: "#000", opacity: .55 }, g);
+      el("path", { d: "M" + (x - 28) + " " + base + " L" + (x - 22) + " " + (base - h) + " Q" + x + " " + (base - h - 16) + " " + (x + 22) + " " + (base - h) + " L" + (x + 28) + " " + base + "Z", fill: "url(#gCabeco)", stroke: "#050403", "stroke-width": 2 }, g);
+      el("path", { d: "M" + (x - 34) + " " + (base - h + 10) + " H" + (x + 34), stroke: "#2a2420", "stroke-width": 9, "stroke-linecap": "round" }, g);
+      return [x, base - h * .55];
+    }
+    var dC = "", dL = "";
+    function corda(a, b, cai) {
+      var d = "M" + f1(a[0]) + " " + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2) + " " + f1((a[1] + b[1]) / 2 + cai * 2) + " " + f1(b[0]) + " " + f1(b[1]);
+      dC += d;
+      dL += d;
+    }
+    var a = cabeco(-80, 985, 100), b = cabeco(290, 1000, 110), c = cabeco(1150, 1000, 110), d = cabeco(1520, 985, 100);
+    corda([-460, a[1] + 14], a, 26); corda(a, b, 40); corda(c, d, 40); corda(d, [1900, d[1] + 14], 26);
+    el("path", { d: dC, fill: "none", stroke: "#3a2a18", "stroke-width": 13 }, g);
+    el("path", { d: dL, fill: "none", stroke: "#a08058", "stroke-width": 11, "stroke-dasharray": "3 5", opacity: .8 }, g);
+    el("path", { d: dL, fill: "none", stroke: "#e0c090", "stroke-width": 1.5, opacity: .35, transform: "translate(0 -3)" }, g);
+    // caixotes no canto da direita, com a corda enrolada
+    el("path", { d: "M1640 1010 v-120 h150 v120Z", fill: "#3a2818", stroke: "#0e0904", "stroke-width": 3 }, g);
+    el("path", { d: "M1640 1010 l150 -120 M1640 890 l150 120 M1640 950 h150", stroke: "#1a1008", "stroke-width": 4 }, g);
+    el("path", { d: oval(-300, 1010, 70, 22) + oval(-300, 996, 56, 17) + oval(-300, 984, 40, 12), fill: "none", stroke: "#8a6a44", "stroke-width": 9 }, g);
+  })();
+
+  // as lascas e pingos da tranca
+  (function () {
+    var c = $("faiscasTrinco");
+    for (var i = 0; i < 12; i++) {
+      var s = document.createElement("i"), ang = -Math.PI * (.15 + rnd() * .75), v = 40 + rnd() * 80;
+      s.style.setProperty("--fx", (Math.cos(ang) * v - 30).toFixed(0) + "px");
+      s.style.setProperty("--fy", (Math.sin(ang) * v + 50 + rnd() * 30).toFixed(0) + "px");
+      s.style.animationDelay = (.06 + rnd() * .22).toFixed(2) + "s";
+      s.style.animationDuration = (.35 + rnd() * .35).toFixed(2) + "s";
+      c.appendChild(s);
+    }
+  })();
+
+  // a garoa (n1, n2: traços inclinados num ladrilho) e os borrifos do mar (n3, n4: gotas)
+  function garoa(t, n, comp, cor) {
+    var s = "<svg xmlns='http://www.w3.org/2000/svg' width='" + t + "' height='" + t + "'>";
+    for (var i = 0; i < n; i++) {
+      var x = rnd() * t, y = rnd() * t, l = comp * (.6 + rnd() * .8);
+      s += "<path d='M" + f1(x) + " " + f1(y) + "v" + f1(l) + "' stroke='" + cor + "' stroke-opacity='" + (.35 + rnd() * .45).toFixed(2) + "' stroke-width='1' stroke-linecap='round'/>";
+    }
+    return 'url("data:image/svg+xml,' + encodeURIComponent(s + "</svg>") + '")';
+  }
+  [["n1", 220, 30, 14, "#b8cde0"], ["n2", 300, 18, 22, "#d0e0f0"]].forEach(function (c) {
+    var camada = document.querySelector(".neve." + c[0]);
+    camada.style.backgroundImage = garoa(c[1], c[2], c[3], c[4]);
+    camada.style.backgroundSize = c[1] + "px " + c[1] + "px";
+    camada.style.setProperty("--t", c[1] + "px");
+  });
+  [["n3", 340, 7, 1.4, "200,220,240"], ["n4", 460, 5, 2.2, "220,235,250"]].forEach(function (c) {
+    var camada = document.querySelector(".neve." + c[0]), t = c[1], fundos = [];
+    for (var i = 0; i < c[2]; i++) {
+      var r = c[3] * (.6 + rnd() * .8), x = (rnd() * t).toFixed(0), y = (rnd() * t).toFixed(0);
+      fundos.push("radial-gradient(" + (r * 2.4).toFixed(2) + "px " + (r * 2.4).toFixed(2) + "px at " + x + "px " + y + "px, rgba(240,248,255,.9), rgba(" + c[4] + ",.6) 35%, rgba(" + c[4] + ",0))");
+    }
+    camada.style.backgroundImage = fundos.join(",");
+    camada.style.backgroundSize = t + "px " + t + "px";
+    camada.style.setProperty("--t", t + "px");
+  });
+
+  /* ---------- encaixe na tela ---------- */
+  var palco = $("palco");
+  function encaixa() {
+    var s = Math.min(innerWidth / 1440, innerHeight / 900);
+    palco.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+  }
+  encaixa(); addEventListener("resize", encaixa);
+
+  /* ---------- a câmera (requestAnimationFrame): a mesma de Noxus ---------- */
+  var DUR = 1950, S0 = .86;
+  var longe = $("longe"), mundo = $("mundo"), perto = $("perto"), neveTela = $("neveTela");
+  function quadro(ms) {
+    var t = Math.min(1, Math.max(0, ms / DUR)), p = Math.pow(t, 1.8), q = Math.pow(t, 2.2);
+    mundo.style.transform = "translate(0px," + (-110 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(7.6 / S0, p)).toFixed(4) + ")";
+    perto.style.transform = "translate(0px," + (-60 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(30 / S0, p)).toFixed(4) + ")";
+    perto.style.visibility = t > .62 ? "hidden" : "";
+    longe.style.transform = "translate(0px," + (-36 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(1.3, p)).toFixed(4) + ")";
+    neveTela.style.transform = "scale(" + (1 + 2.2 * q).toFixed(3) + ")";
+    neveTela.style.opacity = (1 - q).toFixed(3);
+  }
+  function repouso() {
+    [mundo, perto, longe].forEach(function (c) { c.style.transform = "scale(" + S0 + ")"; });
+    perto.style.visibility = "";
+    neveTela.style.transform = ""; neveTela.style.opacity = "";
+  }
+  repouso();
+
+  /* ---------- abrir e reiniciar ---------- */
+  var estado = "fechada", timer = 0, laco = 0;
+  var entrada = $("entrada"), loja = $("loja"), botao = $("entrar");
+  var calmo = matchMedia("(prefers-reduced-motion: reduce)");
+  function abrir() {
+    if (estado !== "fechada") return;
+    estado = "abrindo";
+    Som.destravar(); Som.play("catalog:open");
+    document.body.classList.add("abrindo");
+    var reduz = calmo.matches;
+    if (!reduz) {
+      var t0 = performance.now();
+      var passo = function (agora) {
+        if (estado !== "abrindo" || window.__congelado) return;
+        quadro(agora - t0);
+        if (agora - t0 < DUR) laco = requestAnimationFrame(passo);
+      };
+      laco = requestAnimationFrame(passo);
+    }
+    timer = setTimeout(function () {
+      estado = "aberta"; document.body.classList.add("aberta");
+      entrada.setAttribute("aria-hidden", "true");
+      loja.focus({ preventScroll: true });
+    }, reduz ? 1000 : 2150);
+  }
+  function reiniciar() {
+    clearTimeout(timer); cancelAnimationFrame(laco); window.__congelado = false;
+    if (Som.parar) Som.parar();
+    document.body.classList.remove("abrindo", "aberta");
+    entrada.removeAttribute("aria-hidden");
+    repouso();
+    void document.body.offsetWidth;
+    estado = "fechada";
+    botao.focus({ preventScroll: true });
+  }
+  entrada.addEventListener("click", function (e) {
+    if (e.target.closest(".ea-id")) return;
+    abrir();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "r" || e.key === "R") { if (!e.ctrlKey && !e.metaKey && !e.altKey) reiniciar(); return; }
+    if ((e.key === "Enter" || e.key === " ") && estado === "fechada") {
+      if (e.target.closest && e.target.closest(".ea-id")) return;
+      e.preventDefault(); abrir();
+    }
+  });
+
+  // para o QA: congela a abertura no instante ms (câmera e animações CSS juntas, em quadros comparáveis)
+  var DA_ABERTURA = /^(tranca|acorda|abre-esq|abre-dir|escurece|acende|some|luz-neve|poca|raios|flash|loja|esmaece|loja-calma|faisca-trinco)$/;
+  window.__congela = function (ms, clima) {
+    window.__congelado = true; cancelAnimationFrame(laco); clearTimeout(timer);
+    if (document.body.classList.contains("abrindo") && !calmo.matches) quadro(ms);
+    document.getAnimations().forEach(function (a) {
+      a.pause();
+      a.currentTime = DA_ABERTURA.test(a.animationName || "") ? ms : (clima == null ? 2600 : clima);
+    });
+  };
+  window.__abrir = abrir; window.__reiniciar = reiniciar; window.__DUR = DUR; window.__quadro = quadro;
+  window.__pronto = true;
+})();
+</script>
+</body>
+</html>

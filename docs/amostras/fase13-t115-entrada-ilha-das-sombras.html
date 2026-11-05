@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forja · Entrada da Ilha das Sombras</title>
+<!-- F13-T115 (amostra; Leo, 05/11/2026: a Ilha das Sombras entra na fila das entradas, "só a amostra"):
+     "A capela do relicário" — a entrada da Ilha das Sombras no molde de Noxus e Shurima (T99). Mesmo esqueleto
+     (palco 1440×900, camadas da câmera, vão 600–840 × 404–790, folhas em CSS 3D, trava, interior com o lojista,
+     clarão, painel da loja, placa com as classes da integração); a arte própria, em SVG/CSS: uma capela gótica em
+     ruínas na Névoa Negra, lanternas de chama espectral, lápides, a luz verde-pálida pela fresta.
+     Só a textura de papel do projeto, por caminho relativo. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --papel: #e5d3ad;
+  --tinta: #2c1d12;
+  --tinta-suave: #5a4630;
+  --alma: #7dffd0;
+  --alma-clara: #d8fff0;
+  --alma-funda: #1f8f78;
+  --bronze: #6f8f6a;
+  --titulos: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --texto: 'Alegreya', Georgia, serif;
+  --gravado: 'Cinzel', Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: #020504; overflow: hidden; color: var(--tinta); font-family: var(--texto); }
+
+/* ============ A CENA ============ */
+.entrada { position: fixed; inset: 0; overflow: hidden; cursor: pointer; background: #030807; }
+.palco { position: absolute; left: 50%; top: 50%; width: 1440px; height: 900px; transform-origin: 50% 50%; }
+/* três camadas de câmera (paralaxe): longe (céu, lua, as ruínas de Helia), mundo (a capela), perto (lanternas, lápides) */
+.camada { position: absolute; inset: 0; transform-origin: 720px 597px; transform: scale(.86); will-change: transform; }
+.camada > * { position: absolute; }
+.longe, .perto { pointer-events: none; }
+
+/* o céu da Névoa: preto-esverdeado no alto, um verde doente no horizonte */
+.ceu { left: -900px; top: -700px; width: 3240px; height: 2000px;
+  background:
+    radial-gradient(ellipse 1100px 300px at 1620px 1360px, rgba(70,190,150,.30), transparent 70%),
+    radial-gradient(ellipse 700px 220px at 360px 1330px, rgba(60,170,140,.22), transparent 70%),
+    linear-gradient(180deg, #010303 0, #030908 420px, #06120f 760px, #0a1e19 1020px, #10302a 1220px, #174238 1340px, #10302a 1480px, #08160f 1640px); }
+/* a lua pálida, comida pela névoa */
+.lua { left: 1010px; top: -150px; width: 230px; height: 230px; border-radius: 50%;
+  background: radial-gradient(circle at 44% 40%, #f2fff8 0, #cfeee2 26%, #9fcfbf 46%, rgba(120,190,170,.5) 54%, rgba(90,170,150,0) 60%); }
+.lua::before { content: ""; position: absolute; left: -70%; top: -70%; width: 240%; height: 240%; border-radius: 50%; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(150,255,220,.32) 0, rgba(90,220,180,.14) 18%, rgba(60,180,150,.05) 32%, transparent 50%); }
+.lua::after { content: ""; position: absolute; left: -10%; top: 52%; width: 120%; height: 34%; transform: rotate(7deg); filter: blur(5px);
+  background: radial-gradient(ellipse 50% 30% at 40% 45%, rgba(4,10,9,.9), transparent 100%), radial-gradient(ellipse 30% 20% at 74% 70%, rgba(4,10,9,.7), transparent 100%); }
+svg.ilha { left: -900px; top: -700px; width: 3240px; height: 2000px; overflow: visible; }
+/* a Névoa Negra: bolos escuros que andam rente ao chão das ruínas */
+.nevoa-negra { left: -900px; top: -700px; width: 3240px; height: 2000px; }
+.nevoa-negra i { position: absolute; display: block; border-radius: 50%; filter: blur(26px);
+  background: radial-gradient(ellipse at 50% 55%, rgba(2,8,7,.9), rgba(6,20,17,.55) 45%, transparent 72%);
+  animation: nevoa-anda 30s linear infinite; }
+@keyframes nevoa-anda { 0% { transform: translate(0, 0) scale(.8); opacity: 0; } 15% { opacity: .95; } 75% { opacity: .8; }
+  100% { transform: translate(var(--vx, 420px), -160px) scale(1.9); opacity: 0; } }
+/* o brilho verde que respira no horizonte */
+.brilho-ceu { left: -900px; top: 440px; width: 3240px; height: 420px; mix-blend-mode: screen; pointer-events: none;
+  background:
+    radial-gradient(ellipse 620px 90px at 22% 72%, rgba(90,230,180,.20), transparent 70%),
+    radial-gradient(ellipse 520px 80px at 74% 66%, rgba(80,220,170,.22), transparent 70%);
+  animation: respira 8s ease-in-out infinite; }
+
+svg.fundo { left: -600px; top: -400px; width: 2640px; height: 1700px; overflow: visible; }
+svg.frente { left: -600px; top: -400px; width: 2640px; height: 1700px; overflow: visible; }
+/* a rosácea acesa sobre o portal: a luz das almas presa no vidro quebrado */
+.rosacea-brilho { left: 628px; top: 132px; width: 184px; height: 184px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(170,255,225,.55), rgba(90,230,180,.22) 45%, transparent 70%); animation: respira 4.4s ease-in-out infinite; }
+.janela-halo { width: 110px; height: 190px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(120,255,210,.32), transparent 70%); animation: respira 5.2s ease-in-out infinite; }
+.janela-halo.j1 { left: 1030px; top: 300px; } .janela-halo.j2 { left: 1162px; top: 300px; animation-delay: -2.2s; }
+.vitrine-brilho { left: 150px; top: 430px; width: 270px; height: 320px; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 60% 55% at 50% 62%, rgba(255,190,120,.26), rgba(120,230,190,.10) 60%, transparent 85%); animation: respira 4.1s ease-in-out infinite; }
+/* o sino da torre, que balança devagar */
+svg.sino { left: 1203px; top: 50px; width: 70px; height: 90px; overflow: visible; transform-origin: 35px 4px; animation: sino 7s ease-in-out infinite; }
+@keyframes sino { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes respira { 0%,100% { opacity: .72; } 45% { opacity: 1; } 70% { opacity: .84; } }
+
+/* ============ A PORTA ============ */
+/* o vão: 240×386, de x 600 a 840, y 404 a 790 */
+.vao { left: 600px; top: 404px; width: 240px; height: 386px; perspective: 820px; perspective-origin: 50% 46%; }
+.interior { position: absolute; inset: 0; overflow: hidden; background: #0b2a23; }
+.interior svg { display: block; width: 100%; height: 100%; }
+.interior .acende { position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(ellipse 70% 55% at 50% 30%, #eafff6, rgba(150,255,220,.6) 45%, rgba(80,220,170,0) 80%); mix-blend-mode: screen; }
+.folha { position: absolute; top: 0; width: 120px; height: 386px; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform; }
+.folha.esq { left: 0; transform-origin: 0 50%; }
+.folha.dir { right: 0; transform-origin: 100% 50%; }
+/* tábuas velhas de madeira escura, empenadas, com o musgo subindo de baixo e a fresta verde entre elas */
+.tabuas { position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.5), transparent 22%, transparent 70%, rgba(60,140,100,.16) 92%, rgba(70,160,120,.26)),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(0,0,0,.7) 28px 30px, rgba(160,200,180,.05) 30px 31px),
+    repeating-linear-gradient(178deg, rgba(220,240,230,.025) 0 1px, transparent 1px 6px),
+    radial-gradient(ellipse 26px 40px at 30% 40%, rgba(0,0,0,.25), transparent 70%),
+    radial-gradient(ellipse 18px 30px at 70% 72%, rgba(0,0,0,.22), transparent 70%),
+    linear-gradient(90deg, #15130f, #2a2620 30%, #24211b 68%, #12100d); }
+.folha.esq .tabuas { box-shadow: inset 0 0 0 5px #0b0a08, inset 0 0 0 7px #3a372e, inset -3px 0 0 7px #080706; }
+.folha.dir .tabuas { box-shadow: inset 0 0 0 5px #0b0a08, inset 0 0 0 7px #3a372e, inset 3px 0 0 7px #080706; }
+/* as ferragens de bronze azinhavrado, terminando em gancho enrolado */
+.cinta { position: absolute; height: 18px; width: 110px;
+  background:
+    radial-gradient(circle at 50% 50%, #c6d8c0 0 1.6px, #2f3d30 2.6px, transparent 3.2px) 10px 0 / 24px 100% repeat-x,
+    linear-gradient(180deg, #7f9a7c 0, #4e6650 40%, #233125 100%);
+  box-shadow: 0 3px 3px rgba(0,0,0,.6), inset 0 1px 0 rgba(220,255,230,.18); }
+.folha.esq .cinta { left: -6px; clip-path: polygon(0 0, 84% 0, 100% 20%, 92% 50%, 100% 80%, 84% 100%, 0 100%); }
+.folha.dir .cinta { right: -6px; clip-path: polygon(16% 0, 100% 0, 100% 100%, 16% 100%, 0 80%, 8% 50%, 0 20%); }
+.cinta.c1 { top: 36px; } .cinta.c2 { top: 250px; } .cinta.c3 { top: 336px; }
+.suporte { position: absolute; top: 188px; width: 22px; height: 50px; border-radius: 3px;
+  background: radial-gradient(circle at 50% 6px, #c6d8c0 0 1.7px, transparent 2.5px), radial-gradient(circle at 50% 44px, #c6d8c0 0 1.7px, transparent 2.5px), linear-gradient(90deg, #233125, #6f8f6a 50%, #233125);
+  box-shadow: 0 2px 3px rgba(0,0,0,.6); }
+.folha.esq .suporte { left: 46px; } .folha.dir .suporte { right: 58px; }
+/* a aldrava: uma mão de bronze segurando a argola */
+.argola { position: absolute; top: 258px; width: 34px; height: 40px; }
+.folha.esq .argola { right: 14px; } .folha.dir .argola { left: 14px; }
+.argola::before { content: ""; position: absolute; left: 8px; top: -8px; width: 18px; height: 14px; border-radius: 6px 6px 9px 9px;
+  background: radial-gradient(circle at 40% 30%, #a6c2a0, #2f3d30 75%); box-shadow: 0 1px 2px rgba(0,0,0,.8); }
+.argola::after { content: ""; position: absolute; left: 1px; top: 4px; width: 32px; height: 32px; border-radius: 50%;
+  border: 5px solid #3c5040; border-top-color: #8fae88; box-shadow: 0 3px 3px rgba(0,0,0,.6); }
+/* meio selo das almas em cada folha: fechada, a porta mostra o selo inteiro (aceso de leve) */
+.meia { position: absolute; top: 60px; width: 64px; height: 136px; overflow: hidden; filter: drop-shadow(0 3px 2px rgba(0,0,0,.7)); }
+.folha.esq .meia { right: 0; } .folha.dir .meia { left: 0; }
+.folha .sombra { position: absolute; inset: 0; background: #010302; opacity: 0; }
+.folha .borda { position: absolute; top: 0; height: 100%; width: 18px; background: linear-gradient(90deg, #0b0a08, #3a372e, #080706); }
+.folha.esq .borda { right: 0; transform-origin: 100% 50%; transform: rotateY(-90deg); }
+.folha.dir .borda { left: 0; transform-origin: 0 50%; transform: rotateY(90deg); }
+/* a luz das almas pela fresta: fina, apagada onde o selo atravessa (y 464–600) */
+.fresta-meio { left: 718px; top: 404px; width: 4px; height: 386px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(120,255,210,0), rgba(150,255,220,.7) 12%, rgba(210,255,240,.9) 64%, rgba(120,255,210,.6));
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 13%, rgba(0,0,0,.1) 16%, rgba(0,0,0,.1) 51%, #000 56%, #000 100%);
+          mask-image: linear-gradient(180deg, #000 0, #000 13%, rgba(0,0,0,.1) 16%, rgba(0,0,0,.1) 51%, #000 56%, #000 100%);
+  filter: blur(1.5px); mix-blend-mode: screen; animation: respira 3.4s ease-in-out infinite; }
+.fresta-chao { left: 596px; top: 783px; width: 248px; height: 14px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(200,255,235,.95), rgba(90,230,180,.5) 45%, transparent 75%);
+  filter: blur(2px); mix-blend-mode: screen; }
+/* a tranca: uma barra de bronze com azinhavre que corre pelos grampos e entra na bainha à esquerda */
+.tranca { left: 632px; top: 598px; width: 160px; height: 30px; border-radius: 3px;
+  background:
+    radial-gradient(circle at 50% 50%, #d4e4cc 0 1.8px, #2f3d30 2.8px, transparent 3.4px) 8px 0 / 46px 100% repeat-x,
+    linear-gradient(90deg, transparent 0 calc(100% - 14px), #1a231b calc(100% - 14px)),
+    radial-gradient(ellipse 30px 10px at 30% 70%, rgba(120,200,160,.35), transparent 70%),
+    linear-gradient(180deg, #8fae88, #5e7a5c 40%, #3a4c3b 75%, #222d22);
+  box-shadow: 0 7px 9px rgba(0,0,0,.7), inset 0 1px 0 rgba(230,255,240,.3), inset 0 -2px 0 rgba(0,0,0,.5); }
+.tranca::after { content: ""; position: absolute; left: 56px; top: -24px; width: 16px; height: 28px; border-radius: 8px 8px 3px 3px;
+  background: radial-gradient(circle at 40% 30%, #e0eed8 0 2px, transparent 4px), linear-gradient(90deg, #2f3d30, #8fae88 45%, #3a4c3b);
+  box-shadow: 0 2px 2px rgba(0,0,0,.6); }
+.tranca::before { content: ""; position: absolute; right: -10px; top: -5px; width: 16px; height: 40px; border-radius: 3px;
+  background: linear-gradient(90deg, #233125, #7f9a7c 50%, #233125); box-shadow: 0 3px 3px rgba(0,0,0,.6); }
+svg.bainha { left: 432px; top: 568px; width: 186px; height: 84px; overflow: visible; pointer-events: none; }
+.grampo-frente { width: 22px; height: 50px; top: 590px; border-radius: 3px; pointer-events: none;
+  background: radial-gradient(circle at 50% 6px, #c6d8c0 0 1.7px, transparent 2.5px), radial-gradient(circle at 50% 44px, #c6d8c0 0 1.7px, transparent 2.5px), linear-gradient(90deg, #233125, #6f8f6a 50%, #233125);
+  box-shadow: 0 2px 3px rgba(0,0,0,.6); }
+.grampo-frente.g1 { left: 646px; } .grampo-frente.g2 { left: 760px; }
+/* as faíscas frias do bronze raspando */
+.faiscas-trinco { left: 648px; top: 612px; width: 0; height: 0; pointer-events: none; }
+.faiscas-trinco i { position: absolute; left: 0; top: 0; width: 3px; height: 3px; border-radius: 50%; background: #e8fff4;
+  box-shadow: 0 0 5px 2px rgba(110,255,200,.9); opacity: 0; }
+
+/* a luz que sai pela porta e deita no chão do adro */
+.luz-neve { left: 420px; top: 760px; width: 600px; height: 200px; pointer-events: none; opacity: .3; border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 50% 30%, rgba(150,255,220,.6), rgba(80,220,170,.22) 50%, transparent 78%);
+  mix-blend-mode: screen; }
+.poca { left: 360px; top: 792px; width: 720px; height: 360px; pointer-events: none; opacity: .5; transform-origin: 50% 0;
+  clip-path: polygon(33% 0, 67% 0, 100% 100%, 0 100%);
+  background: radial-gradient(ellipse 60% 85% at 50% 0, rgba(210,255,240,.95), rgba(90,230,180,.4) 45%, transparent 82%);
+  mix-blend-mode: screen; transform: scaleY(.3); }
+.raios { left: 270px; top: 200px; width: 900px; height: 800px; pointer-events: none; opacity: 0;
+  background:
+    radial-gradient(ellipse 30% 40% at 50% 50%, rgba(210,255,240,.85), rgba(110,240,190,.25) 55%, transparent 80%),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(150,255,220,.18) 0 4deg, transparent 4deg 11deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0, rgba(0,0,0,.6) 35%, transparent 70%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 0, rgba(0,0,0,.6) 35%, transparent 70%);
+  mix-blend-mode: screen; }
+
+/* ============ AS LANTERNAS DAS ALMAS (camada de perto) ============ */
+.lanterna { width: 140px; height: 340px; top: 560px; transform: scale(1.12); transform-origin: 50% 100%; }
+.lanterna.l1 { left: 395px; } .lanterna.l2 { left: 905px; }
+.lanterna svg { position: absolute; inset: 0; width: 140px; height: 340px; overflow: visible; }
+.halo { position: absolute; left: 70px; top: 120px; width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(120,255,210,.32), rgba(80,220,170,.12) 32%, rgba(60,200,150,.04) 52%, transparent 66%);
+  animation: tremula 3.1s steps(9) infinite; }
+.l2 .halo { animation-duration: 2.6s; animation-delay: -.9s; }
+@keyframes tremula { 0% { opacity: .82; } 13% { opacity: .95; } 27% { opacity: .78; } 41% { opacity: 1; } 55% { opacity: .86; } 70% { opacity: .97; } 84% { opacity: .8; } 100% { opacity: .9; } }
+/* a chama fria: sobe torta e devagar, verde por fora e quase branca no miolo */
+.chamas { position: absolute; left: 70px; top: 140px; width: 0; height: 0; }
+.ch { position: absolute; bottom: -4px; transform-origin: 50% 100%; mix-blend-mode: screen; filter: blur(1.2px);
+  animation: chama 1.3s ease-in-out infinite alternate; }
+.ch::before { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; aspect-ratio: 1; border-radius: 0 50% 50% 50%; transform: rotate(45deg); transform-origin: 50% 50%;
+  background: radial-gradient(circle at 62% 62%, #f4fff9 0, #bfffe6 22%, #5ef0be 50%, #1c9c7c 72%, rgba(20,120,90,0) 84%); }
+.ch.f1 { left: -18px; width: 36px; height: 36px; }
+.ch.f2 { left: -10px; width: 20px; height: 20px; animation-duration: .9s; animation-delay: -.4s; }
+.ch.f2::before { background: radial-gradient(circle at 62% 62%, #ffffff 0, #e6fff5 30%, #9dffd8 55%, rgba(110,255,200,0) 80%); }
+.ch.f3 { left: -24px; width: 18px; height: 18px; animation-duration: 1.1s; animation-delay: -.6s; }
+@keyframes chama { 0% { transform: scale(1, 1.7) skewX(-9deg); } 40% { transform: scale(.85, 2.1) skewX(-16deg); } 75% { transform: scale(1.05, 1.6) skewX(-5deg); } 100% { transform: scale(.92, 1.9) skewX(-12deg); } }
+/* as almas que escapam da lanterna */
+.alma { position: absolute; left: 70px; top: 128px; width: 4px; height: 4px; border-radius: 50%; background: #e8fff4;
+  box-shadow: 0 0 6px 2px rgba(110,255,200,.8); opacity: 0; animation: sobe-alma 3.4s ease-out infinite; }
+@keyframes sobe-alma { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: .9; } 60% { transform: translate(calc(var(--dx) * .5), -90px); }
+  100% { transform: translate(var(--dx), -230px); opacity: 0; } }
+/* a luz das lanternas na fachada */
+.luz-fachada { left: 0; top: 0; width: 1440px; height: 900px; pointer-events: none; mix-blend-mode: soft-light;
+  background:
+    radial-gradient(ellipse 380px 330px at 465px 680px, rgba(120,255,210,.8), transparent 70%),
+    radial-gradient(ellipse 380px 330px at 975px 680px, rgba(120,255,210,.8), transparent 70%);
+  animation: tremula 3.3s steps(7) infinite; }
+
+/* ============ A PLACA (tábua velha pendurada por correntes enferrujadas num braço torto de ferro) ============ */
+.placa-grupo { left: 1024px; top: 384px; width: 360px; transform-origin: 50% 0; animation: balanca 7.5s ease-in-out infinite; cursor: default; }
+@keyframes balanca { 0%,100% { transform: rotate(-1deg); } 50% { transform: rotate(1.1deg); } }
+.corrente { position: absolute; top: -4px; width: 12px; height: 38px;
+  background:
+    radial-gradient(ellipse 50% 50% at 50% 50%, transparent 0 46%, #7a6a58 54%, #3f3226 74%, #18120c 88%, transparent 94%) 0 0 / 12px 14px repeat-y,
+    linear-gradient(90deg, transparent 4.5px, #1d1610 4.5px, #6a5a48 6px, #1d1610 7.5px, transparent 7.5px) 0 0 / 12px 14px repeat-y;
+  filter: drop-shadow(1px 2px 1px rgba(0,0,0,.6)); }
+.corrente.e { left: 34px; } .corrente.d { right: 34px; }
+.entrada-placa { position: relative; margin-top: 32px; padding: 18px 18px 18px; border-radius: 4px; text-align: center;
+  border: 2px solid #050403;
+  background:
+    radial-gradient(circle at 14px 14px, #8fae88 0 2.4px, #233125 3.6px, transparent 4.6px),
+    radial-gradient(circle at calc(100% - 14px) 14px, #8fae88 0 2.4px, #233125 3.6px, transparent 4.6px),
+    radial-gradient(circle at 14px calc(100% - 14px), #8fae88 0 2.4px, #233125 3.6px, transparent 4.6px),
+    radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), #8fae88 0 2.4px, #233125 3.6px, transparent 4.6px),
+    radial-gradient(ellipse 70% 60% at 0% 100%, rgba(80,200,150,.16), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 30px, rgba(0,0,0,.55) 30px 32px, rgba(200,220,200,.05) 32px 33px),
+    repeating-linear-gradient(91deg, rgba(220,240,230,.03) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, #34302a, #26231e 50%, #1a1814);
+  box-shadow: 0 20px 30px rgba(0,0,0,.75), inset 0 0 0 4px #110f0c, inset 0 0 0 6px #4e6650, inset 0 0 0 7px #172017;
+  clip-path: polygon(0 2%, 4% 0, 30% .6%, 52% 0, 78% .8%, 96% 0, 100% 3%, 99.4% 40%, 100% 78%, 98.6% 100%, 70% 99.2%, 44% 100%, 18% 99%, 1.4% 100%, 0 70%, .7% 35%); }
+.entrada-titulo { margin: 4px 0 12px; font-family: var(--titulos); font-weight: 400; font-size: 44px; line-height: 1; letter-spacing: .03em;
+  color: #e4f4ea; text-shadow: 0 2px 0 #000, 0 0 18px rgba(110,255,200,.4); }
+.pergaminho { position: relative; padding: 14px 15px 13px; transform: rotate(-.6deg);
+  background-color: var(--papel); background-image: url("../../assets/textures/shopitem_papertexture02_psd.png");
+  background-size: 420px; background-blend-mode: multiply; color: var(--tinta);
+  box-shadow: 0 3px 6px rgba(0,0,0,.6), inset 0 0 18px rgba(60,90,70,.30), inset 0 0 50px rgba(10,30,20,.10);
+  clip-path: polygon(0 1%, 7% 0, 22% 1.2%, 41% .2%, 63% 1%, 84% 0, 100% 1.4%, 99.4% 30%, 100% 62%, 99.2% 99%, 78% 100%, 55% 98.8%, 31% 100%, 12% 99%, .6% 100%, 0 70%, .8% 38%); }
+.pergaminho .cravo { position: absolute; top: 6px; width: 9px; height: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #a6c2a0, #233125 70%); box-shadow: 0 1px 1px rgba(0,0,0,.6); }
+.pergaminho .cravo.e { left: 7px; } .pergaminho .cravo.d { right: 7px; }
+.entrada-hobby { margin: 0 0 10px; font-style: italic; font-size: 17px; line-height: 1.3; color: var(--tinta); }
+.entrada-contato { margin: 0; padding-top: 9px; border-top: 1px dashed rgba(60,40,20,.38);
+  font-family: var(--gravado); font-size: 13.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-suave); line-height: 1.75; }
+.entrada-contato .ea-rot { display: block; font-size: 13.5px; font-weight: 600; letter-spacing: .2em; margin-bottom: 1px; }
+.entrada-contato .ea-canal { display: block; white-space: nowrap; }
+.entrada-contato .ea-id { font-family: var(--texto); font-size: 19px; font-weight: 700; letter-spacing: .02em; text-transform: none;
+  color: var(--tinta); user-select: all; -webkit-user-select: all; cursor: text; margin-left: 4px; border-bottom: 1px dotted rgba(44,29,18,.35); }
+.entrada-contato .ea-id:hover { border-bottom-color: #1f8f78; color: #17604f; }
+/* a etiqueta da versão: uma chapinha de bronze azinhavrado */
+.etiqueta { position: relative; width: 340px; margin: 18px auto 0; padding: 7px 14px 8px; border-radius: 2px; text-align: center;
+  border: 2px solid #050403; transform-origin: 50% -18px; animation: balanca2 5.4s ease-in-out infinite;
+  background:
+    radial-gradient(ellipse 40% 60% at 80% 30%, rgba(150,220,180,.18), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(230,255,240,.03) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #48604a, #34483a 60%, #26352a);
+  box-shadow: 0 8px 14px rgba(0,0,0,.6), inset 0 0 0 2px #142017, inset 0 1px 0 2px rgba(220,255,230,.12); }
+.etiqueta::before, .etiqueta::after { content: ""; position: absolute; top: -20px; width: 10px; height: 20px;
+  background:
+    radial-gradient(ellipse 50% 50% at 50% 50%, transparent 0 44%, #7a6a58 54%, #3a2e22 76%, transparent 92%) 0 0 / 10px 10px repeat-y,
+    linear-gradient(90deg, transparent 4px, #5a4a3a 4px 6px, transparent 6px) 0 5px / 10px 10px repeat-y; }
+.etiqueta::before { left: 34px; } .etiqueta::after { right: 34px; }
+@keyframes balanca2 { 0%,100% { transform: rotate(1.3deg); } 50% { transform: rotate(-1.5deg); } }
+.entrada-nota .nw { white-space: nowrap; }
+.entrada-nota { margin: 0; font-style: italic; font-size: 16px; color: #e4f4ea; line-height: 1.3; text-shadow: 0 1px 0 #05100a; }
+
+/* ============ SOBRE A CENA (tela, não mundo) ============ */
+/* a cinza fria que cai devagar (n1, n2) e as almas que sobem (n3, n4) */
+.neve { position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; pointer-events: none; will-change: transform; }
+.neve.n1 { animation: cai 26s linear infinite; opacity: .55; }
+.neve.n2 { animation: cai 15s linear infinite; opacity: .7; }
+.neve.n3 { animation: ascende 14s linear infinite; mix-blend-mode: screen; }
+.neve.n4 { animation: ascende 8s linear infinite; mix-blend-mode: screen; filter: blur(1px); }
+@keyframes cai { from { transform: rotate(-6deg) translateY(calc(var(--t) * -1)); } to { transform: rotate(-6deg) translateY(0); } }
+@keyframes ascende { from { transform: rotate(6deg) translateY(0); } to { transform: rotate(6deg) translateY(calc(var(--t) * -1)); } }
+/* a Névoa Negra rente ao chão e os rolos que atravessam o adro */
+.nevoa { position: absolute; left: -20%; right: -20%; bottom: -4%; height: 52%; pointer-events: none;
+  background:
+    radial-gradient(ellipse 30% 40% at 20% 70%, rgba(20,60,50,.32), transparent 70%),
+    radial-gradient(ellipse 34% 36% at 70% 80%, rgba(16,50,42,.30), transparent 70%),
+    linear-gradient(180deg, transparent, rgba(6,20,16,.40) 55%, rgba(4,14,11,.62));
+  animation: nevoa 18s ease-in-out infinite alternate; }
+@keyframes nevoa { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
+.rajada { position: absolute; left: -60%; width: 90%; height: 260px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(3,10,8,.55), rgba(20,60,50,.12) 45%, transparent 70%); filter: blur(18px);
+  animation: rajada 22s linear infinite; }
+.rajada.r1 { top: 52%; } .rajada.r2 { top: 70%; animation-duration: 27s; animation-delay: -11s; height: 320px; }
+@keyframes rajada { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 80% { opacity: .85; } 100% { transform: translate(190%, 2vh); opacity: 0; } }
+.vinheta { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 76% at 50% 56%, transparent 48%, rgba(1,4,3,.72) 100%); }
+.grao { position: absolute; inset: 0; pointer-events: none; opacity: .3; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+.flash { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 55%, #f2fffa, #a8ffe0 45%, #3fb894 100%); }
+.dica { position: absolute; left: 0; right: 0; bottom: 16px; margin: 0; text-align: center; pointer-events: none;
+  font-family: var(--texto); font-style: italic; font-size: 14px; letter-spacing: .04em; color: rgba(220,245,235,.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,.7); animation: dica-chega 1.2s ease 1.4s both, dica-pulsa 4s ease-in-out 2.6s infinite; }
+@keyframes dica-chega { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dica-pulsa { 0%,100% { opacity: 1; } 50% { opacity: .62; } }
+.btn-entrar { position: absolute; left: 50%; bottom: 50px; transform: translateX(-50%); padding: 8px 22px; cursor: pointer;
+  font-family: var(--titulos); font-size: 17px; letter-spacing: .08em; color: #eafff6; background: #1f6b5a;
+  border: 1px solid #0b2a23; border-radius: 2px; box-shadow: 0 3px 0 #0b2a23, 0 6px 12px rgba(0,0,0,.5); opacity: 0; }
+.btn-entrar:focus-visible { opacity: 1; outline: 2px solid var(--alma); outline-offset: 3px; }
+
+/* a loja (placeholder: na integração é o app) */
+.loja { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  visibility: hidden; opacity: 0;
+  background:
+    radial-gradient(ellipse 900px 520px at 50% 40%, rgba(255,190,110,.14), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 10px, rgba(0,0,0,.09) 10px 11px),
+    repeating-linear-gradient(180deg, transparent 0 118px, rgba(0,0,0,.45) 118px 120px),
+    linear-gradient(180deg, #3b2617, #2a1a0f 60%, #21130a); }
+.loja h2 { margin: 0; font-family: var(--titulos); font-weight: 400; font-size: 64px; color: #e8d3a2; text-shadow: 0 2px 0 #1a0d05; letter-spacing: .03em; }
+.loja p { margin: 0; font-family: var(--texto); font-style: italic; font-size: 15px; color: #b89a66; }
+.loja .atalho { position: absolute; right: 18px; bottom: 14px; font-family: var(--gravado); font-size: 11px; letter-spacing: .2em; color: #8a6e48; text-transform: uppercase; }
+
+/* ============ A ABERTURA ============ */
+body.abrindo .entrada { cursor: default; }
+body.abrindo .tranca { animation: tranca .42s cubic-bezier(.5,0,.3,1) both; }
+@keyframes tranca { 0% { transform: translateX(0); } 14% { transform: translateX(7px) translateY(-1px); } 24% { transform: translateX(4px); }
+  82% { transform: translateX(-192px); } 91% { transform: translateX(-181px); } 100% { transform: translateX(-186px); } }
+body.abrindo .grampo-frente { animation: some .12s linear .26s both; }
+body.abrindo .faiscas-trinco i { animation: faisca-trinco .5s cubic-bezier(.2,.7,.4,1) both; }
+@keyframes faisca-trinco { 0% { opacity: 0; transform: translate(0, 0); } 8% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--fx), var(--fy)); } }
+/* o selo das almas e a rosácea respondem ao clique */
+body.abrindo .selo-acorda { animation: acorda .7s ease-out both; }
+@keyframes acorda { 0% { stroke: #5ef0be; stroke-width: 2; opacity: .6; } 30% { stroke: #f0fff8; stroke-width: 4.6; opacity: 1; } 100% { stroke: #7dffd0; stroke-width: 2.6; opacity: .9; } }
+body.abrindo .rosacea-brilho { animation: rosacea .7s ease-out both; }
+@keyframes rosacea { 0% { opacity: .8; transform: scale(1); } 35% { opacity: 1; transform: scale(1.35); } 100% { opacity: .95; transform: scale(1.15); } }
+body.abrindo .folha.esq { animation: abre-esq 1.35s cubic-bezier(.55,.02,.2,1) .26s both; }
+body.abrindo .folha.dir { animation: abre-dir 1.35s cubic-bezier(.55,.02,.2,1) .26s both; }
+@keyframes abre-esq { 0% { transform: rotateY(0); } 7% { transform: rotateY(-1.4deg); } 100% { transform: rotateY(82deg); } }
+@keyframes abre-dir { 0% { transform: rotateY(0); } 7% { transform: rotateY(1.4deg); } 100% { transform: rotateY(-82deg); } }
+body.abrindo .folha .sombra { animation: escurece 1.3s ease-in .26s both; }
+@keyframes escurece { to { opacity: .7; } }
+body.abrindo .interior .acende { animation: acende 1.1s ease-out .3s both; }
+@keyframes acende { to { opacity: 1; } }
+body.abrindo .fresta-meio { animation: some .3s ease .32s both; }
+@keyframes some { to { opacity: 0; } }
+body.abrindo .luz-neve { animation: luz-neve .6s ease-out .02s both; }
+@keyframes luz-neve { to { opacity: 1; transform: scale(1.25, 1.1); } }
+body.abrindo .poca { animation: poca 1.1s cubic-bezier(.3,.6,.3,1) .05s both; }
+@keyframes poca { to { opacity: 1; transform: scaleY(1); } }
+body.abrindo .raios { animation: raios 1.4s ease-out .4s both; }
+@keyframes raios { 0% { opacity: 0; transform: scale(.6); } 100% { opacity: .95; transform: scale(1.15); } }
+body.abrindo .dica { animation: some .3s ease both; }
+body.abrindo .placa-grupo, body.abrindo .etiqueta { animation-play-state: paused; }
+body.abrindo .flash { animation: flash .45s ease-in 1.4s both; }
+@keyframes flash { from { opacity: 0; } to { opacity: 1; } }
+body.abrindo .loja { animation: loja .42s ease-out 1.68s both; }
+@keyframes loja { 0% { visibility: visible; opacity: 0; transform: scale(1.04); } 100% { visibility: visible; opacity: 1; transform: none; } }
+body.aberta .entrada { visibility: hidden; }
+.neve-tela { position: absolute; inset: 0; pointer-events: none; transform-origin: 50% 60%; will-change: transform, opacity;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.22) 0, rgba(0,0,0,.5) 20%, #000 46%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.22) 0, rgba(0,0,0,.5) 20%, #000 46%); }
+.raios, .poca, .luz-neve, .flash, .interior .acende, .fresta-meio { will-change: transform, opacity; }
+
+@media (prefers-reduced-motion: reduce) {
+  .neve, .nevoa, .rajada, .nevoa-negra i, .brilho-ceu, .halo, .luz-fachada, .ch, .alma, .placa-grupo, .etiqueta, .janela-halo, .vitrine-brilho, .rosacea-brilho, svg.sino, .fresta-meio, .dica { animation: none !important; }
+  .alma, .neve.n3, .neve.n4 { display: none; }
+  .dica { opacity: 1; }
+  body.abrindo .dica { opacity: 0 !important; visibility: hidden; }
+  body.abrindo .neve-tela, body.abrindo .raios, body.abrindo .flash, body.abrindo .poca, body.abrindo .luz-neve, body.abrindo .selo-acorda, body.abrindo .faiscas-trinco i { animation: none !important; }
+  body.abrindo .fresta-meio, body.abrindo .fresta-chao { animation: none !important; opacity: 0; }
+  body.abrindo .tranca, body.abrindo .grampo-frente, body.abrindo svg.bainha { animation: esmaece .4s ease both !important; }
+  body.abrindo .folha.esq, body.abrindo .folha.dir { animation: esmaece .55s ease both !important; }
+  body.abrindo .loja { animation: loja-calma .45s ease .5s both !important; }
+}
+@keyframes esmaece { to { opacity: 0; } }
+@keyframes loja-calma { 0% { visibility: visible; opacity: 0; } 100% { visibility: visible; opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div id="entrada" class="entrada" role="dialog" aria-modal="true" aria-label="Entrada da loja — a capela do relicário, na Ilha das Sombras">
+  <div class="palco" id="palco">
+
+    <!-- ===== LONGE: o céu da Névoa, a lua pálida, as ruínas de Helia e a Névoa Negra ===== -->
+    <div class="camada longe" id="longe" aria-hidden="true">
+      <div class="ceu"></div>
+      <div class="lua"></div>
+      <div class="brilho-ceu"></div>
+      <svg class="ilha" viewBox="-900 -700 3240 2000">
+        <defs>
+          <linearGradient id="gRuinaLonge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b2620"/><stop offset="1" stop-color="#0f3029"/></linearGradient>
+          <linearGradient id="gRuina" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#040c0b"/><stop offset="1" stop-color="#071613"/></linearGradient>
+          <filter id="brilhoJan" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <g id="ruinas-longe" fill="url(#gRuinaLonge)" opacity=".85"></g>
+        <g id="ruinas" fill="url(#gRuina)"></g>
+        <g id="arvores-longe" fill="none" stroke="#06110f" stroke-linecap="round"></g>
+        <g id="janelas-ilha" fill="#7dffd0" filter="url(#brilhoJan)"></g>
+      </svg>
+      <div class="nevoa-negra" id="nevoaNegra"></div>
+    </div>
+
+    <!-- ===== MUNDO: a capela do relicário ===== -->
+    <div class="camada mundo" id="mundo">
+      <svg class="fundo" viewBox="-600 -400 2640 1700" aria-hidden="true">
+        <defs>
+          <pattern id="silhares" patternUnits="userSpaceOnUse" x="0" y="0" width="120" height="56">
+            <rect width="120" height="56" fill="#2c3532"/>
+            <path d="M0 0.5H120 M0 28.5H120 M60 0V28 M0 28V56 M120 28V56" stroke="#141a18" stroke-width="2.2"/>
+            <path d="M2 2.5H58 M62 2.5H118 M2 30.5H118" stroke="#56665e" stroke-width="1" opacity=".45"/>
+          </pattern>
+          <pattern id="silharesG" patternUnits="userSpaceOnUse" x="30" y="0" width="160" height="70">
+            <rect width="160" height="70" fill="#252e2b"/>
+            <path d="M0 0.5H160 M0 35.5H160 M80 0V35 M0 35V70 M160 35V70" stroke="#111715" stroke-width="2.6"/>
+            <path d="M2 3H78 M82 3H158 M2 38H158" stroke="#4e5e56" stroke-width="1" opacity=".4"/>
+          </pattern>
+          <filter id="musgo" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".02 .05" numOctaves="3" seed="7" result="t"/>
+            <feColorMatrix in="t" values="0 0 0 0 .07  0 0 0 0 .16  0 0 0 0 .11  0 0 0 2.4 -1.25"/>
+          </filter>
+          <filter id="manchas" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".008 .03" numOctaves="3" seed="3" result="t"/>
+            <feColorMatrix in="t" values="0 0 0 0 0  0 0 0 0 .02  0 0 0 0 .02  0 0 0 2.2 -.9"/>
+          </filter>
+          <linearGradient id="gChao" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18201d"/><stop offset=".4" stop-color="#101614"/><stop offset="1" stop-color="#070a09"/></linearGradient>
+          <linearGradient id="gBronze" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#233125"/><stop offset=".5" stop-color="#8fae88"/><stop offset="1" stop-color="#233125"/></linearGradient>
+          <linearGradient id="gTelha" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1f22"/><stop offset="1" stop-color="#0b0e10"/></linearGradient>
+          <radialGradient id="gRosa" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#eafff6"/><stop offset=".35" stop-color="#9dffd8"/><stop offset=".7" stop-color="#2fae8c"/><stop offset="1" stop-color="#0b3a30"/></radialGradient>
+          <radialGradient id="gVitrine" cx=".5" cy=".62" r=".7"><stop offset="0" stop-color="#ffd8a0"/><stop offset=".35" stop-color="#9a7a50"/><stop offset=".7" stop-color="#1f3a30"/><stop offset="1" stop-color="#08140f"/></radialGradient>
+          <radialGradient id="gJanela" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#bfffe6"/><stop offset=".5" stop-color="#3fbf98"/><stop offset="1" stop-color="#0b2a23"/></radialGradient>
+          <linearGradient id="gSombraTopo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".65"/><stop offset=".5" stop-color="#000" stop-opacity=".1"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+          <linearGradient id="gAlmaBaixo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ef0be" stop-opacity="0"/><stop offset=".7" stop-color="#5ef0be" stop-opacity=".05"/><stop offset="1" stop-color="#5ef0be" stop-opacity=".18"/></linearGradient>
+          <filter id="borrao6"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="borrao3"><feGaussianBlur stdDeviation="3"/></filter>
+          <clipPath id="cParede"><path d="M90 800 V330 L430 244 V170 L720 30 L1010 170 V250 L1190 250 V80 L1330 80 V800Z"/></clipPath>
+          <!-- o selo das almas: um anel partido com a chama da alma subindo no meio (desenho próprio) -->
+          <path id="selo" d="M0 -58 A58 58 0 0 1 48 -32 L40 -27 A48 48 0 0 0 0 -48Z M55 -18 A58 58 0 0 1 34 47 L28 39 A48 48 0 0 0 45 -14Z M22 54 A58 58 0 0 1 -22 54 L-18 45 A48 48 0 0 0 18 45Z M-34 47 A58 58 0 0 1 -55 -18 L-45 -14 A48 48 0 0 0 -28 39Z M-48 -32 A58 58 0 0 1 -6 -58 L-5 -48 A48 48 0 0 0 -40 -27Z
+            M0 34 C-16 22 -18 4 -8 -10 C-6 -2 -2 2 2 0 C-2 -12 4 -26 12 -34 C10 -20 22 -12 18 6 C16 18 10 28 0 34Z"/>
+          <!-- lápide e cruz partida, para o adro -->
+          <path id="lapide" d="M-22 0 V-46 Q-22 -70 0 -70 Q22 -70 22 -46 V0Z"/>
+        </defs>
+
+        <!-- o adro: lajes rachadas, grama morta nas juntas -->
+        <rect x="-600" y="780" width="2640" height="520" fill="url(#gChao)"/>
+        <g id="lajes" fill="none" stroke="#050706" stroke-width="2.4"></g>
+        <g id="lajes-luz" fill="none" stroke="#3a4a44" stroke-width="1" opacity=".4"></g>
+        <g id="grama" fill="none" stroke="#2a3a30" stroke-width="1.4" stroke-linecap="round"></g>
+        <path d="M600 790 L520 1300 L920 1300 L840 790Z" fill="url(#gAlmaBaixo)" opacity=".8"/>
+
+        <!-- ===== a fachada da capela: a nave alta no meio com o frontão pontudo, a ala da loja à esquerda,
+             a torre do sino partida à direita ===== -->
+        <g clip-path="url(#cParede)">
+          <rect x="80" y="20" width="1260" height="790" fill="url(#silharesG)"/>
+          <rect x="420" y="20" width="600" height="790" fill="url(#silhares)"/>
+          <rect x="80" y="20" width="1260" height="790" filter="url(#musgo)" opacity=".55"/>
+          <rect x="80" y="20" width="1260" height="790" filter="url(#manchas)" opacity=".8"/>
+          <g id="blocos-varia"></g>
+          <rect x="80" y="250" width="1260" height="120" fill="url(#gSombraTopo)"/>
+          <path d="M430 250 V800 M1010 250 V800" stroke="#000" stroke-width="30" opacity=".35" filter="url(#borrao6)"/>
+        </g>
+        <!-- contrafortes da nave, com pináculos partidos -->
+        <g id="contrafortes"></g>
+        <!-- o telhado de ardósia da nave (as duas águas do frontão) e o da ala da loja -->
+        <path d="M410 182 L720 18 L1030 182 L1030 196 L720 36 L410 196Z" fill="#0c1012" stroke="#030405" stroke-width="2"/>
+        <path id="ardosia-frontao" d="" fill="none" stroke="#1f2a2c" stroke-width="1.2" opacity=".8"/>
+        <path d="M70 346 L436 254 V286 L90 372Z" fill="#000" opacity=".45" filter="url(#borrao6)"/>
+        <path d="M56 336 L436 238 L436 268 L64 360Z" fill="url(#gTelha)" stroke="#030405" stroke-width="2"/>
+        <path id="ardosia-ala" d="" fill="none" stroke="#2a3436" stroke-width="1.2" opacity=".7"/>
+        <path id="ala-falhas" d="" fill="#050607"/>
+        <!-- a torre do sino, à direita: o campanário aberto e o topo partido -->
+        <path d="M1190 250 V80 L1206 60 L1218 74 L1236 40 L1252 70 L1270 52 L1290 78 L1312 64 L1330 80 V250Z" fill="url(#silharesG)" stroke="#0a0f0d" stroke-width="2"/>
+        <path d="M1206 150 V104 Q1206 86 1222 86 Q1238 86 1238 104 V150Z M1282 150 V104 Q1282 86 1298 86 Q1314 86 1314 104 V150Z" fill="#030706"/>
+        <path d="M1196 156 H1326 V166 H1196Z M1196 74 H1326" stroke="#0a0f0d" stroke-width="2" fill="#4a5650"/>
+        <!-- o portal ogival: arquivoltas de pedra em degraus e o tímpano com o selo -->
+        <g id="arquivoltas"></g>
+        <g id="ombreiras"></g>
+        <path d="M600 404 L600 350 Q600 290 720 256 Q840 290 840 350 L840 404Z" fill="#0c1513" stroke="#050807" stroke-width="2"/>
+        <use href="#selo" transform="translate(720 338) scale(.62)" fill="#1f6b5a" stroke="#0a2a22" stroke-width="2"/>
+        <use href="#selo" class="selo-acorda" transform="translate(720 338) scale(.62)" fill="none" stroke="#7dffd0" stroke-width="2" opacity=".7"/>
+        <!-- a rosácea quebrada sobre o portal -->
+        <g transform="translate(720 220)">
+          <circle r="78" fill="#0a1210" stroke="#050807" stroke-width="3"/>
+          <circle r="66" fill="url(#gRosa)" opacity=".95"/>
+          <g id="rosa-traceria" stroke="#0a1412" stroke-width="5" fill="none"></g>
+          <path d="M18 -64 L34 -30 L10 -6 L40 22 L22 60" stroke="#0a1412" stroke-width="3" fill="none"/>
+          <path d="M30 -46 L60 -20 L40 10Z" fill="#0a1210"/>
+          <circle r="78" fill="none" stroke="#6a7a72" stroke-width="1.2" opacity=".5"/>
+        </g>
+        <!-- as janelas ogivais da torre e da nave, acesas de verde -->
+        <g id="janelas"></g>
+        <!-- a vitrine da ala da loja: o nicho aceso de vela, prateleiras de relíquias -->
+        <g id="vitrine">
+          <path d="M150 760 V520 Q150 440 285 410 Q420 440 420 520 V760Z" fill="url(#gVitrine)"/>
+          <g id="reliquias"></g>
+          <path d="M150 760 V520 Q150 440 285 410 Q420 440 420 520 V760" fill="none" stroke="#141a18" stroke-width="14"/>
+          <path d="M150 760 V520 Q150 440 285 410 Q420 440 420 520 V760" fill="none" stroke="#6a7a72" stroke-width="1.5" opacity=".45" transform="translate(-6 -2)"/>
+          <path d="M285 410 V760 M150 590 H420" stroke="#101614" stroke-width="7"/>
+          <rect x="130" y="756" width="310" height="22" fill="#2a3430" stroke="#080b0a" stroke-width="2"/>
+        </g>
+        <!-- as correntes e as teias penduradas no beiral -->
+        <g id="correntes-beiral" fill="none" stroke="#2a3430" stroke-width="3"></g>
+        <!-- o braço torto de ferro que segura a placa, preso na torre -->
+        <path d="M1188 360 H1270 Q1300 360 1306 336 M1206 360 Q1220 400 1260 404 M1270 360 V372" stroke="#131815" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path d="M1188 360 H1270 Q1300 360 1306 336" stroke="#4e5a52" stroke-width="2" fill="none" opacity=".6"/>
+        <!-- as lápides do adro, junto da parede -->
+        <g id="lapides-fundo"></g>
+      </svg>
+
+      <div class="rosacea-brilho" aria-hidden="true"></div>
+      <div class="janela-halo j1" aria-hidden="true"></div><div class="janela-halo j2" aria-hidden="true"></div>
+      <div class="vitrine-brilho" aria-hidden="true"></div>
+      <svg class="sino" viewBox="0 0 70 90" aria-hidden="true">
+        <path d="M35 2 V12" stroke="#1a201c" stroke-width="4"/>
+        <path d="M16 62 Q16 22 35 14 Q54 22 54 62 L60 70 H10Z" fill="#4e6650" stroke="#0e140f" stroke-width="2"/>
+        <path d="M24 60 Q24 30 35 22" stroke="#9dbf96" stroke-width="2" fill="none" opacity=".6"/>
+        <circle cx="35" cy="74" r="5" fill="#233125"/>
+      </svg>
+
+      <!-- ===== A PORTA ===== -->
+      <div class="vao" id="vao">
+        <div class="interior" aria-hidden="true">
+          <!-- o relicário por dentro: prateleiras de frascos e ossos, velas, e o lojista encapuzado com a lanterna -->
+          <svg viewBox="0 0 240 386" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id="gInt" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#bfffe6"/><stop offset=".35" stop-color="#3fbf98"/><stop offset=".75" stop-color="#0f3a30"/><stop offset="1" stop-color="#061510"/></radialGradient>
+              <radialGradient id="gLampiao" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#bfffe6"/><stop offset="1" stop-color="#5ef0be" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect width="240" height="386" fill="url(#gInt)"/>
+            <!-- prateleiras do fundo com frascos -->
+            <g fill="#0a2a22">
+              <rect x="6" y="70" width="70" height="5"/><rect x="164" y="70" width="70" height="5"/>
+              <rect x="6" y="140" width="70" height="5"/><rect x="164" y="140" width="70" height="5"/>
+              <rect x="6" y="210" width="70" height="5"/><rect x="164" y="210" width="70" height="5"/>
+            </g>
+            <g fill="#082019">
+              <path d="M12 70 v-18 h6 v-6 h6 v6 h6 v18Z M40 70 v-26 q8 -6 16 0 v26Z M60 70 v-12 h12 v12Z"/>
+              <path d="M172 70 v-22 h14 v22Z M192 70 v-12 q6 -8 12 0 v12Z M212 70 v-28 h6 v-4 h4 v4 h6 v28Z"/>
+              <path d="M14 140 q12 -20 24 0Z M44 140 v-16 h22 v16Z M168 140 v-30 h8 v30Z M182 140 q10 -16 20 0Z M208 140 v-18 h20 v18Z"/>
+              <path d="M10 210 v-14 h30 v14Z M48 210 q10 -22 20 0Z M170 210 v-20 h24 v20Z M202 210 q12 -16 24 0Z"/>
+            </g>
+            <g fill="#bfffe6" opacity=".55"><circle cx="21" cy="58" r="2"/><circle cx="48" cy="56" r="2.4"/><circle cx="179" cy="58" r="2"/><circle cx="198" cy="64" r="2"/><circle cx="55" cy="130" r="2"/><circle cx="216" cy="128" r="2.2"/></g>
+            <!-- o lojista: o vulto encapuzado, a lanterna erguida -->
+            <g>
+              <path d="M82 300 Q84 196 104 168 Q112 140 120 136 Q128 140 136 168 Q156 196 158 300Z" fill="#06150f"/>
+              <path d="M104 170 Q120 150 136 170 Q132 196 120 200 Q108 196 104 170Z" fill="#020806"/>
+              <circle cx="113" cy="182" r="2.4" fill="#9dffd8"/><circle cx="127" cy="182" r="2.4" fill="#9dffd8"/>
+              <path d="M152 220 Q170 200 178 170" stroke="#06150f" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M178 170 V150" stroke="#0a2a22" stroke-width="2"/>
+              <path d="M170 150 h16 l-2 -18 h-12Z" fill="#0a2a22"/>
+              <circle cx="178" cy="141" r="16" fill="url(#gLampiao)"/>
+              <path d="M172 150 q6 -18 12 0" fill="#eafff6"/>
+            </g>
+            <!-- o balcão de pedra com as velas -->
+            <rect x="0" y="292" width="240" height="94" fill="#0a1f19"/>
+            <rect x="0" y="292" width="240" height="8" fill="#3a4a44"/>
+            <rect x="0" y="292" width="240" height="2" fill="#bfffe6" opacity=".55"/>
+            <g fill="#d8e8d8"><rect x="20" y="276" width="6" height="16"/><rect x="34" y="282" width="5" height="10"/><rect x="206" y="274" width="6" height="18"/><rect x="218" y="282" width="5" height="10"/></g>
+            <g fill="#ffe6b0"><path d="M23 276 q-3 -6 0 -10 q3 4 0 10Z M36.5 282 q-2 -5 0 -8 q2 3 0 8Z M209 274 q-3 -6 0 -10 q3 4 0 10Z M220.5 282 q-2 -5 0 -8 q2 3 0 8Z"/></g>
+            <path d="M90 292 q30 -26 60 0Z" fill="#061510"/>
+            <path d="M104 292 q16 -12 32 0" stroke="#9dffd8" stroke-width="1" fill="none" opacity=".5"/>
+          </svg>
+          <div class="acende"></div>
+        </div>
+        <div class="folha esq">
+          <div class="borda"></div>
+          <div class="tabuas"></div>
+          <div class="cinta c1"></div><div class="cinta c2"></div><div class="cinta c3"></div>
+          <svg class="meia" viewBox="-64 -68 64 136"><use href="#selo" fill="#1f6b5a" stroke="#06140f" stroke-width="3"/><use href="#selo" class="selo-acorda" fill="none" stroke="#7dffd0" stroke-width="1.6" opacity=".55"/></svg>
+          <div class="suporte"></div>
+          <div class="argola"></div>
+          <div class="sombra"></div>
+        </div>
+        <div class="folha dir">
+          <div class="borda"></div>
+          <div class="tabuas"></div>
+          <div class="cinta c1"></div><div class="cinta c2"></div><div class="cinta c3"></div>
+          <svg class="meia" viewBox="0 -68 64 136"><use href="#selo" fill="#1f6b5a" stroke="#06140f" stroke-width="3"/><use href="#selo" class="selo-acorda" fill="none" stroke="#7dffd0" stroke-width="1.6" opacity=".55"/></svg>
+          <div class="suporte"></div>
+          <div class="argola"></div>
+          <div class="sombra"></div>
+        </div>
+      </div>
+      <div class="fresta-meio" aria-hidden="true"></div>
+      <div class="fresta-chao" aria-hidden="true"></div>
+      <div class="tranca" aria-hidden="true"></div>
+      <div class="grampo-frente g1" aria-hidden="true"></div>
+      <div class="grampo-frente g2" aria-hidden="true"></div>
+      <div class="faiscas-trinco" id="faiscasTrinco" aria-hidden="true"></div>
+      <div class="raios" aria-hidden="true"></div>
+      <div class="luz-fachada" aria-hidden="true"></div>
+      <!-- a bainha da tranca na parede -->
+      <svg class="bainha" viewBox="432 568 186 84" aria-hidden="true">
+        <rect x="440" y="596" width="166" height="36" rx="2" fill="#000" opacity=".55" transform="translate(2 4)"/>
+        <rect x="440" y="596" width="166" height="36" rx="2" fill="#2a362c" stroke="#070a08" stroke-width="2"/>
+        <rect x="445" y="601" width="156" height="26" fill="none" stroke="#4e6650" stroke-width="1.5"/>
+        <path d="M441 597.5 H605" stroke="#9dbf96" stroke-width="1" opacity=".45"/>
+        <path d="M452 602 H598" stroke="#070a08" stroke-width="3"/>
+        <g fill="#34463a" stroke="#070a08" stroke-width="1.5"><rect x="462" y="588" width="14" height="52" rx="1.5"/><rect x="560" y="588" width="14" height="52" rx="1.5"/><rect x="600" y="591" width="8" height="46" rx="1.5"/></g>
+        <path d="M469 591.2 a1.8 1.8 0 1 0 .1 0Z M469 633.2 a1.8 1.8 0 1 0 .1 0Z M567 591.2 a1.8 1.8 0 1 0 .1 0Z M567 633.2 a1.8 1.8 0 1 0 .1 0Z" fill="#c6d8c0"/>
+      </svg>
+
+      <!-- ===== A PLACA: tábua velha pendurada por correntes no braço de ferro da torre ===== -->
+      <div class="placa-grupo" id="placa">
+        <i class="corrente e" aria-hidden="true"></i><i class="corrente d" aria-hidden="true"></i>
+        <div class="entrada-placa">
+          <h1 class="entrada-titulo">Bem Vindo(a)!</h1>
+          <div class="pergaminho">
+            <i class="cravo e" aria-hidden="true"></i><i class="cravo d" aria-hidden="true"></i>
+            <p class="entrada-hobby">Este é um projeto feito por hobby sem fins lucrativos.</p>
+            <p class="entrada-contato"><span class="ea-rot">Meus Contatos</span>
+              <span class="ea-canal"><span class="ea-nome">League of Legends</span> <b class="ea-id" title="Riot ID — clique para selecionar">Brelgo#RPG</b></span>
+              <span class="ea-canal"><span class="ea-nome">Discord</span> <b class="ea-id" title="Clique para selecionar">brelgo</b></span>
+            </p>
+          </div>
+        </div>
+        <div class="etiqueta">
+          <p class="entrada-nota"><span class="nw">League of Legends</span> · <span class="nw">Atualização <span data-atualizacao></span></span> · <span class="nw">patch <span data-patch></span></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PERTO: as lanternas das almas, lápides e a árvore morta (passam mais rápido na câmera) ===== -->
+    <div class="camada perto" id="perto" aria-hidden="true">
+      <div class="lanterna l1"></div>
+      <div class="lanterna l2"></div>
+      <svg class="frente" viewBox="-600 -400 2640 1700">
+        <defs>
+          <linearGradient id="gPedraF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b0f0e"/><stop offset=".4" stop-color="#2c3532"/><stop offset=".7" stop-color="#1c2422"/><stop offset="1" stop-color="#080b0a"/></linearGradient>
+        </defs>
+        <path d="M-600 912 L330 930 L330 1300 L-600 1300Z" fill="#0d1210"/>
+        <path d="M1180 930 L2040 906 L2040 1300 L1180 1300Z" fill="#0d1210"/>
+        <g id="lapides-frente"></g>
+        <g id="arvore" fill="none" stroke="#020504" stroke-linecap="round"></g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- a cinza fria, as almas e a Névoa Negra, na tela -->
+  <div class="neve-tela" id="neveTela" aria-hidden="true">
+    <div class="nevoa"></div>
+    <div class="rajada r1"></div><div class="rajada r2"></div>
+    <div class="neve n1"></div><div class="neve n2"></div><div class="neve n3"></div><div class="neve n4"></div>
+  </div>
+  <div class="vinheta" aria-hidden="true"></div>
+  <div class="grao" aria-hidden="true"></div>
+  <div class="flash" aria-hidden="true"></div>
+  <p class="dica" aria-hidden="true">(Clique em qualquer local para abrir)</p>
+  <button id="entrar" class="btn-entrar" type="button">Entrar na loja</button>
+</div>
+
+<!-- a loja: placeholder (na integração é o app de verdade) -->
+<main class="loja" id="loja" tabindex="-1" aria-label="O Catálogo">
+  <h2>O Catálogo</h2>
+  <p>aqui entra a loja de verdade</p>
+  <span class="atalho">R · voltar à porta</span>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  // sorteio estável (a cena é sempre a mesma)
+  var semente = 20261105;
+  function rnd() { semente = (semente * 1664525 + 1013904223) >>> 0; return semente / 4294967296; }
+  function el(tag, at, pai) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (pai) pai.appendChild(e); return e; }
+  function $(id) { return document.getElementById(id); }
+  function f1(n) { return n.toFixed(1); }
+  function oval(cx, cy, rx, ry) { return "M" + f1(cx - rx) + " " + f1(cy) + "a" + f1(rx) + " " + f1(ry) + " 0 1 0 " + f1(2 * rx) + " 0a" + f1(rx) + " " + f1(ry) + " 0 1 0 " + f1(-2 * rx) + " 0Z"; }
+
+  /* ---------- o que na integração vem do app (CATALOG.meta.patch e ATUALIZACAO) ---------- */
+  var ATUALIZACAO = "13.114", CATALOG = { meta: { patch: "16.21.1" } };
+  document.querySelectorAll("[data-patch]").forEach(function (e) { e.textContent = CATALOG.meta.patch || ""; });
+  document.querySelectorAll("[data-atualizacao]").forEach(function (e) { e.textContent = ATUALIZACAO; });
+
+  /* ---------- o som (na integração é o módulo Som do app; aqui, um substituto mínimo) ---------- */
+  var Som = window.Som || (function () {
+    var audio = null, destravado = false;
+    return {
+      destravar: function () { destravado = true; try { audio = audio || new Audio("../../assets/audio/open_catalog.mp3"); audio.preload = "auto"; } catch (e) {} },
+      play: function (evento) {
+        if (!destravado || evento !== "catalog:open" || !audio) return;
+        try { audio.currentTime = 0; audio.volume = .8; var p = audio.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+      },
+      parar: function () { if (audio) try { audio.pause(); audio.currentTime = 0; } catch (e) {} }
+    };
+  })();
+
+  /* ---------- o desenho gerado ---------- */
+
+  // as ruínas de Helia: torres góticas com o topo partido, arcos caídos, umas poucas janelas acesas de verde
+  (function () {
+    var dl = "", dp = "", jan = ["", "", ""];
+    function torre(longe, x, base, larg, alto, nj) {
+      var topo = base - alto, quebra = rnd();
+      var d = "M" + f1(x - larg / 2) + " " + base + "V" + f1(topo + larg * .6);
+      if (quebra < .55) {
+        // o pináculo inteiro, fino e pontudo
+        d += "L" + f1(x) + " " + f1(topo - larg * 1.8) + "L" + f1(x + larg / 2) + " " + f1(topo + larg * .6);
+      } else {
+        // partido: a borda serrilhada
+        var n = 4, px = x - larg / 2;
+        for (var i = 1; i <= n; i++) { var nx = x - larg / 2 + larg * i / n; d += "L" + f1((px + nx) / 2) + " " + f1(topo + (rnd() - .3) * larg * .9) + "L" + f1(nx) + " " + f1(topo + larg * .3 * rnd()); px = nx; }
+      }
+      d += "V" + base + "Z";
+      if (longe) dl += d; else dp += d;
+      for (var j = 0; j < nj; j++) {
+        if (rnd() < .6) continue;
+        var jx = x - 3 + (rnd() - .5) * larg * .4, jy = topo + larg + rnd() * (alto - larg) * .8;
+        var op = rnd();
+        jan[op < .4 ? 0 : op < .75 ? 1 : 2] += "M" + f1(jx) + " " + f1(jy + 10) + "v-6q3 -5 6 0v6Z";
+      }
+    }
+    for (var x = -900; x < 2340; x += 40 + rnd() * 80) torre(true, x, 780, 20 + rnd() * 28, 80 + rnd() * 220, 0);
+    for (var x2 = -880; x2 < 2340; x2 += 90 + rnd() * 120) {
+      if (x2 > 120 && x2 < 1340 && rnd() < .6) continue;
+      torre(false, x2, 800, 30 + rnd() * 30, 140 + rnd() * 240, 5);
+    }
+    torre(false, -250, 800, 64, 640, 10); torre(false, 1620, 800, 80, 820, 14); torre(false, 1960, 800, 46, 520, 6);
+    // um arco de ponte caída entre duas ruínas, à esquerda
+    dp += "M-420 420 Q-330 330 -240 420 L-240 440 Q-330 360 -420 440Z";
+    el("path", { d: dl }, $("ruinas-longe"));
+    el("path", { d: dp }, $("ruinas"));
+    [.35, .6, .9].forEach(function (o, i) { el("path", { d: jan[i], opacity: o }, $("janelas-ilha")); });
+    // árvores mortas ao longe: galhos que se dividem
+    var g = $("arvores-longe");
+    function galho(x, y, ang, comp, larg, nivel, pai) {
+      var x2 = x + Math.cos(ang) * comp, y2 = y + Math.sin(ang) * comp;
+      el("path", { d: "M" + f1(x) + " " + f1(y) + "Q" + f1((x + x2) / 2 + (rnd() - .5) * comp * .3) + " " + f1((y + y2) / 2) + " " + f1(x2) + " " + f1(y2), "stroke-width": f1(larg) }, pai);
+      if (nivel <= 0) return;
+      galho(x2, y2, ang - .3 - rnd() * .5, comp * (.6 + rnd() * .2), larg * .62, nivel - 1, pai);
+      galho(x2, y2, ang + .2 + rnd() * .5, comp * (.55 + rnd() * .2), larg * .6, nivel - 1, pai);
+    }
+    [[-640, 790, 150], [1860, 790, 180], [2200, 790, 130], [-120, 790, 110]].forEach(function (a) { galho(a[0], a[1], -Math.PI / 2 + (rnd() - .5) * .3, a[2], 10, 4, g); });
+  })();
+
+  // a Névoa Negra que anda entre as ruínas
+  (function () {
+    var f = $("nevoaNegra");
+    [[300, 1240, 620, 0], [1000, 1280, 700, -11], [1800, 1220, 760, -5], [2600, 1260, 620, -18], [-200, 1290, 560, -23], [1400, 1300, 520, -15]].forEach(function (p) {
+      var i = document.createElement("i");
+      i.style.left = (p[0] - p[2] / 2) + "px"; i.style.top = (p[1] - p[2] / 2) + "px";
+      i.style.width = p[2] + "px"; i.style.height = (p[2] * .55) + "px";
+      i.style.animationDelay = p[3] + "s"; i.style.setProperty("--vx", (300 + rnd() * 300).toFixed(0) + "px");
+      f.appendChild(i);
+    });
+  })();
+
+  // o adro: lajes rachadas em perspectiva (fuga no meio do portal) e tufos de grama morta nas juntas
+  (function () {
+    var VX = 720, VY = 560, linhas = [], y = 788, passo = 11, dL = "", dLL = "", dG = "";
+    while (y < 1300) { linhas.push(y); passo *= 1.26; y += passo; }
+    linhas.forEach(function (yy) { dL += "M-600 " + f1(yy) + "H2040"; dLL += "M-600 " + f1(yy + 2) + "H2040"; });
+    for (var i = 0; i < linhas.length - 1; i++) {
+      var y0 = linhas[i], y1 = linhas[i + 1], k0 = (y0 - VY), k1 = (y1 - VY), desloc = (i % 2) * .5;
+      for (var c = -24; c <= 24; c++) {
+        var u = (c + desloc + (rnd() - .5) * .3) * 92 / (788 - VY);
+        dL += "M" + f1(VX + u * k0) + " " + f1(y0) + "L" + f1(VX + u * k1) + " " + f1(y1);
+      }
+    }
+    for (var t = 0; t < 40; t++) {
+      var tx = -500 + rnd() * 2440, ty = 800 + rnd() * 440;
+      if (tx > 540 && tx < 900 && ty < 860) continue;
+      dL += "M" + f1(tx) + " " + f1(ty) + "l" + f1(12 + rnd() * 26) + " " + f1((rnd() - .5) * 14) + "l" + f1(8 + rnd() * 24) + " " + f1((rnd() - .5) * 14);
+    }
+    for (var m = 0; m < 160; m++) {
+      var mx = -560 + rnd() * 2560, my = 790 + rnd() * 470;
+      if (mx > 560 && mx < 880 && my < 900) continue;
+      var h = 6 + rnd() * 14 * (my - 760) / 300;
+      dG += "M" + f1(mx) + " " + f1(my) + "q" + f1(-2 - rnd() * 4) + " " + f1(-h * .6) + " " + f1(-4 - rnd() * 6) + " " + f1(-h) + "M" + f1(mx + 3) + " " + f1(my) + "q" + f1(1 + rnd() * 3) + " " + f1(-h * .7) + " " + f1(4 + rnd() * 5) + " " + f1(-h * .9);
+    }
+    el("path", { d: dL }, $("lajes"));
+    el("path", { d: dLL }, $("lajes-luz"));
+    el("path", { d: dG }, $("grama"));
+  })();
+
+  // a variação dos silhares (uns lavados de chuva, uns escurecidos)
+  (function () {
+    var d = ["", ""];
+    for (var i = 0; i < 90; i++) {
+      var row = Math.floor(rnd() * 19), x = 90 + Math.floor(rnd() * 16) * 80 + (row % 2 ? 40 : 0), y = 30 + row * 35;
+      if (x > 560 && x < 880 && y > 250) continue;
+      d[rnd() < .5 ? 0 : 1] += "M" + (x + 2) + " " + (y + 2) + "h76v31h-76Z";
+    }
+    el("path", { d: d[0], fill: "#7a8a82", opacity: .12 }, $("blocos-varia"));
+    el("path", { d: d[1], fill: "#000", opacity: .3 }, $("blocos-varia"));
+  })();
+
+  // os contrafortes da nave com os pináculos partidos; as telhas de ardósia
+  (function () {
+    var g = $("contrafortes");
+    [[400, 186], [1010, 186], [240, 300], [1176, 250]].forEach(function (c, i) {
+      var x = c[0], topo = c[1], w = 34;
+      el("path", { d: "M" + x + " 800 V" + topo + " h" + w + " V800Z", fill: "url(#silhares)", stroke: "#0a0f0d", "stroke-width": 2 }, g);
+      el("path", { d: "M" + x + " " + (topo + 60) + " h" + w + " M" + x + " " + (topo + 240) + " h" + w, stroke: "#141a18", "stroke-width": 4 }, g);
+      // o pináculo: inteiro num, partido no outro
+      var px = x + w / 2;
+      if (i % 2) el("path", { d: "M" + (x + 4) + " " + topo + " L" + px + " " + (topo - 74) + " L" + (x + w - 4) + " " + topo + "Z", fill: "#3a4440", stroke: "#0a0f0d", "stroke-width": 2 }, g);
+      else el("path", { d: "M" + (x + 4) + " " + topo + " L" + (px - 6) + " " + (topo - 40) + " L" + (px + 2) + " " + (topo - 28) + " L" + (px + 8) + " " + (topo - 46) + " L" + (x + w - 4) + " " + topo + "Z", fill: "#3a4440", stroke: "#0a0f0d", "stroke-width": 2 }, g);
+    });
+    var df = "";
+    for (var t = .08; t < 1; t += .08) { df += "M" + f1(410 + 310 * t) + " " + f1(182 - 164 * t + 6) + "L" + f1(1030 - 310 * t) + " " + f1(182 - 164 * t + 6); }
+    for (var k = 0; k < 18; k++) { var tt = k / 18; df += "M" + f1(720 - 300 * tt) + " " + f1(34 + 158 * tt) + "l-8 10 M" + f1(720 + 300 * tt) + " " + f1(34 + 158 * tt) + "l8 10"; }
+    $("ardosia-frontao").setAttribute("d", df);
+    var da = "", dfal = "";
+    for (var s = .06; s < 1; s += .07) { da += "M" + f1(56 + 380 * s) + " " + f1(336 - 98 * s) + "L" + f1(64 + 372 * s) + " " + f1(360 - 92 * s); }
+    for (var q = 0; q < 6; q++) { var qx = 90 + rnd() * 300, qy = 336 - 98 * (qx - 56) / 380 + 8; dfal += "M" + f1(qx) + " " + f1(qy) + "l" + f1(10 + rnd() * 14) + " " + f1(-3) + "l" + f1(-4) + " " + f1(10 + rnd() * 6) + "Z"; }
+    $("ardosia-ala").setAttribute("d", da);
+    $("ala-falhas").setAttribute("d", dfal);
+  })();
+
+  // o portal: as arquivoltas ogivais em degraus e os silhares dos batentes
+  (function () {
+    var g = $("arquivoltas"), go = $("ombreiras");
+    [[76, "#3a4440"], [58, "#323c38"], [40, "#3a4440"], [22, "#2c3532"]].forEach(function (a) {
+      var o = a[0], xl = 600 - o, xr = 840 + o, top = 256 - o * .9, sh = 350 - o * .2;
+      var d = "M" + xl + " 404 V" + f1(sh) + " Q" + xl + " " + f1(top + 40) + " 720 " + f1(top) + " Q" + xr + " " + f1(top + 40) + " " + xr + " " + f1(sh) + " V404 H" + (xr - 18) + " V" + f1(sh + 4) + " Q" + (xr - 18) + " " + f1(top + 58) + " 720 " + f1(top + 18) + " Q" + (xl + 18) + " " + f1(top + 58) + " " + (xl + 18) + " " + f1(sh + 4) + " V404Z";
+      el("path", { d: d, fill: a[1], stroke: "#070a09", "stroke-width": 2 }, g);
+    });
+    el("path", { d: "M524 404 V346 Q524 230 720 186 Q916 230 916 346 V404", fill: "none", stroke: "#7a8a82", "stroke-width": 1.2, opacity: .4 }, g);
+    var dO = ["", ""], dOl = "";
+    for (var y = 404; y < 790; y += 48) {
+      var longo = ((y - 404) / 48) % 2 === 0;
+      [0, 1].forEach(function (li) {
+        var x0 = li === 0 ? (longo ? 520 : 536) : 840, x1 = li === 0 ? 600 : (longo ? 920 : 904);
+        dO[longo ? 0 : 1] += "M" + x0 + " " + (y + 1) + "h" + (x1 - x0) + "v46h" + (x0 - x1) + "Z";
+        dOl += "M" + (x0 + 2) + " " + (y + 2) + "h" + (x1 - x0 - 4) + "v2h" + (x0 - x1 + 4) + "Z";
+      });
+    }
+    el("path", { d: dO[0], fill: "#3a4440", stroke: "#070a09", "stroke-width": 2 }, go);
+    el("path", { d: dO[1], fill: "#2e3734", stroke: "#070a09", "stroke-width": 2 }, go);
+    el("path", { d: dOl, fill: "#7a8a82", opacity: .35 }, go);
+    el("rect", { x: 520, y: 404, width: 400, height: 386, filter: "url(#musgo)", opacity: .7 }, go);
+  })();
+
+  // a traceria da rosácea: os raios e os lóbulos
+  (function () {
+    var g = $("rosa-traceria"), d = "";
+    for (var i = 0; i < 12; i++) { var a = i * Math.PI / 6; d += "M0 0L" + f1(Math.cos(a) * 66) + " " + f1(Math.sin(a) * 66); }
+    el("path", { d: d }, g);
+    el("circle", { r: 22 }, g);
+    el("circle", { r: 46, "stroke-width": 3 }, g);
+    for (var k = 0; k < 12; k++) { var b = (k + .5) * Math.PI / 6; el("circle", { cx: f1(Math.cos(b) * 56), cy: f1(Math.sin(b) * 56), r: 9, "stroke-width": 3 }, g); }
+  })();
+
+  // as janelas ogivais acesas (torre e nave) e as relíquias da vitrine
+  (function () {
+    var g = $("janelas");
+    [[1056, 330], [1188, 330], [470, 300], [940, 300]].forEach(function (j) {
+      var x = j[0], y = j[1], w = 52, h = 140;
+      var d = "M" + (x - w / 2) + " " + (y + h) + " V" + (y + 30) + " Q" + (x - w / 2) + " " + y + " " + x + " " + (y - 14) + " Q" + (x + w / 2) + " " + y + " " + (x + w / 2) + " " + (y + 30) + " V" + (y + h) + "Z";
+      el("path", { d: d, fill: "url(#gJanela)", stroke: "#0a0f0d", "stroke-width": 8 }, g);
+      el("path", { d: "M" + x + " " + (y - 10) + " V" + (y + h) + " M" + (x - w / 2) + " " + (y + 70) + " H" + (x + w / 2), stroke: "#0a1412", "stroke-width": 4 }, g);
+    });
+    var r = $("reliquias");
+    // prateleiras, crânios, frascos, um livro aberto
+    el("path", { d: "M170 600 H400 M170 680 H400", stroke: "#0a1210", "stroke-width": 6 }, r);
+    var dr = "";
+    for (var k = 0; k < 7; k++) { var kx = 186 + k * 32; dr += (k % 3 === 0) ? oval(kx, 588, 11, 12) + "M" + (kx - 6) + " 596h12v6h-12Z" : "M" + (kx - 7) + " 600v-" + (14 + (k % 2) * 8) + "h4v-5h6v5h4v" + (14 + (k % 2) * 8) + "Z"; }
+    for (var q = 0; q < 6; q++) { var qx = 190 + q * 36; dr += "M" + (qx - 9) + " 680v-" + (12 + (q % 3) * 6) + "q9 -8 18 0v" + (12 + (q % 3) * 6) + "Z"; }
+    el("path", { d: dr, fill: "#0b1a15" }, r);
+    el("path", { d: "M220 754 q30 -18 60 0 q30 -18 60 0 v6 h-120Z", fill: "#e8dcc0", opacity: .7 }, r);
+    el("path", { d: "M236 744 h30 M296 744 h30", stroke: "#5a4a3a", "stroke-width": 1.2 }, r);
+    // correntes e teias no beiral da ala
+    var c = $("correntes-beiral"), dc = "";
+    for (var n = 0; n < 5; n++) { var nx = 100 + n * 70, ny = 360 - 92 * (nx - 64) / 372; dc += "M" + f1(nx) + " " + f1(ny) + "v" + f1(30 + rnd() * 60); }
+    el("path", { d: dc, "stroke-dasharray": "5 3" }, c);
+    el("path", { d: "M436 268 q-30 20 -60 4 M436 268 q-18 34 -48 34 M436 268 q-8 40 -36 54 M378 272 q12 20 10 30", stroke: "#8a9a92", "stroke-width": .8, opacity: .35 }, c);
+  })();
+
+  // as lápides: as do fundo, junto da parede; as da frente, grandes e tortas
+  (function () {
+    var g = $("lapides-fundo");
+    [[470, 790, .8, -4], [960, 790, .9, 5], [1260, 790, .7, -8], [20, 790, .9, 6]].forEach(function (l) {
+      el("use", { href: "#lapide", transform: "translate(" + l[0] + " " + l[1] + ") rotate(" + l[3] + ") scale(" + l[2] + ")", fill: "#2c3532", stroke: "#070a09", "stroke-width": 2.5 }, g);
+    });
+    var f = $("lapides-frente");
+    [[-150, 1030, 2.1, -9], [250, 1060, 1.8, 6], [1220, 1070, 2, -5], [1600, 1030, 2.3, 10]].forEach(function (l, i) {
+      el("ellipse", { cx: l[0], cy: l[1] + 4, rx: 60 * l[2] / 2, ry: 10, fill: "#000", opacity: .55 }, f);
+      if (i % 2) el("use", { href: "#lapide", transform: "translate(" + l[0] + " " + l[1] + ") rotate(" + l[3] + ") scale(" + l[2] + ")", fill: "url(#gPedraF)", stroke: "#030504", "stroke-width": 1.4 }, f);
+      else el("path", { d: "M-8 0 V-60 H-30 V-74 H-8 V-96 H8 V-74 H30 V-60 H8 V-30 L2 -22 L8 0Z", transform: "translate(" + l[0] + " " + l[1] + ") rotate(" + l[3] + ") scale(" + l[2] * .9 + ")", fill: "url(#gPedraF)", stroke: "#030504", "stroke-width": 1.4 }, f);
+    });
+    // a árvore morta do primeiro plano, à esquerda, sobre o adro
+    var a = $("arvore");
+    function galho(x, y, ang, comp, larg, nivel) {
+      var x2 = x + Math.cos(ang) * comp, y2 = y + Math.sin(ang) * comp;
+      el("path", { d: "M" + f1(x) + " " + f1(y) + "Q" + f1((x + x2) / 2 + (rnd() - .5) * comp * .35) + " " + f1((y + y2) / 2) + " " + f1(x2) + " " + f1(y2), "stroke-width": f1(larg) }, a);
+      if (nivel <= 0) return;
+      galho(x2, y2, ang - .35 - rnd() * .5, comp * (.62 + rnd() * .18), larg * .64, nivel - 1);
+      galho(x2, y2, ang + .25 + rnd() * .5, comp * (.58 + rnd() * .2), larg * .6, nivel - 1);
+    }
+    galho(-420, 1000, -Math.PI / 2 + .18, 300, 46, 5);
+    galho(1880, 1000, -Math.PI / 2 - .2, 260, 40, 5);
+  })();
+
+  // as lanternas das almas: poste de ferro torto, a gaiola de vidro e a chama fria
+  document.querySelectorAll(".lanterna").forEach(function (b, bi) {
+    b.innerHTML =
+      '<div class="halo"></div>' +
+      '<svg viewBox="0 0 140 340">' +
+      '<defs><linearGradient id="gFerroL' + bi + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b0e0d"/><stop offset=".45" stop-color="#3a4440"/><stop offset=".7" stop-color="#1e2522"/><stop offset="1" stop-color="#080a09"/></linearGradient>' +
+      '<radialGradient id="gVidroL' + bi + '" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#eafff6" stop-opacity=".9"/><stop offset=".4" stop-color="#5ef0be" stop-opacity=".5"/><stop offset="1" stop-color="#0b3a30" stop-opacity=".35"/></radialGradient>' +
+      '<radialGradient id="gChaoL' + bi + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#5ef0be" stop-opacity=".45"/><stop offset="1" stop-color="#5ef0be" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse cx="70" cy="336" rx="120" ry="20" fill="url(#gChaoL' + bi + ')"/>' +
+      '<path d="M66 336 L64 200 Q63 186 70 180 Q77 186 76 200 L74 336Z" fill="url(#gFerroL' + bi + ')"/>' +
+      '<path d="M52 336 h36 l-6 -10 h-24Z" fill="#1e2522" stroke="#050706" stroke-width="1.5"/>' +
+      '<path d="M70 196 Q40 190 44 168 M70 196 Q100 190 96 168" stroke="#141a18" stroke-width="4" fill="none"/>' +
+      '<path d="M46 168 H94 L88 100 H52Z" fill="url(#gVidroL' + bi + ')" stroke="#0b0e0d" stroke-width="3"/>' +
+      '<path d="M58 168 L56 100 M70 168 V100 M82 168 L84 100" stroke="#0b0e0d" stroke-width="2"/>' +
+      '<path d="M44 168 H96 V176 H44Z M48 100 H92 L70 76Z" fill="#1e2522" stroke="#050706" stroke-width="2"/>' +
+      '<path d="M70 76 V62 M64 62 a6 6 0 1 0 12 0 a6 6 0 1 0 -12 0" stroke="#141a18" stroke-width="3" fill="none"/>' +
+      '</svg>' +
+      '<div class="chamas"><i class="ch f3"></i><i class="ch f1"></i><i class="ch f2"></i></div>';
+    for (var f = 0; f < 5; f++) {
+      var s = document.createElement("i");
+      s.className = "alma";
+      s.style.setProperty("--dx", ((rnd() - .3) * 90).toFixed(0) + "px");
+      s.style.left = (60 + rnd() * 20).toFixed(0) + "px";
+      s.style.animationDuration = (2.6 + rnd() * 2).toFixed(2) + "s";
+      s.style.animationDelay = (-rnd() * 4).toFixed(2) + "s";
+      b.appendChild(s);
+    }
+  });
+
+  // as faíscas frias da tranca
+  (function () {
+    var c = $("faiscasTrinco");
+    for (var i = 0; i < 14; i++) {
+      var s = document.createElement("i"), ang = -Math.PI * (.15 + rnd() * .75), v = 40 + rnd() * 90;
+      s.style.setProperty("--fx", (Math.cos(ang) * v - 30).toFixed(0) + "px");
+      s.style.setProperty("--fy", (Math.sin(ang) * v + 40 + rnd() * 30).toFixed(0) + "px");
+      s.style.animationDelay = (.06 + rnd() * .22).toFixed(2) + "s";
+      s.style.animationDuration = (.35 + rnd() * .35).toFixed(2) + "s";
+      c.appendChild(s);
+    }
+  })();
+
+  // a cinza fria (n1, n2: lascas cinza-esverdeadas num ladrilho SVG) e as almas que sobem (n3, n4: pontos verdes)
+  function lascas(t, n, rmin, rmax, cor, borda) {
+    var s = "<svg xmlns='http://www.w3.org/2000/svg' width='" + t + "' height='" + t + "'>";
+    for (var i = 0; i < n; i++) {
+      var cx = 8 + rnd() * (t - 16), cy = 8 + rnd() * (t - 16), r = rmin + rnd() * (rmax - rmin), k = 4 + Math.floor(rnd() * 3), a0 = rnd() * 6.283, pts = [];
+      for (var j = 0; j < k; j++) {
+        var a = a0 + j * 6.283 / k + (rnd() - .5) * .9, rr = r * (.4 + rnd() * .8);
+        pts.push(f1(cx + Math.cos(a) * rr) + "," + f1(cy + Math.sin(a) * rr * .75));
+      }
+      s += "<polygon points='" + pts.join(" ") + "' fill='" + cor + "' fill-opacity='" + (.5 + rnd() * .4).toFixed(2) + "' stroke='" + borda + "' stroke-width='.6'/>";
+    }
+    return 'url("data:image/svg+xml,' + encodeURIComponent(s + "</svg>") + '")';
+  }
+  [["n1", 260, 22, 1.4, 3, "#5a6a64", "rgba(160,200,180,.35)"], ["n2", 340, 9, 2.4, 4.6, "#6a7a74", "rgba(180,220,200,.4)"]].forEach(function (c) {
+    var camada = document.querySelector(".neve." + c[0]);
+    camada.style.backgroundImage = lascas(c[1], c[2], c[3], c[4], c[5], c[6]);
+    camada.style.backgroundSize = c[1] + "px " + c[1] + "px";
+    camada.style.setProperty("--t", c[1] + "px");
+  });
+  [["n3", 360, 5, 1.8, "110,255,200"], ["n4", 480, 4, 2.6, "170,255,225"]].forEach(function (c) {
+    var camada = document.querySelector(".neve." + c[0]), t = c[1], fundos = [];
+    for (var i = 0; i < c[2]; i++) {
+      var r = c[3] * (.6 + rnd() * .8), x = (rnd() * t).toFixed(0), y = (rnd() * t).toFixed(0);
+      fundos.push("radial-gradient(" + (r * 3).toFixed(2) + "px " + (r * 3).toFixed(2) + "px at " + x + "px " + y + "px, rgba(240,255,250,1), rgba(" + c[4] + ",.8) 30%, rgba(" + c[4] + ",.16) 60%, rgba(" + c[4] + ",0))");
+    }
+    camada.style.backgroundImage = fundos.join(",");
+    camada.style.backgroundSize = t + "px " + t + "px";
+    camada.style.setProperty("--t", t + "px");
+  });
+
+  /* ---------- encaixe na tela ---------- */
+  var palco = $("palco");
+  function encaixa() {
+    var s = Math.min(innerWidth / 1440, innerHeight / 900);
+    palco.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+  }
+  encaixa(); addEventListener("resize", encaixa);
+
+  /* ---------- a câmera (requestAnimationFrame) ---------- */
+  // a mesma de Noxus: p = t^1,8; a fachada vai de 0,86 a 7,6 e sobe até centrar a porta; o primeiro plano
+  // (lanternas, lápides) vai a 30 e sai do quadro; o céu só avança 1,3×
+  var DUR = 1950, S0 = .86;
+  var longe = $("longe"), mundo = $("mundo"), perto = $("perto"), neveTela = $("neveTela");
+  function quadro(ms) {
+    var t = Math.min(1, Math.max(0, ms / DUR)), p = Math.pow(t, 1.8), q = Math.pow(t, 2.2);
+    mundo.style.transform = "translate(0px," + (-110 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(7.6 / S0, p)).toFixed(4) + ")";
+    perto.style.transform = "translate(0px," + (-60 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(30 / S0, p)).toFixed(4) + ")";
+    perto.style.visibility = t > .62 ? "hidden" : "";
+    longe.style.transform = "translate(0px," + (-36 * p).toFixed(2) + "px) scale(" + (S0 * Math.pow(1.3, p)).toFixed(4) + ")";
+    neveTela.style.transform = "scale(" + (1 + 2.2 * q).toFixed(3) + ")";
+    neveTela.style.opacity = (1 - q).toFixed(3);
+  }
+  function repouso() {
+    [mundo, perto, longe].forEach(function (c) { c.style.transform = "scale(" + S0 + ")"; });
+    perto.style.visibility = "";
+    neveTela.style.transform = ""; neveTela.style.opacity = "";
+  }
+  repouso();
+
+  /* ---------- abrir e reiniciar ---------- */
+  var estado = "fechada", timer = 0, laco = 0;
+  var entrada = $("entrada"), loja = $("loja"), botao = $("entrar");
+  var calmo = matchMedia("(prefers-reduced-motion: reduce)");
+  function abrir() {
+    if (estado !== "fechada") return;
+    estado = "abrindo";
+    Som.destravar(); Som.play("catalog:open");
+    document.body.classList.add("abrindo");
+    var reduz = calmo.matches;
+    if (!reduz) {
+      var t0 = performance.now();
+      var passo = function (agora) {
+        if (estado !== "abrindo" || window.__congelado) return;
+        quadro(agora - t0);
+        if (agora - t0 < DUR) laco = requestAnimationFrame(passo);
+      };
+      laco = requestAnimationFrame(passo);
+    }
+    timer = setTimeout(function () {
+      estado = "aberta"; document.body.classList.add("aberta");
+      entrada.setAttribute("aria-hidden", "true");
+      loja.focus({ preventScroll: true });
+    }, reduz ? 1000 : 2150);
+  }
+  function reiniciar() {
+    clearTimeout(timer); cancelAnimationFrame(laco); window.__congelado = false;
+    if (Som.parar) Som.parar();
+    document.body.classList.remove("abrindo", "aberta");
+    entrada.removeAttribute("aria-hidden");
+    repouso();
+    void document.body.offsetWidth;
+    estado = "fechada";
+    botao.focus({ preventScroll: true });
+  }
+  entrada.addEventListener("click", function (e) {
+    if (e.target.closest(".ea-id")) return;
+    abrir();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "r" || e.key === "R") { if (!e.ctrlKey && !e.metaKey && !e.altKey) reiniciar(); return; }
+    if ((e.key === "Enter" || e.key === " ") && estado === "fechada") {
+      if (e.target.closest && e.target.closest(".ea-id")) return;
+      e.preventDefault(); abrir();
+    }
+  });
+
+  // para o QA: congela a abertura no instante ms (câmera e animações CSS juntas, em quadros comparáveis)
+  var DA_ABERTURA = /^(tranca|acorda|rosacea|abre-esq|abre-dir|escurece|acende|some|luz-neve|poca|raios|flash|loja|esmaece|loja-calma|faisca-trinco)$/;
+  window.__congela = function (ms, clima) {
+    window.__congelado = true; cancelAnimationFrame(laco); clearTimeout(timer);
+    if (document.body.classList.contains("abrindo") && !calmo.matches) quadro(ms);
+    document.getAnimations().forEach(function (a) {
+      a.pause();
+      a.currentTime = DA_ABERTURA.test(a.animationName || "") ? ms : (clima == null ? 2600 : clima);
+    });
+  };
+  window.__abrir = abrir; window.__reiniciar = reiniciar; window.__DUR = DUR; window.__quadro = quadro;
+  window.__pronto = true;
+})();
+</script>
+</body>
+</html>
