@@ -6,11 +6,14 @@ dos dragões no mapa"). Tira do jogo instalado o que o mapa do app precisa para 
 
   - as imagens do minimapa de agora (o map11.png do Data Dragon é a arte antiga): uma por alma e por forma do
     covil do Barão (2dlevelminimap_<alma>_baron<n>.tex), em assets/mapa/;
-  - as camadas de navegação que o jogo põe por cima da grade (NavGrid_*.ngrid_overlay): as almas que mudam
-    parede ou arbusto e as formas do covil do Barão, em data/mapa_camadas.json. O covil do Atakhan fica de fora:
-    o Atakhan saiu do jogo (Leo, 05/11/2026: "o atakhan foi removido"), embora os arquivos dele continuem lá.
+  - as malhas de colisão (Leo, 05/11/2026: "e as malhas de colisões?"), prontas como o app lê, em
+    data/mapa_variantes.js (window.MAPA_HOJE): a grade de base de hoje, a AIPath_SRX_3 (a que casa com o
+    minimapa de agora; o data/gerar_mapa.py ainda lê a SRX_2), no mesmo formato do data/mapa.js; e, por variante,
+    as regiões que a camada de navegação do jogo (NavGrid_*.ngrid_overlay) troca por cima dela — as almas que
+    mudam o terreno e as formas do covil do Barão. O covil do Atakhan fica de fora: o Atakhan saiu do jogo (Leo,
+    05/11/2026: "o atakhan foi removido"), embora os arquivos dele continuem lá.
 
-A grade de base é a do data/gerar_mapa.py. Nenhum dado é digitado: tudo sai dos arquivos.
+Nenhum dado é digitado: tudo sai dos arquivos.
 
 Uso:  python extrair_mapa_do_jogo.py [pasta do LoL]
       Precisa do zstandard e do Pillow (o Pillow lê a textura DXT5).
@@ -43,12 +46,24 @@ import gerar_mapa as gm   # o xxHash64, a leitura da grade e o caminho do Map11.
 LOL = sys.argv[1] if len(sys.argv) > 1 else r"C:\Riot Games\League of Legends"
 WAD = os.path.join(LOL, "Game", "DATA", "FINAL", "Maps", "Shipping", "Map11.wad.client")
 IMAGENS = os.path.join(RAIZ, "assets", "mapa")
-CAMADAS = os.path.join(AQUI, "mapa_camadas.json")
+SAIDA = os.path.join(AQUI, "mapa_variantes.js")
+GRADE_HOJE = "ASSETS/Maps/NavGrid/Map11/AIPath_SRX_3.aimesh_ngrid"
 # só as almas que mudam o terreno (Leo, 05/11/2026: "eu quero as almas que realmente afetam o mapa… o Hextec só
 # adiciona portais"): a Nuvem e a Hextec ficam de fora; a Quimtec não tem imagem própria (a de base, com a camada dela)
 ALMAS = ["base", "infernal", "mountain", "ocean"]
 # as camadas que o map11.bin cita (as de Map90, as de regiões e as do Atakhan, que saiu do jogo, ficam de fora)
 NOMES_CAMADAS = ["Infernal_SEASONAL", "Mountain_SEASONAL", "Ocean_SEASONAL", "Chemtech", "Cup_Base", "Tunnel_Base"]
+# a variante no app → a camada do jogo. A forma 2 do covil do Barão é a Tunnel e a 3 é a Cup (conferido pela
+# diferença entre as imagens baron2/baron3 e a de base: 356 de 454 e 118 de 136 células dentro da camada)
+VARIANTES = {"infernal": "Infernal_SEASONAL", "montanha": "Mountain_SEASONAL", "oceano": "Ocean_SEASONAL",
+             "quimtec": "Chemtech", "barao2": "Tunnel_Base", "barao3": "Cup_Base"}
+
+
+def tipo(v):
+    """A célula como o app a usa, pelas regras do gerar_mapa.py: 1 parede que esconde, 2 arbusto, 4 só para o passo."""
+    transp = gm.PAREDE_TRANSPARENTE | gm.PAREDE_ESTRUTURA
+    return ((1 if v & gm.PAREDE and not v & transp else 0) | (2 if v & gm.ARBUSTO and not v & gm.PAREDE else 0)
+            | (4 if v & transp else 0))
 
 
 def indice(wad):
@@ -131,10 +146,36 @@ def main():
         c = "ASSETS/Maps/NavGrid/NavGrid_%s.ngrid_overlay" % nome
         if tem(c):
             camadas[nome] = camada(ler(WAD, idx, c))
-    with open(CAMADAS, "w", encoding="utf-8", newline="\n") as f:
-        json.dump({"_gerado_por": "data/extrair_mapa_do_jogo.py — não editar à mão", "camadas": camadas}, f, separators=(",", ":"))
+    # a malha de base de hoje, no formato do data/mapa.js
+    g = gm.ler_grade(ler(WAD, idx, GRADE_HOJE))
+    tipos = [tipo(v) for v in g["marcas"]]
+    hoje = {"fonte": GRADE_HOJE, "versao": g["versao"], "celula": g["celula"], "nx": g["nx"], "nz": g["nz"],
+            "min": [round(g["min"][0], 3), round(g["min"][1], 3)], "max": [round(g["max"][0], 3), round(g["max"][1], 3)],
+            "paredes": gm.bits([t & 1 for t in tipos]), "arbustos": gm.bits([t & 2 for t in tipos]),
+            "soPasso": gm.bits([t & 4 for t in tipos]), "variantes": {}}
+    # por variante: [x, z, largura, altura, os tipos das células linha a linha (z), um algarismo de 0 a 7 por célula]
+    for chave, nome in VARIANTES.items():
+        if nome not in camadas:
+            continue
+        for r in camadas[nome]:
+            if r["x"] < 0 or r["z"] < 0 or r["x"] + r["w"] > g["nx"] or r["z"] + r["h"] > g["nz"]:
+                sys.exit("a camada %s sai da grade" % nome)
+        hoje["variantes"][chave] = {"camada": "ASSETS/Maps/NavGrid/NavGrid_%s.ngrid_overlay" % nome,
+                                    "regioes": [[r["x"], r["z"], r["w"], r["h"], "".join(str(tipo(v)) for v in r["marcas"])]
+                                                for r in camadas[nome]]}
+    js = ("// GERADO por data/extrair_mapa_do_jogo.py - nao editar a mao (F13-T113).\n"
+          "// A malha de colisao de hoje (AIPath_SRX_3) no formato do data/mapa.js e, por variante (as almas que mudam o\n"
+          "// terreno e as formas do covil do Barao), as regioes que a camada de navegacao do jogo troca por cima dela:\n"
+          "// [x, z, largura, altura, tipos], um algarismo por celula, linha a linha: 1 parede, 2 arbusto, 4 so para o passo.\n"
+          "window.MAPA_HOJE = " + json.dumps(hoje, separators=(",", ":")) + ";\n")
+    with open(SAIDA, "w", encoding="utf-8", newline="\n") as f:
+        f.write(js)
+    conta = lambda b: sum(1 for x in tipos if x & b)
     print("imagens (%d) em %s: %s" % (len(feitas), IMAGENS, ", ".join(feitas)))
-    print("camadas (%d) em %s: %s" % (len(camadas), CAMADAS, ", ".join("%s (%d regiões)" % (k, len(v)) for k, v in camadas.items())))
+    print("malha de hoje %s: %d × %d · parede %d · arbusto %d · só o passo %d"
+          % (GRADE_HOJE.rsplit("/", 1)[1], g["nx"], g["nz"], conta(1), conta(2), conta(4)))
+    print("variantes em %s (%d KB): %s" % (SAIDA, len(js) // 1024,
+          ", ".join("%s (%d regiões)" % (k, len(v["regioes"])) for k, v in hoje["variantes"].items())))
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ isso é antigo… e tem as alterações das almas dos dragões no mapa". E: "voc
 nas malhas? aí sexta-feira a gente finaliza isso".
 
 Tudo abaixo saiu do `Map11.wad.client` da instalação do LoL do Leo, com `data/extrair_mapa_do_jogo.py`
-(imagens em `assets/mapa/`, camadas em `data/mapa_camadas.json`; sem o Atakhan, que saiu do jogo). O app ainda não usa nada disso.
+(imagens em `assets/mapa/`; as malhas de colisão em `data/mapa_variantes.js`; sem o Atakhan, que saiu do jogo). O app ainda não usa nada disso.
 
 ## 1. Por que o mapa estava errado
 
@@ -47,6 +47,19 @@ rio). Captura `fase13-t113-almas.png`: cada variante, a imagem dela à esquerda 
   Infernal é a de base com o covil do Dragão tirado da imagem dele (só a área da camada), para a figura não
   mostrar parede aberta que o jogo não abre.
 - **A Quimtec** não tem imagem própria: a de base, com a camada dela.
+- **A imagem do Infernal, na sexta: a de base.** O covil do Dragão na imagem dele é igual ao da base (nenhuma célula
+  muda dentro da camada); só as paredes da selva mudam, e essas são as antigas. A parede do covil vem da camada.
+
+## 3b. As malhas de colisão (Leo, 05/11/2026: "e as malhas de colisões?")
+
+`data/mapa_variantes.js` (`window.MAPA_HOJE`, 48 KB), gerado pelo mesmo `data/extrair_mapa_do_jogo.py`: a malha de
+base de hoje (a `AIPath_SRX_3`, no formato do `data/mapa.js`: paredes, arbustos e o que só para o passo) e, por
+variante — `infernal`, `montanha`, `oceano`, `quimtec`, `barao2`, `barao3` —, as regiões que a camada do jogo troca,
+com o tipo de cada célula já como o app usa. Conferido lendo o arquivo gerado de fora
+(captura `fase13-t113-malhas.png`: cada variante por cima da imagem dela, as caixas em ciano são as regiões):
+dentro das regiões, a parede da malha bate com a imagem da variante em 77% na Montanha (só a base: 70%), 83% na
+forma 2 do Barão (65%), 82% na forma 3 (69%) e 90% no Oceano (90%: ele muda arbusto, que a imagem não desenha). O
+Infernal fica em 44% (só a base: 81%) porque a imagem dele não mostra o covil novo — a camada é a fonte.
 
 ## 4. Para sexta (a parte 2)
 
