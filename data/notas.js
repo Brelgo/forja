@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "05/11/2026",
+   "add": [],
+   "aj": [
+    "Mapa: arraste as sentinelas do botão para o mapa e pelo mapa (a visão vai junto e a névoa volta como fumaça); solte fora do mapa para tirar; e a Alteração Vidente"
+   ],
+   "rem": []
+  },
+  {
    "data": "03/11/2026",
    "add": [
     "Card do Discord na hora: publicou, o card fica pronto em cerca de um minuto, e a placa avisa quando já dá para colar o link"
