@@ -37,8 +37,6 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 | depende | Capítulos de dado 1.1–1.4 (campeões, Bestiário, Gerador) e a calculadora de monstros épicos | — |
 
 ## Esperando o Leo
-- Apagar o ramo remoto `cards-gif` (os GIFs de teste do card animado, cancelado).
-- As pastas `Splash animadas LoL` (~1,1 GB) e `… - recortes do card` (~120 MB): a arte animada saiu de vez (05/11) — apagar?
 - Conferir no navegador dele se o Freljord ainda pula quadros em 1440×900.
 
 ## Regras que mais pegam
