@@ -4621,7 +4621,7 @@ body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
   background: var(--forja-molde-2); color: var(--forja-texto); border: 1px solid var(--forja-placa-borda); }
 .mesa-btn:hover, .mesa-btn:focus-visible { border-color: var(--forja-brasa); color: var(--forja-titulo); }
 .mesa-zoom { display: block; margin-top: 8px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); }
-.mesa-nevoa { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.mesa-nevoa { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: blur(1.6px); }
 .mesa-marcas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .mesa-ferras { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
 .mesa-ferra { display: flex; align-items: center; gap: 9px; width: 100%; padding: 6px 10px; border-radius: 3px; cursor: pointer; text-align: left;
@@ -4629,9 +4629,27 @@ body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
   background: var(--forja-molde-2); border: 1px solid var(--forja-placa-borda); }
 .mesa-ferra img { width: 24px; height: 24px; border-radius: 3px; border: 1px solid #000; flex: none; }
 .mesa-ferra small { margin-left: auto; font: italic 11px var(--loja-texto); letter-spacing: 0; text-transform: none; color: var(--forja-texto-suave); }
-.mesa-ferra[aria-checked="true"] { background: linear-gradient(var(--forja-brasa-clara), var(--forja-brasa)); color: #1a0d04; border-color: #a24a0c; }
-.mesa-ferra[aria-checked="true"] small { color: #3a1a05; }
+.mesa-ferra:not(:disabled) { cursor: grab; touch-action: none; user-select: none; transition: border-color .15s, transform .15s; }
+.mesa-ferra:not(:disabled):hover, .mesa-ferra:focus-visible { border-color: var(--forja-brasa); color: var(--forja-titulo); transform: translateX(2px); }
+.mesa-ferra:not(:disabled):active { cursor: grabbing; }
+.mesa-ferra img { pointer-events: none; }
 .mesa-ferra:disabled { opacity: .45; cursor: default; }
+/* F13-T112: a sentinela na mão (erguida, com sombra), a que pousa (um quique) e o fantasma fora do mapa */
+.mesa-janela.sobre-marca { cursor: grab; }
+.mesa-janela.levando, .mesa-janela.levando * { cursor: grabbing; }
+.mm-sent .mm-corpo { transform-box: fill-box; transform-origin: center; transition: transform .14s cubic-bezier(.3,1.6,.5,1); }
+.mm-sent.erguida .mm-corpo { transform: scale(1.3) translateY(-3px); filter: drop-shadow(0 8px 6px rgba(0,0,0,.6)); }
+.mm-sent.assenta .mm-corpo { animation: mm-assenta .32s cubic-bezier(.3,1.7,.5,1); }
+@keyframes mm-assenta { 0% { transform: scale(1.3) translateY(-3px); } 55% { transform: scale(.9); } 100% { transform: none; } }
+.mesa-fantasma { position: fixed; z-index: 3000; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 2px solid #1a0d04;
+  pointer-events: none; transform: scale(1.3); box-shadow: 0 10px 14px rgba(0,0,0,.55); opacity: .92; }
+.mesa-fantasma img { position: absolute; inset: 3px; width: 16px; height: 16px; border-radius: 50%; }
+.mesa-fantasma.tirar { filter: grayscale(.7) brightness(.8); }
+.mesa-fantasma.tirar::after { content: "×"; position: absolute; right: -10px; top: -12px; width: 16px; height: 16px; border-radius: 50%; background: #9b1c18;
+  color: #fff; font: 700 13px/15px var(--loja-texto); text-align: center; border: 1px solid #1a0d04; }
+.mesa-fantasma.some { transition: transform .26s ease-in, opacity .26s ease-in; transform: scale(.2) rotate(40deg); opacity: 0; }
+body.ac-movimento .mm-sent .mm-corpo { transition: none; animation: none; }
+@media (prefers-reduced-motion: reduce) { .mm-sent .mm-corpo { transition: none; animation: none; } }
 .mesa-opt { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; color: var(--forja-texto); font: 13px var(--loja-texto); cursor: pointer; }
 .mesa-conta { margin: 4px 0 14px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); min-height: 1em; }
 .mesa-pode-btn { margin-top: 6px; }
@@ -8484,15 +8502,15 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
     </div>
     <div class="mesa-palco">
       <div class="mesa-moldura">
-        <div id="mesa-janela" class="mesa-janela" tabindex="0" role="application" aria-label="Mapa de Summoner's Rift — a roda do mouse aproxima, arrastar move; + e − aproximam, as setas movem, 0 volta ao mapa inteiro">
+        <div id="mesa-janela" class="mesa-janela" tabindex="0" role="application" aria-label="Mapa de Summoner's Rift — a roda do mouse aproxima, arrastar move (arrastar uma sentinela a leva); + e − aproximam, as setas movem, 0 volta ao mapa inteiro">
           <div id="mesa-mapa" class="mesa-mapa"><img id="mesa-img" alt="" draggable="false"><canvas id="mesa-nevoa" class="mesa-nevoa" aria-hidden="true"></canvas></div>
           <svg id="mesa-marcas" class="mesa-marcas" aria-hidden="true"></svg>
         </div>
       </div>
       <div class="mesa-ferr">
-        <!-- F13-T108: as sentinelas. O raio e o ícone vêm do catálogo (Sentinela Invisível, Sentinela de Controle) -->
+        <!-- F13-T108: as sentinelas. O raio e o ícone vêm do catálogo (Sentinela Invisível, Sentinela de Controle; a Alteração Vidente, F13-T112) -->
         <div class="mesa-ferr-tit">Pôr no mapa</div>
-        <div id="mesa-ferras" class="mesa-ferras" role="radiogroup" aria-label="O que o clique põe"></div>
+        <div id="mesa-ferras" class="mesa-ferras" aria-label="Arraste para o mapa"></div>
         <p id="mesa-pode" class="mesa-dica"></p>
         <div class="mesa-ferr-tit">Mostrar</div>
         <label class="mesa-opt"><input type="checkbox" id="mesa-nevoa-on"> Névoa de guerra</label>
@@ -9315,7 +9333,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.111";
+const ATUALIZACAO = "13.112";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -9522,7 +9540,7 @@ const HAB_GERAL = (window.HABILIDADES && window.HABILIDADES.regraGeral) || null;
 // sempre: a build que já existia grava e assina igual.
 // F13-T108: as marcas do mapa da build — por enquanto, as sentinelas da aba Visão, em unidades do jogo.
 // Só o que é de Summoner's Rift e cabe no mapa; um teto para um texto torto não encher a build.
-const MAPA_TIPOS = ["sentinela", "controle"], MAPA_MAX = 40;
+const MAPA_TIPOS = ["sentinela", "controle", "vidente"], MAPA_MAX = 40;   // F13-T112: a Alteração Vidente
 function normMapa(m) {
   const lim = window.MAPA ? [MAPA.min[0], MAPA.min[1], MAPA.min[0] + MAPA.nx * MAPA.celula, MAPA.min[1] + MAPA.nz * MAPA.celula] : [0, 0, 15000, 15000];
   const visao = (m && Array.isArray(m.visao) ? m.visao : []).filter(v => v && MAPA_TIPOS.includes(v.t)
@@ -12031,54 +12049,63 @@ function renderBuildTotals() {
 // F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de guerra,
 // revelando o alcance e o que ela revela e o que não revela"; "o raio de visão deve ser equivalente à escala
 // do tamanho, e uma opção permitindo ver exatamente o raio da visão como um círculo ciano"): as sentinelas
-// da aba Visão. O clique põe a do botão escolhido; o clique numa sentinela a tira; arrastar só move o mapa.
-// O raio e o ícone são os do catálogo (o raio, lido do texto do item: se o texto não disser, a ferramenta
-// some e a tela diz que falta). A visão de cada sentinela é por célula da grade: a parede barra a linha, e o
-// arbusto só se vê de dentro dele (Gerador, fundamentos/visao_mecanica.md §1.3). Mexer pede o Editar, como
-// toda a build; as marcas são da build aberta.
+// da aba Visão. O raio e o ícone são os do catálogo (o raio, lido do texto do item: se o texto não disser, a
+// ferramenta some e a tela diz que falta). A visão de cada sentinela é por célula da grade: a parede barra a
+// linha, e o arbusto só se vê de dentro dele (Gerador, fundamentos/visao_mecanica.md §1.3). Mexer pede o
+// Editar, como toda a build; as marcas são da build aberta.
+// F13-T112 (Leo, 04/11/2026: "a ideia é poder pegar a ward e arrastar com a visão dela expulsando a fog que vai
+// se juntando rapidamente como um líquido ou fumaça de verdade, não precisar clicar"; a opção A da amostra, a
+// fumaça): a névoa viva. Arrastar do botão para o mapa põe; arrastar a do mapa a leva, com a visão junto;
+// soltar fora do mapa tira (o clique no botão põe uma no meio do que se vê). A névoa é uma densidade por célula
+// da grade: a visão a empurra para fora e, quando a visão sai, ela volta da borda para dentro, em fiapos. E a
+// Alteração Vidente (Leo, 05/11/2026: "exibir só o 500 de alcance"), que vê por cima de parede e arbusto
+// porque o texto do item diz.
 const Mesa = (function () {
   const MAX = 6, PASSO = 1.25;
-  let z = 1, x = 0, y = 0, montada = false, arraste = null, ferra = "sentinela", aviso = "";
+  let z = 1, x = 0, y = 0, montada = false, arraste = null;
   const el = (id) => document.getElementById(id);
   function lado() { return el("mesa-janela").clientWidth || 1; }
 
   // ---- as sentinelas, do catálogo: o item, o ícone e o raio (o número que o texto do item diz)
   const FERRAS = {
-    sentinela: { slug: "stealth-ward", nome: "Sentinela", campo: "notes", re: /raio de visão de ([\d.]+)/ },
-    controle: { slug: "control-ward", nome: "Sentinela de Controle", campo: "mechanics", re: /visão num raio de ([\d.]+)/ },
+    sentinela: { slug: "stealth-ward", nome: "Sentinela", campo: "notes", re: /raio de visão de ([\d.]+)/, cor: "#e8c35a" },
+    controle: { slug: "control-ward", nome: "Sentinela de Controle", campo: "mechanics", re: /visão num raio de ([\d.]+)/, cor: "#d8434b" },
+    vidente: { slug: "farsight-alteration", nome: "Alteração Vidente", campo: "notes", re: /raio de visão menor \(([\d.]+)\)/, cor: "#4fa3ff",
+               livre: /inclusive sobre terreno e através de arbustos/ },
   };
   function ferraDoCatalogo(k) {
     const f = FERRAS[k], it = byId[f.slug];
     const txt = it ? JSON.stringify(it[f.campo] || "") + " " + JSON.stringify(it) : "";
     const m = it && f.re.exec(String(it[f.campo] || "")) || (it && f.re.exec(txt));
-    return { item: it || null, raio: m ? Number(m[1].replace(/\./g, "")) : null };
+    return { item: it || null, raio: m ? Number(m[1].replace(/\./g, "")) : null, livre: !!(f.livre && f.livre.test(txt)) };
   }
-  const G = window.MAPA, T = G ? G.celula : 50, LX = G ? G.nx * T : 1, LZ = G ? G.nz * T : 1;
+  const G = window.MAPA, T = G ? G.celula : 50, NX = G ? G.nx : 1, NZ = G ? G.nz : 1, N = NX * NZ, LX = NX * T, LZ = NZ * T;
   const bits = (b64) => { const s = atob(b64 || ""); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
   const parede = G ? bits(G.paredes) : () => 0, arbusto = G ? bits(G.arbustos) : () => 0, soPasso = G ? bits(G.soPasso) : () => 0;
   const celDe = (wx, wz) => [Math.floor((wx - G.min[0]) / T), Math.floor((wz - G.min[1]) / T)];
-  const chao = (k, w) => k >= 0 && w >= 0 && k < G.nx && w < G.nz && !parede(w * G.nx + k) && !soPasso(w * G.nx + k);
+  const chao = (k, w) => k >= 0 && w >= 0 && k < NX && w < NZ && !parede(w * NX + k) && !soPasso(w * NX + k);
   // as células que uma sentinela em (wx, wz) vê até o raio r: a linha até a célula não cruza parede; o arbusto
-  // só de dentro dele. Cada célula leva a distância (para a névoa abrir de dentro para fora)
-  function visao(wx, wz, r) {
-    const [cx, cz] = celDe(wx, wz), n = Math.ceil(r / T), naMoita = arbusto(cz * G.nx + cx), out = [];
+  // só de dentro dele (livre: a que vê por cima dos dois). Cada célula leva a distância e o passo desde a sentinela
+  function visao(wx, wz, r, livre) {
+    const [cx, cz] = celDe(wx, wz), n = Math.ceil(r / T), naMoita = livre || arbusto(cz * NX + cx), out = [];
     for (let dz = -n; dz <= n; dz++) for (let dx = -n; dx <= n; dx++) {
       const d2 = (dx * dx + dz * dz) * T * T;
       if (d2 > r * r) continue;
       const k = cx + dx, w = cz + dz;
-      if (k < 0 || w < 0 || k >= G.nx || w >= G.nz) continue;
-      const i = w * G.nx + k;
+      if (k < 0 || w < 0 || k >= NX || w >= NZ) continue;
+      if (livre) { out.push([k, w, Math.sqrt(d2), dx, dz]); continue; }
+      const i = w * NX + k;
       if (parede(i) || (arbusto(i) && !naMoita)) continue;
       const passos = Math.max(Math.abs(dx), Math.abs(dz));
-      let livre = true;
-      for (let s = 1; s < passos && livre; s++) {
-        if (parede(Math.round(cz + dz * s / passos) * G.nx + Math.round(cx + dx * s / passos))) livre = false;
+      let aberta = true;
+      for (let s = 1; s < passos && aberta; s++) {
+        if (parede(Math.round(cz + dz * s / passos) * NX + Math.round(cx + dx * s / passos))) aberta = false;
       }
-      if (livre) out.push([k, w, Math.sqrt(d2)]);
+      if (aberta) out.push([k, w, Math.sqrt(d2), dx, dz]);
     }
     return out;
   }
-  // o clique numa parede escorrega para o chão mais perto (como o jogo faz ao pôr a sentinela)
+  // o ponto numa parede escorrega para o chão mais perto (como o jogo faz ao pôr a sentinela)
   function noChao(wx, wz) {
     const [cx, cz] = celDe(wx, wz);
     for (let d = 0; d <= 4; d++) for (let dz = -d; dz <= d; dz++) for (let dx = -d; dx <= d; dx++) {
@@ -12088,123 +12115,315 @@ const Mesa = (function () {
     return null;
   }
   const paraTela = (wx, wz) => [(wx - G.min[0]) / LX * lado(), (1 - (wz - G.min[1]) / LZ) * lado()];   // em px do mapa sem zoom
+  const doMapa = (mx, my) => [G.min[0] + mx / lado() * LX, G.min[1] + (1 - my / lado()) * LZ];
 
-  // ---- a névoa: um véu esfumado feito aqui (sem imagem de fora — o canvas fica legível), recortado pela visão
-  const NEVOA_RES = 1024;
-  let veu = null, anima = 0, abrindo = null;
-  function fazerVeu() {
-    const c = document.createElement("canvas"); c.width = c.height = NEVOA_RES;
-    const g = c.getContext("2d");
-    g.fillStyle = "rgba(10,14,26,.72)"; g.fillRect(0, 0, NEVOA_RES, NEVOA_RES);
-    // nuvens: manchas grandes e suaves, com semente fixa (a mesma névoa toda vez)
-    let s = 7;
-    const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
-    g.filter = "blur(26px)";
-    for (let k = 0; k < 90; k++) {
-      const r = 40 + rnd() * 120;
-      g.fillStyle = rnd() < .5 ? "rgba(120,140,170,.10)" : "rgba(0,0,8,.16)";
-      g.beginPath(); g.arc(rnd() * NEVOA_RES, rnd() * NEVOA_RES, r, 0, 7); g.fill();
-    }
-    g.filter = "none";
-    return c;
+  // ---- as marcas: as da build e, durante o arrasto, a que está na mão (no lugar dela, ou fora do mapa)
+  function marcas() { return build.id ? normMapa(build.mapa).visao : []; }
+  function vivas() {
+    const l = marcas();
+    if (!arraste || !arraste.marca) return l;
+    if (arraste.i >= 0) l.splice(arraste.i, 1);
+    if (!arraste.fora) l.push(arraste.marca);
+    return l;
   }
-  function desenharNevoa() {
-    const cv = el("mesa-nevoa");
-    const on = el("mesa-nevoa-on").checked && !!G;
+  function raioDe(t) { return ferraDoCatalogo(t).raio; }
+
+  // ---- a névoa viva (a opção A da amostra): densidade por célula, 1 = fechada, 0 = aberta
+  const OP = { empurra: .5, entra: .13, difunde: .24, volta: .004, borda: .32, ruido: .55, alfa: .80, cor: [14, 18, 32], nuvens: .9 };
+  const NEVOA_RES = 1024;
+  let D = null, D2, V, FORA, PERTO, RUIDO, peq, pctx, img, nuvens = null, nuvens2 = null;
+  let sujo = true, ativo = 0, laco = 0, ultimo = 0, caixa = null;
+  const reduzido = () => document.body.classList.contains("ac-movimento") || !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function preparar() {
+    D = new Float32Array(N).fill(1); D2 = new Float32Array(N); V = new Uint8Array(N); FORA = new Int32Array(N); PERTO = new Float32Array(N);
+    // o corpo da névoa: um ruído fixo por célula (semente fixa: a mesma névoa toda vez)
+    const RS = 64, R = new Float32Array(RS * RS);
+    let s = 11;
+    for (let i = 0; i < RS * RS; i++) { s = (s * 16807) % 2147483647; R[i] = s / 2147483647; }
+    const ruido = (u, v) => {
+      const iu = Math.floor(u), iv = Math.floor(v), fu = u - iu, fv = v - iv, a = iu & 63, b = (a + 1) & 63, c = iv & 63, d = (c + 1) & 63;
+      const su = fu * fu * (3 - 2 * fu), sv = fv * fv * (3 - 2 * fv);
+      const x1 = R[c * RS + a] + (R[c * RS + b] - R[c * RS + a]) * su, x2 = R[d * RS + a] + (R[d * RS + b] - R[d * RS + a]) * su;
+      return x1 + (x2 - x1) * sv;
+    };
+    RUIDO = new Float32Array(N);
+    for (let w = 0; w < NZ; w++) for (let k = 0; k < NX; k++) RUIDO[w * NX + k] = (.65 * ruido(k * .09, w * .09) + .35 * ruido(k * .21, w * .21) - .5) * OP.ruido;
+    peq = document.createElement("canvas"); peq.width = NX; peq.height = NZ;
+    pctx = peq.getContext("2d"); img = pctx.createImageData(NX, NZ);
+  }
+  // as nuvens finas por cima (o detalhe que a grade não tem), repetíveis nas bordas, à deriva
+  function fazerNuvens(g0, claras) {
+    const R = 512, c = document.createElement("canvas"); c.width = c.height = R;
+    const g = c.getContext("2d");
+    let s = claras ? 5 : 9;
+    const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    g.filter = "blur(14px)";
+    for (let k = 0; k < 70; k++) {
+      const r = 20 + rnd() * 70, px = rnd() * R, py = rnd() * R;
+      g.fillStyle = rnd() < .55 ? "rgba(140,160,190," + (claras ? .16 : .10) + ")" : "rgba(0,0,10,.22)";
+      for (const ox of [-R, 0, R]) for (const oy of [-R, 0, R]) { g.beginPath(); g.arc(px + ox, py + oy, r, 0, 7); g.fill(); }
+    }
+    return g0.createPattern(c, "repeat");
+  }
+  const juntar = (a, b) => !a ? b : !b ? a : [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])];
+  // a visão de todas: cada célula vista sabe para onde empurrar a névoa (para longe da sentinela mais perto)
+  function refazerVisao() {
+    let vista = null;
+    V.fill(0);
+    FORA.fill(-1); PERTO.fill(1e9);
+    for (const m of vivas()) {
+      const f = ferraDoCatalogo(m.t);
+      if (!f.raio) continue;
+      for (const [k, w, d, dx, dz] of visao(m.x, m.z, f.raio, f.livre)) {
+        const i = w * NX + k;
+        if (d >= PERTO[i]) continue;
+        V[i] = 1; PERTO[i] = d;
+        vista = juntar(vista, [k, w, k, w]);
+        const len = Math.hypot(dx, dz);
+        if (!len) { FORA[i] = (w + 1 < NZ ? w + 1 : w) * NX + k; continue; }
+        const k2 = Math.min(NX - 1, Math.max(0, k + Math.round(dx / len))), w2 = Math.min(NZ - 1, Math.max(0, w + Math.round(dz / len)));
+        FORA[i] = w2 * NX + k2;
+      }
+    }
+    caixa = juntar(caixa, vista);
+    sujo = false; ativo = 3;
+  }
+  // um passo: a vista empurra a névoa para fora; a não vista volta (pela vizinha mais densa) e se espalha. Só
+  // dentro da caixa onde algo se mexe; a caixa encolhe até o que ainda não assentou
+  function passo() {
+    if (sujo) refazerVisao();
+    if (!caixa) return 0;
+    const k0 = Math.max(0, caixa[0] - 2), w0 = Math.max(0, caixa[1] - 2), k1 = Math.min(NX - 1, caixa[2] + 2), w1 = Math.min(NZ - 1, caixa[3] + 2);
+    for (let w = w0; w <= w1; w++) D2.set(D.subarray(w * NX + k0, w * NX + k1 + 1), w * NX + k0);
+    let mexeu = 0, nova = null;
+    for (let w = w0; w <= w1; w++) {
+      const lin = w * NX;
+      for (let k = k0; k <= k1; k++) {
+        const i = lin + k, d = D[i];
+        if (V[i]) {
+          if (d > .002) { const a = d * OP.empurra; D2[i] -= a; D2[FORA[i]] += a * .93; mexeu += a; }
+          continue;
+        }
+        const e = k > 0 ? D[i - 1] : 1, di = k < NX - 1 ? D[i + 1] : 1, b = w > 0 ? D[i - NX] : 1, c = w < NZ - 1 ? D[i + NX] : 1;
+        if (d === 1 && e === 1 && di === 1 && b === 1 && c === 1) continue;
+        const maior = Math.min(1, Math.max(e, di, b, c)), media = (e + di + b + c) * .25;
+        let dd = OP.difunde * (media - d) + OP.volta * (1 - d);
+        if (maior > d) dd += OP.entra * (maior - d);
+        D2[i] += dd;   // somado: o empurrão que uma vista já deu nesta célula fica
+        mexeu += dd > 0 ? dd : -dd;
+      }
+    }
+    // o acabamento: o teto do acúmulo, a que quase fechou fecha, a vista quase vazia esvazia; e a caixa nova
+    for (let w = w0; w <= w1; w++) for (let k = k0; k <= k1; k++) {
+      const i = w * NX + k;
+      let n = D2[i];
+      if (n > 1.7) n = 1.7; else if (n > .996 && n < 1.004) n = 1; else if (n < .002) n = 0;
+      D2[i] = n;
+      if (n !== 1 || V[i]) nova = juntar(nova, [k, w, k, w]);
+    }
+    const t = D; D = D2; D2 = t;
+    // o que ficou fora da caixa nova continua igual nos dois quadros
+    for (let w = w0; w <= w1; w++) D2.set(D.subarray(w * NX + k0, w * NX + k1 + 1), w * NX + k0);
+    const velha = caixa;
+    caixa = nova;
+    return { mexeu: mexeu, pinta: [k0, w0, k1, w1], velha: velha };
+  }
+  const suave = (x) => { const t = Math.min(1, Math.max(0, (x - (.5 - OP.borda)) / (2 * OP.borda))); return t * t * (3 - 2 * t); };
+  function pintarCelulas(k0, w0, k1, w1) {
+    const px = img.data, [cr, cg, cb] = OP.cor, A = OP.alfa * 255;
+    for (let w = w0; w <= w1; w++) {
+      const lin = w * NX, linPx = (NZ - 1 - w) * NX;
+      for (let k = k0; k <= k1; k++) {
+        const d = D[lin + k];
+        let a = suave(d + RUIDO[lin + k]), r = cr, g = cg, b = cb;
+        if (d > 1) { const p = Math.min(.3, (d - 1) * .6); a = Math.min(1, a * (1 + p)); r *= 1 - p; g *= 1 - p; b *= 1 - p * .5; }
+        const p = (linPx + k) * 4;
+        px[p] = r; px[p + 1] = g; px[p + 2] = b; px[p + 3] = a * A;
+      }
+    }
+    pctx.putImageData(img, 0, 0, k0, NZ - 1 - w1, k1 - k0 + 1, w1 - w0 + 1);
+  }
+  function compor(tempo) {
+    const cv = el("mesa-nevoa"), g = cv.getContext("2d"), W = NEVOA_RES;
+    if (!nuvens) { nuvens = fazerNuvens(g, false); nuvens2 = fazerNuvens(g, true); }
+    g.globalCompositeOperation = "source-over"; g.globalAlpha = 1; g.setTransform(1, 0, 0, 1, 0, 0);
+    g.clearRect(0, 0, W, W);
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
+    g.drawImage(peq, 0, 0, W, W);
+    // o detalhe das nuvens só onde há névoa (parado, se o movimento está reduzido)
+    g.globalCompositeOperation = "source-atop"; g.globalAlpha = OP.nuvens;
+    const s = W / 512 * .9, dx = (tempo * .006) % 512, dy = (tempo * .0035) % 512;
+    g.setTransform(s, 0, 0, s, 0, 0); g.translate(dx, dy); g.fillStyle = nuvens; g.fillRect(-dx, -dy, W / s, W / s);
+    g.setTransform(s * 1.6, 0, 0, s * 1.6, 0, 0); g.translate(-dx * .7, dy * .5); g.fillStyle = nuvens2; g.fillRect(dx * .7, -dy * .5, W / s, W / s);
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = "source-over";
+  }
+  function nevoaLigada() { return !!G && el("mesa-nevoa-on").checked; }
+  function quadro(t) {
+    laco = 0;
+    if (!montada || el("view-mapa").classList.contains("hidden") || !nevoaLigada()) return;
+    laco = requestAnimationFrame(quadro);
+    const vivo = ativo > 0 || sujo || !!arraste;
+    if (!vivo && t - ultimo < 50) return;   // parada, só as nuvens andam, a 20 por segundo
+    const dois = t - ultimo > 24;           // o quadro que atrasou anda dois passos (a névoa não fica lenta)
+    ultimo = t;
+    if (vivo) {
+      let mexeu = 0;
+      for (let n = dois ? 2 : 1; n > 0; n--) {
+        const r = passo();
+        if (r) { mexeu += r.mexeu; const p = juntar(r.pinta, r.velha); pintarCelulas(Math.max(0, p[0] - 2), Math.max(0, p[1] - 2), Math.min(NX - 1, p[2] + 2), Math.min(NZ - 1, p[3] + 2)); }
+      }
+      if (mexeu > .5) ativo = 3; else if (ativo > 0) ativo--;
+    }
+    compor(t);
+  }
+  // acorda a névoa (e a desenha de uma vez, assentada, quando o movimento está reduzido ou ao abrir a aba)
+  function desenharNevoa(assentada) {
+    const cv = el("mesa-nevoa"), on = nevoaLigada();
     cv.hidden = !on;
     if (!on) return;
     if (cv.width !== NEVOA_RES) { cv.width = cv.height = NEVOA_RES; }
-    if (!veu) veu = fazerVeu();
-    const g = cv.getContext("2d"), cel = T / LX * NEVOA_RES, agora = performance.now();
-    g.globalCompositeOperation = "source-over"; g.filter = "none";
-    g.clearRect(0, 0, NEVOA_RES, NEVOA_RES);
-    g.drawImage(veu, 0, 0);
-    const furo = document.createElement("canvas"); furo.width = furo.height = NEVOA_RES;
-    const f = furo.getContext("2d"); f.fillStyle = "#fff";
-    let falta = false;
-    marcas().forEach((v, i) => {
-      const r = raioDe(v.t);
-      if (!r) return;
-      // a névoa sendo expulsa: a recém-posta abre de dentro para fora em ~0,45 s
-      let ate = r;
-      if (abrindo && abrindo.i === i) { const p = Math.min(1, (agora - abrindo.t0) / 450); ate = r * (1 - Math.pow(1 - p, 3)); if (p < 1) falta = true; }
-      visao(v.x, v.z, r).forEach(([k, w, d]) => {
-        if (d > ate) return;
-        f.beginPath(); f.arc((k + .5) * cel, NEVOA_RES - (w + .5) * cel, cel * .95, 0, 7); f.fill();
-      });
-    });
-    g.globalCompositeOperation = "destination-out"; g.filter = "blur(" + Math.max(2, cel * .7).toFixed(1) + "px)";
-    g.drawImage(furo, 0, 0);
-    g.globalCompositeOperation = "source-over"; g.filter = "none";
-    if (falta) anima = requestAnimationFrame(desenharNevoa); else { anima = 0; abrindo = null; }
+    if (!D) { preparar(); assentada = true; }
+    sujo = true;
+    if (assentada || reduzido()) {
+      refazerVisao();
+      for (let i = 0; i < N; i++) D[i] = V[i] ? 0 : 1;
+      D2.set(D);
+      caixa = null; ativo = 0;
+      pintarCelulas(0, 0, NX - 1, NZ - 1);
+      compor(reduzido() ? 0 : performance.now());
+      if (reduzido()) return;
+    }
+    ativo = 3;
+    if (!laco) laco = requestAnimationFrame(quadro);
   }
 
   // ---- as marcas por cima (fora do zoom: o ícone fica do mesmo tamanho; o raio cresce com o mapa)
-  function marcas() { return build.id ? normMapa(build.mapa).visao : []; }
-  function raioDe(t) { return ferraDoCatalogo(t).raio; }
   function desenharMarcas() {
     const svg = el("mesa-marcas"), L = lado(), raioOn = el("mesa-raio-on").checked;
     let h = "";
-    marcas().forEach((v) => {
-      const [px, py] = paraTela(v.x, v.z), sx = x + px * z, sy = y + py * z, r = raioDe(v.t);
+    vivas().forEach((v, i) => {
+      const [px, py] = paraTela(v.x, v.z), sx = x + px * z, sy = y + py * z, f = ferraDoCatalogo(v.t), r = f.raio;
       if (raioOn && r) h += '<circle class="mm-raio" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (r / LX * L * z).toFixed(1) + '" fill="none" stroke="#3ee8ff" stroke-width="1.6" stroke-dasharray="6 4" opacity=".95"/>';
-      const ic = ferraDoCatalogo(v.t).item;
-      h += '<g class="mm-sent ' + v.t + '" transform="translate(' + sx.toFixed(1) + ',' + sy.toFixed(1) + ')">'
-        + '<circle r="11" fill="' + (v.t === "controle" ? "#d8434b" : "#e8c35a") + '" stroke="#1a0d04" stroke-width="2"/>'
-        + (ic ? '<image href="' + esc(ic.iconUrl) + '" x="-8" y="-8" width="16" height="16" style="clip-path: circle(8px)"/>' : "") + "</g>";
+      const ic = f.item, naMao = arraste && arraste.marca === v;
+      h += '<g class="mm-sent ' + v.t + (naMao ? " erguida" : !arraste && i === assentaI ? " assenta" : "") + '" transform="translate(' + sx.toFixed(1) + ',' + sy.toFixed(1) + ')"><g class="mm-corpo">'
+        + '<circle r="11" fill="' + FERRAS[v.t].cor + '" stroke="#1a0d04" stroke-width="2"/>'
+        + (ic ? '<image href="' + esc(ic.iconUrl) + '" x="-8" y="-8" width="16" height="16" style="clip-path: circle(8px)"/>' : "") + "</g></g>";
     });
     svg.setAttribute("viewBox", "0 0 " + L + " " + L);
     svg.innerHTML = h;
-    const n = marcas(), s = n.filter(v => v.t === "sentinela").length, c = n.length - s;
-    el("mesa-conta").textContent = n.length ? [s ? s + (s === 1 ? " sentinela" : " sentinelas") : "", c ? c + (c === 1 ? " de controle" : " de controle") : ""].filter(Boolean).join(" · ") : "";
+    const n = marcas(), q = (t) => n.filter(v => v.t === t).length, s = q("sentinela"), c = q("controle"), vd = q("vidente");
+    el("mesa-conta").textContent = n.length ? [s ? s + (s === 1 ? " sentinela" : " sentinelas") : "", c ? c + " de controle" : "",
+      vd ? vd + (vd === 1 ? " vidente" : " videntes") : ""].filter(Boolean).join(" · ") : "";
   }
 
-  // ---- o clique: pôr ou tirar (com o Editar, numa build de Summoner's Rift)
+  // ---- pôr, levar e tirar (com o Editar, numa build de Summoner's Rift)
   function podeMexer() {
     if (!build.id) return "Abra uma build para pôr sentinelas: as marcas ficam guardadas nela.";
     if (!rotaPossivel(build.mode)) return "Esta build é de " + build.mode + ": as sentinelas são de Summoner's Rift.";
     if (!G) return "Falta o data/mapa.js: sem a forma do mapa, a visão não se calcula.";
     return "";
   }
-  function clicarNoMapa(cx, cy) {
-    const motivo = podeMexer();
-    if (motivo) return;
-    if (!build.editing) { chamarEditar(); return; }
-    const L = lado(), mx = (cx - x) / z, my = (cy - y) / z;   // px do mapa sem zoom
-    const lista = normMapa(build.mapa).visao;
-    // em cima de uma sentinela (até 12 px na tela): tira
-    const perto = lista.findIndex(v => { const [px, py] = paraTela(v.x, v.z); return Math.hypot((px - mx) * z, (py - my) * z) <= 12; });
-    if (perto >= 0) { lista.splice(perto, 1); build.mapa = { visao: lista }; abrindo = null; mudou(); return; }
-    if (!raioDe(ferra)) return;
-    if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas por build."; return; }
-    const lugar = noChao(G.min[0] + mx / L * LX, G.min[1] + (1 - my / L) * LZ);
-    if (!lugar) { el("mesa-conta").textContent = "Aí não: escolha um ponto do chão."; return; }
-    lista.push({ t: ferra, x: Math.round(lugar[0]), z: Math.round(lugar[1]) });
-    build.mapa = normMapa({ visao: lista });
-    const reduz = document.body.classList.contains("ac-movimento") || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-    abrindo = reduz ? null : { i: build.mapa.visao.length - 1, t0: performance.now() };
-    mudou();
+  // a sentinela debaixo de um ponto da janela (até 12 px na tela), a de cima primeiro
+  function marcaEm(cx, cy) {
+    const l = marcas();
+    for (let i = l.length - 1; i >= 0; i--) {
+      const [px, py] = paraTela(l[i].x, l[i].z);
+      if (Math.hypot(x + px * z - cx, y + py * z - cy) <= 12) return i;
+    }
+    return -1;
   }
-  function mudou() {
+  // o fantasma: a sentinela na mão, fora do mapa (do botão até o mapa, ou saindo dele para ser tirada)
+  let fantasma = null;
+  function mostrarFantasma(t, ev, tirar) {
+    if (!fantasma) {
+      const ic = ferraDoCatalogo(t).item;
+      fantasma = document.createElement("div");
+      fantasma.className = "mesa-fantasma";
+      fantasma.style.background = FERRAS[t].cor;
+      if (ic) fantasma.innerHTML = '<img src="' + esc(ic.iconUrl) + '" alt="">';
+      document.body.appendChild(fantasma);
+    }
+    fantasma.classList.toggle("tirar", !!tirar);
+    fantasma.style.left = ev.clientX + "px"; fantasma.style.top = ev.clientY + "px";
+  }
+  function sumirFantasma(some) {
+    if (!fantasma) return;
+    const f = fantasma; fantasma = null;
+    if (some && !reduzido()) { f.classList.add("some"); setTimeout(() => f.remove(), 280); } else f.remove();
+  }
+  // onde a sentinela na mão está: no chão debaixo do cursor, ou fora do mapa
+  function levar(ev) {
+    const j = el("mesa-janela").getBoundingClientRect(), cx = ev.clientX - j.left, cy = ev.clientY - j.top, L = lado();
+    const dentro = cx >= -6 && cy >= -6 && cx <= j.width + 6 && cy <= j.height + 6;
+    if (dentro) {
+      // no chão debaixo do cursor; numa parede funda, fica onde estava (a nova, que ainda não pousou, segue na mão)
+      const [wx, wz] = doMapa((Math.min(L, Math.max(0, cx)) - x) / z, (Math.min(L, Math.max(0, cy)) - y) / z);
+      const lugar = noChao(wx, wz);
+      if (lugar) { arraste.marca.x = Math.round(lugar[0]); arraste.marca.z = Math.round(lugar[1]); arraste.noMapa = true; }
+      if (arraste.noMapa) { arraste.fora = false; sumirFantasma(false); } else mostrarFantasma(arraste.marca.t, ev, false);
+    } else {
+      arraste.fora = true;
+      mostrarFantasma(arraste.marca.t, ev, arraste.i >= 0);
+    }
+    sujo = true;
+    desenharMarcas();
+    desenharNevoa();
+  }
+  function largar() {
+    const a = arraste, lista = marcas();
+    arraste = null;
+    el("mesa-janela").classList.remove("arrastando", "levando");
+    if (a.i < 0 && (a.fora || !a.noMapa)) {   // a nova solta fora do mapa: não põe, e a build não muda
+      sumirFantasma(true); sujo = true; desenharNevoa(); desenharMarcas(); return;
+    }
+    if (a.i >= 0) lista.splice(a.i, 1);
+    if (!a.fora && a.noMapa) {
+      if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas por build."; sumirFantasma(true); mudou(); return; }
+      lista.push({ t: a.marca.t, x: a.marca.x, z: a.marca.z });
+      sumirFantasma(false);
+    } else sumirFantasma(true);
+    build.mapa = normMapa({ visao: lista });
+    mudou(a.fora || !a.noMapa ? null : build.mapa.visao.length - 1);
+  }
+  // o clique (ou o Enter) no botão põe uma no meio do que se vê
+  function porNoMeio(t) {
+    if (podeMexer() || !raioDe(t)) return;
+    if (!build.editing) { chamarEditar(); return; }
+    const lista = marcas();
+    if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas por build."; return; }
+    const L = lado(), [wx, wz] = doMapa((L / 2 - x) / z, (L / 2 - y) / z), lugar = noChao(wx, wz);
+    if (!lugar) { el("mesa-conta").textContent = "Aí não: arraste para um ponto do chão."; return; }
+    lista.push({ t: t, x: Math.round(lugar[0]), z: Math.round(lugar[1]) });
+    build.mapa = normMapa({ visao: lista });
+    mudou(build.mapa.visao.length - 1);
+  }
+  // a que acabou de pousar dá um quique (a marca do índice, pelo tempo da animação)
+  let assentaI = -1, assentaTimer = 0;
+  function mudou(assenta) {
     saveBuild();
-    if (anima) cancelAnimationFrame(anima);
+    if (assenta != null && !reduzido()) {
+      assentaI = assenta;
+      clearTimeout(assentaTimer);
+      assentaTimer = setTimeout(() => { assentaI = -1; }, 340);
+    }
+    sujo = true;
     desenharNevoa();
     desenharMarcas();
   }
   function desenharFerras() {
-    const caixa = el("mesa-ferras"), motivo = podeMexer();
-    caixa.innerHTML = Object.keys(FERRAS).map(k => {
+    const caixaF = el("mesa-ferras"), motivo = podeMexer();
+    caixaF.innerHTML = Object.keys(FERRAS).map(k => {
       const f = ferraDoCatalogo(k);
       const falta = !f.raio;
-      return '<button type="button" class="mesa-ferra" role="radio" data-ferra="' + k + '" aria-checked="' + (ferra === k && !falta) + '"'
-        + (falta || motivo ? " disabled" : "") + (falta ? ' title="O catálogo não diz o raio de visão deste item"' : "") + ">"
+      return '<button type="button" class="mesa-ferra" data-ferra="' + k + '"'
+        + (falta || motivo ? " disabled" : "") + ' title="' + (falta ? "O catálogo não diz o raio de visão deste item" : "Arraste para o mapa (o clique põe uma no meio)") + '">'
         + (f.item ? '<img src="' + esc(f.item.iconUrl) + '" alt="">' : "") + esc(f.item ? f.item.namePt : FERRAS[k].nome)
         + "<small>" + (falta ? "sem raio no catálogo" : "raio " + f.raio) + "</small></button>";
     }).join("");
     const pode = el("mesa-pode");
     if (motivo) pode.innerHTML = esc(motivo);
     else if (!build.editing) pode.innerHTML = 'Para pôr e tirar, ligue o <b>Editar</b>. <button type="button" class="mesa-btn mesa-pode-btn" data-ligar-editar>Ligar Editar</button>';
-    else pode.textContent = "Clique no mapa para pôr; clique numa sentinela para tirar. Arrastar move o mapa.";
+    else pode.textContent = "Arraste uma do botão para o mapa; arraste a do mapa para levá-la, com a visão junto; solte fora do mapa para tirar.";
   }
   // o mapa sempre cobre a janela: o canto não entra
   function prender() {
@@ -12240,36 +12459,69 @@ const Mesa = (function () {
       const d = ev.deltaMode === 1 ? ev.deltaY * 33 : ev.deltaY;
       zoom(Math.exp(Math.max(-300, Math.min(300, -d)) * 0.002), ev.clientX - r.left, ev.clientY - r.top);
     }, { passive: false });
+    // na janela: em cima de uma sentinela, pegá-la (com o Editar); fora delas, mover o mapa
     janela.addEventListener("pointerdown", (ev) => {
-      if (ev.button !== 0) return;
-      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y, longe: false };
+      if (ev.button !== 0 || arraste) return;
+      const r = janela.getBoundingClientRect(), i = marcaEm(ev.clientX - r.left, ev.clientY - r.top);
+      if (i >= 0 && !podeMexer()) {
+        if (!build.editing) { chamarEditar(); return; }
+        ev.preventDefault();
+        arraste = { id: ev.pointerId, marca: Object.assign({}, marcas()[i]), i: i, fora: false, noMapa: true, alvo: janela };
+        janela.setPointerCapture(ev.pointerId);
+        janela.classList.add("levando");
+        desenharMarcas();
+        return;
+      }
+      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y };
       janela.setPointerCapture(ev.pointerId);
       janela.classList.add("arrastando");
     });
     janela.addEventListener("pointermove", (ev) => {
-      if (!arraste || ev.pointerId !== arraste.id) return;
-      if (Math.hypot(ev.clientX - arraste.px, ev.clientY - arraste.py) > 4) arraste.longe = true;
+      if (!arraste) {   // a mão muda em cima de uma sentinela: ela se pega
+        const r = janela.getBoundingClientRect();
+        janela.classList.toggle("sobre-marca", !podeMexer() && marcaEm(ev.clientX - r.left, ev.clientY - r.top) >= 0);
+        return;
+      }
+      if (ev.pointerId !== arraste.id || arraste.alvo !== undefined && arraste.alvo !== janela) return;
+      if (arraste.marca) { levar(ev); return; }
       x = arraste.x + ev.clientX - arraste.px;
       y = arraste.y + ev.clientY - arraste.py;
       aplicar();
     });
-    const solta = (ev) => { if (arraste && ev.pointerId === arraste.id) { arraste = null; janela.classList.remove("arrastando"); } };
-    janela.addEventListener("pointerup", (ev) => {
-      if (arraste && ev.pointerId === arraste.id && !arraste.longe) {
-        const r = janela.getBoundingClientRect();
-        x = arraste.x; y = arraste.y; aplicar();   // o clique não arrasta
-        clicarNoMapa(ev.clientX - r.left, ev.clientY - r.top);
-      }
-      solta(ev);
-    });
+    const solta = (ev) => {
+      if (!arraste || ev.pointerId !== arraste.id || arraste.alvo !== undefined && arraste.alvo !== janela) return;
+      if (arraste.marca) { largar(); return; }
+      arraste = null; janela.classList.remove("arrastando");
+    };
+    janela.addEventListener("pointerup", solta);
     janela.addEventListener("pointercancel", solta);
-    el("mesa-pode").addEventListener("click", (ev) => { if (ev.target.closest("[data-ligar-editar]")) ligarEdicao(true); });
-    el("mesa-ferras").addEventListener("click", (ev) => {
+    // no botão: arrastar uma nova até o mapa (o clique, sem arrastar, põe uma no meio)
+    const caixaF = el("mesa-ferras");
+    caixaF.addEventListener("pointerdown", (ev) => {
       const b = ev.target.closest("[data-ferra]");
-      if (!b || b.disabled) return;
-      ferra = b.dataset.ferra;
-      desenharFerras();
+      if (!b || b.disabled || ev.button !== 0 || arraste) return;
+      ev.preventDefault();
+      if (!build.editing) { chamarEditar(); return; }
+      arraste = { id: ev.pointerId, marca: { t: b.dataset.ferra, x: 0, z: 0 }, i: -1, fora: true, noMapa: false, alvo: b, px: ev.clientX, py: ev.clientY, longe: false };
+      b.setPointerCapture(ev.pointerId);
     });
+    caixaF.addEventListener("pointermove", (ev) => {
+      if (!arraste || ev.pointerId !== arraste.id || !arraste.alvo || arraste.alvo === janela) return;
+      if (!arraste.longe && Math.hypot(ev.clientX - arraste.px, ev.clientY - arraste.py) > 4) { arraste.longe = true; el("mesa-janela").classList.add("levando"); }
+      if (arraste.longe) levar(ev);
+    });
+    const soltaBotao = (ev) => {
+      if (!arraste || ev.pointerId !== arraste.id || !arraste.alvo || arraste.alvo === janela) return;
+      if (!arraste.longe) { const t = arraste.marca.t; arraste = null; porNoMeio(t); return; }
+      largar();
+    };
+    caixaF.addEventListener("pointerup", soltaBotao);
+    caixaF.addEventListener("pointercancel", soltaBotao);
+    caixaF.addEventListener("click", (ev) => {   // o Enter e o espaço no botão (o clique do mouse já passou pelo pointerup)
+      const b = ev.target.closest("[data-ferra]");
+      if (b && !b.disabled && ev.detail === 0) porNoMeio(b.dataset.ferra);
+    });
+    el("mesa-pode").addEventListener("click", (ev) => { if (ev.target.closest("[data-ligar-editar]")) ligarEdicao(true); });
     // a névoa e o raio são do jeito de ver de cada um: ficam no navegador, não na build
     [["mesa-nevoa-on", "mesa.nevoa"], ["mesa-raio-on", "mesa.raio"]].forEach(([id, chave]) => {
       let v = "1";
@@ -12277,7 +12529,7 @@ const Mesa = (function () {
       el(id).checked = v === "1";
       el(id).addEventListener("change", () => {
         try { localStorage.setItem(chave, el(id).checked ? "1" : "0"); } catch (e) { /* vale só nesta visita */ }
-        desenharNevoa(); desenharMarcas();
+        desenharNevoa(true); desenharMarcas();
       });
     });
     janela.addEventListener("keydown", (ev) => {
@@ -12296,6 +12548,7 @@ const Mesa = (function () {
     addEventListener("resize", () => { if (!el("view-mapa").classList.contains("hidden")) aplicar(); });
   }
   // ao abrir a aba (e a cada render da build, com a aba aberta): o mapa e de quem ele é
+  let donaDe = null;
   function mostrar() {
     if (el("view-mapa").classList.contains("hidden")) return;
     if (!montada) montar();
@@ -12304,11 +12557,15 @@ const Mesa = (function () {
     else if (!rotaPossivel(build.mode)) dona.innerHTML = "<b>" + esc(build.name || "Build") + "</b> é de " + esc(build.mode) + ": este é o mapa de Summoner's Rift";
     else dona.innerHTML = "o mapa de <b>" + esc(build.name || "Build") + "</b>";
     desenharFerras();
-    if (!anima) desenharNevoa();
+    // outra build (ou a aba que volta): a névoa já assentada; a mesma, ela segue de onde estava
+    const chave = (build.id || "") + "|" + JSON.stringify(marcas());
+    if (!arraste) desenharNevoa(!laco && chave !== donaDe);
+    donaDe = chave;
     aplicar();
   }
   return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; },
-           visao: visao, raio: raioDe, paraTela: paraTela };
+           visao: visao, raio: raioDe, paraTela: paraTela, livre: function (t) { return ferraDoCatalogo(t).livre; },
+           nevoa: function () { return { ativo: ativo > 0 || sujo, laco: !!laco, caixa: caixa }; } };
 })();
 
 function renderBuild() {

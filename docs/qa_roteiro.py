@@ -613,7 +613,8 @@ def checar_fundacao(s, p):
       at: typeof ATUALIZACAO === 'string' ? ATUALIZACAO : null, patch: CATALOG.meta.patch }))()""")
     try:
         log = subprocess.run(["git", "log", "--format=%s", "-n", "400"], cwd=RAIZ, capture_output=True).stdout.decode("utf-8", "replace")
-        ultima = max([int(n) for n in re.findall(r"^F13-T(\d+)", log, re.M)] or [0])
+        # a amostra de uma tarefa ("F13-T112 (amostra): …") não mexe no index.html: não conta como a tarefa feita
+        ultima = max([int(n) for n in re.findall(r"^F13-T(\d+)\b(?!\s*\(amostra\))", log, re.M)] or [0])
         mexido = bool(subprocess.run(["git", "status", "--porcelain", "index.html"], cwd=RAIZ, capture_output=True).stdout.strip())
     except Exception:
         ultima, mexido = None, False
@@ -8210,9 +8211,11 @@ def checar_sentinelas(s, p):
     """F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de
     guerra, revelando o alcance e o que ela revela e o que não revela"; "o raio de visão deve ser equivalente
     à escala… um círculo ciano"): as sentinelas na aba Mapa. O raio e o ícone vêm do catálogo; sem o Editar
-    nada muda; o clique põe e tira, arrastar só move; a névoa abre na visão de verdade (a parede barra, o
-    arbusto só de dentro); o raio em ciano acompanha o zoom; a névoa e o raio se desligam (lembrado); as marcas
-    ficam na build (salvar, recarregar, duplicar)."""
+    nada muda; a névoa abre na visão de verdade (a parede barra, o arbusto só de dentro); o raio em ciano
+    acompanha o zoom; a névoa e o raio se desligam (lembrado); as marcas ficam na build (salvar, recarregar,
+    duplicar). F13-T112 (a névoa viva): arrastar do botão põe, arrastar a sentinela a leva (a névoa abre no
+    novo lugar e volta a fechar no velho), soltar fora do mapa tira, arrastar o mapa só move; o Enter no botão
+    põe uma no meio; a Alteração Vidente vê por cima da parede, porque o texto do item diz."""
     print("\n%sSENTINELAS%s" % (AMARELO, FIM))
     s.tela(1440, 900)
     s.limpar_memoria()
@@ -8259,38 +8262,53 @@ def checar_sentinelas(s, p):
       }
       return null; })()"""
 
+    # F13-T112: o arrasto de verdade (o mouse do CDP): apertar, andar em passos, soltar
+    def arrasta(de, para, passos=20, solta=True):
+        mouse("mouseMoved", de[0], de[1])
+        mouse("mousePressed", de[0], de[1], button="left", buttons=1, clickCount=1)
+        for k in range(1, passos + 1):
+            mouse("mouseMoved", de[0] + (para[0] - de[0]) * k / passos, de[1] + (para[1] - de[1]) * k / passos, button="left", buttons=1)
+            time.sleep(0.016)
+        if solta:
+            mouse("mouseReleased", para[0], para[1], button="left", buttons=0, clickCount=1)
+            time.sleep(0.9)
+
+    botao = lambda t: s.js("(() => { const r = document.querySelector('#mesa-ferras [data-ferra=\"%s\"]').getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; })()" % t)
+
     try:
         # 1. as ferramentas: o ícone e o raio do catálogo (o número que o texto do item diz)
         f = s.js("""(() => { const it = (sl) => CATALOG.items.find(i => i.slug === sl);
-          const txt = (sl) => JSON.stringify(it(sl)); const m1 = /raio de visão de ([\\d.]+)/.exec(txt('stealth-ward')), m2 = /visão num raio de ([\\d.]+)/.exec(txt('control-ward'));
-          return { raios: [Mesa.raio('sentinela'), Mesa.raio('controle')], doTexto: [m1 && Number(m1[1].replace(/\\./g, '')), m2 && Number(m2[1].replace(/\\./g, ''))],
-                   icones: [...document.querySelectorAll('#mesa-ferras img')].map(i => i.src), doCat: [it('stealth-ward').iconUrl, it('control-ward').iconUrl],
+          const txt = (sl) => JSON.stringify(it(sl)); const m1 = /raio de visão de ([\\d.]+)/.exec(txt('stealth-ward')), m2 = /visão num raio de ([\\d.]+)/.exec(txt('control-ward')),
+            m3 = /raio de visão menor \\(([\\d.]+)\\)/.exec(txt('farsight-alteration'));
+          return { raios: [Mesa.raio('sentinela'), Mesa.raio('controle'), Mesa.raio('vidente')],
+                   doTexto: [m1 && Number(m1[1].replace(/\\./g, '')), m2 && Number(m2[1].replace(/\\./g, '')), m3 && Number(m3[1].replace(/\\./g, ''))],
+                   icones: [...document.querySelectorAll('#mesa-ferras img')].map(i => i.src), doCat: [it('stealth-ward').iconUrl, it('control-ward').iconUrl, it('farsight-alteration').iconUrl],
                    rotulos: [...document.querySelectorAll('#mesa-ferras small')].map(x => x.textContent) }; })()""")
-        p.conta("sentinelas", "as duas ferramentas levam o ícone do catálogo e o raio que o texto do item diz (Sentinela Invisível e Sentinela de Controle)",
+        p.conta("sentinelas", "as três ferramentas levam o ícone do catálogo e o raio que o texto do item diz (Sentinela Invisível, Sentinela de Controle e Alteração Vidente)",
                 f["raios"] == f["doTexto"] and all(f["raios"]) and f["icones"] == f["doCat"] and f["rotulos"] == ["raio %d" % r for r in f["raios"]], "%s" % f)
 
-        # 2. sem o Editar, o clique não muda nada e a mesa oferece o "Ligar Editar"
+        # 2. sem o Editar, arrastar do botão para o mapa não põe nada e a mesa oferece o "Ligar Editar"
         a = s.js(achar)
         x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, a["chao"][0], a["chao"][1]))
-        clique(x1, y1)
-        sem = s.js("({ n: build.mapa.visao.length, editing: build.editing, btn: !!document.querySelector('#mesa-pode [data-ligar-editar]') })")
+        arrasta(botao("sentinela"), (x1, y1))
+        sem = s.js("({ n: build.mapa.visao.length, editing: build.editing, btn: !!document.querySelector('#mesa-pode [data-ligar-editar]'), fantasma: !!document.querySelector('.mesa-fantasma') })")
         s.clicar("#mesa-pode [data-ligar-editar]", 0.6)
         ligado = s.js("build.editing")
-        p.conta("sentinelas", "sem o Editar, o clique no mapa não põe nada e a mesa oferece o \"Ligar Editar\", que liga",
-                sem == {"n": 0, "editing": False, "btn": True} and ligado is True, "%s · depois %s" % (sem, ligado))
+        p.conta("sentinelas", "sem o Editar, arrastar do botão para o mapa não põe nada e a mesa oferece o \"Ligar Editar\", que liga",
+                sem == {"n": 0, "editing": False, "btn": True, "fantasma": False} and ligado is True, "%s · depois %s" % (sem, ligado))
 
-        # 3. com o Editar, o clique (de verdade) põe a sentinela onde foi dado; a build fica "não salva"; a névoa abre
-        #    ali e continua fechada atrás da parede, dentro do raio, e longe
+        # 3. com o Editar, arrastar (de verdade) do botão até o mapa põe a sentinela onde foi solta; a build fica
+        #    "não salva"; a névoa abre ali e continua fechada atrás da parede, dentro do raio, e longe
         x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, a["chao"][0], a["chao"][1]))
-        clique(x1, y1)
+        arrasta(botao("sentinela"), (x1, y1))
         time.sleep(0.6)
-        v = s.js("({ m: build.mapa.visao, sujo: rascunho.sujo, svg: document.querySelectorAll('#mesa-marcas .mm-sent').length, ic: (document.querySelector('#mesa-marcas image') || {}).getAttribute && document.querySelector('#mesa-marcas image').getAttribute('href') })")
+        v = s.js("({ m: build.mapa.visao, sujo: rascunho.sujo, svg: document.querySelectorAll('#mesa-marcas .mm-sent').length, ic: (document.querySelector('#mesa-marcas image') || {}).getAttribute && document.querySelector('#mesa-marcas image').getAttribute('href'), fantasma: !!document.querySelector('.mesa-fantasma') })")
         al = s.js("(() => { const f = %s; return { aqui: f(%r, %r), atras: %s, longe: f(MAPA.min[0] + 400, MAPA.min[1] + MAPA.nz * MAPA.celula - 400) }; })()"
                   % (alfa, a["chao"][0], a["chao"][1], ("f(%r, %r)" % tuple(a["atras"])) if a["atras"] else "null"))
         m = v["m"][0] if v["m"] else {}
-        p.conta("sentinelas", "com o Editar, o clique põe a sentinela onde foi dado (a menos de uma célula) e a build fica \"não salva\"; a névoa abre ali e segue fechada atrás da parede (dentro do raio) e longe",
+        p.conta("sentinelas", "com o Editar, arrastar do botão até o mapa põe a sentinela onde foi solta (a menos de uma célula) e a build fica \"não salva\"; a névoa abre ali e segue fechada atrás da parede (dentro do raio) e longe",
                 len(v["m"]) == 1 and m.get("t") == "sentinela" and abs(m["x"] - a["chao"][0]) <= 50 and abs(m["z"] - a["chao"][1]) <= 50 and v["sujo"] and v["svg"] == 1
-                and v["ic"] == s.js("CATALOG.items.find(i => i.slug === 'stealth-ward').iconUrl")
+                and not v["fantasma"] and v["ic"] == s.js("CATALOG.items.find(i => i.slug === 'stealth-ward').iconUrl")
                 and al["aqui"] is not None and al["aqui"] < 70 and al["atras"] is not None and al["atras"] > 120 and al["longe"] > 120,
                 "%s · névoa %s · ponto atrás %s" % (v, al, a["atras"]))
 
@@ -8307,7 +8325,8 @@ def checar_sentinelas(s, p):
         p.conta("sentinelas", "o raio em ciano tem o tamanho do raio na escala do mapa e cresce junto com o zoom",
                 r1 is not None and abs(r1 - esperado) < 0.6 and r2 is not None and abs(r2 - r1 * z2) < 1, "r %s (esperado %.1f) · zoom %.2f → %s" % (r1, esperado, z2, r2))
 
-        # 5. arrastar não põe; o clique numa sentinela a tira
+        # 5. arrastar o mapa (fora das sentinelas) não põe; arrastar a sentinela a leva — a névoa abre no lugar
+        #    novo e volta a fechar no velho —; soltá-la fora do mapa a tira
         s.js("(() => { const j = document.getElementById('mesa-janela'), r = j.getBoundingClientRect(); j.dispatchEvent(new WheelEvent('wheel', { deltaY: -200, clientX: r.left + 100, clientY: r.top + 100, bubbles: true, cancelable: true })); return 1; })()")
         time.sleep(0.6)
         x0, y0 = jan()["x"] + 200, jan()["y"] + 200
@@ -8321,18 +8340,55 @@ def checar_sentinelas(s, p):
         s.js("Mesa.inteiro(); 'ok'")
         time.sleep(0.7)
         x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, m["x"], m["z"]))
-        clique(x1, y1)
+        arrasta((x1, y1), (x1 + 90, y1 - 70), passos=30)
+        levada = s.js("build.mapa.visao")
+        time.sleep(2.0)
+        nv = s.js("(() => { const f = %s; return { velho: f(%r, %r), novo: f(%r, %r) }; })()" % (alfa, m["x"], m["z"], levada[0]["x"] if levada else 0, levada[0]["z"] if levada else 0))
+        x2, y2 = s.js("(%s)(%r, %r)" % (tela_de, levada[0]["x"], levada[0]["z"])) if levada else (x1, y1)
+        arrasta((x2, y2), (jan()["x"] + jan()["w"] + 90, y2), passos=25)
         n_tira = s.js("build.mapa.visao.length")
-        p.conta("sentinelas", "arrastar move o mapa e não põe sentinela; o clique numa sentinela a tira", n_arr == 1 and n_tira == 0, "depois de arrastar %s · depois do clique %s" % (n_arr, n_tira))
+        p.conta("sentinelas", "arrastar o mapa não põe sentinela; arrastar a sentinela a leva (a névoa abre no lugar novo e volta a fechar no velho); soltá-la fora do mapa a tira",
+                n_arr == 1 and len(levada) == 1 and math.hypot(levada[0]["x"] - m["x"], levada[0]["z"] - m["z"]) > 1500
+                and nv["novo"] < 70 and nv["velho"] > 120 and n_tira == 0,
+                "depois de arrastar o mapa %s · levada %s · névoa %s · depois de soltar fora %s" % (n_arr, levada, nv, n_tira))
 
-        # 6. a Sentinela de Controle; e o clique numa parede escorrega para o chão
-        s.clicar('#mesa-ferras [data-ferra="controle"]', 0.4)
+        # 6. a Sentinela de Controle; e a solta numa parede escorrega para o chão
         xw, yw = s.js("(%s)(%r, %r)" % (tela_de, a["parede"][0], a["parede"][1]))
-        clique(xw, yw)
+        arrasta(botao("controle"), (xw, yw))
         c = s.js("""(() => { const v = build.mapa.visao[0]; if (!v) return null; const G = MAPA, k = Math.floor((v.x - G.min[0]) / G.celula), z = Math.floor((v.z - G.min[1]) / G.celula);
           const t = atob(G.paredes), i = z * G.nx + k; return { t: v.t, parede: (t.charCodeAt(i >> 3) >> (i & 7)) & 1, dist: Math.hypot(v.x - %r, v.z - %r), cor: document.querySelector('#mesa-marcas .mm-sent.controle circle').getAttribute('fill') }; })()""" % (a["parede"][0], a["parede"][1]))
-        p.conta("sentinelas", "a Sentinela de Controle se põe com a sua cor; o clique numa parede escorrega para o chão mais perto (não fica na parede)",
+        p.conta("sentinelas", "a Sentinela de Controle se põe com a sua cor; a solta numa parede escorrega para o chão mais perto (não fica na parede)",
                 bool(c) and c["t"] == "controle" and c["parede"] == 0 and c["dist"] <= 250 and c["cor"] == "#d8434b", "%s" % c)
+
+        # 6b. o Enter no botão põe uma no meio do que se vê (o teclado também põe); a do teclado sai do mapa arrastada
+        s.js("document.querySelector('#mesa-ferras [data-ferra=\"vidente\"]').focus(); 'ok'")
+        s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Enter", "code": "Enter", "windowsVirtualKeyCode": 13, "text": "\r"})
+        s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Enter", "code": "Enter", "windowsVirtualKeyCode": 13})
+        time.sleep(0.6)
+        meio = s.js("(() => { const l = build.mapa.visao, v = l[l.length - 1]; const p = Mesa.paraTela(v.x, v.z), L = Mesa.estado().lado; return { n: l.length, t: v.t, dx: Math.abs(p[0] - L / 2), dy: Math.abs(p[1] - L / 2), cor: [...document.querySelectorAll('#mesa-marcas .mm-sent.vidente circle')].map(c => c.getAttribute('fill')) }; })()")
+        p.conta("sentinelas", "o Enter no botão da Alteração Vidente põe uma no meio do que se vê (perto do centro, no chão), com a cor dela",
+                meio["n"] == 2 and meio["t"] == "vidente" and meio["dx"] < 30 and meio["dy"] < 30 and meio["cor"] == ["#4fa3ff"], "%s" % meio)
+        mv = s.js("build.mapa.visao[1]")
+        x3, y3 = s.js("(%s)(%r, %r)" % (tela_de, mv["x"], mv["z"]))
+        arrasta((x3, y3), (x3, jan()["y"] - 80), passos=25)
+
+        # 6c. a Alteração Vidente vê por cima da parede (o texto do item diz "inclusive sobre terreno e através de
+        #     arbustos"): perto de uma parede, há chão atrás dela que ela vê e a Sentinela, do mesmo ponto e raio, não
+        vd = s.js("""(() => { const G = MAPA, it = CATALOG.items.find(i => i.slug === 'farsight-alteration');
+          const tp = atob(G.paredes), par = (i) => (tp.charCodeAt(i >> 3) >> (i & 7)) & 1;
+          const diz = /inclusive sobre terreno e através de arbustos/.test(JSON.stringify(it)), r = Mesa.raio('vidente');
+          // um ponto de chão, perto do meio, com chão atrás de parede dentro do raio
+          const w = (k) => G.min[0] + (k + .5) * G.celula, zz = (z) => G.min[1] + (z + .5) * G.celula;
+          for (let d = 0; d < 140; d += 3) for (let k = 147 - d; k <= 147 + d; k += 3) for (const z of [148 - d, 148 + d]) {
+            if (k < 0 || z < 0 || k >= G.nx || z >= G.nz || par(z * G.nx + k)) continue;
+            const comum = new Set(Mesa.visao(w(k), zz(z), r, false).map(c => c[0] + ',' + c[1]));
+            const dela = Mesa.visao(w(k), zz(z), r, Mesa.livre('vidente'));
+            const atras = dela.filter(c => !comum.has(c[0] + ',' + c[1]) && !par(c[1] * G.nx + c[0])).length;
+            if (atras) return { diz: diz, livre: Mesa.livre('vidente'), livreSent: Mesa.livre('sentinela'), atras: atras, dela: dela.length, comum: comum.size, ponto: [k, z] };
+          }
+          return { diz: diz, livre: Mesa.livre('vidente'), livreSent: Mesa.livre('sentinela'), atras: 0 }; })()""")
+        p.conta("sentinelas", "a Alteração Vidente vê por cima da parede porque o texto do item diz (do mesmo ponto e raio, chão atrás da parede que a visão comum não vê, ela vê); a Sentinela não",
+                vd["diz"] and vd["livre"] is True and vd["livreSent"] is False and vd["atras"] > 0, "%s" % vd)
 
         # 7. o arbusto: de fora não se vê dentro; de dentro, sim (a regra, pela própria grade)
         mt = s.js("""(() => { const G = MAPA, T = G.celula, b = (s) => { const t = atob(s); return (i) => (t.charCodeAt(i >> 3) >> (i & 7)) & 1; };
