@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forja · Névoa viva</title>
+<!-- F13-T112 (Leo, 04/11/2026: "a ideia é poder pegar a ward e arrastar com a visão dela expulsando a fog que vai
+     se juntando rapidamente como um líquido ou fumaça de verdade, não precisar clicar"): a amostra, duas opções
+     lado a lado com a mesma mecânica. A névoa é uma densidade por célula da grade do jogo (data/mapa.js): a visão
+     empurra a névoa para fora (ela se acumula na borda) e, quando a visão sai, a névoa volta escorrendo da borda
+     para dentro. O raio e o ícone vêm do catálogo; a visão por célula é a mesma do app (parede barra, arbusto só
+     de dentro). Sem dado escrito aqui. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ferro-1: #1a1614; --ferro-2: #100d0b; --placa-1: #2a2420; --placa-2: #1a1512; --placa-borda: #443a32;
+  --brasa: #ff7a1e; --brasa-clara: #ffd27a; --titulo: #e9b36a; --texto: #d8cbb6; --texto-suave: #8f8074;
+  --titulos: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --serif: 'Alegreya', Georgia, serif;
+  --gravado: 'Cinzel', Georgia, serif;
+  --L: min(calc((100vw - 104px) / 2), calc(100vh - 244px), 720px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { min-height: 100vh; background: radial-gradient(ellipse at 50% 0%, #241b15, var(--ferro-2) 70%); color: var(--texto); font-family: var(--serif); }
+header { padding: 16px 32px 6px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+h1 { margin: 0; font: 400 26px var(--titulos); color: var(--titulo); }
+.dica { margin: 0; color: var(--texto-suave); font: italic 14px/1.4 var(--serif); }
+.acoes { margin-left: auto; display: flex; gap: 8px; }
+.btn { padding: 7px 12px; font: 600 11px var(--gravado); letter-spacing: .1em; text-transform: uppercase; border-radius: 3px; cursor: pointer;
+  background: linear-gradient(var(--placa-1), var(--placa-2)); color: var(--texto); border: 1px solid var(--placa-borda); }
+.btn:hover { border-color: var(--brasa); color: var(--brasa-clara); }
+main { display: flex; gap: 24px; justify-content: center; padding: 8px 32px 24px; }
+.painel { width: calc(var(--L) + 14px); }
+.cab { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.cab h2 { margin: 0 6px 0 0; font: 600 13px var(--gravado); letter-spacing: .16em; text-transform: uppercase; color: var(--brasa); }
+.cab .sub { font: italic 13px var(--serif); color: var(--texto-suave); }
+.ferras { display: flex; gap: 8px; margin: 0 0 8px; flex-wrap: wrap; align-items: center; }
+.ferra { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 6px; border-radius: 3px; cursor: grab; touch-action: none; user-select: none;
+  font: 600 11px var(--gravado); letter-spacing: .08em; text-transform: uppercase; color: var(--texto);
+  background: linear-gradient(var(--placa-1), var(--placa-2)); border: 1px solid var(--placa-borda); transition: border-color .15s, transform .15s; }
+.ferra:hover { border-color: var(--brasa); transform: translateY(-1px); }
+.ferra:active { cursor: grabbing; }
+.ferra img { width: 24px; height: 24px; border-radius: 3px; border: 1px solid #000; pointer-events: none; }
+.ferra small { font: italic 11px var(--serif); letter-spacing: 0; text-transform: none; color: var(--texto-suave); }
+.opt { margin-left: auto; font: 13px var(--serif); color: var(--texto-suave); display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.moldura { padding: 6px; background: #0c0907; border: 1px solid var(--placa-borda); border-radius: 3px; box-shadow: inset 0 0 0 1px #000, 0 10px 30px rgba(0,0,0,.5); }
+.janela { position: relative; width: var(--L); aspect-ratio: 1; overflow: hidden; }
+.janela img.mapa { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+.janela canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.painel.fumaca canvas { filter: blur(1.6px); }
+.painel.liquido canvas { filter: blur(.7px); }
+.marcas { position: absolute; inset: 0; }
+.marcas svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.sent, .fantasma { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 2px solid #1a0d04;
+  background: #e8c35a center / 18px 18px no-repeat; cursor: grab; touch-action: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,.6); transition: transform .14s cubic-bezier(.3,1.6,.5,1), box-shadow .14s; }
+.sent.controle, .fantasma.controle { background-color: #d8434b; }
+.sent.vidente, .fantasma.vidente { background-color: #4fa3ff; }
+.sent.revelando::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #bfefff; animation: revela 1s ease-out infinite; }
+@keyframes revela { from { transform: scale(.6); opacity: 1; } to { transform: scale(2.2); opacity: 0; } }
+.sent > i, .fantasma > i { position: absolute; inset: 2px; border-radius: 50%; background: inherit; background-size: cover; background-color: transparent; }
+.sent.erguida { transform: scale(1.3) translateY(-3px); box-shadow: 0 10px 14px rgba(0,0,0,.55), 0 0 0 3px rgba(255,210,122,.35); cursor: grabbing; z-index: 2; }
+.sent.assenta { animation: assenta .32s cubic-bezier(.3,1.7,.5,1); }
+@keyframes assenta { 0% { transform: scale(1.3) translateY(-3px); } 55% { transform: scale(.9); } 100% { transform: none; } }
+.fantasma { position: fixed; z-index: 50; pointer-events: none; transform: scale(1.3); box-shadow: 0 10px 14px rgba(0,0,0,.55); opacity: .92; }
+.fantasma.tirar { filter: grayscale(.7) brightness(.8); }
+.fantasma.tirar::after { content: "×"; position: absolute; right: -10px; top: -12px; width: 16px; height: 16px; border-radius: 50%; background: #9b1c18;
+  color: #fff; font: 700 13px/15px var(--serif); text-align: center; border: 1px solid #1a0d04; }
+.fantasma.some { transition: transform .26s ease-in, opacity .26s ease-in; transform: scale(.2) rotate(40deg); opacity: 0; }
+.pe { margin-top: 8px; font: italic 12.5px/1.4 var(--serif); color: var(--texto-suave); min-height: 18px; }
+.falta { padding: 40px; text-align: center; font: italic 15px var(--serif); color: var(--brasa-clara); }
+@media (prefers-reduced-motion: reduce) { .sent, .fantasma { transition: none; } .sent.assenta { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>A névoa viva</h1>
+  <p class="dica">Arraste uma sentinela do botão para o mapa; arraste a que está no mapa para levá-la — a visão vai junto e a névoa volta atrás dela. Solte fora do mapa para tirar.</p>
+  <div class="acoes">
+    <button type="button" class="btn" id="demo">▶ Ver sozinha</button>
+    <button type="button" class="btn" id="limpar">Recomeçar</button>
+  </div>
+</header>
+<main id="palco"></main>
+
+<script src="../../data/catalog.js"></script>
+<script src="../../data/mapa.js"></script>
+<script>
+"use strict";
+const G = window.MAPA, CAT = window.CATALOG;
+const palco = document.getElementById("palco");
+if (!G || !CAT) {
+  palco.innerHTML = '<p class="falta">Falta o data/mapa.js ou o data/catalog.js: sem eles a amostra não tem mapa nem sentinela.</p>';
+  throw new Error("sem dados");
+}
+const byId = {};
+CAT.items.forEach(it => byId[it.slug] = it);
+
+// ---- a grade do jogo e a visão (o mesmo cálculo da Mesa do app)
+const T = G.celula, NX = G.nx, NZ = G.nz, N = NX * NZ, LX = NX * T, LZ = NZ * T;
+const bits = (b64) => { const s = atob(b64 || ""); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+const parede = bits(G.paredes), arbusto = bits(G.arbustos), soPasso = bits(G.soPasso);
+const celDe = (wx, wz) => [Math.floor((wx - G.min[0]) / T), Math.floor((wz - G.min[1]) / T)];
+const chao = (k, w) => k >= 0 && w >= 0 && k < NX && w < NZ && !parede(w * NX + k) && !soPasso(w * NX + k);
+function visao(wx, wz, r, livre) {
+  const [cx, cz] = celDe(wx, wz), n = Math.ceil(r / T), naMoita = livre || arbusto(cz * NX + cx), out = [];
+  for (let dz = -n; dz <= n; dz++) for (let dx = -n; dx <= n; dx++) {
+    const d2 = (dx * dx + dz * dz) * T * T;
+    if (d2 > r * r) continue;
+    const k = cx + dx, w = cz + dz;
+    if (k < 0 || w < 0 || k >= NX || w >= NZ) continue;
+    const i = w * NX + k;
+    if (livre) { out.push([k, w, Math.sqrt(d2), dx, dz]); continue; }
+    if (parede(i) || (arbusto(i) && !naMoita)) continue;
+    const passos = Math.max(Math.abs(dx), Math.abs(dz));
+    let aberta = true;
+    for (let s = 1; s < passos && aberta; s++) {
+      if (parede(Math.round(cz + dz * s / passos) * NX + Math.round(cx + dx * s / passos))) aberta = false;
+    }
+    if (aberta) out.push([k, w, Math.sqrt(d2), dx, dz]);
+  }
+  return out;
+}
+function noChao(wx, wz) {
+  const [cx, cz] = celDe(wx, wz);
+  for (let d = 0; d <= 4; d++) for (let dz = -d; dz <= d; dz++) for (let dx = -d; dx <= d; dx++) {
+    if (Math.max(Math.abs(dx), Math.abs(dz)) !== d || !chao(cx + dx, cz + dz)) continue;
+    return d === 0 ? [wx, wz] : [G.min[0] + (cx + dx + .5) * T, G.min[1] + (cz + dz + .5) * T];
+  }
+  return null;
+}
+
+// ---- as sentinelas, do catálogo (o raio, lido do texto do item)
+const FERRAS = {
+  sentinela: { slug: "stealth-ward", nome: "Sentinela", campo: "notes", re: /raio de visão de ([\d.]+)/ },
+  controle: { slug: "control-ward", nome: "Sentinela de Controle", campo: "mechanics", re: /visão num raio de ([\d.]+)/ },
+  // a Alteração Vidente: o raio que fica (o das notas), a revelação ao cair (raio e segundos, da Mecânica) e a visão
+  // que passa parede e arbusto, se o texto do item disser
+  vidente: { slug: "farsight-alteration", nome: "Alteração Vidente", campo: "notes", re: /raio de visão menor \(([\d.]+)\)/,
+             revela: /visão da área num raio de ([\d.]+) por ([\d,]+)s/, livre: /inclusive sobre terreno e através de arbustos/ },
+};
+const num = (s) => Number(String(s).replace(/\./g, "").replace(",", "."));
+function ferra(k) {
+  const f = FERRAS[k], it = byId[f.slug], tudo = it ? JSON.stringify(it) : "";
+  const m = it && (f.re.exec(String(it[f.campo] || "")) || f.re.exec(tudo));
+  const rv = f.revela && f.revela.exec(tudo);
+  return { item: it || null, raio: m ? num(m[1]) : null, revela: rv ? { raio: num(rv[1]), ms: num(rv[2]) * 1000 } : null,
+           livre: !!(f.livre && f.livre.test(tudo)) };
+}
+
+// ---- o ruído que dá corpo à névoa (valor, repetível, semente fixa)
+const RS = 64, RUIDO = new Float32Array(RS * RS);
+{ let s = 11; for (let i = 0; i < RS * RS; i++) { s = (s * 16807) % 2147483647; RUIDO[i] = s / 2147483647; } }
+function ruido(u, v) {
+  const iu = Math.floor(u), iv = Math.floor(v), fu = u - iu, fv = v - iv;
+  const a = iu & (RS - 1), b = (a + 1) & (RS - 1), c = iv & (RS - 1), d = (c + 1) & (RS - 1);
+  const su = fu * fu * (3 - 2 * fu), sv = fv * fv * (3 - 2 * fv);
+  const x1 = RUIDO[c * RS + a] + (RUIDO[c * RS + b] - RUIDO[c * RS + a]) * su;
+  const x2 = RUIDO[d * RS + a] + (RUIDO[d * RS + b] - RUIDO[d * RS + a]) * su;
+  return x1 + (x2 - x1) * sv;
+}
+// as nuvens finas por cima (o detalhe que a grade não tem), repetíveis nas bordas
+function fazerNuvens(claras) {
+  const R = 512, c = document.createElement("canvas"); c.width = c.height = R;
+  const g = c.getContext("2d");
+  let s = claras ? 5 : 9;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  g.filter = "blur(14px)";
+  for (let k = 0; k < 70; k++) {
+    const r = 20 + rnd() * 70, px = rnd() * R, py = rnd() * R;
+    g.fillStyle = rnd() < .55 ? "rgba(140,160,190," + (claras ? .16 : .10) + ")" : "rgba(0,0,10,.22)";
+    for (const ox of [-R, 0, R]) for (const oy of [-R, 0, R]) { g.beginPath(); g.arc(px + ox, py + oy, r, 0, 7); g.fill(); }
+  }
+  return c;
+}
+const suave = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// ---- as duas opções: a mesma mecânica, o jeito de escorrer e de pintar diferente
+const OPCOES = [
+  { cls: "fumaca", nome: "A — Fumaça", sub: "volta devagar, em fiapos",
+    empurra: .5, entra: .13, difunde: .24, volta: .004, borda: .32, ruido: .55, alfa: .80, cor: [14, 18, 32], aro: 0, nuvens: .9, deriva: 1 },
+  { cls: "liquido", nome: "B — Líquido", sub: "escorre de volta, com a borda viva",
+    empurra: .7, entra: .4, difunde: .07, volta: .006, borda: .07, ruido: .16, alfa: .84, cor: [10, 14, 28], aro: .6, nuvens: .45, deriva: .45 },
+];
+
+const paineis = [];
+function Painel(op) {
+  const raiz = document.createElement("section");
+  raiz.className = "painel " + op.cls;
+  const fs = Object.keys(FERRAS).map(k => [k, ferra(k)]);
+  raiz.innerHTML = '<div class="cab"><h2>' + op.nome + '</h2><span class="sub">' + op.sub + '</span></div>'
+    + '<div class="ferras">' + fs.map(([k, f]) => f.raio
+        ? '<div class="ferra" data-ferra="' + k + '" title="Arraste para o mapa">' + (f.item ? '<img src="' + f.item.iconUrl + '" alt="">' : "")
+          + (f.item ? f.item.namePt : FERRAS[k].nome) + ' <small>raio ' + f.raio + (f.revela ? " · revela " + f.revela.raio + " por " + (f.revela.ms / 1000).toString().replace(".", ",") + " s" : "") + '</small></div>'
+        : '<div class="ferra" aria-disabled="true" style="opacity:.45;cursor:default">' + FERRAS[k].nome + ' <small>sem raio no catálogo</small></div>').join("")
+    + '<label class="opt"><input type="checkbox" class="raio-on" checked> Raio de visão</label></div>'
+    + '<div class="moldura"><div class="janela"><img class="mapa" alt="Summoner\'s Rift" draggable="false" src="https://ddragon.leagueoflegends.com/cdn/'
+    + CAT.meta.patch + '/img/map/map11.png"><canvas></canvas><div class="marcas"><svg></svg></div></div></div><div class="pe"></div>';
+  palco.appendChild(raiz);
+  const janela = raiz.querySelector(".janela"), cv = raiz.querySelector("canvas"), camada = raiz.querySelector(".marcas"),
+        svg = raiz.querySelector("svg"), pe = raiz.querySelector(".pe"), raioOn = raiz.querySelector(".raio-on");
+  const ctx = cv.getContext("2d");
+  const peq = document.createElement("canvas"); peq.width = NX; peq.height = NZ;
+  const pctx = peq.getContext("2d"), img = pctx.createImageData(NX, NZ), px = img.data;
+  const nuvens = ctx.createPattern(fazerNuvens(op.aro > 0), "repeat"), nuvens2 = ctx.createPattern(fazerNuvens(false), "repeat");
+  let D = new Float32Array(N).fill(1), D2 = new Float32Array(N);
+  const V = new Uint8Array(N), FORA = new Int32Array(N), PERTO = new Float32Array(N);
+  let marcas = [], sujo = true, ativo = 3, L = 1;
+
+  const lado = () => janela.clientWidth || 1;
+  const paraTela = (wx, wz) => [(wx - G.min[0]) / LX * L, (1 - (wz - G.min[1]) / LZ) * L];
+  const doMundo = (sx, sy) => [G.min[0] + sx / L * LX, G.min[1] + (1 - sy / L) * LZ];
+
+  // a visão de todas: cada célula vista sabe para onde empurrar a névoa (para longe da sentinela mais perto)
+  function refazerVisao() {
+    V.fill(0); FORA.fill(-1); PERTO.fill(1e9);
+    for (const m of marcas) {
+      if (m.fora) continue;
+      const f = ferra(m.t), r = m.revelaAte ? f.revela.raio : f.raio;
+      if (!r) continue;
+      for (const [k, w, d, dx, dz] of visao(m.x, m.z, r, f.livre)) {
+        const i = w * NX + k;
+        if (d >= PERTO[i]) continue;
+        V[i] = 1; PERTO[i] = d;
+        const len = Math.hypot(dx, dz);
+        if (!len) { FORA[i] = (w + 1 < NZ ? w + 1 : w) * NX + k; continue; }
+        const k2 = Math.min(NX - 1, Math.max(0, k + Math.round(dx / len))), w2 = Math.min(NZ - 1, Math.max(0, w + Math.round(dz / len)));
+        FORA[i] = w2 * NX + k2;
+      }
+    }
+    sujo = false; ativo = 3;
+  }
+
+  // um passo da névoa: a vista empurra para fora; a não vista escorre de volta (pela maior vizinha) e se espalha
+  function passo() {
+    if (sujo) refazerVisao();
+    if (reduz) { for (let i = 0; i < N; i++) D[i] = V[i] ? 0 : 1; return 0; }
+    D2.set(D);
+    let mexeu = 0;
+    for (let w = 0; w < NZ; w++) {
+      const lin = w * NX;
+      for (let k = 0; k < NX; k++) {
+        const i = lin + k, d = D[i];
+        if (V[i]) {
+          if (d > .002) { const a = d * op.empurra; D2[i] -= a; D2[FORA[i]] += a * .93; mexeu += a; }
+          continue;
+        }
+        const e = k > 0 ? D[i - 1] : 1, di = k < NX - 1 ? D[i + 1] : 1, b = w > 0 ? D[i - NX] : 1, c = w < NZ - 1 ? D[i + NX] : 1;
+        const maior = Math.min(1, Math.max(e, di, b, c)), media = (e + di + b + c) * .25;
+        let dd = op.difunde * (media - d) + op.volta * (1 - d);
+        if (maior > d) dd += op.entra * (maior - d);
+        if (dd > 1e-4 || dd < -1e-4) { D2[i] = Math.min(1.7, d + dd); mexeu += dd < 0 ? -dd : dd; }
+      }
+    }
+    const t = D; D = D2; D2 = t;
+    return mexeu;
+  }
+
+  function pintar(tempo) {
+    const tt = tempo * .00004 * op.deriva, [cr, cg, cb] = op.cor, A = op.alfa * 255;
+    for (let w = 0; w < NZ; w++) {
+      const lin = w * NX, linPx = (NZ - 1 - w) * NX;
+      for (let k = 0; k < NX; k++) {
+        const d = D[lin + k];
+        const n = .65 * ruido(k * .09 + tt * 40, w * .09 + tt * 25) + .35 * ruido(k * .21 - tt * 55, w * .21 + tt * 30);
+        const ds = d + (n - .5) * op.ruido;
+        let a = suave(.5 - op.borda, .5 + op.borda, ds);
+        let r = cr, g = cg, b = cb;
+        if (d > 1) { const p = Math.min(.3, (d - 1) * .6); a = Math.min(1, a * (1 + p)); r *= 1 - p; g *= 1 - p; b *= 1 - p * .5; }
+        if (op.aro) {
+          const x = (ds - .5) / .09, aro = Math.exp(-x * x) * op.aro;
+          r += (90 - r) * aro; g += (140 - g) * aro; b += (185 - b) * aro; a = Math.max(a, aro * .7);
+        }
+        const p = (linPx + k) * 4;
+        px[p] = r; px[p + 1] = g; px[p + 2] = b; px[p + 3] = a * A;
+      }
+    }
+    pctx.putImageData(img, 0, 0);
+    const W = cv.width;
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, W, W);
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(peq, 0, 0, W, W);
+    // o detalhe das nuvens só onde há névoa, à deriva
+    ctx.globalCompositeOperation = "source-atop";
+    ctx.globalAlpha = op.nuvens;
+    const s = W / 512 * .9, dx = (tempo * .006 * op.deriva) % 512, dy = (tempo * .0035 * op.deriva) % 512;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.translate(dx, dy); ctx.fillStyle = nuvens; ctx.fillRect(-dx, -dy, W / s, W / s);
+    if (op.deriva > .6) { ctx.setTransform(s * 1.6, 0, 0, s * 1.6, 0, 0); ctx.translate(-dx * .7, dy * .5); ctx.fillStyle = nuvens2; ctx.fillRect(dx * .7, -dy * .5, W / s, W / s); }
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
+  }
+
+  function desenharMarcas() {
+    let h = "";
+    for (const m of marcas) {
+      if (!m.el) {
+        const f = ferra(m.t);
+        m.el = document.createElement("div");
+        m.el.className = "sent " + m.t;
+        m.el.title = (f.item ? f.item.namePt : FERRAS[m.t].nome) + " — arraste para levar; solte fora do mapa para tirar";
+        if (f.item) m.el.innerHTML = '<i style="background-image:url(\'' + f.item.iconUrl + '\')"></i>';
+        m.el.addEventListener("pointerdown", (ev) => pegar(ev, m));
+        camada.appendChild(m.el);
+      }
+      m.el.hidden = !!m.fora;
+      if (m.fora) continue;
+      const [sx, sy] = paraTela(m.x, m.z);
+      m.el.style.left = sx + "px"; m.el.style.top = sy + "px";
+      const f = ferra(m.t), r = f.raio;
+      if (raioOn.checked && m.revelaAte) h += '<circle cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (f.revela.raio / LX * L).toFixed(1) + '" fill="none" stroke="#bfefff" stroke-width="1.2" stroke-dasharray="2 4" opacity=".8"/>';
+      if (raioOn.checked && r) h += '<circle cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (r / LX * L).toFixed(1) + '" fill="none" stroke="#3ee8ff" stroke-width="1.6" stroke-dasharray="6 4" opacity=".95"/>';
+    }
+    svg.setAttribute("viewBox", "0 0 " + L + " " + L);
+    svg.innerHTML = h;
+    const vis = marcas.filter(m => !m.fora), q = (t) => vis.filter(m => m.t === t).length, s = q("sentinela"), c = q("controle"), v = q("vidente");
+    pe.textContent = vis.length ? [s ? s + (s === 1 ? " sentinela" : " sentinelas") : "", c ? c + " de controle" : "", v ? v + (v === 1 ? " vidente" : " videntes") : ""].filter(Boolean).join(" · ") : "Nenhuma sentinela: arraste uma do botão.";
+  }
+
+  // ---- o arrasto (o mesmo para a que vem do botão e para a que já está no mapa)
+  let arr = null, fantasma = null;
+  function dentro(ev) {
+    const r = janela.getBoundingClientRect();
+    const sx = ev.clientX - r.left, sy = ev.clientY - r.top;
+    return { sx: sx, sy: sy, ok: sx >= -6 && sy >= -6 && sx <= r.width + 6 && sy <= r.height + 6 };
+  }
+  function mostrarFantasma(t, ev, tirar) {
+    if (!fantasma) {
+      const f = ferra(t);
+      fantasma = document.createElement("div");
+      fantasma.className = "fantasma " + t;
+      if (f.item) fantasma.innerHTML = '<i style="background-image:url(\'' + f.item.iconUrl + '\')"></i>';
+      document.body.appendChild(fantasma);
+    }
+    fantasma.classList.toggle("tirar", !!tirar);
+    fantasma.style.left = ev.clientX + "px"; fantasma.style.top = ev.clientY + "px";
+  }
+  function sumirFantasma(poof) {
+    if (!fantasma) return;
+    const f = fantasma; fantasma = null;
+    if (poof && !reduz) { f.classList.add("some"); setTimeout(() => f.remove(), 280); } else f.remove();
+  }
+  function mover(ev) {
+    if (!arr || ev.pointerId !== arr.id) return;
+    const p = dentro(ev), m = arr.m;
+    if (p.ok) {
+      const [wx, wz] = doMundo(Math.min(L, Math.max(0, p.sx)), Math.min(L, Math.max(0, p.sy)));
+      const lugar = noChao(wx, wz);
+      if (lugar) { m.x = lugar[0]; m.z = lugar[1]; }
+      if (m.fora || !marcas.includes(m)) { m.fora = false; if (!marcas.includes(m)) marcas.push(m); }
+      if (m.el) m.el.classList.add("erguida");
+      sumirFantasma(false);
+    } else {
+      m.fora = true;
+      mostrarFantasma(m.t, ev, !arr.novo);
+    }
+    sujo = true;
+    desenharMarcas();
+  }
+  function soltar(ev) {
+    if (!arr || ev.pointerId !== arr.id) return;
+    const m = arr.m;
+    removeEventListener("pointermove", mover); removeEventListener("pointerup", soltar); removeEventListener("pointercancel", soltar);
+    if (m.fora || !marcas.includes(m)) {
+      marcas = marcas.filter(x => x !== m);
+      if (m.el) m.el.remove();
+      sumirFantasma(true);
+    } else if (m.el) {
+      m.el.classList.remove("erguida");
+      // a Alteração Vidente revela a área maior ao cair, pelo tempo do catálogo; depois fica o raio dela
+      const f = ferra(m.t);
+      if (f.revela) { m.revelaAte = performance.now() + f.revela.ms; m.el.classList.add("revelando"); }
+      if (!reduz) { m.el.classList.remove("assenta"); void m.el.offsetWidth; m.el.classList.add("assenta"); }
+    }
+    arr = null; sujo = true;
+    desenharMarcas();
+  }
+  function comecar(ev, m, novo) {
+    ev.preventDefault();
+    arr = { id: ev.pointerId, m: m, novo: novo };
+    addEventListener("pointermove", mover); addEventListener("pointerup", soltar); addEventListener("pointercancel", soltar);
+  }
+  function pegar(ev, m) {
+    if (ev.button !== 0 || arr) return;
+    m.el.classList.add("erguida");
+    comecar(ev, m, false);
+  }
+  raiz.querySelectorAll(".ferra[data-ferra]").forEach(b => b.addEventListener("pointerdown", (ev) => {
+    if (ev.button !== 0 || arr) return;
+    const m = { t: b.dataset.ferra, x: 0, z: 0, fora: true };
+    mostrarFantasma(m.t, ev, false);
+    comecar(ev, m, true);
+  }));
+  raioOn.addEventListener("change", desenharMarcas);
+
+  function medir() {
+    L = lado();
+    const W = Math.round(L * Math.min(2, devicePixelRatio || 1));
+    if (cv.width !== W) { cv.width = cv.height = W; }
+    desenharMarcas();
+  }
+  addEventListener("resize", medir);
+
+  const painel = {
+    op: op,
+    por(lista) {
+      marcas.forEach(m => m.el && m.el.remove());
+      marcas = lista.map(([t, fx, fz]) => { const l = noChao(G.min[0] + fx * LX, G.min[1] + fz * LZ); return { t: t, x: l[0], z: l[1] }; });
+      // recomeça assentada (sem a onda de quando tudo aparece de uma vez)
+      refazerVisao(); for (let i = 0; i < N; i++) D[i] = V[i] ? 0 : 1;
+      desenharMarcas();
+    },
+    levar(i, fx, fz) {
+      const m = marcas[i]; if (!m) return;
+      const l = noChao(G.min[0] + fx * LX, G.min[1] + fz * LZ);
+      if (l) { m.x = l[0]; m.z = l[1]; sujo = true; desenharMarcas(); }
+    },
+    quadro(tempo, n) {
+      const agora = performance.now();
+      for (const m of marcas) if (m.revelaAte && agora >= m.revelaAte) { m.revelaAte = 0; if (m.el) m.el.classList.remove("revelando"); sujo = true; desenharMarcas(); }
+      const mexeu = passo() + (n > 1 ? passo() : 0);
+      if (mexeu > .5) ativo = 3; else if (ativo > 0) ativo--;
+      pintar(tempo);
+      return mexeu;
+    },
+    get ativo() { return ativo > 0 || !!arr; },
+    estado() { let vista = 0, densa = 0; for (let i = 0; i < N; i++) { vista += V[i]; densa += D[i]; } return { marcas: marcas.filter(m => !m.fora).length, vista: vista, densidade: densa / N, L: L }; },
+  };
+  medir();
+  // a névoa começa assentada (sem a onda inicial)
+  refazerVisao();
+  return painel;
+}
+
+OPCOES.forEach(op => paineis.push(Painel(op)));
+const INICIO = [["sentinela", .36, .52], ["controle", .5, .5], ["sentinela", .64, .3]];
+paineis.forEach(p => p.por(INICIO));
+
+// ---- o laço: a 60 por segundo enquanto a névoa se mexe; parada, só a deriva, a 20
+let ultimo = 0, quadros = 0, medidos = [];
+function laco(t) {
+  requestAnimationFrame(laco);
+  const ativo = paineis.some(p => p.ativo) || demo;
+  if (!ativo && t - ultimo < 50) return;
+  const n = t - ultimo > 24 ? 2 : 1;   // um quadro que atrasou anda dois passos (a velocidade da névoa não cai)
+  ultimo = t;
+  if (demo) demo(t);
+  const t0 = performance.now();
+  paineis.forEach(p => p.quadro(t, n));
+  medidos.push(performance.now() - t0); if (medidos.length > 120) medidos.shift();
+  quadros++;
+}
+requestAnimationFrame(laco);
+window.__nevoa = { paineis: paineis, custo: () => { const s = [...medidos].sort((a, b) => a - b); return { quadros: quadros, mediana: s[s.length >> 1], p95: s[Math.floor(s.length * .95)] }; } };
+
+// ---- "Ver sozinha": a sentinela do meio dá uma volta pela selva, nas duas opções ao mesmo tempo
+let demo = null;
+const ROTA = [[.5, .5], [.42, .58], [.33, .62], [.27, .55], [.3, .44], [.4, .4], [.5, .5]];
+document.getElementById("demo").addEventListener("click", () => {
+  paineis.forEach(p => p.por(INICIO));
+  const t0 = performance.now(), DUR = 7000;
+  demo = (t) => {
+    const p = Math.min(1, Math.max(0, (t - t0) / DUR)), s = p * (ROTA.length - 1), i = Math.min(ROTA.length - 2, Math.floor(s)), f = s - i;
+    const fx = ROTA[i][0] + (ROTA[i + 1][0] - ROTA[i][0]) * f, fz = ROTA[i][1] + (ROTA[i + 1][1] - ROTA[i][1]) * f;
+    paineis.forEach(pp => pp.levar(1, fx, fz));
+    if (p >= 1) demo = null;
+  };
+});
+document.getElementById("limpar").addEventListener("click", () => { demo = null; paineis.forEach(p => p.por(INICIO)); });
+</script>
+</body>
+</html>
