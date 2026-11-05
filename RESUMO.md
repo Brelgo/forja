@@ -33,13 +33,12 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 | sáb 07/11 (até 17:00) | **As entradas de Águas de Sentina e da Ilha das Sombras** por workflow (2 opções + juiz cada), por `docs/direcao_regioes.md`; as amostras de 05/11 são o que não fazer | 16–24% |
 | sáb 07/11 | Integrar as entradas aprovadas (`<template id="en-tema-…">`) | 3–5% cada |
 | depois | **Planos de mapa** (biblioteca própria Minhas/Publicadas, tabela própria no Supabase, link próprio; só a Selva liga com build) | grande |
-| depois | Arte animada no site (vídeo mp4 na lista e nos cards; sem vídeo, a splash) — amostra primeiro | médio |
 | depois | Calculadora de armadura · app instalável (PWA) · "Mandar para o jogo" · overlay (para pensar) | — |
 | depende | Capítulos de dado 1.1–1.4 (campeões, Bestiário, Gerador) e a calculadora de monstros épicos | — |
 
 ## Esperando o Leo
 - Apagar o ramo remoto `cards-gif` (os GIFs de teste do card animado, cancelado).
-- A pasta `Splash animadas LoL - recortes do card` (~120 MB): fica (para a arte animada no site) ou sai?
+- As pastas `Splash animadas LoL` (~1,1 GB) e `… - recortes do card` (~120 MB): a arte animada saiu de vez (05/11) — apagar?
 - Conferir no navegador dele se o Freljord ainda pula quadros em 1440×900.
 
 ## Regras que mais pegam
