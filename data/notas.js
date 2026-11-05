@@ -3,7 +3,9 @@ window.NOTAS = {
  "datas": [
   {
    "data": "05/11/2026",
-   "add": [],
+   "add": [
+    "Update Tracker: um quadro de cartazes com o que mudou em cada item a cada patch — o antes e o depois, em verde o que melhorou, em vermelho o que piorou e em amarelo o que foi ajustado"
+   ],
    "aj": [
     "Mapa: arraste as sentinelas do botão para o mapa e pelo mapa (a visão vai junto e a névoa volta como fumaça); solte fora do mapa para tirar; e a Alteração Vidente"
    ],
