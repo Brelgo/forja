@@ -614,7 +614,7 @@ def checar_fundacao(s, p):
     try:
         log = subprocess.run(["git", "log", "--format=%s", "-n", "400"], cwd=RAIZ, capture_output=True).stdout.decode("utf-8", "replace")
         # a amostra de uma tarefa ("F13-T112 (amostra): …") não mexe no index.html: não conta como a tarefa feita
-        ultima = max([int(n) for n in re.findall(r"^F13-T(\d+)\b(?!\s*\(amostra\))", log, re.M)] or [0])
+        ultima = max([int(m.group(1)) for l in log.splitlines() if "(amostra)" not in l for m in [re.match(r"F13-T(\d+)\b", l)] if m] or [0])
         mexido = bool(subprocess.run(["git", "status", "--porcelain", "index.html"], cwd=RAIZ, capture_output=True).stdout.strip())
     except Exception:
         ultima, mexido = None, False
