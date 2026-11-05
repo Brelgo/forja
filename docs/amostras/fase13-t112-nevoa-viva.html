@@ -57,10 +57,7 @@ main { display: flex; gap: 24px; justify-content: center; padding: 8px 32px 24px
   background: #e8c35a center / 18px 18px no-repeat; cursor: grab; touch-action: none;
   box-shadow: 0 2px 4px rgba(0,0,0,.6); transition: transform .14s cubic-bezier(.3,1.6,.5,1), box-shadow .14s; }
 .sent.controle, .fantasma.controle { background-color: #d8434b; }
-.sent.vidente, .fantasma.vidente { background-color: #4fa3ff; }
-.sent.revelando::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #bfefff; animation: revela 1s ease-out infinite; }
-@keyframes revela { from { transform: scale(.6); opacity: 1; } to { transform: scale(2.2); opacity: 0; } }
-.sent > i, .fantasma > i { position: absolute; inset: 2px; border-radius: 50%; background: inherit; background-size: cover; background-color: transparent; }
+.sent.vidente, .fantasma.vidente { background-color: #4fa3ff; }.sent > i, .fantasma > i { position: absolute; inset: 2px; border-radius: 50%; background: inherit; background-size: cover; background-color: transparent; }
 .sent.erguida { transform: scale(1.3) translateY(-3px); box-shadow: 0 10px 14px rgba(0,0,0,.55), 0 0 0 3px rgba(255,210,122,.35); cursor: grabbing; z-index: 2; }
 .sent.assenta { animation: assenta .32s cubic-bezier(.3,1.7,.5,1); }
 @keyframes assenta { 0% { transform: scale(1.3) translateY(-3px); } 55% { transform: scale(.9); } 100% { transform: none; } }
@@ -136,18 +133,16 @@ function noChao(wx, wz) {
 const FERRAS = {
   sentinela: { slug: "stealth-ward", nome: "Sentinela", campo: "notes", re: /raio de visão de ([\d.]+)/ },
   controle: { slug: "control-ward", nome: "Sentinela de Controle", campo: "mechanics", re: /visão num raio de ([\d.]+)/ },
-  // a Alteração Vidente: o raio que fica (o das notas), a revelação ao cair (raio e segundos, da Mecânica) e a visão
-  // que passa parede e arbusto, se o texto do item disser
+  // a Alteração Vidente (Leo, 05/11/2026: "a ideia da vidente é exibir só o 500 de alcance"): o raio das notas e a
+  // visão que passa parede e arbusto, se o texto do item disser
   vidente: { slug: "farsight-alteration", nome: "Alteração Vidente", campo: "notes", re: /raio de visão menor \(([\d.]+)\)/,
-             revela: /visão da área num raio de ([\d.]+) por ([\d,]+)s/, livre: /inclusive sobre terreno e através de arbustos/ },
+             livre: /inclusive sobre terreno e através de arbustos/ },
 };
 const num = (s) => Number(String(s).replace(/\./g, "").replace(",", "."));
 function ferra(k) {
   const f = FERRAS[k], it = byId[f.slug], tudo = it ? JSON.stringify(it) : "";
   const m = it && (f.re.exec(String(it[f.campo] || "")) || f.re.exec(tudo));
-  const rv = f.revela && f.revela.exec(tudo);
-  return { item: it || null, raio: m ? num(m[1]) : null, revela: rv ? { raio: num(rv[1]), ms: num(rv[2]) * 1000 } : null,
-           livre: !!(f.livre && f.livre.test(tudo)) };
+  return { item: it || null, raio: m ? num(m[1]) : null, livre: !!(f.livre && f.livre.test(tudo)) };
 }
 
 // ---- o ruído que dá corpo à névoa (valor, repetível, semente fixa)
@@ -194,7 +189,7 @@ function Painel(op) {
   raiz.innerHTML = '<div class="cab"><h2>' + op.nome + '</h2><span class="sub">' + op.sub + '</span></div>'
     + '<div class="ferras">' + fs.map(([k, f]) => f.raio
         ? '<div class="ferra" data-ferra="' + k + '" title="Arraste para o mapa">' + (f.item ? '<img src="' + f.item.iconUrl + '" alt="">' : "")
-          + (f.item ? f.item.namePt : FERRAS[k].nome) + ' <small>raio ' + f.raio + (f.revela ? " · revela " + f.revela.raio + " por " + (f.revela.ms / 1000).toString().replace(".", ",") + " s" : "") + '</small></div>'
+          + (f.item ? f.item.namePt : FERRAS[k].nome) + ' <small>raio ' + f.raio + '</small></div>'
         : '<div class="ferra" aria-disabled="true" style="opacity:.45;cursor:default">' + FERRAS[k].nome + ' <small>sem raio no catálogo</small></div>').join("")
     + '<label class="opt"><input type="checkbox" class="raio-on" checked> Raio de visão</label></div>'
     + '<div class="moldura"><div class="janela"><img class="mapa" alt="Summoner\'s Rift" draggable="false" src="https://ddragon.leagueoflegends.com/cdn/'
@@ -219,7 +214,7 @@ function Painel(op) {
     V.fill(0); FORA.fill(-1); PERTO.fill(1e9);
     for (const m of marcas) {
       if (m.fora) continue;
-      const f = ferra(m.t), r = m.revelaAte ? f.revela.raio : f.raio;
+      const f = ferra(m.t), r = f.raio;
       if (!r) continue;
       for (const [k, w, d, dx, dz] of visao(m.x, m.z, r, f.livre)) {
         const i = w * NX + k;
@@ -310,7 +305,6 @@ function Painel(op) {
       const [sx, sy] = paraTela(m.x, m.z);
       m.el.style.left = sx + "px"; m.el.style.top = sy + "px";
       const f = ferra(m.t), r = f.raio;
-      if (raioOn.checked && m.revelaAte) h += '<circle cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (f.revela.raio / LX * L).toFixed(1) + '" fill="none" stroke="#bfefff" stroke-width="1.2" stroke-dasharray="2 4" opacity=".8"/>';
       if (raioOn.checked && r) h += '<circle cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (r / LX * L).toFixed(1) + '" fill="none" stroke="#3ee8ff" stroke-width="1.6" stroke-dasharray="6 4" opacity=".95"/>';
     }
     svg.setAttribute("viewBox", "0 0 " + L + " " + L);
@@ -369,9 +363,6 @@ function Painel(op) {
       sumirFantasma(true);
     } else if (m.el) {
       m.el.classList.remove("erguida");
-      // a Alteração Vidente revela a área maior ao cair, pelo tempo do catálogo; depois fica o raio dela
-      const f = ferra(m.t);
-      if (f.revela) { m.revelaAte = performance.now() + f.revela.ms; m.el.classList.add("revelando"); }
       if (!reduz) { m.el.classList.remove("assenta"); void m.el.offsetWidth; m.el.classList.add("assenta"); }
     }
     arr = null; sujo = true;
@@ -418,8 +409,6 @@ function Painel(op) {
       if (l) { m.x = l[0]; m.z = l[1]; sujo = true; desenharMarcas(); }
     },
     quadro(tempo, n) {
-      const agora = performance.now();
-      for (const m of marcas) if (m.revelaAte && agora >= m.revelaAte) { m.revelaAte = 0; if (m.el) m.el.classList.remove("revelando"); sujo = true; desenharMarcas(); }
       const mexeu = passo() + (n > 1 ? passo() : 0);
       if (mexeu > .5) ativo = 3; else if (ativo > 0) ativo--;
       pintar(tempo);
