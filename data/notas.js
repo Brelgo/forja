@@ -4,7 +4,8 @@ window.NOTAS = {
   {
    "data": "05/11/2026",
    "add": [
-    "Update Tracker: um quadro de cartazes com o que mudou em cada item a cada patch — o antes e o depois, em verde o que melhorou, em vermelho o que piorou e em amarelo o que foi ajustado"
+    "Update Tracker: um quadro de cartazes com o que mudou em cada item a cada patch — o antes e o depois, em verde o que melhorou, em vermelho o que piorou e em amarelo o que foi ajustado",
+    "a forma do Kayn: a build diz se é para o Rhaast, para o Assassino das Sombras ou para as duas, e o ícone e o card do Discord mostram a forma escolhida"
    ],
    "aj": [
     "Mapa: arraste as sentinelas do botão para o mapa e pelo mapa (a visão vai junto e a névoa volta como fumaça); solte fora do mapa para tirar; e a Alteração Vidente"
