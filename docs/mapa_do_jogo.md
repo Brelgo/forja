@@ -5,7 +5,7 @@ isso é antigo… e tem as alterações das almas dos dragões no mapa". E: "voc
 nas malhas? aí sexta-feira a gente finaliza isso".
 
 Tudo abaixo saiu do `Map11.wad.client` da instalação do LoL do Leo, com `data/extrair_mapa_do_jogo.py`
-(imagens em `assets/mapa/`, camadas em `data/mapa_camadas.json`). O app ainda não usa nada disso.
+(imagens em `assets/mapa/`, camadas em `data/mapa_camadas.json`; sem o Atakhan, que saiu do jogo). O app ainda não usa nada disso.
 
 ## 1. Por que o mapa estava errado
 
@@ -31,7 +31,7 @@ Tudo abaixo saiu do `Map11.wad.client` da instalação do LoL do Leo, com `data/
 | Alma Quimtec | não tem imagem | `Chemtech` — 4 × 2 células no covil |
 | Covil do Barão, forma 2 | `*_baron2` | `Tunnel_Base` (7 regiões) |
 | Covil do Barão, forma 3 | `*_baron3` | `Cup_Base` (2 regiões) |
-| Covil do Atakhan (em cima / embaixo) | adesivos `atakhan_top`, `atakhan_bot` | `AtakhanTop`, `AtakhanBot` (3 regiões cada) |
+| ~~Covil do Atakhan~~ | — | — (o Atakhan saiu do jogo — Leo, 05/11/2026: "o atakhan foi removido"; os arquivos dele seguem no jogo, `NavGrid_AtakhanTop/Bot` e os adesivos, e ficam de fora) |
 
 Conferido pela diferença entre as imagens: das células em que a imagem da Montanha difere da de base, 501 de 633
 caem dentro das regiões da camada dela; a forma 2 do covil do Barão difere da base dentro da `Tunnel_Base` (356

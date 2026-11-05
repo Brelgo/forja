@@ -5,9 +5,10 @@ certo… na saída do rio tem um arbusto no meio, não na borda, isso é antigo�
 dos dragões no mapa"). Tira do jogo instalado o que o mapa do app precisa para ser o de hoje, sem mudar nada lá:
 
   - as imagens do minimapa de agora (o map11.png do Data Dragon é a arte antiga): uma por alma e por forma do
-    covil do Barão (2dlevelminimap_<alma>_baron<n>.tex) e os adesivos do covil do Atakhan, em assets/mapa/;
+    covil do Barão (2dlevelminimap_<alma>_baron<n>.tex), em assets/mapa/;
   - as camadas de navegação que o jogo põe por cima da grade (NavGrid_*.ngrid_overlay): as almas que mudam
-    parede ou arbusto, as formas do covil do Barão e o covil do Atakhan, em data/mapa_camadas.json.
+    parede ou arbusto e as formas do covil do Barão, em data/mapa_camadas.json. O covil do Atakhan fica de fora:
+    o Atakhan saiu do jogo (Leo, 05/11/2026: "o atakhan foi removido"), embora os arquivos dele continuem lá.
 
 A grade de base é a do data/gerar_mapa.py. Nenhum dado é digitado: tudo sai dos arquivos.
 
@@ -44,9 +45,8 @@ WAD = os.path.join(LOL, "Game", "DATA", "FINAL", "Maps", "Shipping", "Map11.wad.
 IMAGENS = os.path.join(RAIZ, "assets", "mapa")
 CAMADAS = os.path.join(AQUI, "mapa_camadas.json")
 ALMAS = ["base", "cloud", "hextech", "infernal", "mountain", "ocean", "chemtech"]
-# as camadas que o map11.bin cita (as de Map90 e as de regiões ficam de fora)
-NOMES_CAMADAS = ["Infernal_SEASONAL", "Mountain_SEASONAL", "Ocean_SEASONAL", "Chemtech", "Cup_Base", "Tunnel_Base",
-                 "AtakhanTop", "AtakhanBot"]
+# as camadas que o map11.bin cita (as de Map90, as de regiões e as do Atakhan, que saiu do jogo, ficam de fora)
+NOMES_CAMADAS = ["Infernal_SEASONAL", "Mountain_SEASONAL", "Ocean_SEASONAL", "Chemtech", "Cup_Base", "Tunnel_Base"]
 
 
 def indice(wad):
@@ -124,12 +124,6 @@ def main():
                 nome = "%s_baron%d.png" % (alma, n)
                 textura(ler(WAD, idx, c)).save(os.path.join(IMAGENS, nome), optimize=True)
                 feitas.append(nome)
-    for lado in ("top", "bot"):
-        c = "assets/maps/info/map11/2dlevelminimap_atakhan_%s_sticker.tex" % lado
-        if tem(c):
-            nome = "atakhan_%s.png" % lado
-            textura(ler(WAD, idx, c)).save(os.path.join(IMAGENS, nome), optimize=True)
-            feitas.append(nome)
     camadas = {}
     for nome in NOMES_CAMADAS:
         c = "ASSETS/Maps/NavGrid/NavGrid_%s.ngrid_overlay" % nome
