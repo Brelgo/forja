@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forja · Update Tracker</title>
+<!-- F13-T114 (Leo, 05/11/2026: "deve ter algo visual para as atualizações do robô para mostrar quais itens e o que
+     foi alterado para o usuário saber exatamente o que mudou, aí pode nomear o nome do bot para Update Tracker"):
+     a amostra, duas opções lado a lado com os mesmos dados. Os dados vêm do histórico do data/catalog.js no git
+     (o mesmo caminho do data/gerar_mudancas.py), gerados por script para esta página: o antes e o depois de cada
+     campo que mudou, patch a patch. O nome e o ícone do item vêm do catalog.js. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --papel: #e5d3ad; --papel-escuro: #cdb689; --papel-borda: #a88f60; --tinta: #2c1d12; --tinta-suave: #5a4630;
+  --madeira: #2a1a10; --madeira-escura: #1c120b; --latao: #b6873a; --latao-claro: #d5b35a; --latao-escuro: #8a5f18;
+  --cera: #8d2c22; --cera-borda: #5c150d; --cera-texto: #f4e6c4; --titulo: #e8d3a2; --legenda: #b89a66;
+  --sobe: #2f5d1e; --desce: #8d2c22;
+  --titulos: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --texto: 'Alegreya', Georgia, serif;
+  --gravado: 'Cinzel', Georgia, serif;
+  --tex-01: url("../../assets/textures/shopitem_papertexture01_psd.png");
+  --tex-02: url("../../assets/textures/shopitem_papertexture02_psd.png");
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; color: var(--titulo); font-family: var(--texto);
+  background: radial-gradient(ellipse at 50% -10%, #4a2e1a, var(--madeira-escura) 70%); }
+header { padding: 16px 32px 4px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+h1 { margin: 0; font: 400 28px var(--titulos); color: var(--titulo); }
+h1 small { font: 600 11px var(--gravado); letter-spacing: .2em; color: var(--latao-claro); margin-left: 8px; }
+.dica { margin: 0; color: var(--legenda); font: italic 14px var(--texto); }
+.patches { margin-left: auto; display: flex; gap: 6px; }
+.patches button { font: 600 11px var(--gravado); letter-spacing: .12em; padding: 6px 12px; border-radius: 3px; cursor: pointer;
+  color: var(--titulo); background: linear-gradient(#3a2616, #24170d); border: 1px solid var(--latao-escuro); }
+.patches button[aria-pressed="true"] { background: linear-gradient(var(--latao-claro), var(--latao)); color: var(--madeira-escura); border-color: var(--latao-claro); }
+main { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 10px 32px 32px; }
+.opcao > h2 { margin: 0 0 8px; font: 600 13px var(--gravado); letter-spacing: .16em; text-transform: uppercase; color: #ff9a4a; }
+.opcao > h2 span { font: italic 13px var(--texto); letter-spacing: 0; text-transform: none; color: var(--legenda); margin-left: 8px; }
+
+/* ---- A: o livro-razão do lojista ---- */
+.livro { position: relative; padding: 22px 26px 26px; color: var(--tinta); border-radius: 4px;
+  background: var(--tex-01) center / cover, var(--papel); background-blend-mode: multiply; border: 1px solid var(--papel-borda);
+  box-shadow: inset 0 0 60px rgba(90,60,20,.35), 0 14px 30px rgba(0,0,0,.55); max-height: calc(100vh - 150px); overflow: auto; }
+.livro-cab { display: flex; align-items: baseline; gap: 10px; border-bottom: 2px solid rgba(44,29,18,.55); padding-bottom: 6px; margin-bottom: 4px; }
+.livro-cab b { font: 400 22px var(--titulos); }
+.livro-cab span { font: italic 13px var(--texto); color: var(--tinta-suave); }
+.livro-cab em { margin-left: auto; font: 600 10.5px var(--gravado); letter-spacing: .14em; color: var(--cera); }
+.linha { display: grid; grid-template-columns: 40px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px dashed rgba(44,29,18,.35); }
+.linha img { width: 40px; height: 40px; border: 1px solid #000; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,.4); }
+.linha .nome { font: 700 16px var(--texto); }
+.linha .nome small { font: 600 9.5px var(--gravado); letter-spacing: .12em; color: var(--tinta-suave); margin-left: 6px; text-transform: uppercase; }
+.lanc { margin-top: 5px; display: grid; grid-template-columns: 128px 1fr; gap: 2px 10px; font-size: 14px; line-height: 1.4; }
+.lanc dt { font: 600 10px var(--gravado); letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-suave); padding-top: 3px; }
+.lanc dd { margin: 0; }
+.antes { color: #7a6448; text-decoration: line-through; text-decoration-color: rgba(141,44,34,.7); }
+.seta { margin: 0 6px; color: var(--tinta-suave); }
+.depois { font-weight: 700; }
+.sobe { color: var(--sobe); } .desce { color: var(--desce); }
+ins { text-decoration: none; background: rgba(47,93,30,.16); color: var(--sobe); font-weight: 700; padding: 0 2px; border-radius: 2px; }
+del { color: #8a6a4a; text-decoration: line-through; text-decoration-color: rgba(141,44,34,.75); }
+.so-texto { display: inline-block; margin-left: 6px; font: italic 11.5px var(--texto); color: var(--tinta-suave); }
+.removidos { margin-top: 10px; font: italic 13px var(--texto); color: var(--cera); }
+
+/* ---- B: o quadro de avisos ---- */
+.quadro { padding: 18px; border-radius: 6px; max-height: calc(100vh - 150px); overflow: auto;
+  background: repeating-linear-gradient(90deg, #3b2616 0 3px, #33200f 3px 9px), #33200f;
+  border: 10px solid #24160c; box-shadow: inset 0 0 40px rgba(0,0,0,.7), 0 14px 30px rgba(0,0,0,.55); }
+.quadro-cab { display: flex; align-items: center; gap: 12px; margin: -4px 0 14px; }
+.quadro-cab .placa { padding: 6px 16px; font: 400 20px var(--titulos); color: var(--madeira-escura); border-radius: 3px;
+  background: linear-gradient(var(--latao-claro), var(--latao)); border: 1px solid var(--latao-escuro); box-shadow: 0 3px 6px rgba(0,0,0,.5); }
+.quadro-cab span { font: italic 13px var(--texto); color: var(--legenda); }
+.avisos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.aviso { position: relative; padding: 18px 14px 12px; color: var(--tinta); cursor: pointer;
+  background: var(--tex-02) center / cover, var(--papel); background-blend-mode: multiply; border: 1px solid var(--papel-borda); border-radius: 2px;
+  box-shadow: 0 8px 14px rgba(0,0,0,.5); transform: rotate(var(--giro, 0deg)); transition: transform .2s, box-shadow .2s; }
+.aviso:hover, .aviso.aberto { transform: rotate(0) translateY(-3px) scale(1.02); box-shadow: 0 14px 22px rgba(0,0,0,.6); z-index: 2; }
+.aviso::before { content: ""; position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e8d07a, var(--latao-escuro)); box-shadow: 0 2px 3px rgba(0,0,0,.6); }
+.aviso-topo { display: flex; gap: 10px; align-items: center; }
+.aviso-topo img { width: 36px; height: 36px; border: 1px solid #000; border-radius: 3px; }
+.aviso-topo b { font: 700 15px/1.15 var(--texto); }
+.selos { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.selo { font: 600 9.5px var(--gravado); letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border-radius: 10px;
+  color: var(--cera-texto); background: var(--cera); border: 1px solid var(--cera-borda); }
+.selo.num { background: #3e5a2a; border-color: #263a18; }
+.resumo { margin-top: 8px; font-size: 13.5px; }
+.detalhe { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(44,29,18,.4); font-size: 13px; line-height: 1.4; }
+.aviso.aberto .detalhe { display: block; }
+.detalhe p { margin: 0 0 6px; }
+.detalhe p b { font: 600 9.5px var(--gravado); letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-suave); display: block; }
+.abre { margin-top: 6px; font: italic 12px var(--texto); color: var(--tinta-suave); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Update Tracker <small>O QUE MUDOU NOS ITENS</small></h1>
+  <p class="dica">Item por item, o que o patch mudou: o antes riscado, o depois em tinta forte. Os dados são do histórico do catálogo.</p>
+  <div class="patches" id="patches"></div>
+</header>
+<main>
+  <section class="opcao"><h2>A — O livro-razão <span>uma linha por item, tudo à vista</span></h2><div class="livro" id="livro"></div></section>
+  <section class="opcao"><h2>B — O quadro de avisos <span>um aviso por item; o clique abre o detalhe</span></h2><div class="quadro" id="quadro"></div></section>
+</main>
+<script src="../../data/catalog.js"></script>
+<script>
+"use strict";
+const DADOS = [{"patch": "16.21.1", "desde": "16.20.1", "itens": [{"slug": "bastionbreaker", "campos": [{"campo": "atributos", "antes": ["+55 de Dano de Ataque", "+22 de Letalidade", "+15 de Aceleração de Habilidade"], "depois": ["+55 de Dano de Ataque", "+18 de Letalidade", "+15 de Aceleração de Habilidade"]}, {"campo": "habilidades", "antes": ["Investida Esculpida (passiva única): a próxima instância de dano de habilidade a um campeão ou monstro épico com uma habilidade de campeão causa 50 (corpo a corpo) / 25 (à distância) (+1,5 / +0,75 por 1 de Letalidade) de dano verdadeiro bônus → 83 / 41,5 com os 22 de Letalidade do item. Recarga de 20s. Dano de proc: NÃO ativa efeitos de habilidade. É bloqueado por escudo de feitiço.", "Sabotagem (passiva única): abater ou assistir um campeão inimigo até 3s após causar dano a ele concede Sabotagem por 90s: o próximo ataque básico contra torre ou monstro épico consome o efeito para causar 300 / 240 (+25 / +20 por 1 de Letalidade) de dano verdadeiro bônus ao longo de 3s → 850 / 680 com 22 de Letalidade. Dano em intervalos de 0,25s. Instâncias de Sabotagem NÃO acumulam: uma nova aplicação aplica imediatamente todo o dano pendente da anterior."], "depois": ["Investida Esculpida (passiva única): a próxima instância de dano de habilidade a um campeão ou monstro épico com uma habilidade de campeão causa 40 (corpo a corpo) / 20 (à distância) (+1,5 / +0,75 por 1 de Letalidade) de dano verdadeiro bônus → 67 / 33,5 com os 18 de Letalidade do item. Recarga de 20s. Dano de proc: NÃO ativa efeitos de habilidade. É bloqueado por escudo de feitiço.", "Sabotagem (passiva única): abater ou assistir um campeão inimigo até 3s após causar dano a ele concede Sabotagem, que dura indefinidamente depois de obtida e é removida ao morrer, como a maioria dos buffs (o cliente exibe 25000s): o próximo ataque básico contra torre ou monstro épico consome o efeito para causar 300 / 240 (+25 / +20 por 1 de Letalidade) de dano verdadeiro bônus ao longo de 3s → 750 / 600 com 18 de Letalidade. Dano em intervalos de 0,25s. Instâncias de Sabotagem NÃO acumulam: uma nova aplicação aplica imediatamente todo o dano pendente da anterior."]}]}, {"slug": "dawncore", "campos": [{"campo": "habilidades", "antes": ["Primeira Luz (passiva única): +2% de Poder de Cura e Escudo e +10 de Poder de Habilidade por 100% de Regeneração de Mana base adicional. Só com o próprio item: +10 de PdH e +2% de Poder de Cura e Escudo → 55 de PdH e 18% de Poder de Cura e Escudo no total; +10 de PdH e +2% por 100% de Regeneração de Mana base de outras fontes."], "depois": ["Primeira Luz (passiva única): +2% de Poder de Cura e Escudo e +15 de Poder de Habilidade por 100% de Regeneração de Mana base adicional. Só com o próprio item: +15 de PdH e +2% de Poder de Cura e Escudo → 60 de PdH e 18% de Poder de Cura e Escudo no total; +15 de PdH e +2% por 100% de Regeneração de Mana base de outras fontes."]}]}, {"slug": "gluttonous-greaves", "campos": [{"campo": "preço", "antes": ["1000"], "depois": ["1100"]}, {"campo": "custo de combinação", "antes": ["700"], "depois": ["800"]}]}, {"slug": "hubris", "campos": [{"campo": "habilidades", "antes": ["Eminência (passiva única): abater ou assistir um campeão inimigo até 3s após causar dano a ele gera 1 acúmulo permanente e concede 12 (+3 por acúmulo) de DdA bônus por 90s → 15 no 1º abate, 42 no 10º. Abates subsequentes com Eminência ativa renovam a duração e atualizam o valor. O buff é removido ao morrer, como a maioria dos buffs; os acúmulos permanecem."], "depois": ["Eminência (passiva única): abater ou assistir um campeão inimigo até 3s após causar dano a ele gera 1 acúmulo permanente e concede 15 (corpo a corpo) / 10 (à distância) (+3 / +2 por acúmulo) de DdA bônus por 90s → 18 / 12 no 1º abate, 45 / 30 no 10º. Abates subsequentes com Eminência ativa renovam a duração e atualizam o valor. O buff é removido ao morrer, como a maioria dos buffs; os acúmulos permanecem."]}]}, {"slug": "immortal-path", "campos": [{"campo": "preço", "antes": ["1000"], "depois": ["1100"]}]}], "removidos": []}, {"patch": "16.20.1", "desde": "16.18.1", "itens": [{"slug": "bastionbreaker", "campos": [{"campo": "habilidades", "antes": ["Investida Esculpida (passiva única): a próxima instância de dano de habilidade a um campeão ou monstro épico com uma habilidade de campeão causa 50 (corpo a corpo) / 25 (à distância) (+1,5 / +0,75 por 1 de Letalidade) de dano verdadeiro bônus → 83 / 41,5 com os 22 de Letalidade do item. Recarga de 20s. Dano de proc: NÃO ativa efeitos de habilidade. É bloqueado por escudo de feitiço.", "Sabotagem (passiva única): abater ou assistir um campeão inimigo até 3s após causar dano a ele concede Sabotagem por 90s: o próximo ataque básico contra torre ou monstro épico consome o efeito para causar 300 / 240 (+25 / +20 por 1 de Letalidade) de dano verdadeiro bônus ao longo de 3s → 850 / 680 com 22 de Letalidade. Dano em intervalos de 0,25s. Instâncias de Sabotagem NÃO acumulam: uma nova aplicação aplica imediatamente todo o dano pendente da anterior."], "depois": ["Investida Esculpida (passiva única): a próxima instância de dano de habilidade a um campeão ou monstro épico com uma habilidade de campeão causa 50 (corpo a corpo) / 25 (à distância) (+1,5 / +0,75 por 1 de Letalidade) de dano verdadeiro bônus → 83 / 41,5 com os 22 de Letalidade do item. Recarga de 20s. Dano de proc: NÃO ativa efeitos de habilidade. É bloqueado por escudo de feitiço.", "Sabotagem (passiva única): abater ou assistir um campeão inimigo até 3s após causar dano a ele concede Sabotagem por 90s: o próximo ataque básico contra torre ou monstro épico consome o efeito para causar 300 / 240 (+25 / +20 por 1 de Letalidade) de dano verdadeiro bônus ao longo de 3s → 850 / 680 com 22 de Letalidade. Dano em intervalos de 0,25s. Instâncias de Sabotagem NÃO acumulam: uma nova aplicação aplica imediatamente todo o dano pendente da anterior."]}]}, {"slug": "dark-seal", "campos": [{"campo": "habilidades", "antes": ["Glória (passiva única): 2 acúmulos por abate de campeão e 1 por assistência, até 10 acúmulos. 4 de PdH por acúmulo → 40 de PdH com 10 acúmulos. Perde 5 acúmulos ao morrer. Os acúmulos são preservados ao aprimorar para Ladrão de Almas de Mejai."], "depois": ["Glória (passiva única): 2 acúmulos por abate de campeão e 1 por assistência, até 10 acúmulos. 4 de PdH por acúmulo → 40 de PdH com 10 acúmulos. Perde 5 acúmulos ao morrer. Os acúmulos são preservados ao aprimorar para Ladrão de Almas de Mejai."]}]}, {"slug": "experimental-hexplate", "campos": [{"campo": "habilidades", "antes": ["Hexcarregado (passiva única): +30 de Aceleração de Ultimate (permanente). Ex.: ultimate de 100s de recarga cai para 76,92s.", "Turbo (passiva única): ao conjurar a ultimate, entra em Turbo: +50% (corpo a corpo) / +35% (à distância) de Velocidade de Ataque bônus e +20% / +14% de Velocidade de Movimento bônus por 8s. Recarga de 30s, iniciada na conjuração da ultimate. Efeitos de item que ativam ao conjurar a ultimate (Turbo, Barragem Inicial dos Dardos de Caça-Demônios, Tempestade Gelofogo da Convergência de Zeke): no Udyr, ativam por conjuração Despertada; ativam assim que a ultimate é conjurada; com tempo de conjuração, podem ativar até 0,25s depois (inesperado). Ultimates com ativação adiada (EN, como na wiki): Briar — Certain Death (fim da conjuração inicial; renovado ao fim do avanço se acertar); Fiddlesticks — Crowstorm (fim da canalização); Galio — Hero's Entrance (fim da canalização); Kled — Chaaaaaaaarge!!! (fim da carga ou do avanço de perseguição); Nocturne — Paranoia (imediato na primeira conjuração; renovado ao fim do avanço da reconjuração); Pantheon — Grand Starfall (fim da segunda canalização, ou da primeira se interrompida); Poppy — Keeper's Verdict (0,2s após a reconjuração; não ativa se a primeira canalização for interrompida ou expirar); Rek'Sai — Void Rush (ao emergir); Rengar — Thrill of the Hunt (fim da camuflagem); Shen — Stand United (fim da canalização); Sion — Unstoppable Onslaught (0,65s após o fim da canalização sem colisão com inimigo, imediato ao colidir com parede, 0,1s após o fim se colidir com inimigo); Tahm Kench — Devour (após Regurgitate, ao fim do deslocamento do alvo, ou ao fim da supressão sem Regurgitate); Vi — Cease and Desist (0,5s após agarrar o alvo, ou fim do avanço se cancelado); Warwick — Infinite Duress (fim do avanço; se colidir, 0,45s após o início da canalização, renovado ao fim dela)."], "depois": ["Hexcarregado (passiva única): +30 de Aceleração de Ultimate (permanente). Ex.: ultimate de 100s de recarga cai para 76,92s.", "Turbo (passiva única): ao conjurar a ultimate, entra em Turbo: +50% (corpo a corpo) / +25% (à distância) de Velocidade de Ataque bônus e +20% / +10% de Velocidade de Movimento bônus por 8s. Recarga de 30s, iniciada na conjuração da ultimate. Efeitos de item que ativam ao conjurar a ultimate (Turbo, Barragem Inicial dos Dardos de Caça-Demônios, Tempestade Gelofogo da Convergência de Zeke): no Udyr, ativam por conjuração Despertada; ativam assim que a ultimate é conjurada; com tempo de conjuração, podem ativar até 0,25s depois (inesperado). Ultimates com ativação adiada (EN, como na wiki): Briar — Certain Death (fim da conjuração inicial; renovado ao fim do avanço se acertar); Fiddlesticks — Crowstorm (fim da canalização); Galio — Hero's Entrance (fim da canalização); Kled — Chaaaaaaaarge!!! (fim da carga ou do avanço de perseguição); Nocturne — Paranoia (imediato na primeira conjuração; renovado ao fim do avanço da reconjuração); Pantheon — Grand Starfall (fim da segunda canalização, ou da primeira se interrompida); Poppy — Keeper's Verdict (0,2s após a reconjuração; não ativa se a primeira canalização for interrompida ou expirar); Rek'Sai — Void Rush (ao emergir); Rengar — Thrill of the Hunt (fim da camuflagem); Shen — Stand United (fim da canalização); Sion — Unstoppable Onslaught (0,65s após o fim da canalização sem colisão com inimigo, imediato ao colidir com parede, 0,1s após o fim se colidir com inimigo); Tahm Kench — Devour (após Regurgitate, ao fim do deslocamento do alvo, ou ao fim da supressão sem Regurgitate); Vi — Cease and Desist (0,5s após agarrar o alvo, ou fim do avanço se cancelado); Warwick — Infinite Duress (fim do avanço; se colidir, 0,45s após o início da canalização, renovado ao fim dela)."]}]}, {"slug": "hextech-rocketbelt", "campos": [{"campo": "atributos", "antes": ["+60 de Poder de Habilidade", "+350 de Vida", "+20 de Aceleração de Habilidade"], "depois": ["+60 de Poder de Habilidade", "+350 de Vida", "+10 de Aceleração de Habilidade"]}, {"campo": "habilidades", "antes": ["Supersônico (ativa única): avança 275 unidades na direção-alvo (sem atravessar terreno) e dispara um arco de 7 foguetes à frente, que percorrem até 1.050 unidades e explodem num raio de ≈185 ao colidir com inimigo ou terreno. Inimigos a até ≈85 unidades do avanço e os atingidos pelas explosões sofrem 100 (+10% do PdH) de dano mágico → 120 com 200 de PdH, uma vez por conjuração. Reinicia o temporizador do ataque básico (não conta para Saraivada de Lâminas). Recarga de 50s. Dano em área: APLICA efeitos de habilidade. Bloqueado por escudo de feitiço. Direcional; conjurar quebra furtividade; tempo de conjuração breve durante o avanço. Foguetes são projéteis e NÃO atravessam terreno. O avanço é interrompido por derrubada e Arremesso ao Ar; desativado enquanto Aterrado ou Enraizado. Só causa dano ao mesmo inimigo uma vez a cada 3s pelo mesmo usuário. A caixa de colisão do avanço se estende 400 unidades atrás do usuário (inesperado). Durante o avanço: ataques, habilidades, movimento e itens desativados; feitiços de invocador desativados."], "depois": ["Supersônico (ativa única): avança 275 unidades na direção-alvo (sem atravessar terreno) e dispara um arco de 7 foguetes à frente, que percorrem até 1.050 unidades e explodem num raio de ≈185 ao colidir com inimigo ou terreno. Inimigos a até ≈85 unidades do avanço e os atingidos pelas explosões sofrem 135 (+15% do PdH) de dano mágico → 165 com 200 de PdH, uma vez por conjuração. Reinicia o temporizador do ataque básico (não conta para Saraivada de Lâminas). Recarga de 50s. Dano em área: APLICA efeitos de habilidade. Bloqueado por escudo de feitiço. Direcional; conjurar quebra furtividade; tempo de conjuração breve durante o avanço. Foguetes são projéteis e NÃO atravessam terreno. O avanço é interrompido por derrubada e Arremesso ao Ar; desativado enquanto Aterrado ou Enraizado. Só causa dano ao mesmo inimigo uma vez a cada 3s pelo mesmo usuário. A caixa de colisão do avanço se estende 400 unidades atrás do usuário (inesperado). Durante o avanço: ataques, habilidades, movimento e itens desativados; feitiços de invocador desativados."]}, {"campo": "Passiva do Ornn", "antes": ["Poder de Habilidade 60 → 76.67", "Vida 350 → 475", "Aceleração de Habilidade 20 → 30.67"], "depois": ["Poder de Habilidade 60 → 76.67", "Vida 350 → 475", "Aceleração de Habilidade 10 → 20.67"]}]}, {"slug": "hollow-radiance", "campos": [{"campo": "habilidades", "antes": ["Imolar (passiva única): sofrer ou causar dano ativa a passiva por 3s: causa 15 (+1% da Vida bônus) de dano mágico por segundo → 21 com 600 de Vida bônus, aos inimigos num raio de 325 (+100% do tamanho bônus), aumentado para 125% contra tropas e monstros (18,75 + 1,25% da Vida bônus → 26,25). Executa tropas que morreriam com mais um tique. Dano de proc, marcado como periódico e em área, NÃO aplica efeitos de habilidade. Efeito auto-direcionado. Desde o V26.11 a aura não cresce mais com tamanho bônus (bug); não pode ser reduzida abaixo do raio base. Como a aura precisa alcançar o centro do inimigo, alguns campeões corpo a corpo não a aplicam no alcance máximo contra alvos de colisão grande (ex.: Dragão, Arauto).", "Desolar (passiva única): matar uma unidade não campeã (exceto sentinelas e estruturas) causa uma erupção no local da morte com 200% do dano de Imolar — 30 (+2% da Vida bônus) de dano mágico → 42 com 600 de Vida bônus, aos inimigos a até 350 unidades. Abater ou assistir um campeão inimigo até 3s após causar dano a ele causa erupção maior, com 400% do dano de Imolar — 60 (+4% da Vida bônus) → 84, a até 500 unidades. Dano de proc em área, NÃO aplica efeitos de habilidade. Auto-direcionado."], "depois": ["Imolar (passiva única): sofrer ou causar dano ativa a passiva por 3s: causa 15 (+1% da Vida bônus) de dano mágico por segundo → 21 com 600 de Vida bônus, aos inimigos num raio de 325 (+100% do tamanho bônus), aumentado para 125% contra tropas e monstros (18,75 + 1,25% da Vida bônus → 26,25). Executa tropas que morreriam com mais um tique. Dano de proc, marcado como periódico e em área, NÃO aplica efeitos de habilidade. Efeito auto-direcionado. A aura cresce com tamanho bônus (o bug que impedia isso foi corrigido no V26.20) e não pode ser reduzida abaixo do raio base. Como a aura precisa alcançar o centro do inimigo, alguns campeões corpo a corpo não a aplicam no alcance máximo contra alvos de colisão grande (ex.: Dragão, Arauto).", "Desolar (passiva única): matar uma unidade não campeã (exceto sentinelas e estruturas) causa uma erupção no local da morte com 200% do dano de Imolar — 30 (+2% da Vida bônus) de dano mágico → 42 com 600 de Vida bônus, aos inimigos a até 350 unidades. Abater ou assistir um campeão inimigo até 3s após causar dano a ele causa erupção maior, com 400% do dano de Imolar — 60 (+4% da Vida bônus) → 84, a até 500 unidades. Dano de proc em área, NÃO aplica efeitos de habilidade. Auto-direcionado."]}]}, {"slug": "mejai-s-soulstealer", "campos": [{"campo": "habilidades", "antes": ["Glória (passiva única): 4 acúmulos por abate de campeão e 2 por assistência, até 25. 5 de PdH por acúmulo, até 125 com 25. Com 10 ou mais acúmulos, +10% de Velocidade de Movimento bônus. Perde 10 acúmulos ao morrer. Acúmulos preservados do Lacre Sombrio."], "depois": ["Glória (passiva única): 4 acúmulos por abate de campeão e 2 por assistência, até 25. 5 de PdH por acúmulo, até 125 com 25. Com 10 ou mais acúmulos, +10% de Velocidade de Movimento bônus. Perde 10 acúmulos ao morrer. Acúmulos preservados do Lacre Sombrio."]}]}, {"slug": "runaan-s-hurricane", "campos": [{"campo": "habilidades", "antes": ["Fúria do Vento (passiva única): ataques básicos (ao atacar) disparam dardos adicionais em até 2 inimigos à frente (180°), os mais próximos de você que não sejam o alvo principal, cada um causando 65% do DdA de dano físico → 65 com DdA 100. Os dardos aplicam efeitos ao contato e são afetados por modificadores de acerto crítico. Dano básico marcado como área, NÃO aplica efeitos de habilidade. Auto-direcionado. Os dardos: causam o mesmo tipo de dano e aplicam os mesmos efeitos de acerto dos ataques básicos (Roubo de Vida, efeitos ao contato — exceto Dardos de Prata da Vayne —, podem ser críticos só se o ataque principal for, salvo críticos garantidos, atraem aggro de tropas, podem ser esquivados/bloqueados/errados por cegueira); NÃO ativam efeitos ao atacar; são projéteis bloqueáveis com velocidade 2.000 (2.500 nos ataques de Foco do Patrulheiro da Ashe e da Kalista); NÃO miram estruturas nem sentinelas; causam 0 de dano físico ao contato no alvo primário, capaz de acumular Talhar (Cutelo Negro). Dano inalterado se o ataque principal tiver dano modificado (exceto Foco do Patrulheiro e Fishbones). NÃO disparam efeitos já consumidos pelo ataque principal. Campeões que mudam de forma só ativam na forma à distância. A Velocidade de Movimento percentual acumula aditivamente com outros modificadores percentuais."], "depois": ["Fúria do Vento (passiva única): ataques básicos (ao atacar) disparam dardos adicionais em até 2 inimigos à frente (180°), os mais próximos de você que não sejam o alvo principal, cada um causando 60% do DdA de dano físico → 60 com DdA 100. Os dardos aplicam efeitos ao contato e são afetados por modificadores de acerto crítico. Dano básico marcado como área, NÃO aplica efeitos de habilidade. Auto-direcionado. Os dardos: causam o mesmo tipo de dano e aplicam os mesmos efeitos de acerto dos ataques básicos (Roubo de Vida, efeitos ao contato — exceto Dardos de Prata da Vayne —, podem ser críticos só se o ataque principal for, salvo críticos garantidos, atraem aggro de tropas, podem ser esquivados/bloqueados/errados por cegueira); NÃO ativam efeitos ao atacar; são projéteis bloqueáveis com velocidade 2.000 (2.500 nos ataques de Foco do Patrulheiro da Ashe e da Kalista); NÃO miram estruturas nem sentinelas; causam 0 de dano físico ao contato no alvo primário, capaz de acumular Talhar (Cutelo Negro). Dano inalterado se o ataque principal tiver dano modificado (exceto Foco do Patrulheiro e Fishbones). NÃO disparam efeitos já consumidos pelo ataque principal. Campeões que mudam de forma só ativam na forma à distância. A Velocidade de Movimento percentual acumula aditivamente com outros modificadores percentuais."]}]}, {"slug": "runic-compass", "campos": [{"campo": "atributos", "antes": ["+100 de Vida", "+50% de Regeneração de Vida base", "+50% de Regeneração de Mana base", "+5 de ouro a cada 10s"], "depois": ["+60 de Vida", "+75% de Regeneração de Vida base", "+50% de Regeneração de Mana base", "+5 de ouro a cada 10s"]}]}, {"slug": "sunfire-aegis", "campos": [{"campo": "habilidades", "antes": ["Imolar (passiva única): sofrer ou causar dano ativa a passiva por 3s: causa 20 (+1,5% da Vida bônus) de dano mágico por segundo → 29 com 600 de Vida bônus, aos inimigos num raio de 325 (+100% do tamanho bônus), aumentado para 150% contra tropas (30 + 2,25% da Vida bônus → 43,5) e 180% contra monstros (36 + 2,7% → 52,2). Executa tropas que morreriam com mais um tique. Dano de proc, marcado como periódico, NÃO aplica efeitos de habilidade. Auto-direcionado. O dano por segundo atual aparece como contador no ícone do item. Desde o V26.11 a aura não cresce mais com tamanho bônus (bug); não pode ser reduzida abaixo do raio base. Como a aura precisa alcançar o centro do inimigo, alguns campeões corpo a corpo não a aplicam no alcance máximo contra alvos de colisão grande."], "depois": ["Imolar (passiva única): sofrer ou causar dano ativa a passiva por 3s: causa 20 (+1,5% da Vida bônus) de dano mágico por segundo → 29 com 600 de Vida bônus, aos inimigos num raio de 325 (+100% do tamanho bônus), aumentado para 150% contra tropas (30 + 2,25% da Vida bônus → 43,5) e 180% contra monstros (36 + 2,7% → 52,2). Executa tropas que morreriam com mais um tique. Dano de proc, marcado como periódico, NÃO aplica efeitos de habilidade. Auto-direcionado. O dano por segundo atual aparece como contador no ícone do item. A aura cresce com tamanho bônus (o bug que impedia isso foi corrigido no V26.20) e não pode ser reduzida abaixo do raio base. Como a aura precisa alcançar o centro do inimigo, alguns campeões corpo a corpo não a aplicam no alcance máximo contra alvos de colisão grande."]}]}, {"slug": "world-atlas", "campos": [{"campo": "atributos", "antes": ["+30 de Vida", "+25% de Regeneração de Vida base", "+25% de Regeneração de Mana base", "+3 de ouro a cada 10s"], "depois": ["+50% de Regeneração de Vida base", "+25% de Regeneração de Mana base", "+3 de ouro a cada 10s"]}]}], "removidos": []}];
+const byId = {};
+(window.CATALOG ? CATALOG.items : []).forEach(it => byId[it.slug] = it);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const limpa = (s) => String(s).replace(/\\n/g, " ");
+const ROTULO = { "preço": "Preço", "custo de combinação": "Combinação", "atributos": "Atributos", "habilidades": "Habilidades",
+  "receita": "Receita", "modos": "Modos", "Reembolso": "Reembolso", "Passiva do Ornn": "Passiva do Ornn" };
+
+// a diferença palavra a palavra (a maior sequência comum): o que saiu riscado, o que entrou realçado
+function difPalavras(a, b) {
+  const x = limpa(a).split(/(\s+)/), y = limpa(b).split(/(\s+)/), n = x.length, m = y.length;
+  const L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = x[i] === y[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  let i = 0, j = 0, h = "";
+  while (i < n && j < m) {
+    if (x[i] === y[j]) { h += esc(x[i]); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) { h += /\S/.test(x[i]) ? "<del>" + esc(x[i]) + "</del>" : esc(x[i]); i++; }
+    else { h += /\S/.test(y[j]) ? "<ins>" + esc(y[j]) + "</ins>" : esc(y[j]); j++; }
+  }
+  while (i < n) { h += /\S/.test(x[i]) ? "<del>" + esc(x[i]) + "</del>" : esc(x[i]); i++; }
+  while (j < m) { h += /\S/.test(y[j]) ? "<ins>" + esc(y[j]) + "</ins>" : esc(y[j]); j++; }
+  return h;
+}
+const numero = (s) => { const m = /-?\d+(?:[.,]\d+)?/.exec(String(s)); return m ? Number(m[0].replace(",", ".")) : null; };
+// só a redação mudou (os números do texto são os mesmos)
+const soTexto = (a, b) => JSON.stringify((limpa(a).match(/\d+(?:[.,]\d+)?/g) || [])) === JSON.stringify((limpa(b).match(/\d+(?:[.,]\d+)?/g) || []));
+
+function antesDepois(c) {
+  const a = c.antes || [], b = c.depois || [];
+  if (c.campo === "preço" || c.campo === "custo de combinação") {
+    const va = numero(a[0]), vb = numero(b[0]);
+    const cls = va != null && vb != null ? (vb > va ? "desce" : vb < va ? "sobe" : "") : "";   // mais caro é pior para quem compra
+    return '<span class="antes">' + esc(a[0] || "—") + ' g</span><span class="seta">→</span><span class="depois ' + cls + '">' + esc(b[0] || "—") + " g</span>";
+  }
+  // linha a linha: a que ficou igual some; a que mudou mostra a diferença
+  const linhas = [], k = Math.max(a.length, b.length);
+  for (let i = 0; i < k; i++) {
+    if (a[i] === b[i]) continue;
+    if (a[i] != null && b[i] != null) linhas.push(difPalavras(a[i], b[i]) + (c.campo === "habilidades" && soTexto(a[i], b[i]) ? '<span class="so-texto">(só a redação)</span>' : ""));
+    else if (a[i] != null) linhas.push("<del>" + esc(limpa(a[i])) + "</del>");
+    else linhas.push("<ins>" + esc(limpa(b[i])) + "</ins>");
+  }
+  return linhas.join("<br>");
+}
+function resumo(c) {
+  if (c.campo === "preço" || c.campo === "custo de combinação") {
+    const va = numero((c.antes || [])[0]), vb = numero((c.depois || [])[0]);
+    return ROTULO[c.campo] + " " + (vb > va ? "+" : "") + (vb - va) + " g";
+  }
+  if (c.campo === "atributos") {
+    const p = [], k = Math.max((c.antes || []).length, (c.depois || []).length);
+    for (let i = 0; i < k; i++) if ((c.antes || [])[i] !== (c.depois || [])[i]) p.push(((c.antes || [])[i] || "—") + " → " + ((c.depois || [])[i] || "—"));
+    return p.join("; ");
+  }
+  return ROTULO[c.campo] + " mudou";
+}
+
+let atual = 0;
+function desenhar() {
+  const v = DADOS[atual];
+  document.getElementById("patches").innerHTML = DADOS.map((d, i) => '<button type="button" data-i="' + i + '" aria-pressed="' + (i === atual) + '">Patch ' + esc(d.patch) + "</button>").join("");
+  const nome = (s) => byId[s] ? byId[s].namePt : s, icone = (s) => byId[s] ? '<img src="' + esc(byId[s].iconUrl) + '" alt="">' : "";
+  // A
+  document.getElementById("livro").innerHTML = '<div class="livro-cab"><b>Patch ' + esc(v.patch) + '</b><span>desde o ' + esc(v.desde) + '</span><em>'
+    + v.itens.length + (v.itens.length === 1 ? " ITEM" : " ITENS") + "</em></div>"
+    + v.itens.map(it => '<div class="linha">' + icone(it.slug) + '<div><div class="nome">' + esc(nome(it.slug)) + "<small>" + esc(byId[it.slug] ? byId[it.slug].tier : "") + "</small></div>"
+      + '<dl class="lanc">' + it.campos.map(c => "<dt>" + esc(ROTULO[c.campo] || c.campo) + "</dt><dd>" + antesDepois(c) + "</dd>").join("") + "</dl></div></div>").join("")
+    + (v.removidos.length ? '<p class="removidos">Saíram do jogo: ' + v.removidos.map(s => esc(nome(s))).join(", ") + "</p>" : "");
+  // B
+  document.getElementById("quadro").innerHTML = '<div class="quadro-cab"><span class="placa">Patch ' + esc(v.patch) + '</span><span>' + v.itens.length + " avisos · desde o " + esc(v.desde) + "</span></div>"
+    + '<div class="avisos">' + v.itens.map((it, i) => {
+        const numeros = it.campos.filter(c => c.campo !== "habilidades" || !(c.antes || []).every((a, k) => a === (c.depois || [])[k] || soTexto(a, (c.depois || [])[k] || "")));
+        return '<div class="aviso" style="--giro:' + ((i * 37) % 7 - 3) * .6 + 'deg" tabindex="0"><div class="aviso-topo">' + icone(it.slug) + "<b>" + esc(nome(it.slug)) + "</b></div>"
+          + '<div class="selos">' + it.campos.map(c => '<span class="selo' + (numeros.includes(c) ? " num" : "") + '">' + esc(ROTULO[c.campo] || c.campo) + "</span>").join("") + "</div>"
+          + '<div class="resumo">' + esc(it.campos.filter(c => c.campo !== "habilidades").map(resumo).join(" · ") || (numeros.length ? "Habilidade com número novo" : "Só a redação da habilidade")) + "</div>"
+          + '<div class="detalhe">' + it.campos.map(c => "<p><b>" + esc(ROTULO[c.campo] || c.campo) + "</b>" + antesDepois(c) + "</p>").join("") + "</div>"
+          + '<div class="abre">clique para ver o antes e o depois</div></div>';
+      }).join("") + "</div>";
+}
+document.addEventListener("click", (ev) => {
+  const b = ev.target.closest("#patches button"); if (b) { atual = Number(b.dataset.i); desenhar(); return; }
+  const a = ev.target.closest(".aviso"); if (a) a.classList.toggle("aberto");
+});
+document.addEventListener("keydown", (ev) => { const a = ev.target.closest && ev.target.closest(".aviso"); if (a && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); a.classList.toggle("aberto"); } });
+desenhar();
+</script>
+</body>
+</html>
