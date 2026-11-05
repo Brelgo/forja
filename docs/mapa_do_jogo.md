@@ -39,13 +39,14 @@ de 454) e a forma 3 dentro da `Cup_Base` (118 de 136). As marcas da camada são 
 rio). Captura `fase13-t113-almas.png`: cada variante, a imagem dela à esquerda e a grade com a camada à direita
 (as caixas em ciano são as regiões).
 
-## 3. Em aberto — para o Leo conferir no jogo
+## 3. Decidido com o Leo
 
-- **O Infernal:** a imagem do Infernal mostra quatro paredes da selva queimadas (abertas), mas a camada dele só
-  mexe no covil do Dragão (captura `fase13-t113-diferencas.png`, embaixo à esquerda, em vermelho). Ou o jogo
-  ainda abre essas paredes por outro caminho, ou a imagem ficou de uma temporada anterior. No jogo: com a alma
-  do Infernal, essas paredes da selva se abrem?
-- **A Quimtec** não tem imagem própria: na sexta, ela usaria a imagem de base com a camada dela.
+- **O Infernal muda só o covil do Dragão** (Leo, 05/11/2026: "só o covil, eu falei errado!"): a camada dele está
+  certa, e as quatro paredes da selva queimadas que a imagem `infernal_baron1` mostra (captura
+  `fase13-t113-diferencas.png`, embaixo à esquerda) são arte de uma temporada anterior. Na sexta, a imagem do
+  Infernal é a de base com o covil do Dragão tirado da imagem dele (só a área da camada), para a figura não
+  mostrar parede aberta que o jogo não abre.
+- **A Quimtec** não tem imagem própria: a de base, com a camada dela.
 
 ## 4. Para sexta (a parte 2)
 
