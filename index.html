@@ -4873,6 +4873,18 @@ body.ac-movimento .chamar { box-shadow: 0 0 0 3px var(--forja-brasa), 0 0 18px v
 .champ-pick { position: relative; display: inline-block; }
 .champ-btn { display: inline-flex; align-items: center; gap: 8px; min-width: 230px; text-align: left; cursor: pointer; padding-right: 30px; position: relative; }
 .champ-btn .champ-caret, .build-switch-btn .champ-caret { position: absolute; right: 11px; top: 50%; width: 7px; height: 7px; border-right: 2px solid var(--forja-texto-suave); border-bottom: 2px solid var(--forja-texto-suave); transform: translateY(-70%) rotate(45deg); }
+.forma-pick { display: inline-flex; gap: 4px; }
+.forma-opt { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border-radius: 3px; cursor: pointer; border: 1px solid #3a3029; background: rgba(0,0,0,.3); color: var(--forja-texto-suave); font-family: var(--loja-texto); font-size: 13px; }
+.forma-opt img { width: 24px; height: 24px; border-radius: 3px; border: 1px solid #c9973f; object-fit: cover; }
+.forma-opt:hover:not(:disabled) { border-color: var(--forja-brasa); }
+.forma-opt.ativa { border-color: #c9973f; color: var(--forja-brasa-clara); box-shadow: 0 0 0 1px #c9973f; }
+.forma-opt:disabled { cursor: default; }
+.forma-opt:disabled:not(.ativa) { opacity: .45; }
+/* F13-T117: as duas formas num ícone só — Rhaast em cima à esquerda, o Assassino das Sombras embaixo à direita */
+.champ-duas { position: relative; display: inline-block; line-height: 0; flex-shrink: 0; vertical-align: middle; }
+.champ-duas > img + img { position: absolute; left: 0; top: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.champ-duas::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to bottom right, transparent calc(50% - 1px), #c9973f calc(50% - 1px), #c9973f calc(50% + .5px), transparent calc(50% + .5px)); }
 .champ-btn.aberto { border-color: var(--forja-brasa); box-shadow: 0 0 10px var(--forja-brasa-glow); }
 .champ-menu {
   position: absolute; z-index: 90; top: calc(100% + 6px); left: 0; width: 460px; max-width: calc(100vw - 40px);
@@ -8507,6 +8519,8 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
         <p id="champ-note" class="champ-note" hidden></p>
       </div>
     </div>
+    <span class="library-label" id="build-forma-rot" hidden>Forma</span>
+    <div id="build-forma" class="forma-pick" role="radiogroup" aria-label="Forma do campeão" hidden></div>
     <span class="library-label">Layout</span>
     <select id="build-layout" class="build-select layout-select" title="Como esta build é lida (o Tabuleiro é a forja; os outros são leituras, sem edição)"></select>
     <button id="new-build" class="btn">Nova build</button>
@@ -9420,7 +9434,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.114";
+const ATUALIZACAO = "13.117";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -9441,7 +9455,16 @@ const Campeoes = (() => {
   const DD = "https://ddragon.leagueoflegends.com/cdn/" + patch;
   const CHAVE = "campeoes." + patch;
   let lista = null, promessa = null, falha = null;
-  function iconUrl(id) { return `${DD}/img/champion/${id}.png`; }
+  function iconUrl(id, forma) { const f = formas(id).find(x => x.id === forma); return f ? f.icone : `${DD}/img/champion/${id}.png`; }
+  // F13-T117: o campeão de duas formas (Leo, 05/11/2026: "precisa ver quando a build serve para ambas as formas").
+  // O Data Dragon só tem o ícone de sempre; os das formas vêm do Community Dragon, na versão do catálogo.
+  // Os nomes são os que o Leo usou no pedido (rótulo da tela, como os marcadores).
+  const CD = "https://raw.communitydragon.org/" + patch.split(".").slice(0, 2).join(".") + "/game/assets/characters/";
+  const FORMAS = {
+    Kayn: [{ id: "rhaast", nome: "Rhaast", icone: CD + "kayn/hud/kayn_slay_square.png" },
+           { id: "sombra", nome: "Assassino das Sombras", icone: CD + "kayn/hud/kayn_ass_square.png" }],
+  };
+  function formas(id) { return FORMAS[id] || []; }
   function daCache() {
     try { const j = localStorage.getItem(CHAVE); if (j) lista = JSON.parse(j); } catch (e) { /* sem cache */ }
     return lista;
@@ -9490,7 +9513,7 @@ const Campeoes = (() => {
     const n = norm(nome);
     return (lista || []).find(c => norm(c.name) === n || norm(c.id) === n) || null;
   }
-  return { carregar, iconUrl, porChave, porNome, habilidades, habilidadesCache, spellUrl, get lista() { return lista; }, get falha() { return falha; }, patch };
+  return { carregar, iconUrl, formas, porChave, porNome, habilidades, habilidadesCache, spellUrl, get lista() { return lista; }, get falha() { return falha; }, patch };
 })();
 
 // ---------------- Marcadores da build (Fase 7, T5) ----------------
@@ -9715,7 +9738,7 @@ function assinaturaDaBuild(b) {
     : (v && typeof v === "object") ? Object.keys(v).sort().reduce((o, k) => { o[k] = ordena(v[k]); return o; }, {}) : v;
   return JSON.stringify(ordena({
     name: b.name || "", desc: b.desc || "", mode: b.mode || "", rota: rotaValida(b.rota), masterwork: !!b.masterwork,
-    champion: b.champion && b.champion.key ? String(b.champion.key) : null,
+    champion: b.champion && b.champion.key ? String(b.champion.key) + (b.champion.forma ? ":" + b.champion.forma : "") : null,
     markers: normMarkers(b.markers), runas: normRunas(b.runas), habilidades: normHabilidades(b.habilidades),
     // F13-T108: as marcas do mapa contam como mudança da build (a assinatura só as leva quando existem:
     // as builds de antes, sem o campo, não passam a dizer "Há alterações")
@@ -10670,7 +10693,7 @@ function loadBuild() {
           rota: rotaValida(b.rota),
           masterwork: !!b.masterwork,
           // Campeão (Fase 7, T2): sem esta linha o campo se perdia a cada recarga.
-          champion: b.champion && b.champion.key && b.champion.id ? { key: String(b.champion.key), id: String(b.champion.id), name: String(b.champion.name || b.champion.id) } : null,
+          champion: normCampeao(b.champion),
           markers: normMarkers(b.markers),
           desc: typeof b.desc === "string" ? b.desc : "",
           runas: b.runas || null,   // normalizada quando a build vira ativa
@@ -10740,7 +10763,7 @@ function copiarParaBigorna(b) {
   build.mode = ALL_MODES.includes(b.mode) ? b.mode : "";
   build.rota = rotaValida(b.rota);
   build.masterwork = !!b.masterwork;
-  build.champion = b.champion && b.champion.key ? { key: String(b.champion.key), id: String(b.champion.id), name: String(b.champion.name) } : null;
+  build.champion = normCampeao(b.champion);
   build.markers = normMarkers(b.markers);
   build.desc = typeof b.desc === "string" ? b.desc : "";
   build.runas = normRunas(b.runas);
@@ -12709,13 +12732,21 @@ function renderSpanOptions() {
     b.classList.toggle("active", Number(b.dataset.span) === build.defaultSpan));
 }
 
+// F13-T117: o campeão da build, com a forma quando ele tem formas ("" = as duas)
+function normCampeao(c) {
+  if (!c || !c.key || !c.id) return null;
+  const o = { key: String(c.key), id: String(c.id), name: String(c.name || c.id) };
+  if (Campeoes.formas(o.id).some(f => f.id === c.forma)) o.forma = c.forma;
+  return o;
+}
 function setBuildChampion(c) {
-  build.champion = c ? { key: String(c.key), id: String(c.id), name: String(c.name) } : null;
+  build.champion = c ? normCampeao({ key: c.key, id: c.id, name: c.name }) : null;   // outro campeão: a forma volta a "as duas"
   saveBuild();
   renderBuildAll();
 }
 
 function initChampPicker() {
+  initFormaSelect();
   const btn = document.getElementById("build-champ-btn");
   const menu = document.getElementById("champ-menu");
   const search = document.getElementById("champ-search");
@@ -12803,6 +12834,32 @@ function renderLayoutSelect() {
   if (!sel.options.length) Object.keys(LAYOUTS).forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = LAYOUTS[k]; sel.appendChild(o); });
   sel.value = layoutValido(build.layout);
 }
+// F13-T117: as formas do campeão da build (só aparece no campeão que tem); "" = a build serve para as duas
+function renderFormaSelect() {
+  const caixa = document.getElementById("build-forma"), rot = document.getElementById("build-forma-rot");
+  if (!caixa) return;
+  const fs = build.champion ? Campeoes.formas(build.champion.id) : [];
+  caixa.hidden = rot.hidden = !fs.length;
+  if (!fs.length) { caixa.innerHTML = ""; return; }
+  const atual = build.champion.forma || "";
+  const opcoes = [{ id: "", nome: "As duas", html: champIconHtml({ id: build.champion.id, name: build.champion.name }, "") }]
+    .concat(fs.map(f => ({ id: f.id, nome: f.nome, html: `<img src="${f.icone}" alt="">` })));
+  caixa.innerHTML = opcoes.map(o => `<button type="button" class="forma-opt${o.id === atual ? " ativa" : ""}" data-forma="${o.id}" role="radio" aria-checked="${o.id === atual}"${build.editing ? "" : " disabled"} title="${o.id ? "A build é para o Kayn " + esc(o.nome) : "A build serve para as duas formas"}">${o.html}<span>${esc(o.nome)}</span></button>`).join("");
+}
+function initFormaSelect() {
+  const caixa = document.getElementById("build-forma");
+  if (!caixa) return;
+  caixa.addEventListener("click", (e) => {
+    const b = e.target.closest(".forma-opt");
+    if (!b || b.disabled || !build.champion) return;
+    const forma = b.dataset.forma;
+    if ((build.champion.forma || "") === forma) return;
+    build.champion = normCampeao(Object.assign({}, build.champion, { forma }));
+    saveBuild();
+    renderBuildAll();
+  });
+}
+
 function renderChampSelect() {
   const list = document.getElementById("champ-list");
   const label = document.getElementById("build-champ-label");
@@ -12828,9 +12885,10 @@ function renderChampSelect() {
   const art = document.getElementById("build-champ-art");
   [icon, art].forEach(img => {
     if (!img) return;
-    if (build.champion) { img.src = Campeoes.iconUrl(build.champion.id); img.alt = build.champion.name; img.title = build.champion.name; img.hidden = false; }
+    if (build.champion) { img.src = Campeoes.iconUrl(build.champion.id, build.champion.forma); img.alt = build.champion.name; img.title = build.champion.name; img.hidden = false; }
     else { img.hidden = true; img.removeAttribute("src"); }
   });
+  renderFormaSelect();
   const folder = document.getElementById("client-folder");
   const note = document.getElementById("client-folder-note");
   if (folder) folder.textContent = pastaCliente();
@@ -13255,7 +13313,7 @@ function renderPicker() {
 
 let dragCatId = null;
 let dragItemPayload = null;
-const EDITAVEIS_NA_FORJA = ".build-name, .build-desc, .cat-name, .cat-desc, .cat-kind, .build-habs .bh-cel, #mf-switch, .champ-btn, #build-mode, #build-rota, #build-marks .mark-slot";
+const EDITAVEIS_NA_FORJA = ".build-name, .build-desc, .cat-name, .cat-desc, .cat-kind, .build-habs .bh-cel, #mf-switch, .champ-btn, .forma-opt, #build-mode, #build-rota, #build-marks .mark-slot";
 
 let editHintTimer = null;
 // F13-T76 (Leo, 24/10/2026: "deve sempre fazer uma notificação informando que o modo de edição
@@ -14918,9 +14976,14 @@ function buildResumo(b) {
     n: cats.reduce((s, c) => s + c.items.length, 0),
   };
 }
+// F13-T117: a forma escolhida troca o ícone; a build das duas formas mostra os dois ícones na diagonal (a opção A do Leo)
 function champIconHtml(champ, cls) {
-  return champ ? `<img class="${cls}" src="${Campeoes.iconUrl(champ.id)}" alt="" title="${esc(champ.name)}" loading="lazy">`
-               : `<span class="${cls} bp-todos" title="Todos os campeões">∞</span>`;
+  if (!champ) return `<span class="${cls} bp-todos" title="Todos os campeões">∞</span>`;
+  const fs = Campeoes.formas(champ.id), f = fs.find(x => x.id === champ.forma);
+  if (f) return `<img class="${cls}" src="${f.icone}" alt="" title="${esc(champ.name + " · " + f.nome)}" loading="lazy">`;
+  if (fs.length === 2)
+    return `<span class="champ-duas" title="${esc(champ.name)} · as duas formas"><img class="${cls}" src="${fs[0].icone}" alt="" loading="lazy"><img class="${cls}" src="${fs[1].icone}" alt="" loading="lazy"></span>`;
+  return `<img class="${cls}" src="${Campeoes.iconUrl(champ.id)}" alt="" title="${esc(champ.name)}" loading="lazy">`;
 }
 
 function showBuildScreen(tela) {

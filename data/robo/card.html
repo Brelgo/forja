@@ -31,7 +31,12 @@
   .fundo { position: absolute; inset: 0 0 0 auto; width: 720px; background-size: cover; background-position: 50% 25%; opacity: .32;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%); }
   .topo { position: absolute; left: 34px; top: 26px; right: 190px; display: flex; gap: 20px; align-items: center; height: 124px; }
-  .retrato { flex: none; width: 118px; height: 118px; border-radius: 50%; border: 3px solid var(--ouro); box-shadow: 0 0 0 5px #0b0908, 0 0 0 6px var(--borda), 0 0 24px var(--brasa-glow); background-size: cover; }
+  .retrato { flex: none; width: 118px; height: 118px; border-radius: 50%; border: 3px solid var(--ouro); box-shadow: 0 0 0 5px #0b0908, 0 0 0 6px var(--borda), 0 0 24px var(--brasa-glow); background-size: cover;
+    position: relative; overflow: hidden; }
+  /* F13-T117: a build das duas formas — a segunda forma embaixo à direita, a linha de ouro na diagonal */
+  .retrato .metade { position: absolute; inset: 0; background-size: cover; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+  .retrato.duas::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom right, transparent calc(50% - 1.5px), var(--ouro) calc(50% - 1.5px), var(--ouro) calc(50% + 1.5px), transparent calc(50% + 1.5px)); }
   .cab { min-width: 0; flex: 1; }
   .nome { font-family: 'Cinzel', serif; font-weight: 700; font-size: 50px; color: var(--ouro-claro); line-height: 1.05; letter-spacing: .04em;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -61,6 +66,13 @@
 <script>
 const DD = "https://ddragon.leagueoflegends.com/cdn/";
 const PATCH = CATALOG.meta.patch;
+// F13-T117: as formas do campeão — as mesmas do app (Campeoes.formas no index.html): ícones do Community Dragon
+// na versão do catálogo, nomes do pedido do Leo
+const CD = "https://raw.communitydragon.org/" + PATCH.split(".").slice(0, 2).join(".") + "/game/assets/characters/";
+const FORMAS = {
+  Kayn: [{ id: "rhaast", nome: "Rhaast", icone: CD + "kayn/hud/kayn_slay_square.png" },
+         { id: "sombra", nome: "Assassino das Sombras", icone: CD + "kayn/hud/kayn_ass_square.png" }],
+};
 // Map, não objeto: quem publica escolhe o itemId e as runas, e "constructor" ou "__proto__" num objeto
 // comum achavam a função herdada (F13-T95: o desenho quebrava e, com ele, a rodada do robô)
 const porSlug = new Map(CATALOG.items.map(i => [i.slug, i]));
@@ -167,7 +179,9 @@ async function desenhar(build) {
   let arte = ch ? `${DD}img/champion/centered/${encodeURIComponent(ch)}_0.jpg` : "";
   let temArte = await carregar(arte);
   if (ch && !temArte) { arte = `${DD}img/champion/splash/${encodeURIComponent(ch)}_0.jpg`; temArte = await carregar(arte); }
-  const retrato = ch ? `${DD}${PATCH}/img/champion/${encodeURIComponent(ch)}.png` : "";
+  const formas = (ch && FORMAS[ch]) || [], forma = formas.find(x => x.id === build.campeao.forma);
+  const retrato = !ch ? "" : forma ? forma.icone : formas.length === 2 ? formas[0].icone : `${DD}${PATCH}/img/champion/${encodeURIComponent(ch)}.png`;
+  const retrato2 = ch && !forma && formas.length === 2 ? formas[1].icone : "";
   const f = fichaDaBuild(build);
   const R = build.runas && typeof build.runas === "object" ? build.runas : {};
   const ordem = ordemDasHabilidades(build.habilidades);
@@ -178,13 +192,13 @@ async function desenhar(build) {
   const hab = L => { const s = spells && spells["QWE".indexOf(L)]; return s && s.image ? `<img class="ico" src="${esc(DD + PATCH + "/img/spell/" + s.image.full)}" width="56" height="56" alt="">` : `<div class="letra">${L}</div>`; };
   const it = s => `<div class="it">${ico(s, 64)}<span>${esc(porSlug.get(s).namePt)}</span></div>`;
   const temRunas = runas.has(R.assinatura) || lista(R.slots).some(id => runas.has(id));
-  const tags = [ROTAS.get(build.rota) || "", build.modo].filter(Boolean).join(" · ");
+  const tags = [forma ? forma.nome : "", ROTAS.get(build.rota) || "", build.modo].filter(Boolean).join(" · ");
   const quem = [build.campeao && build.campeao.name, ROTAS.get(build.rota) || "", build.modo].filter(Boolean).join(" · ");
   const pe = [build.autor ? "por " + build.autor : "", build.patch ? "patch " + build.patch : ""].filter(Boolean).join(" · ");
   const nomeCampeao = build.campeao && build.campeao.name;
   const vazio = t => `<div class="vazio">${t}</div>`;
   card.innerHTML = `${temArte ? `<div class="fundo" style="background-image:url(&quot;${esc(arte)}&quot;)"></div>` : ""}
-    <div class="topo">${ch ? `<div class="retrato" style="background-image:url(&quot;${esc(retrato)}&quot;)"></div>` : ""}
+    <div class="topo">${ch ? `<div class="retrato${retrato2 ? " duas" : ""}" style="background-image:url(&quot;${esc(retrato)}&quot;)">${retrato2 ? `<div class="metade" style="background-image:url(&quot;${esc(retrato2)}&quot;)"></div>` : ""}</div>` : ""}
       <div class="cab"><div class="nome">${esc(nomeCampeao || build.nome || "Build sem nome")}</div>
         ${nomeCampeao ? `<div class="build">${esc(build.nome || "Build sem nome")}</div>` : ""}
         ${tags ? `<div class="tags">${esc(tags)}</div>` : ""}</div></div>
@@ -211,7 +225,7 @@ async function desenhar(build) {
   const rostos = await comPrazo(Promise.all(ROSTOS.map(fo => document.fonts.load(fo).then(l => l.length > 0 && l.every(x => x.status === "loaded"), () => false))), PRAZO_MS, []);
   await comPrazo(document.fonts.ready.catch(() => null), PRAZO_MS, null);
   const fontes = rostos.length === ROSTOS.length && rostos.every(Boolean);
-  if (ch && retrato && !(await carregar(retrato))) faltou.push("retrato");
+  if (ch && retrato && (!(await carregar(retrato)) || (retrato2 && !(await carregar(retrato2))))) faltou.push("retrato");
   await Promise.all([...card.querySelectorAll("img")].map(i => i.complete ? i.naturalWidth > 0 : carregar(i.src)));
   // o que a foto vai mostrar, para o robô e o roteiro conferirem
   const caixa = card.getBoundingClientRect();

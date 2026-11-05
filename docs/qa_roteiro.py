@@ -8307,6 +8307,93 @@ def checar_mesa(s, p):
         s.tela(1440, 900)
 
 
+def checar_formas(s, p):
+    """F13-T117 (Leo, 05/11/2026: "no caso do Kayn… precisa ver quando a build serve para ambas as formas, eu pensei
+    nos 2 ícones com uma linha na diagonal dividindo eles"; a opção A; "adoraria que o card do Discord acompanhasse
+    a forma"): o marcador de forma. O seletor só existe no campeão de formas (o Kayn), só muda com o Editar, grava a
+    forma dentro do campeão da build (volta ao recarregar), troca o ícone em todo lugar (as duas: os dois ícones na
+    diagonal), conta na assinatura (sem forma, a assinatura de antes) e o card do Discord segue a forma."""
+    print("\n%sFORMA DO CAMPEÃO%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+    fim = time.time() + 10
+    while time.time() < fim and not s.js("!!Campeoes.lista"):
+        s.js("Campeoes.carregar(); 1")
+        time.sleep(0.3)
+    if not s.js("!!Campeoes.lista"):
+        p.conta("forma do campeão", "a lista de campeões (Data Dragon)", False, "não carregou", pulou=True)
+        return
+    ICONE = {"rhaast": "kayn_slay_square", "sombra": "kayn_ass_square"}
+    gravou, botao, seletor = [], [], []
+    for nome, forma in (("Zed sem forma", None), ("Kayn as duas", ""), ("Kayn Rhaast", "rhaast"), ("Kayn Sombras", "sombra")):
+        s.nova_build()
+        if not s.js("build.editing"):
+            s.clicar("#edit-switch")
+        s.js("build.name = %s; setBuildChampion(Campeoes.porNome(%s)); 1" % (json.dumps(nome), json.dumps("Zed" if forma is None else "Kayn")))
+        time.sleep(0.4)
+        if forma is None:
+            seletor.append(s.js("document.getElementById('build-forma').hidden && document.getElementById('build-forma-rot').hidden"))
+        else:
+            seletor.append(s.js("!document.getElementById('build-forma').hidden && document.querySelectorAll('#build-forma .forma-opt').length === 3"))
+            if forma:
+                s.clicar('#build-forma .forma-opt[data-forma="%s"]' % forma)
+            gravou.append(s.js("(build.champion.forma || '') === %s && document.querySelector('#build-forma .forma-opt.ativa').dataset.forma === %s" % (json.dumps(forma), json.dumps(forma))))
+            if forma:
+                botao.append(s.js("document.getElementById('build-champ-icon').src.includes(%s) && document.getElementById('build-champ-art').src.includes(%s)" % (json.dumps(ICONE[forma]), json.dumps(ICONE[forma]))))
+        if not s.js("document.getElementById('save-btn').disabled"):
+            s.clicar("#save-btn", espera=0.6)
+    p.conta("forma do campeão", "o seletor de forma só no campeão que tem formas (o Zed não; o Kayn com as três opções)", all(seletor), "%s" % seletor)
+    p.conta("forma do campeão", "o clique na forma grava na build e acende o botão", all(gravou) and len(gravou) == 3, "%s" % gravou)
+    p.conta("forma do campeão", "o botão e a arte do campeão na forja seguem a forma", all(botao) and len(botao) == 2, "%s" % botao)
+    # sem o Editar: desligadas, o clique não muda
+    s.clicar("#edit-switch")
+    if s.js("build.editing"):
+        s.clicar("#edit-switch")
+    antes = s.js("build.champion.forma || ''")
+    s.clicar('#build-forma .forma-opt[data-forma="rhaast"]')
+    fixa = s.js("!build.editing && [...document.querySelectorAll('#build-forma .forma-opt')].every(b => b.disabled)") and s.js("(build.champion.forma || '') === %s" % json.dumps(antes))
+    p.conta("forma do campeão", "sem o Editar, as formas ficam desligadas e o clique não troca", bool(fixa), "antes %s" % antes)
+    # recarregar: a forma volta com a build; a lista mostra o ícone de cada forma e o dividido
+    s.abrir("")
+    time.sleep(1)
+    s.entrar()
+    s.js("switchTab('build'); showBuildScreen('lista'); 1")
+    time.sleep(0.8)
+    volta = s.js("library.builds.filter(b => b.champion && b.champion.id === 'Kayn').map(b => b.champion.forma || '').sort().join(',')")
+    p.conta("forma do campeão", "depois de recarregar, cada build do Kayn com a sua forma", volta == ",rhaast,sombra", "%r" % volta)
+    lista = s.js("""(() => { const imgs = [...document.querySelectorAll('#bi-rows .bi-champ img')].map(i => i.src);
+      return { duas: document.querySelectorAll('#bi-rows .bi-champ .champ-duas').length, rhaast: imgs.filter(u => u.includes('kayn_slay_square')).length,
+               sombra: imgs.filter(u => u.includes('kayn_ass_square')).length }; })()""")
+    p.conta("forma do campeão", "a lista: o ícone de cada forma e o dividido na diagonal da build das duas", lista == {"duas": 1, "rhaast": 2, "sombra": 2}, "%s" % lista)
+    ass = s.js("""(() => { const b = library.builds.find(x => x.champion && x.champion.forma === 'rhaast'); const c = JSON.parse(JSON.stringify(b)); delete c.champion.forma;
+      return assinaturaDaBuild(b) !== assinaturaDaBuild(c) && JSON.parse(assinaturaDaBuild(c)).champion === c.champion.key; })()""")
+    p.conta("forma do campeão", "a forma conta na assinatura; a build sem forma assina como antes", ass is True, "%s" % ass)
+    norm = s.js("normCampeao({ key: '238', id: 'Zed', name: 'Zed', forma: 'rhaast' }).forma === undefined && normCampeao({ key: '141', id: 'Kayn', name: 'Kayn', forma: 'xx' }).forma === undefined && normCampeao({ key: '141', id: 'Kayn', name: 'Kayn', forma: 'sombra' }).forma === 'sombra'")
+    p.conta("forma do campeão", "a forma inválida, ou de campeão sem formas, some ao carregar", norm is True, "%s" % norm)
+    # o card do Discord segue a forma (o molde do robô, com a build desenhada aqui)
+    r = Sessao(s.url)
+    try:
+        r.tela(1200, 630)
+        r.abrir("data/robo/card.html")
+        time.sleep(1.5)
+        cards = {}
+        for forma in ("", "rhaast", "sombra"):
+            b = {"nome": "Forma QA", "campeao": {"key": "141", "id": "Kayn", "name": "Kayn", **({"forma": forma} if forma else {})}, "modo": "Summoner's Rift",
+                 "rota": "selva", "patch": "16.21.1", "caixas": []}
+            cards[forma or "duas"] = r.js("""desenhar(%s).then(i => { const rt = document.querySelector('.retrato'), m = rt.querySelector('.metade');
+              return { faltou: i.faltou.join(), bg: getComputedStyle(rt).backgroundImage.includes('kayn_') ? getComputedStyle(rt).backgroundImage.match(/kayn_[a-z]+_square/)[0] : '',
+                       metade: m ? getComputedStyle(m).backgroundImage.match(/kayn_[a-z]+_square/)[0] : '', tags: (document.querySelector('.tags') || {}).textContent || '' }; })""" % json.dumps(b))
+        ok = (cards["duas"] == {"faltou": "", "bg": "kayn_slay_square", "metade": "kayn_ass_square", "tags": "Selva · Summoner's Rift"}
+              and cards["rhaast"] == {"faltou": "", "bg": "kayn_slay_square", "metade": "", "tags": "Rhaast · Selva · Summoner's Rift"}
+              and cards["sombra"] == {"faltou": "", "bg": "kayn_ass_square", "metade": "", "tags": "Assassino das Sombras · Selva · Summoner's Rift"})
+        p.conta("forma do campeão", "o card do Discord: o retrato e o nome da forma; as duas, o retrato dividido", ok, "%s" % cards)
+        p.conta("forma do campeão", "o card: console sem erro", not r.erros, "%s" % r.erros)
+    finally:
+        r.fechar()
+    p.conta("forma do campeão", "console sem erro", not s.erros, "%s" % s.erros)
+
+
 def checar_sentinelas(s, p):
     """F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de
     guerra, revelando o alcance e o que ela revela e o que não revela"; "o raio de visão deve ser equivalente
@@ -8579,6 +8666,7 @@ GRUPOS = [
     ("dicas", checar_dicas),
     ("update tracker", checar_tracker),
     ("mesa de guerra", checar_mesa),
+    ("forma do campeão", checar_formas),
     ("sentinelas", checar_sentinelas),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
