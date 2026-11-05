@@ -6327,7 +6327,7 @@ def checar_camada_robo(s, p):
             and dado["selo_bb"].endswith(":patch 16.22.1") and "conferir" in dado["selo_am"] and dado["selo_rd"] == ""
             and dado["aviso"].startswith("Patch 16.22.1") and not erros, "%s · erros %s" % (dado, erros[:2]))
     p.conta("camada do robô", "na ficha, o bloco do robô diz o que já foi aplicado (de → para, de onde), o que está a conferir e as contas do patch anterior",
-            "Patch 16.22.1 · pelo robô" in ficha and "Já aplicado" in ficha and "%s → %s" % (ap.fmt_num(preco_bb), ap.fmt_num(preco_bb + 100)) in ficha
+            "Patch 16.22.1 · pelo Update Tracker" in ficha and "Já aplicado" in ficha and "%s → %s" % (ap.fmt_num(preco_bb), ap.fmt_num(preco_bb + 100)) in ficha
             and "A conferir" in ficha and "Shaped Charge" in ficha and "Do patch %s" % patch in ficha and "análise de custo" in ficha, ficha[:400])
     p.conta("camada do robô", "a build com item que o robô viu mudar fica desatualizada, com a borda vermelha nele (o da Opcional não conta, o que não mudou também não)",
             etiqueta["robo"] == ["bastionbreaker"] and etiqueta["borda_bb"] is True and etiqueta["borda_ls"] is False and etiqueta["borda_am"] is False and etiqueta["etiqueta"],
@@ -8054,6 +8054,105 @@ def checar_mapa(p):
             r.returncode == 0 and igual, (r.stdout + r.stderr).strip().splitlines()[-1][:120] if (r.stdout + r.stderr).strip() else "sem saída")
 
 
+def checar_tracker(s, p):
+    """F13-T114 (Leo, 05/11/2026: "algo visual para as atualizações do robô para mostrar quais itens e o que foi
+    alterado… o nome do bot para Update Tracker"; a opção B da amostra "como aqueles quadros de velho oeste onde
+    ficam os cartazes de procurado"): o Update Tracker. O botão do topo abre o quadro; um cartaz por item do
+    "detalhe" do data/mudancas.js (o histórico do catálogo), o patch mais novo primeiro; o preço na "Recompensa",
+    do antes ao preço de hoje; o clique abre o antes e o depois; com patch novo na camada, ele vem primeiro, com o
+    que já foi aplicado e o que se confere; o Esc fecha; o mural abre o quadro."""
+    print("\n%sUPDATE TRACKER%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.abrir("")
+    s.entrar()
+    time.sleep(0.5)
+    try:
+        # 0. o registro: o "detalhe" de cada versão casa com os itens e os campos dela
+        reg = s.js("""(() => { const vs = (window.MUDANCAS || {}).versoes || [];
+          return vs.map(v => ({ patch: v.patch, ok: !!v.detalhe && Object.keys(v.detalhe).join() === Object.keys(v.itens).join()
+            && Object.entries(v.detalhe).every(([sl, l]) => l.map(x => x[0]).join() === v.itens[sl].join() && l.every(x => Array.isArray(x[1]) && Array.isArray(x[2]))) })); })()""")
+        p.conta("update tracker", "o data/mudancas.js leva, em cada versão, o antes e o depois de cada campo que mudou (os mesmos itens e campos que desatualizam as builds)",
+                bool(reg) and all(r["ok"] for r in reg), "%s" % reg)
+
+        # 1. o botão abre o quadro: um cartaz por item (e por item que saiu) do patch mais novo, as abas do mais novo ao mais velho
+        s.clicar("#tracker-btn", 0.6)
+        q = s.js("""(() => { const vs = MUDANCAS.versoes, u = vs[vs.length - 1];
+          return { aberto: !document.getElementById('tracker').hidden, exp: document.getElementById('tracker-btn').getAttribute('aria-expanded'),
+                   cartazes: [...document.querySelectorAll('.tk-cartaz')].map(c => c.dataset.slug),
+                   esperado: Object.keys(u.detalhe).concat(u.removidos || []),
+                   nomes: [...document.querySelectorAll('.tk-nome')].map(x => x.textContent),
+                   nomesCat: Object.keys(u.detalhe).concat(u.removidos || []).map(sl => byId[sl] ? byId[sl].namePt : sl),
+                   abas: [...document.querySelectorAll('[data-tk-patch]')].map(b => b.textContent), patches: vs.map(v => 'Patch ' + v.patch).reverse() }; })()""")
+        p.conta("update tracker", "o botão do topo abre o quadro: um cartaz por item que mudou no patch mais novo, com o nome do catálogo; as abas vão do patch mais novo ao mais velho",
+                q["aberto"] and q["exp"] == "true" and q["cartazes"] == q["esperado"] and q["nomes"] == q["nomesCat"] and q["abas"] == q["patches"], "%s" % q)
+
+        # 2. a Recompensa: o preço de antes riscado e o de hoje (o do catálogo)
+        r = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
+          const sl = Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'preço')); if (!sl) return null;
+          const c = document.querySelector('.tk-cartaz[data-slug="' + sl + '"] .tk-recompensa'), pr = u.detalhe[sl].find(x => x[0] === 'preço');
+          return { sl: sl, antes: c && c.querySelector('.tk-antes').textContent, depois: c && c.querySelector('.tk-depois').textContent,
+                   esperaAntes: fmtNum(Number(pr[1][0])) + ' g', esperaDepois: fmtNum(byId[sl].priceGold) + ' g',
+                   caro: c && c.querySelector('.tk-depois').classList.contains(Number(pr[2][0]) > Number(pr[1][0]) ? 'piorou' : 'melhorou') }; })()""")
+        p.conta("update tracker", "no cartaz de preço, a Recompensa mostra o preço de antes riscado e o de hoje (o do catálogo), com a cor de mais caro ou mais barato",
+                bool(r) and r["antes"] == r["esperaAntes"] and r["depois"] == r["esperaDepois"] and r["caro"], "%s" % r)
+
+        # 2b. as cores (Leo, 05/11/2026: "vermelho se é uma mudança negativa, verde para positiva e amarelo para ajuste
+        #     ou reformulação"; "percebi pelo Quebra-Bastião PERDENDO letalidade e estando verde"): o atributo que cai é
+        #     vermelho; na recarga, o número que cai é verde; o texto trocado sem número é amarelo
+        tm = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
+          const cai = Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'atributos' && x[1].some((a, i) => {
+            const b = x[2][i], va = a && Number((a.match(/\\d+(?:,\\d+)?/) || [])[0]), vb = b && Number((b.match(/\\d+(?:,\\d+)?/) || [])[0]);
+            return a && b && a.replace(/[\\d,+]/g, '') === b.replace(/[\\d,+]/g, '') && vb < va; })));
+          const c = cai && document.querySelector('.tk-cartaz[data-slug="' + cai + '"]');
+          const li = c && [...c.querySelectorAll('.tk-resumo li')].find(x => x.textContent.includes('→'));
+          const t = (a, b) => Tracker.difPalavras(a, b).tons.join();
+          return { cai: cai, li: li ? li.className : null, ins: c ? [...c.querySelectorAll('.tk-detalhe p')].filter(p => /Atributos/i.test(p.querySelector('b').textContent)).map(p => [...p.querySelectorAll('ins')].map(i => i.className).join()).join() : null,
+                   dano: t('causa 50 de dano', 'causa 40 de dano'), recarga: t('Recarga de 20s.', 'Recarga de 15s.'), custo: t('custo de 60 de Mana', 'custo de 80 de Mana'),
+                   texto: t('Abates concedem Glória', 'Eliminações concedem Glória'), sobe: t('+30 de Vida', '+45 de Vida'),
+                   junta: [Tracker.juntaTom(['piorou', 'ajuste']), Tracker.juntaTom(['piorou', 'melhorou']), Tracker.juntaTom(['ajuste']), Tracker.juntaTom(['melhorou', 'melhorou'])] }; })()""")
+        p.conta("update tracker", "as cores do tom: o atributo que cai sai vermelho (o Quebra-Bastião perdendo Letalidade), o que sobe verde; na recarga e no custo é o contrário; o texto trocado sem número é amarelo; no cartaz, os números decidem quando vão todos para o mesmo lado (sem número, ou uns subindo e outros descendo, é ajuste)",
+                bool(tm["cai"]) and tm["li"] == "piorou" and tm["ins"] == "piorou" and tm["dano"] == "piorou" and tm["recarga"] == "melhorou"
+                and tm["custo"] == "piorou" and tm["texto"] == "ajuste" and tm["sobe"] == "melhorou" and tm["junta"] == ["piorou", "ajuste", "ajuste", "melhorou"], "%s" % tm)
+
+        # 3. o clique abre o antes e o depois: o que saiu riscado, o que entrou realçado, o texto de hoje da Mecânica
+        d = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
+          const sl = Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'habilidades')); if (!sl) return null;
+          const c = document.querySelector('.tk-cartaz[data-slug="' + sl + '"]'); c.click();
+          const det = c.querySelector('.tk-detalhe'), vis = getComputedStyle(det).display !== 'none';
+          const txt = det.textContent.replace(/\\s+/g, ' '), ins = [...det.querySelectorAll('ins')].map(x => x.textContent), del = [...det.querySelectorAll('del')].map(x => x.textContent);
+          const hoje = (byId[sl].abilities || []).map(h => (h.mechanics || h.description || '').replace(/\\\\n/g, ' ').replace(/\\s+/g, ' '));
+          const semDel = (() => { const cl = det.cloneNode(true); cl.querySelectorAll('del').forEach(x => x.remove()); return cl.textContent.replace(/\\s+/g, ' '); })();
+          return { sl: sl, aberto: c.classList.contains('aberto') && vis, ins: ins.length, del: del.length, hoje: hoje.every(h => semDel.includes(h.slice(0, 60))) }; })()""")
+        p.conta("update tracker", "o clique no cartaz abre o antes e o depois: o que saiu riscado, o que entrou realçado; sem o riscado, fica o texto de hoje da Mecânica",
+                bool(d) and d["aberto"] and d["ins"] > 0 and d["del"] > 0 and d["hoje"], "%s" % d)
+
+        # 4. o Esc fecha; o mural abre o quadro
+        s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+        s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+        time.sleep(0.3)
+        fechou = s.js("document.getElementById('tracker').hidden")
+        s.clicar("#notas-btn", 0.5)
+        s.clicar("#mural [data-abrir-tracker]", 0.6)
+        mural = s.js("({ tracker: !document.getElementById('tracker').hidden, mural: !document.getElementById('mural').hidden })")
+        p.conta("update tracker", "o Esc fecha o quadro; no mural da loja, o \"Ver os cartazes\" abre o quadro (e fecha o mural)",
+                fechou is True and mural == {"tracker": True, "mural": False}, "Esc %s · mural %s" % (fechou, mural))
+
+        # 5. com patch novo na camada: ele vem primeiro, com o que já foi aplicado (de → para) e o que se confere
+        n = s.js("""(() => { ROBO.ativo = true; ROBO.de = CATALOG.meta.patch; ROBO.para = '99.1.1';
+          ROBO.itens = { 'doran-s-blade': { aplicados: ['priceGold'], recusados: [], contaVelha: [], mudou: [{ campo: 'preço', de: 450, para: 500, fonte: 'wiki e Data Dragon' }] } };
+          ROBO.aConferir = { 'long-sword': [{ campo: 'atributos', porque: 'a wiki diz outro número' }] };
+          Tracker.abrir(true);
+          return { abas: [...document.querySelectorAll('[data-tk-patch]')].map(b => b.textContent), titulos: [...document.querySelectorAll('.tk-procurado')].map(x => x.textContent), fina: (document.querySelector('.tk-cartaz[data-slug="doran-s-blade"] .tk-linha-fina') || {}).textContent || '',
+                   rec: (document.querySelector('.tk-cartaz[data-slug="doran-s-blade"] .tk-recompensa') || {}).textContent || '',
+                   conf: (document.querySelector('.tk-cartaz[data-slug="long-sword"] .tk-resumo') || {}).textContent || '' }; })()""")
+        p.conta("update tracker", "com patch novo na camada, a aba dele vem primeiro: o cartaz do patch novo (\"patch novo · …\", e o título pelo tom: o preço subiu, \"Piorou\") com o preço de → para, e o \"A conferir\" com o motivo",
+                n["abas"][:1] == ["Patch 99.1.1 · novo"] and n["titulos"] == ["Piorou", "A conferir"] and n["fina"] == "patch novo · 99.1.1" and "450 g" in n["rec"] and "500 g" in n["rec"]
+                and "a wiki diz outro número" in n["conf"], "%s" % n)
+    finally:
+        s.abrir("")   # a camada de mentira não fica para os outros grupos
+        time.sleep(0.4)
+
+
 def checar_mesa(s, p):
     """F13-T107 (Leo, 02/11/2026: a opção A da F13-T106, e "é para ser uma aba à parte, como a calculadora"):
     a mesa de guerra — o mapa de Summoner's Rift na aba Mapa, com o balão "Novidade" (a adição mais recente);
@@ -8083,13 +8182,14 @@ def checar_mesa(s, p):
 
     abre_mapa = "(() => { switchTab('mapa'); window.scrollTo(0, 0); return 1; })()"
     try:
-        # 1. a aba: o clique abre a tela do mapa e o endereço vira #mapa; o balão "Novidade" mora nela (e só nela);
+        # 1. a aba: o clique abre a tela do mapa e o endereço vira #mapa; o balão "Novidade" é um só, na adição mais
+        #    recente (desde a F13-T114, o botão do Update Tracker);
         #    a linha diz de quem é o mapa — e a build de ARAM avisa que o mapa é o de Summoner's Rift
         s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
         a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')];
           return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
                    aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
-                   ondeNov: n.map(x => x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : '?'),
+                   ondeNov: n.map(x => x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : (x.parentElement.id || '?')),
                    novTxt: n.map(x => x.textContent.trim()), novVis: n.every(x => x.getBoundingClientRect().width > 0),
                    dona: document.getElementById('mesa-dona').textContent.trim(), nome: build.name,
                    src: document.getElementById('mesa-img').src, patch: CATALOG.meta.patch, w: document.getElementById('mesa-img').naturalWidth }; })()""")
@@ -8108,8 +8208,8 @@ def checar_mesa(s, p):
         s.js(abre_mapa)
         time.sleep(0.5)
         j = janela()
-        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa), com o balão \"Novidade\" — um só, nela; a linha diz de qual build é o mapa e, na de ARAM, que o mapa é o de Summoner's Rift; o map11.png do patch, numa janela quadrada",
-                a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["mapa"] and a["novTxt"] == ["Novidade"] and a["novVis"]
+        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no Update Tracker (a adição mais recente); a linha diz de qual build é o mapa e, na de ARAM, que o mapa é o de Summoner's Rift; o map11.png do patch, numa janela quadrada",
+                a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["tracker-btn"] and a["novTxt"] == ["Novidade"] and a["novVis"]
                 and a["nome"] in a["dona"] and "ARAM" in dona_aram and "Summoner's Rift" in dona_aram
                 and a["src"].endswith("/cdn/%s/img/map/map11.png" % a["patch"]) and a["w"] > 0 and abs(j["w"] - j["h"]) < 1.5,
                 "%s · ARAM: %s · janela %s" % (a, dona_aram, j))
@@ -8477,6 +8577,7 @@ GRUPOS = [
     ("entrada", checar_entrada),
     ("entrada da loja", checar_entrada_loja),
     ("dicas", checar_dicas),
+    ("update tracker", checar_tracker),
     ("mesa de guerra", checar_mesa),
     ("sentinelas", checar_sentinelas),
     ("desatualizadas", checar_desatualizadas),

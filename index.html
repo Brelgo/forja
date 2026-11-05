@@ -3725,7 +3725,84 @@ body.names-only .card.full .card-main { padding-bottom: 22px; }
 .mural .m-k { font-variant: small-caps; letter-spacing: .05em; margin-right: 5px; }
 .mural .m-k.add { color: #3f6b2a; } .mural .m-k.aj { color: #8a5a12; } .mural .m-k.rem { color: #6a6058; }
 .mural .m-pe { font: italic 11.5px var(--loja-texto); color: #e2c793; margin: 4px 6px 0; }
+.mural .bilhete.tracker-bilhete { text-align: center; } .mural .bilhete.tracker-bilhete p { margin: 0 0 8px; }
+/* F13-T114: o Update Tracker — o quadro de cartazes de "procurado" (o velho oeste que o Leo pediu), em madeira,
+   com um cartaz de papel pregado por item que mudou; o clique abre o antes e o depois */
+.tracker-btn { position: relative; }
+.tracker-btn svg { width: 18px; height: 18px; }
+.tracker { position: fixed; inset: 0; z-index: 86; display: flex; justify-content: center; align-items: flex-start; padding: 3vh 3vw;
+  background: rgba(12,7,3,.72); animation: tk-entra .22s ease-out; }
+@keyframes tk-entra { from { opacity: 0; } to { opacity: 1; } }
+.tk-tabua { position: relative; width: min(1280px, 94vw); max-height: 94vh; overflow: auto; padding: 22px 26px 30px; border-radius: 4px;
+  background: linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,0) 30px),
+    repeating-linear-gradient(180deg, #6a4527 0 66px, #4a2f19 66px 69px, #5e3c21 69px 135px, #432a16 135px 138px), #5e3c21;
+  border: 12px solid #2e1c0e; box-shadow: inset 0 0 50px rgba(0,0,0,.6), 0 20px 50px rgba(0,0,0,.7); }
+.tk-fechar { position: sticky; float: right; top: 0; z-index: 3; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 19px; line-height: 1;
+  color: #f1dcae; background: rgba(0,0,0,.45); border: 1px solid rgba(241,220,174,.4); }
+.tk-fechar:hover, .tk-fechar:focus-visible { border-color: var(--loja-latao-claro); color: #fff3d6; }
+.tk-cab { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin: 0 40px 18px 0; }
+.tk-titulo { margin: 0; padding: 6px 18px; font: 400 26px var(--loja-titulos); color: #2a170b; border-radius: 3px;
+  background: linear-gradient(var(--loja-latao-claro), var(--loja-latao)); border: 1px solid var(--loja-latao-escuro); box-shadow: 0 4px 8px rgba(0,0,0,.5); }
+.tk-sub { font: italic 14px var(--loja-texto); color: #f0d9a8; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
+.tk-patches { margin-left: auto; display: flex; gap: 6px; }
+.tk-patches button { font: 600 11px var(--loja-gravado); letter-spacing: .12em; padding: 6px 12px; border-radius: 3px; cursor: pointer;
+  color: #f1dcae; background: rgba(0,0,0,.35); border: 1px solid rgba(213,179,90,.55); }
+.tk-patches button[aria-selected="true"] { color: #2a170b; background: linear-gradient(var(--loja-latao-claro), var(--loja-latao)); border-color: var(--loja-latao-claro); }
+.tk-vazio { font: italic 15px var(--loja-texto); color: #f0d9a8; }
+.tk-cartazes { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 26px 22px; align-items: start; }
+/* o cartaz: a sombra fica no de fora (o recorte da borda rasgada a cortaria), o papel recortado dentro */
+.tk-cartaz { position: relative; cursor: default; outline: none; transform: rotate(var(--giro, 0deg));
+  filter: drop-shadow(0 9px 10px rgba(0,0,0,.55)); transition: transform .2s ease, filter .2s ease; }
+.tk-cartaz:has(.tk-detalhe) { cursor: pointer; }
+.tk-cartaz:hover, .tk-cartaz:focus-visible, .tk-cartaz.aberto { transform: rotate(0) translateY(-4px); filter: drop-shadow(0 16px 16px rgba(0,0,0,.6)); z-index: 2; }
+.tk-cartaz.aberto { grid-column: 1 / -1; }
+.tk-cartaz::before, .tk-cartaz::after { content: ""; position: absolute; top: 7px; z-index: 2; width: 11px; height: 11px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #c9c2b6, #4c4640 70%); box-shadow: 0 1px 2px rgba(0,0,0,.7); }
+.tk-cartaz::before { left: 14px; } .tk-cartaz::after { right: 14px; }
+.tk-papel { padding: 16px 16px 14px; text-align: center; color: #2c1a0e;
+  background: var(--tex-02) center / cover, #e7d2a4; background-blend-mode: multiply;
+  box-shadow: inset 0 0 36px rgba(110,70,25,.45);
+  clip-path: polygon(0 1.5%, 6% 0, 14% 1.2%, 25% .2%, 37% 1.4%, 49% 0, 61% 1.1%, 73% .1%, 86% 1.3%, 94% 0, 100% 1.6%, 99.2% 14%, 100% 31%, 99.3% 52%, 100% 71%, 99.4% 88%, 100% 98.4%,
+    93% 100%, 82% 98.9%, 69% 100%, 57% 98.8%, 44% 100%, 31% 98.9%, 19% 100%, 8% 98.8%, 0 100%, .7% 86%, 0 69%, .8% 50%, 0 32%, .6% 15%); }
+.tk-procurado { font: 400 30px/1 var(--loja-titulos); letter-spacing: .08em; text-transform: uppercase; color: #3a1c0e;
+  border-top: 3px double rgba(58,28,14,.7); border-bottom: 3px double rgba(58,28,14,.7); padding: 6px 0 4px; margin: 6px 0 2px; }
+.tk-linha-fina { font: 600 10px var(--loja-gravado); letter-spacing: .22em; text-transform: uppercase; color: #6b4a2a; margin-bottom: 10px; }
+.tk-retrato { display: inline-block; padding: 5px; background: rgba(58,28,14,.12); border: 3px double rgba(58,28,14,.65); }
+.tk-retrato img { display: block; width: 72px; height: 72px; filter: sepia(.35) contrast(1.06); }
+.tk-cartaz:hover .tk-retrato img, .tk-cartaz.aberto .tk-retrato img { filter: none; }
+.tk-nome { margin-top: 8px; font: 700 18px/1.15 var(--loja-texto); text-transform: uppercase; letter-spacing: .03em; }
+.tk-tier { font: italic 12.5px var(--loja-texto); color: #6b4a2a; }
+.tk-resumo { list-style: none; margin: 8px 0 0; padding: 8px 0 0; border-top: 1px dashed rgba(58,28,14,.45); font: 13.5px/1.35 var(--loja-texto); }
+.tk-resumo li + li { margin-top: 3px; }
+.tk-recompensa { margin-top: 10px; padding: 6px 4px 4px; border-top: 3px double rgba(58,28,14,.6); font: 600 15px var(--loja-texto); }
+.tk-recompensa small { display: block; font: 600 10px var(--loja-gravado); letter-spacing: .24em; text-transform: uppercase; color: #6b4a2a; }
+.tk-antes { color: #7a6448; text-decoration: line-through; text-decoration-color: rgba(141,44,34,.75); }
+.tk-seta { margin: 0 6px; color: #6b4a2a; }
+.tk-depois.piorou { color: #9b1c18; } .tk-depois.melhorou { color: #2f5d1e; } .tk-depois.ajuste { color: #7a5608; }
+.tk-resumo li.melhorou { color: #2f5d1e; } .tk-resumo li.piorou { color: #9b1c18; } .tk-resumo li.ajuste { color: #7a5608; }
+.tk-procurado.melhorou { color: #2f5d1e; } .tk-procurado.piorou { color: #8d1c16; } .tk-procurado.ajuste { color: #6e4d07; }
+.tk-legenda { display: flex; align-items: center; gap: 6px; font: italic 13px var(--loja-texto); color: #f0d9a8; }
+.tk-legenda i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-left: 6px; border: 1px solid rgba(0,0,0,.4); }
+.tk-legenda i.melhorou { background: #5d9a3c; } .tk-legenda i.piorou { background: #c0392b; } .tk-legenda i.ajuste { background: #d4a21e; }
+.tk-detalhe { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(58,28,14,.45); text-align: left; font: 14px/1.45 var(--loja-texto); }
+.tk-cartaz.aberto .tk-detalhe { display: block; }
+.tk-detalhe p { margin: 0 0 8px; }
+.tk-detalhe p > b { display: block; font: 600 10px var(--loja-gravado); letter-spacing: .12em; text-transform: uppercase; color: #6b4a2a; }
+.tk-detalhe ins { text-decoration: none; font-weight: 700; padding: 0 2px; border-radius: 2px; }
+.tk-detalhe ins.melhorou { background: rgba(47,93,30,.16); color: #2f5d1e; }
+.tk-detalhe ins.piorou { background: rgba(155,28,24,.13); color: #9b1c18; }
+.tk-detalhe ins.ajuste { background: rgba(212,162,30,.22); color: #6e4d07; }
+.tk-detalhe del { color: #8a6a4a; text-decoration: line-through; text-decoration-color: rgba(141,44,34,.75); }
+.tk-so { font: italic 12px var(--loja-texto); color: #6b4a2a; }
+.tk-abre { margin-top: 8px; font: italic 11.5px var(--loja-texto); color: #7a5a3a; }
+.tk-cartaz.aberto .tk-abre { display: none; }
+.tk-cartaz.conferir .tk-procurado { color: var(--loja-cera); }
+.tk-cartaz.fora .tk-papel { filter: grayscale(.6); }
+@media (prefers-reduced-motion: reduce) { .tracker { animation: none; } .tk-cartaz { transition: none; } }
+body.ac-movimento .tracker { animation: none; } body.ac-movimento .tk-cartaz { transition: none; }
 /* F13-T77: o selo e o aviso da camada do robô — lacre de cera, o mesmo da loja */
+.robo-ver { margin-left: 6px; padding: 1px 8px; font: 600 10.5px var(--loja-gravado); letter-spacing: .08em; border-radius: 9px; cursor: pointer;
+  color: var(--loja-papel); background: rgba(0,0,0,.25); border: 1px solid rgba(232,211,162,.5); }
 .robo-selo { display: inline-block; width: max-content; align-self: flex-start; justify-self: start; margin: 2px 0 0; padding: 1px 7px; border-radius: 9px; font-family: var(--loja-texto); font-size: 11px; font-style: normal;
   letter-spacing: .02em; color: var(--loja-papel); background: var(--loja-cera); border: 1px solid rgba(0,0,0,.25); white-space: nowrap; }
 .robo-selo.conferir { background: transparent; color: var(--loja-cera); border: 1px dashed var(--loja-cera); }
@@ -4689,6 +4766,9 @@ body.ac-movimento .mm-sent .mm-corpo { transition: none; animation: none; }
 .som-btn.mudo .som-risco { display: block; }
 .som-btn.travado { opacity: .55; }
 #som-volume { width: 84px; accent-color: #c9973f; cursor: pointer; }
+/* F13-T114: o botão do Update Tracker ocupa ~46 px no topo; abaixo de 1366, o espaço entre os ícones e o volume
+   devolvem o que ele tomou (a plaqueta da bigorna continua cabendo debaixo da aba Builds em 1280) */
+@media (max-width: 1365px) { .counts-wrap { gap: 8px; } #som-volume { width: 62px; } }
 body.forja .som-btn { background: linear-gradient(160deg, #ffd27a, #ff7a1e 55%, #b34d0e); border-color: #b34d0e; }
 body.forja #som-volume { accent-color: #ff7a1e; }
 
@@ -8122,8 +8202,8 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <button class="tab-btn" data-tab="build">Builds<span class="tab-count" id="build-tab-count"></span></button>
       <button class="tab-btn" data-tab="runas">Runas<span class="tab-count" id="runas-tab-count"></span></button>
       <!-- F13-T107: a aba do mapa. O balão "Novidade" mora sempre na adição mais recente do Montador
-           (Leo, 02/11/2026); quando entrar a próxima, ele passa para ela -->
-      <button class="tab-btn" data-tab="mapa">Mapa<span class="novidade" title="A adição mais recente do Montador">Novidade</span></button>
+           (Leo, 02/11/2026); desde a F13-T114 ele está no Update Tracker -->
+      <button class="tab-btn" data-tab="mapa">Mapa</button>
       <button class="tab-btn" data-tab="calc">Calculadora</button>
       <!-- F13-T51 (Leo, 18/10/2026): a plaqueta da bigorna, pendurada sob a aba
            Builds — diz de qualquer tela qual build está aberta e em que estado.
@@ -8152,6 +8232,11 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <button type="button" id="notas-btn" class="som-btn notas-btn" aria-label="Notas de atualização" aria-haspopup="dialog" aria-expanded="false" title="Notas de atualização — o que mudou e o que vem por aí">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4z"/><path d="M6 4a2 2 0 0 0-2 2v2h2M9 9h7M9 12h7M9 15h5"/></svg>
         <span class="nb-num" data-atualizacao></span>
+      </button>
+      <!-- F13-T114: o Update Tracker — o quadro de cartazes do que mudou nos itens (e o balão "Novidade", a adição mais recente) -->
+      <button type="button" id="tracker-btn" class="som-btn tracker-btn" aria-label="Update Tracker — o que mudou nos itens" aria-haspopup="dialog" aria-expanded="false" title="Update Tracker — o que mudou nos itens, patch a patch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 3.5l14 .8-.6 16.2-13.8-.7z"/><circle cx="8" cy="6" r=".9" fill="currentColor"/><circle cx="16" cy="6.4" r=".9" fill="currentColor"/><path d="M8 9.4h8M9.6 12.2h4.8M8 17h7.6"/><rect x="10" y="13.6" width="4" height="2" rx=".4"/></svg>
+        <span class="novidade" title="A adição mais recente do Montador">Novidade</span>
       </button>
       <div class="acess-ctl" id="acess-ctl">
         <button type="button" id="acess-btn" class="som-btn" aria-label="Acessibilidade" aria-haspopup="true" aria-expanded="false" title="Acessibilidade">
@@ -8280,6 +8365,8 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
 <!-- ============ ABA BUILD ============ -->
 <!-- F13-T80 (Leo, 25/10/2026: a opção B, "o mural da loja"): as notas de atualização, deslizando da direita -->
 <aside id="mural" class="mural" role="dialog" aria-label="Notas de atualização" hidden></aside>
+<!-- F13-T114: o Update Tracker, o quadro de cartazes -->
+<aside id="tracker" class="tracker" role="dialog" aria-label="Update Tracker" hidden></aside>
 <!-- F13-T76: fora da forja, para o aviso do Editar aparecer também nas Runas -->
 <div id="edit-hint" class="edit-hint" aria-live="polite"></div>
 <div id="view-build" class="build-view hidden">
@@ -9333,7 +9420,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.112";
+const ATUALIZACAO = "13.114";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -17926,6 +18013,7 @@ function renderMural() {
     <div class="m-sub">Atualização ${esc(ATUALIZACAO)} · patch ${esc(CATALOG.meta.patch)}</div>
     ${n.embreve.length ? `<div class="bilhete embreve"><h3>Em breve na loja</h3><ul>${n.embreve.map(([t, f]) => `<li><b>${esc(t)}</b> — ${esc(f)}</li>`).join("")}</ul></div>
       <p class="m-pe">Sem data prometida: a ordem pode mudar, e a lista muda junto.</p>` : ""}
+    <div class="bilhete tracker-bilhete"><h3>Update Tracker</h3><p>O que mudou nos itens, patch a patch: o antes e o depois de cada um.</p><button type="button" class="btn ghost" data-abrir-tracker>Ver os cartazes</button></div>
     <div class="bilhete apoie"><h3>Apoie o projeto</h3><p>Nunca pedirei por doações. Me ajude divulgando com seus amigos!</p></div>
     ${n.datas.map(d => `<div class="bilhete"><h3>${esc(d.data)}</h3><ul>${["add", "aj", "rem"].flatMap(k => (d[k] || []).map(x =>
       `<li><span class="m-k ${k}">${NOTAS_ROT[k]}</span>${esc(x)}</li>`)).join("")}</ul></div>`).join("")}`;
@@ -17958,6 +18046,198 @@ function initMural() {
   window.addEventListener("keydown", (e) => { if (e.key === "Escape" && !el.hidden) { abrirMural(false); b.focus(); } });
   document.addEventListener("pointerdown", (e) => { if (!el.hidden && !el.contains(e.target) && !b.contains(e.target)) abrirMural(false); });
 }
+// F13-T114 (Leo, 05/11/2026: "deve ter algo visual para as atualizações do robô para mostrar quais itens e o que
+// foi alterado para o usuário saber exatamente o que mudou, aí pode nomear o nome do bot para Update Tracker"; da
+// amostra, a opção B, "mas acho mais legal como aqueles quadros de velho oeste onde ficam os cartazes de
+// procurado"): o Update Tracker. Um quadro de madeira com um cartaz por item que mudou, patch a patch: o antes
+// riscado e o depois realçado. Os dados são o "detalhe" do data/mudancas.js (o histórico do catálogo,
+// data/gerar_mudancas.py) e, com patch novo, o que a camada do Update Tracker já aplicou ou deixou a conferir
+// (window.ROBO). Nada é digitado aqui.
+const Tracker = (function () {
+  const ROT = { "preço": "Preço", "custo de combinação": "Combinação", "atributos": "Atributos", "habilidades": "Habilidades",
+    "receita": "Receita", "modos": "Modos", "Reembolso": "Reembolso", "Passiva do Ornn": "Passiva do Ornn" };
+  const el = (id) => document.getElementById(id);
+  const limpa = (s) => String(s == null ? "" : s).replace(/\\n/g, " ");
+  const rotulo = (c) => ROT[c] || c;
+  let atual = 0;
+
+  // as versões, da mais nova para a mais velha; o patch novo da camada vem primeiro
+  function versoes() {
+    const vs = ((window.MUDANCAS || {}).versoes || []).slice().reverse().map(v => ({
+      patch: v.patch, desde: v.desde, removidos: v.removidos || [],
+      itens: Object.keys(v.detalhe || {}).map(slug => ({ slug: slug, campos: v.detalhe[slug].map(([campo, antes, depois]) => ({ campo: campo, antes: antes || [], depois: depois || [] })) })) }));
+    if (ROBO.ativo) {
+      const itens = Object.entries(ROBO.itens).filter(([, r]) => r.mudou.length).map(([slug, r]) => ({ slug: slug, campos: r.mudou.map(m => m.nota
+        ? { campo: m.campo, antes: [], depois: [m.nota] }
+        : { campo: m.campo, antes: [valorDoRobo(m.de)], depois: [valorDoRobo(m.para)], fonte: m.fonte }) }));
+      Object.entries(ROBO.aConferir).forEach(([slug, l]) => {
+        if (!ROBO.itens[slug] || !ROBO.itens[slug].mudou.length) itens.push({ slug: slug, conferir: l.map(x => x.campo + ": " + x.porque), campos: [] });
+      });
+      vs.unshift({ patch: ROBO.para, desde: ROBO.de, removidos: [], itens: itens, novo: true });
+    }
+    return vs;
+  }
+  // o tom de cada mudança (Leo, 05/11/2026: "deve ficar em vermelho se é uma mudança negativa, verde para positiva e
+  // amarelo para ajuste ou reformulação"): o número que sobe melhorou e o que desce piorou — menos na recarga, no
+  // custo, no preço e na espera, em que é o contrário; o texto que muda sem ser um número por outro é ajuste, e o
+  // campo em que uma coisa melhora e outra piora também
+  const INVERSO = /(recarga|custo|pre[cç]o|espera|atraso)[^.;:]{0,40}$/i;
+  const NUM = /^[+-]?\d+(?:[.,]\d+)?%?s?[.,:;)]*$/;
+  const valor = (s) => Number(String(s).replace(/[^\d.,-]/g, "").replace(/[.,]+$/, "").replace(",", "."));
+  function tomDoPar(a, b, antes) {
+    const x = valor(a), y = valor(b);
+    if (!isFinite(x) || !isFinite(y) || x === y) return "ajuste";
+    return (INVERSO.test(antes) ? y < x : y > x) ? "melhorou" : "piorou";
+  }
+  // o tom de um conjunto: os números decidem quando vão todos para o mesmo lado (o texto reescrito junto não muda
+  // isso); sem número, ou com uns subindo e outros descendo, é ajuste
+  const juntaTom = (tons) => { const n = tons.filter(t => t !== "ajuste");
+    return n.length && n.every(t => t === "melhorou") ? "melhorou" : n.length && n.every(t => t === "piorou") ? "piorou" : "ajuste"; };
+  // a diferença palavra a palavra (a maior sequência comum): o que saiu riscado, o que entrou realçado na cor do tom
+  function difPalavras(a, b) {
+    const x = limpa(a).split(/(\s+)/), y = limpa(b).split(/(\s+)/), n = x.length, m = y.length;
+    const L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = x[i] === y[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    const ops = [];
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (x[i] === y[j]) { ops.push(["=", x[i]]); i++; j++; }
+      else if (L[i + 1][j] >= L[i][j + 1]) ops.push(["-", x[i++]]);
+      else ops.push(["+", y[j++]]);
+    }
+    while (i < n) ops.push(["-", x[i++]]);
+    while (j < m) ops.push(["+", y[j++]]);
+    // cada trecho que mudou entre dois iguais: um número trocado por outro tem tom; o resto é ajuste
+    let h = "", ctx = "", k = 0;
+    const tons = [];
+    while (k < ops.length) {
+      if (ops[k][0] === "=") { h += esc(ops[k][1]); ctx += ops[k][1]; k++; continue; }
+      const sai = [], entra = [];
+      while (k < ops.length && ops[k][0] !== "=") { (ops[k][0] === "-" ? sai : entra).push(ops[k][1]); k++; }
+      const ps = sai.filter(s => /\S/.test(s)), pe = entra.filter(s => /\S/.test(s));
+      const tom = ps.length === 1 && pe.length === 1 && NUM.test(ps[0]) && NUM.test(pe[0]) ? tomDoPar(ps[0], pe[0], ctx.slice(-60)) : "ajuste";
+      tons.push(tom);
+      h += sai.map(s => /\S/.test(s) ? "<del>" + esc(s) + "</del>" : esc(s)).join("")
+        + entra.map(s => /\S/.test(s) ? '<ins class="' + tom + '">' + esc(s) + "</ins>" : esc(s)).join("");
+      ctx += entra.join("");
+    }
+    return { h: h, tons: tons };
+  }
+  const numeros = (s) => limpa(s).match(/\d+(?:[.,]\d+)?/g) || [];
+  // só a redação mudou: os números do texto são os mesmos
+  const soRedacao = (a, b) => JSON.stringify(numeros(a)) === JSON.stringify(numeros(b));
+  const ouro = (s) => { const m = /-?\d+(?:[.,]\d+)?/.exec(String(s)); return m ? Number(m[0].replace(",", ".")) : null; };
+  const ehOuro = (c) => c.campo === "preço" || c.campo === "custo de combinação";
+  // o antes e o depois de um campo, e o tom dele
+  function antesDepois(c) {
+    if (ehOuro(c)) {
+      const va = ouro(c.antes[0]), vb = ouro(c.depois[0]);
+      const tom = va != null && vb != null && va !== vb ? (vb > va ? "piorou" : "melhorou") : "ajuste";   // mais caro é pior para quem compra
+      return { tom: tom, h: '<span class="tk-antes">' + esc(va != null ? fmtNum(va) + " g" : "—") + '</span><span class="tk-seta">→</span><b class="tk-depois ' + tom + '">'
+        + esc(vb != null ? fmtNum(vb) + " g" : "—") + "</b>" };
+    }
+    const l = [], tons = [], k = Math.max(c.antes.length, c.depois.length), attr = c.campo === "atributos";
+    for (let i = 0; i < k; i++) {
+      const a = c.antes[i], b = c.depois[i];
+      if (a === b) continue;
+      if (a != null && b != null) {
+        const d = difPalavras(a, b);
+        tons.push(juntaTom(d.tons));
+        l.push(d.h + (c.campo === "habilidades" && soRedacao(a, b) ? ' <span class="tk-so">(só a redação)</span>' : ""));
+      } else if (a != null) { tons.push(attr ? "piorou" : "ajuste"); l.push("<del>" + esc(limpa(a)) + "</del>"); }   // o atributo que sai piora o item
+      else { const t = attr ? "melhorou" : "ajuste"; tons.push(t); l.push('<ins class="' + t + '">' + esc(limpa(b)) + "</ins>"); }
+    }
+    return { tom: juntaTom(tons), h: l.join("<br>") + (c.fonte ? ' <span class="tk-so">(' + esc(c.fonte) + ")</span>" : "") };
+  }
+  // o resumo do cartaz: uma linha por campo, na cor do tom
+  function resumo(c) {
+    const tom = antesDepois(c).tom;
+    if (ehOuro(c)) {
+      const va = ouro(c.antes[0]), vb = ouro(c.depois[0]);
+      return { tom: tom, t: rotulo(c.campo) + (va != null && vb != null ? " " + (vb > va ? "+" : "") + fmtNum(vb - va) + " g" : " mudou") };
+    }
+    if (c.campo === "atributos") {
+      const p = [], k = Math.max(c.antes.length, c.depois.length);
+      for (let i = 0; i < k; i++) if (c.antes[i] !== c.depois[i]) p.push((c.antes[i] || "—") + " → " + (c.depois[i] || "—"));
+      return { tom: tom, t: p.join("; ") || "Atributos mudaram" };
+    }
+    if (c.campo === "habilidades") {
+      const so = c.antes.length === c.depois.length && c.antes.every((a, i) => a === c.depois[i] || soRedacao(a, c.depois[i]));
+      return { tom: tom, t: so ? "Habilidade: só a redação" : tom === "melhorou" ? "Habilidade melhorou" : tom === "piorou" ? "Habilidade piorou" : "Habilidade ajustada" };
+    }
+    return { tom: tom, t: rotulo(c.campo) + " mudou" };
+  }
+  function cartaz(it, v, i) {
+    const item = byId[it.slug], nome = item ? item.namePt : it.slug, preco = it.campos.find(c => c.campo === "preço");
+    const tom = juntaTom(it.campos.map(c => antesDepois(c).tom));
+    const titulo = it.conferir ? "A conferir" : it.fora ? "Fora do jogo" : tom === "melhorou" ? "Melhorou" : tom === "piorou" ? "Piorou" : "Ajustado";
+    const giro = (((i * 37) % 7) - 3) * .55;
+    return '<article class="tk-cartaz' + (it.conferir ? " conferir" : "") + (it.fora ? " fora" : "") + '" tabindex="0" style="--giro:' + giro.toFixed(2) + 'deg" data-slug="' + esc(it.slug) + '">'
+      + '<div class="tk-papel"><div class="tk-procurado' + (it.conferir || it.fora ? "" : " " + tom) + '">' + esc(titulo) + "</div>"
+      + '<div class="tk-linha-fina">' + (v.novo ? "patch novo · " : "patch ") + esc(v.patch) + "</div>"
+      + (item ? '<div class="tk-retrato"><img src="' + esc(item.iconUrl) + '" alt=""></div>' : "")
+      + '<div class="tk-nome">' + esc(nome) + "</div>"
+      + (item ? '<div class="tk-tier">' + esc(item.tier) + "</div>" : "")
+      + (it.conferir ? '<ul class="tk-resumo">' + it.conferir.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>"
+        : it.fora ? '<ul class="tk-resumo"><li>Saiu do catálogo neste patch</li></ul>'
+        : it.campos.some(c => c.campo !== "preço") ? '<ul class="tk-resumo">' + it.campos.filter(c => c.campo !== "preço").map(c => { const r = resumo(c); return '<li class="' + r.tom + '">' + esc(r.t) + "</li>"; }).join("") + "</ul>" : "")
+      + (preco ? '<div class="tk-recompensa"><small>Recompensa</small>' + antesDepois(preco).h + "</div>" : "")
+      + (it.campos.length ? '<div class="tk-detalhe">' + it.campos.map(c => '<p><b>' + esc(rotulo(c.campo)) + "</b>" + antesDepois(c).h + "</p>").join("") + "</div>"
+        + '<div class="tk-abre">clique para ver o antes e o depois</div>' : "")
+      + "</div></article>";
+  }
+  function desenhar() {
+    const vs = versoes(), caixa = el("tracker");
+    if (!vs.length) {
+      caixa.innerHTML = '<div class="tk-tabua"><button type="button" class="tk-fechar" aria-label="Fechar o Update Tracker" title="Fechar (Esc)">×</button>'
+        + '<h2 class="tk-titulo">Update Tracker</h2><p class="tk-vazio">Ainda não há patch anterior no histórico do catálogo para comparar.</p></div>';
+      return;
+    }
+    atual = Math.min(atual, vs.length - 1);
+    const v = vs[atual];
+    const itens = v.itens.concat(v.removidos.map(s => ({ slug: s, fora: true, campos: [] })));
+    caixa.innerHTML = '<div class="tk-tabua">'
+      + '<button type="button" class="tk-fechar" aria-label="Fechar o Update Tracker" title="Fechar (Esc)">×</button>'
+      + '<div class="tk-cab"><h2 class="tk-titulo">Update Tracker</h2>'
+      + '<span class="tk-sub">' + (v.novo ? "o patch " + esc(v.patch) + " chegou: o que já foi aplicado e o que ainda se confere" : "o que mudou nos itens do patch " + esc(v.desde) + " para o " + esc(v.patch))
+      + " · " + itens.length + (itens.length === 1 ? " cartaz" : " cartazes") + "</span>"
+      + '<span class="tk-legenda"><i class="melhorou"></i>melhorou <i class="piorou"></i>piorou <i class="ajuste"></i>ajuste</span>'
+      + '<div class="tk-patches" role="tablist" aria-label="Patch">' + vs.map((x, i) => '<button type="button" role="tab" data-tk-patch="' + i + '" aria-selected="' + (i === atual) + '">Patch ' + esc(x.patch) + (x.novo ? " · novo" : "") + "</button>").join("") + "</div></div>"
+      + '<div class="tk-cartazes">' + itens.map((it, i) => cartaz(it, v, i)).join("") + "</div></div>";
+  }
+  function abrir(sim) {
+    const caixa = el("tracker"), b = el("tracker-btn");
+    if (!caixa) return;
+    if (sim) {
+      desenhar();
+      caixa.hidden = false;
+      const f = caixa.querySelector(".tk-fechar");
+      if (f) f.focus();
+    } else {
+      caixa.hidden = true;
+    }
+    if (b) b.setAttribute("aria-expanded", String(!!sim));
+  }
+  function init() {
+    const caixa = el("tracker"), b = el("tracker-btn");
+    if (!caixa) return;
+    if (b) b.addEventListener("click", () => abrir(caixa.hidden));
+    caixa.addEventListener("click", (e) => {
+      if (e.target === caixa || e.target.closest(".tk-fechar")) { abrir(false); if (b) b.focus(); return; }
+      const p = e.target.closest("[data-tk-patch]");
+      if (p) { atual = Number(p.dataset.tkPatch); desenhar(); return; }
+      const c = e.target.closest(".tk-cartaz");
+      if (c && c.querySelector(".tk-detalhe")) c.classList.toggle("aberto");
+    });
+    caixa.addEventListener("keydown", (e) => {
+      const c = e.target.closest && e.target.closest(".tk-cartaz");
+      if (c && (e.key === "Enter" || e.key === " ") && c.querySelector(".tk-detalhe")) { e.preventDefault(); c.classList.toggle("aberto"); }
+    });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape" && !caixa.hidden) { abrir(false); if (b) b.focus(); } });
+    document.addEventListener("click", (e) => { if (e.target.closest("[data-abrir-tracker]")) { abrirMural(false); abrir(true); } });
+  }
+  return { init: init, abrir: abrir, versoes: versoes, difPalavras: difPalavras, juntaTom: juntaTom };
+})();
 // F13-T83 (pendente desde a Fase 10: o autor opcional na publicação): um apelido para as suas
 // publicações, lembrado neste navegador; vazio, a pública sai sem autor, como antes. A pública
 // mostra "por <autor>" no resumo (F10).
@@ -17983,8 +18263,8 @@ function valorDoRobo(v) {
 function seloDoRobo(item) {
   if (!ROBO.ativo) return "";
   const r = ROBO.itens[item.slug];
-  if (r && r.aplicados.length) return `<span class="robo-selo" title="Mudou no patch ${esc(ROBO.para)}: o robô já aplicou o que a wiki e o Data Dragon dizem; o Capítulo 1 ainda confere">patch ${esc(ROBO.para)}</span>`;
-  if (ROBO.aConferir[item.slug]) return `<span class="robo-selo conferir" title="Mudou no patch ${esc(ROBO.para)}, e o robô não aplicou: o Capítulo 1 confere — até lá, o item é o do patch ${esc(ROBO.de)}">a conferir</span>`;
+  if (r && r.aplicados.length) return `<span class="robo-selo" title="Mudou no patch ${esc(ROBO.para)}: o Update Tracker já aplicou o que a wiki e o Data Dragon dizem; o Capítulo 1 ainda confere">patch ${esc(ROBO.para)}</span>`;
+  if (ROBO.aConferir[item.slug]) return `<span class="robo-selo conferir" title="Mudou no patch ${esc(ROBO.para)}, e o Update Tracker não aplicou: o Capítulo 1 confere — até lá, o item é o do patch ${esc(ROBO.de)}">a conferir</span>`;
   return "";
 }
 function fichaDoRobo(item) {
@@ -17996,7 +18276,7 @@ function fichaDoRobo(item) {
     : `${esc(m.campo)}: ${esc(valorDoRobo(m.de))} → <b>${esc(valorDoRobo(m.para))}</b> <span class="rb-fonte">(${esc(m.fonte)})</span>`;
   return `
     <div class="modal-section robo">
-      <div class="modal-section-title">Patch ${esc(ROBO.para)} · pelo robô</div>
+      <div class="modal-section-title">Patch ${esc(ROBO.para)} · pelo Update Tracker</div>
       ${feito.length ? `<div class="rb-linha"><span class="rb-k">Já aplicado</span><span>${feito.map(linha).join(" · ")}</span></div>` : ""}
       ${conf.length ? `<div class="rb-linha conferir"><span class="rb-k">A conferir</span><span>${conf.map(x => `${esc(x.campo)}: ${esc(x.porque)}`).join(" · ")}</span></div>` : ""}
       ${velhas.length ? `<div class="rb-linha velha"><span class="rb-k">Do patch ${esc(ROBO.de)}</span><span>${velhas.map(k => esc(CONTA_VELHA_ROTULO[k] || k)).join(", ")} — o Capítulo 1 refaz</span></div>` : ""}
@@ -18008,9 +18288,9 @@ function mostrarAvisoDoRobo() {
   const itens = Object.values(ROBO.itens).filter(r => r.aplicados.length).length;
   const mudancas = Object.values(ROBO.itens).reduce((s, r) => s + r.mudou.length, 0);
   const conferir = Object.keys(ROBO.aConferir).length;
-  el.innerHTML = `<b>Patch ${esc(ROBO.para)}</b>: o robô já aplicou ${mudancas} ${mudancas === 1 ? "mudança" : "mudanças"} da wiki e do Data Dragon em ${itens} ${itens === 1 ? "item" : "itens"} (selo <span class="robo-selo">patch ${esc(ROBO.para)}</span>)`
+  el.innerHTML = `<b>Patch ${esc(ROBO.para)}</b>: o Update Tracker já aplicou ${mudancas} ${mudancas === 1 ? "mudança" : "mudanças"} da wiki e do Data Dragon em ${itens} ${itens === 1 ? "item" : "itens"} (selo <span class="robo-selo">patch ${esc(ROBO.para)}</span>)`
     + (conferir ? `; ${conferir} ${conferir === 1 ? "item" : "itens"} o Capítulo 1 ainda confere (selo <span class="robo-selo conferir">a conferir</span>)` : "")
-    + (ROBO.statPricesVelhos.length ? `. O valor em ouro dos atributos ainda é o do patch ${esc(ROBO.de)} (${esc(ROBO.statPricesVelhos.join(", "))} ${ROBO.statPricesVelhos.length === 1 ? "mudou" : "mudaram"})` : "") + ".";
+    + (ROBO.statPricesVelhos.length ? `. O valor em ouro dos atributos ainda é o do patch ${esc(ROBO.de)} (${esc(ROBO.statPricesVelhos.join(", "))} ${ROBO.statPricesVelhos.length === 1 ? "mudou" : "mudaram"})` : "") + ". <button type=\"button\" class=\"robo-ver\" data-abrir-tracker>Ver os cartazes</button>";
   el.hidden = false;
 }
 function openModal(id) {
@@ -19960,6 +20240,7 @@ function init() {
   initShiftFullCard();
   mostrarAvisoDoRobo();   // F13-T77
   initMural();            // F13-T80
+  Tracker.init();         // F13-T114
   document.getElementById("catalog-cat-select").addEventListener("change", (e) => {
     // F13-T94: no controle remoto a caixa é a da dona — o seletor volta ao dela até o estado chegar
     if (remota.ativa) { const id = e.target.value || null; e.target.value = build.selectedCatId || ""; pedirNaDona({ acao: "caixa", id }); return; }

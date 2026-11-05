@@ -19,6 +19,11 @@ habilidades, modos, Reembolso e Passiva do Ornn (masterwork). Ícone, fontes,
 notas e a análise de custo não desatualizam ninguém. Risco aceito com o Leo: uma
 correção de texto do Capítulo 1 numa habilidade desatualiza a build sem precisar.
 
+F13-T114 (Leo, 05/11/2026: "algo visual… para o usuário saber exatamente o que mudou", o Update Tracker): cada
+versão leva também o "detalhe" — por item, o antes e o depois de cada campo que mudou, do jeito que a tela mostra
+(o preço em ouro, os atributos como o catálogo escreve, a Mecânica de cada habilidade). As builds desatualizadas
+continuam lendo só o "itens".
+
 A saída não tem data nem hash: rodar duas vezes dá o mesmo arquivo.
 """
 import json, os, re, subprocess, sys
@@ -78,6 +83,22 @@ CAMPOS = OrderedDict([
 ])
 
 
+# F13-T114: o campo como o Update Tracker mostra. Na habilidade, a Mecânica (o texto do Capítulo 1, com os
+# números de verdade): a descrição é a do cliente, que às vezes traz 0 ou 25000 no lugar do número.
+VISTA = OrderedDict([
+    ("preço", lambda i: [] if i.get("priceGold") is None else [str(i.get("priceGold"))]),
+    ("custo de combinação", lambda i: [] if i.get("combineCost") is None else [str(i.get("combineCost"))]),
+    ("receita", lambda i: ["%s ×%s" % (c.get("namePt"), c.get("qty") or 1) for c in i.get("components") or []]),
+    ("atributos", lambda i: [a.get("raw") for a in i.get("attributes") or []]),
+    ("habilidades", lambda i: [("%s (%s): %s" % (h.get("name"), h.get("type"), h.get("mechanics") or h.get("description") or "")).strip()
+                               for h in i.get("abilities") or []]),
+    ("modos", lambda i: sorted(i.get("gameModes") or [])),
+    ("Reembolso", lambda i: ["%s%% · %s g de volta · %s g líquido" % tuple((i.get("cashback") or {}).get(k) for k in ("percent", "refundGold", "netGold"))]
+                  if i.get("cashback") else []),
+    ("Passiva do Ornn", lambda i: ["%s %s → %s" % (m.get("stat"), m.get("base"), m.get("total")) for m in (i.get("masterwork") or {}).get("stats") or []]),
+])
+
+
 # Texto de habilidade que cita a fonte ("vazia no Data Dragon pt_BR 16.20.1") troca
 # o número a cada patch sem o item mudar — achado no 16.21.1 (Atlas Mundial e
 # Convergência de Zeke). O número de patch (16.21.1) vira um marcador antes de
@@ -100,15 +121,16 @@ def compara(antes, depois):
         if mudou:
             itens[slug] = mudou
     removidos = sorted(s for s in a if s not in d)
-    return itens, removidos
+    detalhe = OrderedDict((slug, [[c, VISTA[c](a[slug]), VISTA[c](d[slug])] for c in campos]) for slug, campos in itens.items())
+    return itens, removidos, detalhe
 
 
 def main():
     grupos = por_patch(versoes())
     registro = []
     for (p0, o0, c0), (p1, o1, c1) in zip(grupos, grupos[1:]):
-        itens, removidos = compara(c0, c1)
-        registro.append(OrderedDict([("patch", p1), ("desde", p0), ("itens", itens), ("removidos", removidos)]))
+        itens, removidos, detalhe = compara(c0, c1)
+        registro.append(OrderedDict([("patch", p1), ("desde", p0), ("itens", itens), ("removidos", removidos), ("detalhe", detalhe)]))
         nomes = {i["slug"]: i["namePt"] for i in c1["items"]}
         print("%s → %s (%s → %s): %d itens mudaram, %d saíram" % (p0, p1, o0, o1, len(itens), len(removidos)))
         for slug, campos in itens.items():
