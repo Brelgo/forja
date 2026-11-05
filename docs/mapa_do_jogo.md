@@ -26,8 +26,8 @@ Tudo abaixo saiu do `Map11.wad.client` da instalação do LoL do Leo, com `data/
 | Alma do Infernal | `infernal_baron1` | `Infernal_SEASONAL` — só o covil do Dragão (2 regiões) |
 | Alma da Montanha | `mountain_baron1..3` | `Mountain_SEASONAL` — o covil e 5 trechos da selva (6 regiões) |
 | Alma do Oceano | `ocean_baron1..3` | `Ocean_SEASONAL` — arbustos e trechos (11 regiões) |
-| Alma da Nuvem | `cloud_baron1..3` | nenhuma (as correntes de vento não mudam parede) |
-| Alma Hextec | `hextech_baron1..3` | nenhuma (os portais aparecem só desenhados na imagem) |
+| ~~Alma da Nuvem~~ | — | nenhuma: as correntes de vento não mudam o terreno — fica de fora |
+| ~~Alma Hextec~~ | — | nenhuma: só os portais, desenhados na imagem — fica de fora (Leo, 05/11/2026: "eu quero as almas que realmente afetam o mapa… o Hextec só adiciona portais") |
 | Alma Quimtec | não tem imagem | `Chemtech` — 4 × 2 células no covil |
 | Covil do Barão, forma 2 | `*_baron2` | `Tunnel_Base` (7 regiões) |
 | Covil do Barão, forma 3 | `*_baron3` | `Cup_Base` (2 regiões) |

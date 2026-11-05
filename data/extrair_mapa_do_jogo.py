@@ -44,7 +44,9 @@ LOL = sys.argv[1] if len(sys.argv) > 1 else r"C:\Riot Games\League of Legends"
 WAD = os.path.join(LOL, "Game", "DATA", "FINAL", "Maps", "Shipping", "Map11.wad.client")
 IMAGENS = os.path.join(RAIZ, "assets", "mapa")
 CAMADAS = os.path.join(AQUI, "mapa_camadas.json")
-ALMAS = ["base", "cloud", "hextech", "infernal", "mountain", "ocean", "chemtech"]
+# só as almas que mudam o terreno (Leo, 05/11/2026: "eu quero as almas que realmente afetam o mapa… o Hextec só
+# adiciona portais"): a Nuvem e a Hextec ficam de fora; a Quimtec não tem imagem própria (a de base, com a camada dela)
+ALMAS = ["base", "infernal", "mountain", "ocean"]
 # as camadas que o map11.bin cita (as de Map90, as de regiões e as do Atakhan, que saiu do jogo, ficam de fora)
 NOMES_CAMADAS = ["Infernal_SEASONAL", "Mountain_SEASONAL", "Ocean_SEASONAL", "Chemtech", "Cup_Base", "Tunnel_Base"]
 
