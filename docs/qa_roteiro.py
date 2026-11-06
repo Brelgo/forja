@@ -8208,10 +8208,10 @@ def checar_mesa(s, p):
         s.js(abre_mapa)
         time.sleep(0.5)
         j = janela()
-        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no Update Tracker (a adição mais recente); a linha diz de qual build é o mapa e, na de ARAM, que o mapa é o de Summoner's Rift; o map11.png do patch, numa janela quadrada",
+        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no Update Tracker (a adição mais recente); a linha diz de qual build é o mapa e, na de ARAM, que o mapa é o de Summoner's Rift; o minimapa de hoje (assets/mapa, F13-T113), numa janela quadrada",
                 a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["tracker-btn"] and a["novTxt"] == ["Novidade"] and a["novVis"]
                 and a["nome"] in a["dona"] and "ARAM" in dona_aram and "Summoner's Rift" in dona_aram
-                and a["src"].endswith("/cdn/%s/img/map/map11.png" % a["patch"]) and a["w"] > 0 and abs(j["w"] - j["h"]) < 1.5,
+                and a["src"].endswith("/assets/mapa/base_baron1.png") and a["w"] > 0 and abs(j["w"] - j["h"]) < 1.5,
                 "%s · ARAM: %s · janela %s" % (a, dona_aram, j))
 
         # 2. a roda aproxima em volta do cursor e a página não rola; fora do mapa, a roda rola a página
@@ -8392,6 +8392,87 @@ def checar_formas(s, p):
     finally:
         r.fechar()
     p.conta("forma do campeão", "console sem erro", not s.erros, "%s" % s.erros)
+
+
+def checar_terreno(s, p):
+    """F13-T113 (Leo, 05/11/2026: "na saída do rio tem um arbusto no meio, não na borda, isso é antigo… e tem as
+    alterações das almas dos dragões no mapa"): o mapa de hoje. A grade é a AIPath_SRX_3 (o data/mapa.js igual à
+    base do data/mapa_variantes.js); a imagem, o minimapa do jogo; a alma e a forma do covil do Barão, escolhidas
+    com cliques de verdade, trocam a imagem e aplicam a camada do jogo na grade (célula a célula, e fora dela nada
+    muda), a visão segue a grade nova, a escolha volta ao recarregar, e as moitas são pintadas da grade."""
+    print("\n%sTERRENO%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+    time.sleep(0.8)
+    base = s.js("""(() => { const H = MAPA_HOJE; return { fonte: MAPA.fonte, igual: ['paredes', 'arbustos', 'soPasso'].every(k => MAPA[k] === H[k]) && MAPA.nx === H.nx && MAPA.nz === H.nz,
+      almas: [...document.querySelectorAll('#mesa-alma [data-alma]')].map(b => b.dataset.alma).join(','),
+      covis: [...document.querySelectorAll('#mesa-covil [data-covil]')].map(b => b.dataset.covil).join(','), img: document.getElementById('mesa-img').src }; })()""")
+    p.conta("terreno", "a grade é a de hoje (AIPath_SRX_3, igual à base das variantes); as almas que mudam o terreno e as três formas do covil",
+            base["fonte"].endswith("AIPath_SRX_3.aimesh_ngrid") and base["igual"] and base["almas"] == ",infernal,montanha,oceano"
+            and base["covis"] == "1,2,3" and base["img"].endswith("assets/mapa/base_baron1.png"), "%s" % base)
+    # célula a célula: dentro das regiões da camada o tipo é o da camada; fora delas, o da base (a ordem: a alma,
+    # depois a forma do covil, como o app aplica)
+    confere = """(chaves) => { const H = MAPA_HOJE, NX = H.nx, N = NX * H.nz, b = (k) => { const s = atob(H[k]); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+      const p = b('paredes'), a = b('arbustos'), sp = b('soPasso'), esp = new Uint8Array(N);
+      for (let i = 0; i < N; i++) esp[i] = p(i) | a(i) << 1 | sp(i) << 2;
+      let mudam = 0;
+      for (const c of chaves) for (const [x0, z0, w, h, t] of H.variantes[c].regioes) for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) {
+        const i = (z0 + r) * NX + x0 + q, v = t.charCodeAt(r * w + q) - 48; if (esp[i] !== v) mudam++; esp[i] = v; }
+      let erradas = 0; for (let i = 0; i < N; i++) if (Mesa.tipo(i) !== esp[i]) erradas++;
+      return { mudam: mudam, erradas: erradas }; }"""
+    res, imgs = {}, {}
+    for alma, covil, chaves, img in (("montanha", None, ["montanha"], "mountain_baron1"), (None, 2, ["montanha", "barao2"], "mountain_baron2"),
+                                     ("infernal", None, ["infernal", "barao2"], "base_baron2"), ("oceano", 3, ["oceano", "barao3"], "ocean_baron3"),
+                                     ("", 1, [], "base_baron1")):
+        if alma is not None:
+            s.clicar('#mesa-alma [data-alma="%s"]' % alma, 0.4)
+        if covil:
+            s.clicar('#mesa-covil [data-covil="%d"]' % covil, 0.4)
+        nome = "+".join(chaves) or "sem alma, 1ª forma"
+        res[nome] = s.js("(%s)(%s)" % (confere, json.dumps(chaves)))
+        imgs[nome] = s.js("(() => { const i = document.getElementById('mesa-img'); return i.src.split('/').pop() + ':' + (i.complete && i.naturalWidth > 0); })()")
+        ok_img = imgs[nome] == img + ".png:true"
+        p.conta("terreno", "%s: a camada do jogo na grade (célula a célula, nada muda fora dela) e a imagem %s" % (nome, img),
+                ok_img and res[nome]["erradas"] == 0 and (res[nome]["mudam"] > 0) == bool(chaves), "%s · %s" % (res[nome], imgs[nome]))
+    aceso = s.js("[...document.querySelectorAll('.mesa-terr-opt.ativa')].map(b => b.dataset.alma || b.dataset.covil).join(',')")
+    p.conta("terreno", "o botão aceso é o da escolha (a alma e a forma do covil)", aceso == ",1", "%r" % aceso)
+    # a camada que não muda nada na grade de hoje não vira opção (a Quimtec, no SRX_3)
+    quim = s.js("(() => { const H = MAPA_HOJE, NX = H.nx; let m = 0; for (const [x0, z0, w, h, t] of H.variantes.quimtec.regioes) for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) if (Mesa.tipo((z0 + r) * NX + x0 + q) !== t.charCodeAt(r * w + q) - 48) m++; return { muda: m, botao: !!document.querySelector('#mesa-alma [data-alma=quimtec]') }; })()")
+    p.conta("terreno", "a alma que não muda o terreno de hoje fica fora do seletor (a Quimtec: o covil dela já é o da base)", quim == {"muda": 0, "botao": False}, "%s" % quim)
+    # a visão segue a grade nova: um ponto que a camada da Montanha abre (parede na base, chão nela) é visto de perto só com ela
+    s.clicar('#mesa-alma [data-alma="montanha"]', 0.4)
+    vis = s.js("""(() => { const H = MAPA_HOJE, NX = H.nx, T = H.celula, sp = atob(H.paredes), pb = (i) => (sp.charCodeAt(i >> 3) >> (i & 7)) & 1;
+      for (const [x0, z0, w, h, t] of H.variantes.montanha.regioes) for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) {
+        const k = x0 + q, z = z0 + r, i = z * NX + k;
+        if (!pb(i) || t.charCodeAt(r * w + q) !== 48) continue;
+        const wx = H.min[0] + (k + .5) * T, wz = H.min[1] + (z + .5) * T;
+        const ve = Mesa.visao(wx + 2 * T, wz, Mesa.raio('sentinela')).some(c => c[0] === k && c[1] === z);
+        return { ponto: [k, z], ve: ve, tipo: Mesa.tipo(i) };
+      } return null; })()""")
+    s.clicar('#mesa-alma [data-alma=""]', 0.4)
+    vis_base = s.js("(() => { const c = %s; if (!c) return null; const H = MAPA_HOJE, T = H.celula, wx = H.min[0] + (c[0] + .5) * T, wz = H.min[1] + (c[1] + .5) * T; return Mesa.visao(wx + 2 * T, wz, Mesa.raio('sentinela')).some(x => x[0] === c[0] && x[1] === c[1]); })()"
+                    % json.dumps(vis["ponto"] if vis else None))
+    p.conta("terreno", "a visão segue a grade: a parede que a Montanha abre é vista com ela e não sem ela",
+            bool(vis) and vis["ve"] is True and vis["tipo"] == 0 and vis_base is False, "%s · sem alma: %s" % (vis, vis_base))
+    # volta ao recarregar; as moitas pintadas da grade
+    s.clicar('#mesa-alma [data-alma="oceano"]', 0.3)
+    s.clicar('#mesa-covil [data-covil="3"]', 0.3)
+    s.abrir("")
+    time.sleep(1)
+    s.entrar()
+    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+    time.sleep(0.8)
+    volta = s.js("JSON.stringify(Mesa.terreno())")
+    p.conta("terreno", "a escolha volta ao recarregar (no navegador, como a névoa)", json.loads(volta) == {"imagem": "assets/mapa/ocean_baron3.png", "alma": "oceano", "covil": 3}, volta)
+    moitas = s.js("""(() => { const c = document.getElementById('mesa-moitas'), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) n++;
+      let esp = 0; for (let i = 0; i < MAPA.nx * MAPA.nz; i++) if (Mesa.tipo(i) & 2) esp++;
+      return { pintadas: n, moitas: esp, w: c.width, h: c.height }; })()""")
+    p.conta("terreno", "as moitas pintadas são as da grade com a escolha (uma por célula)",
+            moitas["pintadas"] == moitas["moitas"] and moitas["moitas"] > 1000 and moitas["w"] == 295, "%s" % moitas)
+    p.conta("terreno", "console sem erro", not s.erros, "%s" % s.erros)
 
 
 def checar_sentinelas(s, p):
@@ -8667,6 +8748,7 @@ GRUPOS = [
     ("update tracker", checar_tracker),
     ("mesa de guerra", checar_mesa),
     ("forma do campeão", checar_formas),
+    ("terreno", checar_terreno),
     ("sentinelas", checar_sentinelas),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),

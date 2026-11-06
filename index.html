@@ -4689,7 +4689,8 @@ body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
 .mesa-janela { position: relative; width: max(340px, min(820px, 56vw, calc(100vh - 260px))); aspect-ratio: 1; overflow: hidden; cursor: grab; touch-action: none; outline: none; }
 .mesa-janela:focus-visible { box-shadow: 0 0 0 2px var(--forja-brasa); }
 .mesa-janela.arrastando { cursor: grabbing; }
-.mesa-mapa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 0 0; will-change: transform; }
+.mesa-mapa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 0 0; will-change: transform; background: #141a22; }
+.mesa-moitas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: blur(.8px); }
 .mesa-mapa img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; image-rendering: auto; }
 .mesa-ferr { flex: 1; min-width: 200px; max-width: 300px; }
 .mesa-ferr-tit { font: 600 10.5px var(--loja-gravado); letter-spacing: .14em; text-transform: uppercase; color: var(--forja-brasa); margin: 2px 0 8px; }
@@ -4697,6 +4698,12 @@ body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
 .mesa-btn { padding: 7px 12px; font: 600 11px var(--loja-gravado); letter-spacing: .1em; text-transform: uppercase; border-radius: 3px; cursor: pointer;
   background: var(--forja-molde-2); color: var(--forja-texto); border: 1px solid var(--forja-placa-borda); }
 .mesa-btn:hover, .mesa-btn:focus-visible { border-color: var(--forja-brasa); color: var(--forja-titulo); }
+.mesa-terr-rot { margin: 0 0 4px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); }
+.mesa-terr { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.mesa-terr-opt { padding: 4px 9px; border-radius: 3px; cursor: pointer; border: 1px solid #3a3029; background: rgba(0,0,0,.3);
+  color: var(--forja-texto-suave); font: 13px var(--loja-texto); }
+.mesa-terr-opt:hover, .mesa-terr-opt:focus-visible { border-color: var(--forja-brasa); }
+.mesa-terr-opt.ativa { border-color: #c9973f; color: var(--forja-brasa-clara); box-shadow: 0 0 0 1px #c9973f; }
 .mesa-zoom { display: block; margin-top: 8px; color: var(--forja-texto-suave); font: 12px var(--loja-texto); }
 .mesa-nevoa { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: blur(1.6px); }
 .mesa-marcas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
@@ -8604,7 +8611,7 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
     <div class="mesa-palco">
       <div class="mesa-moldura">
         <div id="mesa-janela" class="mesa-janela" tabindex="0" role="application" aria-label="Mapa de Summoner's Rift — a roda do mouse aproxima, arrastar move (arrastar uma sentinela a leva); + e − aproximam, as setas movem, 0 volta ao mapa inteiro">
-          <div id="mesa-mapa" class="mesa-mapa"><img id="mesa-img" alt="" draggable="false"><canvas id="mesa-nevoa" class="mesa-nevoa" aria-hidden="true"></canvas></div>
+          <div id="mesa-mapa" class="mesa-mapa"><img id="mesa-img" alt="" draggable="false"><canvas id="mesa-moitas" class="mesa-moitas" aria-hidden="true"></canvas><canvas id="mesa-nevoa" class="mesa-nevoa" aria-hidden="true"></canvas></div>
           <svg id="mesa-marcas" class="mesa-marcas" aria-hidden="true"></svg>
         </div>
       </div>
@@ -8617,6 +8624,12 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
         <label class="mesa-opt"><input type="checkbox" id="mesa-nevoa-on"> Névoa de guerra</label>
         <label class="mesa-opt"><input type="checkbox" id="mesa-raio-on"> Raio em ciano</label>
         <p id="mesa-conta" class="mesa-conta" aria-live="polite"></p>
+        <!-- F13-T113: o mapa de hoje — a alma e a forma do covil do Barão mudam o terreno (a imagem e a grade) -->
+        <div class="mesa-ferr-tit">O terreno</div>
+        <div class="mesa-terr-rot">Alma do Dragão</div>
+        <div id="mesa-alma" class="mesa-terr" role="radiogroup" aria-label="Alma do Dragão"></div>
+        <div class="mesa-terr-rot">Covil do Barão</div>
+        <div id="mesa-covil" class="mesa-terr" role="radiogroup" aria-label="Covil do Barão"></div>
         <div class="mesa-ferr-tit">O mapa</div>
         <p class="mesa-dica">A roda do mouse aproxima e afasta, em volta do ponto onde ele está. Arraste para mover.</p>
         <button type="button" id="mesa-inteiro" class="mesa-btn">Mapa inteiro</button>
@@ -8806,6 +8819,7 @@ aplicarCamadaDoRobo(window.CATALOG, window.ATUALIZACAO_PATCH, window.ROBO);
 <script src="data/servidor.js"></script>
 <script src="data/ganho_sons.js"></script>
 <script src="data/mapa.js"></script>
+<script src="data/mapa_variantes.js"></script>
 <script>
 // ============================================================
 // Som — módulo único de áudio (Fase 4). docs/mapa_de_audio.md é a régua.
@@ -9434,7 +9448,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.117";
+const ATUALIZACAO = "13.118";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -12152,8 +12166,9 @@ function renderBuildTotals() {
 // Adicionar item NÃO re-renderiza o seletor: se re-renderizasse, a lista
 // voltaria ao topo a cada clique, obrigando a rolar de novo.
 // F13-T107 (Leo, 02/11/2026): a mesa de guerra — o mapa de Summoner's Rift, na aba Mapa ("uma aba à
-// parte, como a calculadora"; o visual é o da opção A da F13-T106). O map11.png do Data Dragon, do patch do
-// catálogo, cobre os limites da grade do jogo (data/mapa.js, F13-T105). Aqui: o zoom em volta do cursor (a
+// parte, como a calculadora"; o visual é o da opção A da F13-T106). A imagem é o minimapa de hoje, tirado do
+// jogo (na pasta assets/mapa, F13-T113; o map11.png do Data Dragon era a arte antiga), e cobre os limites da grade do
+// jogo (data/mapa.js, F13-T105). Aqui: o zoom em volta do cursor (a
 // roda; + e −) e o arrasto (o mouse; as setas), sem deixar o mapa sair da janela; a linha que diz de qual
 // build são as marcas.
 // F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de guerra,
@@ -12191,7 +12206,36 @@ const Mesa = (function () {
   }
   const G = window.MAPA, T = G ? G.celula : 50, NX = G ? G.nx : 1, NZ = G ? G.nz : 1, N = NX * NZ, LX = NX * T, LZ = NZ * T;
   const bits = (b64) => { const s = atob(b64 || ""); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
-  const parede = G ? bits(G.paredes) : () => 0, arbusto = G ? bits(G.arbustos) : () => 0, soPasso = G ? bits(G.soPasso) : () => 0;
+  // F13-T113 (Leo, 05/11/2026: "na saída do rio tem um arbusto no meio… isso é antigo… e tem as alterações das
+  // almas dos dragões no mapa"): a grade de hoje (a AIPath_SRX_3) e, por cima, a camada do jogo da alma e da forma
+  // do covil do Barão escolhidas (data/mapa_variantes.js; só as almas que mudam o terreno). Um tipo por célula:
+  // 1 parede, 2 arbusto, 4 só para o passo. A escolha é do jeito de ver de cada um, como a névoa: no navegador
+  const BASE = new Uint8Array(N), TIPO = new Uint8Array(N);
+  if (G) { const p = bits(G.paredes), a = bits(G.arbustos), sp = bits(G.soPasso); for (let i = 0; i < N; i++) BASE[i] = p(i) | a(i) << 1 | sp(i) << 2; }
+  const VARIANTES = window.MAPA_HOJE && MAPA_HOJE.nx === NX && MAPA_HOJE.nz === NZ ? MAPA_HOJE.variantes || {} : {};
+  const naCamada = (chave, f) => { for (const [x0, z0, w, h, t] of VARIANTES[chave].regioes)
+    for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) f((z0 + r) * NX + x0 + c, t.charCodeAt(r * w + c) - 48); };
+  const mudaAlgo = (chave) => { let m = false; if (VARIANTES[chave]) naCamada(chave, (i, v) => { if (BASE[i] !== v) m = true; }); return m; };
+  // a alma cuja camada não muda nenhuma célula da grade de hoje fica de fora (a Quimtec: o covil dela já é o da base)
+  const ALMAS = [["", "Sem alma"], ["infernal", "Infernal"], ["montanha", "Montanha"], ["oceano", "Oceano"], ["quimtec", "Quimtec"]]
+    .filter(([k]) => !k || mudaAlgo(k));
+  const COVIS = [[1, "1ª forma"], [2, "2ª forma"], [3, "3ª forma"]].filter(([n]) => n === 1 || VARIANTES["barao" + n]);
+  // a imagem do minimapa de cada uma; o Infernal e a Quimtec usam a de base (docs/mapa_do_jogo.md, §3)
+  const IMG_ALMA = { montanha: "mountain", oceano: "ocean" };
+  let terreno = { alma: "", covil: 1 };
+  try {
+    const t = JSON.parse(localStorage.getItem("mesa.terreno") || "{}");
+    if (ALMAS.some(([k]) => k === t.alma)) terreno.alma = t.alma;
+    if (COVIS.some(([n]) => n === t.covil)) terreno.covil = t.covil;
+  } catch (e) { /* o padrão: sem alma, a 1ª forma */ }
+  function montarGrade() {
+    TIPO.set(BASE);
+    for (const chave of [terreno.alma, terreno.covil > 1 ? "barao" + terreno.covil : ""])
+      if (VARIANTES[chave]) naCamada(chave, (i, v) => { TIPO[i] = v; });
+  }
+  montarGrade();
+  const parede = (i) => TIPO[i] & 1, arbusto = (i) => (TIPO[i] >> 1) & 1, soPasso = (i) => (TIPO[i] >> 2) & 1;
+  const imagemDoTerreno = () => `assets/mapa/${IMG_ALMA[terreno.alma] || "base"}_baron${terreno.covil}.png`;
   const celDe = (wx, wz) => [Math.floor((wx - G.min[0]) / T), Math.floor((wz - G.min[1]) / T)];
   const chao = (k, w) => k >= 0 && w >= 0 && k < NX && w < NZ && !parede(w * NX + k) && !soPasso(w * NX + k);
   // as células que uma sentinela em (wx, wz) vê até o raio r: a linha até a célula não cruza parede; o arbusto
@@ -12366,6 +12410,36 @@ const Mesa = (function () {
     g.setTransform(s, 0, 0, s, 0, 0); g.translate(dx, dy); g.fillStyle = nuvens; g.fillRect(-dx, -dy, W / s, W / s);
     g.setTransform(s * 1.6, 0, 0, s * 1.6, 0, 0); g.translate(-dx * .7, dy * .5); g.fillStyle = nuvens2; g.fillRect(dx * .7, -dy * .5, W / s, W / s);
     g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = "source-over";
+  }
+  // as moitas: o minimapa do jogo não as desenha, e a visão depende delas — pintadas da grade, célula a célula
+  function desenharMoitas() {
+    const cv = el("mesa-moitas");
+    if (!cv || !G) return;
+    cv.width = NX; cv.height = NZ;
+    const g = cv.getContext("2d"), im = g.createImageData(NX, NZ);
+    for (let w = 0; w < NZ; w++) for (let k = 0; k < NX; k++) {
+      if (!arbusto(w * NX + k)) continue;
+      const o = ((NZ - 1 - w) * NX + k) * 4;
+      im.data[o] = 58; im.data[o + 1] = 104; im.data[o + 2] = 46; im.data[o + 3] = 225;
+    }
+    g.putImageData(im, 0, 0);
+  }
+  function trocarTerreno(mudar) {
+    Object.assign(terreno, mudar);
+    try { localStorage.setItem("mesa.terreno", JSON.stringify(terreno)); } catch (e) { /* vale só nesta visita */ }
+    montarGrade();
+    el("mesa-img").src = imagemDoTerreno();
+    desenharMoitas();
+    desenharTerreno();
+    sujo = true;
+    desenharNevoa();
+    desenharMarcas();
+  }
+  function desenharTerreno() {
+    const opc = (lista, atual, dado) => lista.map(([v, nome]) => '<button type="button" class="mesa-terr-opt' + (v === atual ? " ativa" : "")
+      + '" role="radio" aria-checked="' + (v === atual) + '" ' + dado + '="' + v + '">' + esc(nome) + "</button>").join("");
+    el("mesa-alma").innerHTML = opc(ALMAS, terreno.alma, "data-alma");
+    el("mesa-covil").innerHTML = opc(COVIS, terreno.covil, "data-covil");
   }
   function nevoaLigada() { return !!G && el("mesa-nevoa-on").checked; }
   function quadro(t) {
@@ -12560,8 +12634,18 @@ const Mesa = (function () {
   function montar() {
     montada = true;
     const janela = el("mesa-janela");
-    el("mesa-img").src = "https://ddragon.leagueoflegends.com/cdn/" + CATALOG.meta.patch + "/img/map/map11.png";
+    el("mesa-img").src = imagemDoTerreno();
     el("mesa-img").alt = "Summoner's Rift";
+    desenharMoitas();
+    desenharTerreno();
+    el("mesa-alma").addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-alma]");
+      if (b && b.dataset.alma !== terreno.alma) trocarTerreno({ alma: b.dataset.alma });
+    });
+    el("mesa-covil").addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-covil]");
+      if (b && Number(b.dataset.covil) !== terreno.covil) trocarTerreno({ covil: Number(b.dataset.covil) });
+    });
     janela.addEventListener("wheel", (ev) => {
       ev.preventDefault();   // a roda no mapa é do mapa: a página não rola
       const r = janela.getBoundingClientRect();
@@ -12675,7 +12759,8 @@ const Mesa = (function () {
   }
   return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; },
            visao: visao, raio: raioDe, paraTela: paraTela, livre: function (t) { return ferraDoCatalogo(t).livre; },
-           nevoa: function () { return { ativo: ativo > 0 || sujo, laco: !!laco, caixa: caixa }; } };
+           nevoa: function () { return { ativo: ativo > 0 || sujo, laco: !!laco, caixa: caixa }; },
+           terreno: function () { return Object.assign({ imagem: imagemDoTerreno() }, terreno); }, tipo: function (i) { return TIPO[i]; } };
 })();
 
 function renderBuild() {

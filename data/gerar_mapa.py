@@ -6,8 +6,9 @@ célula por célula, e os limites do mapa em unidades do jogo (a escala do zoom,
 raio de visão e do círculo ciano). Grava data/mapa.js (window.MAPA).
 
 A fonte é a grade de navegação do próprio jogo — ASSETS/Maps/NavGrid/Map11/
-AIPath_SRX_2.aimesh_ngrid, a que o map11.bin liga às configurações de Summoner's
-Rift de hoje —, lida de dentro do Map11.wad.client da instalação do LoL, sem mudar
+AIPath_SRX_3.aimesh_ngrid desde a F13-T113 (a SRX_2, que o map11.bin cita, é a de
+antes das mudanças de parede e arbusto; a SRX_3 é a que casa com o minimapa de hoje,
+docs/mapa_do_jogo.md) —, lida de dentro do Map11.wad.client da instalação do LoL, sem mudar
 nada lá. Nenhum dado é digitado: tudo sai do arquivo.
 
 Uso:  python gerar_mapa.py [pasta do LoL]
@@ -41,7 +42,7 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 SAIDA = os.path.join(AQUI, "mapa.js")
 LOL = sys.argv[1] if len(sys.argv) > 1 else r"C:\Riot Games\League of Legends"
 WAD = os.path.join(LOL, "Game", "DATA", "FINAL", "Maps", "Shipping", "Map11.wad.client")
-GRADE = "ASSETS/Maps/NavGrid/Map11/AIPath_SRX_2.aimesh_ngrid"
+GRADE = "ASSETS/Maps/NavGrid/Map11/AIPath_SRX_3.aimesh_ngrid"
 BYTES_POR_CELULA = 48
 ARBUSTO, PAREDE, PAREDE_ESTRUTURA, PAREDE_TRANSPARENTE = 1, 2, 4, 64
 
@@ -161,8 +162,9 @@ def main():
           "// celula de `celula` unidades; a celula (x, z) e o bit z * nx + x; min/max em unidades do jogo.\n"
           "// paredes: a visao nao passa; arbustos: quem esta dentro so e visto por quem tem visao do arbusto;\n"
           "// soPasso: parede transparente e de estrutura (para o passo, nao a visao).\n"
-          "// A imagem do mapa (img/map/map11.png do Data Dragon) cobre de min a min + n * celula: conferido\n"
-          "// na F13-T105, o melhor encaixe da grade sobre ela fica a menos de 2 px (1 px = ~29 unidades).\n"
+          "// A imagem do mapa (o minimapa do jogo, assets/mapa/*_baron*.png, F13-T113) cobre de min a min + n * celula:\n"
+          "// conferido na F13-T113 (como na F13-T105), o melhor encaixe da grade sobre ela fica a menos de 2 px\n"
+          "// (1 px = ~29 unidades). As almas e o covil do Barao: data/mapa_variantes.js.\n"
           "window.MAPA = {\n"
           "  fonte: %r,\n"
           "  celula: %r, nx: %d, nz: %d,\n"
