@@ -138,7 +138,9 @@ Estes dados existem hoje só como texto. O Forjador não os digita. Até o Capí
   - `tipo`: "razão" (soma ao efeito) | "conversão" (vira outro atributo: o atributo que recebe vai junto).
   
   `[]` com "Sem scaling" para a habilidade que não escala, e ausente quando ainda não foi conferido.
-- **No Capítulo 2:** o gerador lê o campo novo (muda o esquema: aprovação do Leo). No grupo Atributo do Catálogo entram os chips "Escala com" PdH, DdA, Vida, Mana, Armadura e RM, só com `de: "seu"`, e o Maior/Menor primeiro ordena pela maior porcentagem do atributo marcado. A ficha mostra a razão junto da habilidade. Custo estimado depois da entrega: 2–3% do semanal.
+- **No Capítulo 2:** o gerador lê o campo novo (muda o esquema: aprovação do Leo). No grupo Atributo do Catálogo entram os chips "Escala com" PdH, DdA, Vida, Mana, Armadura e RM, só com `de: "seu"`, e o Maior/Menor primeiro ordena pela maior porcentagem do atributo marcado. A base fica à vista e também filtra (Leo, 06/11/2026: "é bom também ter essa diferença de vida/ap/ad bônus, base, máxima, pois conheço muita gente que confunde a Sterak"):
+  - cada chip abre as bases que existem no catálogo para aquele atributo (DdA: base · bônus · total; Vida: base · bônus · máxima · perdida...), e "todas" é o padrão;
+  - na ficha e no resumo, a razão sai com a base destacada ("50% do DdA **base**" no Sinal de Sterak), nunca só "50% do DdA". Custo estimado depois da entrega: 2–3% do semanal.
 
 ## E. Dúvida de fonte aberta
 
