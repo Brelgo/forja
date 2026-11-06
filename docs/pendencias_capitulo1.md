@@ -8,7 +8,7 @@ Fica fora daqui o que já foi decidido no Capítulo 1 (`docs/decisoes_capitulo1.
 
 ## Resumo
 
-**23/09/2026: o Leo entregou o Capítulo 1 corrigido** (seção "Ajustes — sessão de correção de 23/09/2026" no fim do catálogo), e o app passou a usar tudo nas F13-T19 a T23. **Não há pendência aberta do Capítulo 1.** C1 e C2, as últimas, entraram com a entrega de 18/10/2026 (o 16.19.1 de 03/10 incluído), e o app passou ao 16.20.1 na F13-T49.
+**23/09/2026: o Leo entregou o Capítulo 1 corrigido** (seção "Ajustes — sessão de correção de 23/09/2026" no fim do catálogo), e o app passou a usar tudo nas F13-T19 a T23. **Aberta: a D5** (o escalonamento por habilidade, 06/11/2026). C1 e C2, as últimas, entraram com a entrega de 18/10/2026 (o 16.19.1 de 03/10 incluído), e o app passou ao 16.20.1 na F13-T49.
 
 | # | Pendência | No Capítulo 1 | No app |
 |---|---|---|---|
@@ -21,6 +21,7 @@ Fica fora daqui o que já foi decidido no Capítulo 1 (`docs/decisoes_capitulo1.
 | D2 | Ouro do Mestre Forjador | ✔ tabelas de preço + "Mestre Forjador (ouro)" (1.000g nos 109) | ✔ F13-T22: o item forjado soma os 1.000g na caixa e na build; a ficha mostra "Forjado" |
 | D3 | Fragmentos do Atributo adicional | ✔ bloco `Fragmentos[]` (34) | ✔ F13-T23: cada Atributo adicional da build guarda o fragmento escolhido, que entra nos atributos e no ouro |
 | E1 | Lentidão do Garrabrasa | ✔ 3s (cliente) | ✔ automático (F13-T19) |
+| D5 | Escalonamento por habilidade (06/11/2026) | **aberta** | o filtro "Escala com" espera o campo |
 
 O gerador (`data/gerar_catalog_json.py`) passou a ler o esquema novo na F13-T19, com o aprovado do Leo: `costAnalysis.goldValueStats` e `goldValueBase`, `apexNumeric`, `fragments`, `masterwork.bonusGold`, `meta.statPrices` e `meta.masterworkPrices` (ver `docs/esquema_catalog.md`). Relatório: 6 avisos (todos casos já decididos) e 0 linhas não reconhecidas.
 
@@ -122,6 +123,23 @@ Estes dados existem hoje só como texto. O Forjador não os digita. Até o Capí
 - **O que o Capítulo 1 faz:** em cada item, uma linha com os patches em que o **jogo** mudou o item (atributo, preço, receita, efeito, modos), por exemplo `Mudou no jogo em[]: 16.19.1, 16.20.1` — o rótulo final é do Capítulo 1; correção de dado do catálogo e troca só de nome não entram. Preencher pelo menos o 16.19.1 e o 16.20.1 a partir das tabelas de reconciliação que já existem.
 - **No Capítulo 2:** o gerador lê a linha (muda o esquema: aprovação do Leo) para `item.changedIn = ["16.19.1", "16.20.1"]`. A build feita no patch P fica desatualizada só se alguma caixa que não é Opcional tiver um item com mudança num patch depois de P (até o atual), ou um item que saiu do catálogo. Vale para a etiqueta e a revisão das suas builds e para a aba Públicas (F13-T56). O robô de atualização por patch passa a precisar desse dado também.
 
+### D5. Aberta (06/11/2026) — Escalonamento (scaling) por habilidade
+- **Pedido do Leo (06/11/2026):** "adicionar o scaling de ad, ap, mana, armadura, mr... para aquele filtro de maior e menor de atributo do catálogo". Ele escolheu este caminho, e não a leitura do texto pelo app.
+- **Hoje:** o escalonamento só existe em campo no `attributes[].scaling`, com 2 itens. Nas habilidades ele está em texto no `mechanics`, escrito de três jeitos:
+  - **razão entre parênteses**, "20 (+1,5% da Vida bônus)": 27 itens;
+  - **conversão**, "concede DdA bônus igual a 2% da Mana máxima": mais 16 itens que não têm a razão entre parênteses (Manamune, Muramana, Cajado do Arcanjo, Abraço de Seraph, Tiara Sussurrante, Diadema de Canções, Aproximação Invernal, Armadura Sangrenta do Suserano, Armadura de Warmog, Sinal de Sterak, Marcha Célere...);
+  - **"Sem scaling."**, escrito em 37 itens.
+- **Por que o app não lê o texto:** o mesmo "X% da Vida máxima" ora é um atributo seu ("+4% da Vida bônus" de dano), ora do alvo ("5% da Vida máxima do alvo"), ora uma cura ("restaura 20% da Mana máxima"), ora uma amplificação ("recebe 4% de Poder de Habilidade"). Separar esses casos é decidir o que o dado significa, e isso é do Capítulo 1.
+- **O que o Capítulo 1 faz:** `abilities[].scaling[] = {stat, pct, base, de, tipo}`:
+  - `stat`: "PdH" | "DdA" | "Vida" | "Mana" | "Armadura" | "RM" | "VM" | "tamanho" | ...;
+  - `pct`: o número, ou uma faixa por nível ("0–12");
+  - `base`: "bônus" | "total" | "base" | "máxima" | "atual" | "perdida";
+  - `de`: "seu" | "alvo";
+  - `tipo`: "razão" (soma ao efeito) | "conversão" (vira outro atributo: o atributo que recebe vai junto).
+  
+  `[]` com "Sem scaling" para a habilidade que não escala, e ausente quando ainda não foi conferido.
+- **No Capítulo 2:** o gerador lê o campo novo (muda o esquema: aprovação do Leo). No grupo Atributo do Catálogo entram os chips "Escala com" PdH, DdA, Vida, Mana, Armadura e RM, só com `de: "seu"`, e o Maior/Menor primeiro ordena pela maior porcentagem do atributo marcado. A ficha mostra a razão junto da habilidade. Custo estimado depois da entrega: 2–3% do semanal.
+
 ## E. Dúvida de fonte aberta
 
 ### E1. ✔ Filhote de Garrabrasa (Scorchclaw Pup): lentidão de 2s ou 3s — 3s, pelo cliente
@@ -183,3 +201,4 @@ A wiki diz 2s e o tooltip do cliente diz 3s. O catálogo marca "[A CONFIRMAR]" e
 - 23/09/2026: A1, A2, B1, C1 e C2 saíram da conferência com a wiki (tabela e 28 artigos). Arquivo único criado a pedido do Leo.
 - 23/09/2026 (tarde): o Leo entregou o Capítulo 1 corrigido. A1, A2, B2 e E1 resolvidos no dado; B1, D1, D2 e D3 entregues como campos novos, que o app passa a usar nas F13-T20 a T23. C1 e C2 ficam para quando o catálogo subir de patch.
 - 18/10/2026: C1 e C2 resolvidos — entrega do Capítulo 1 no 16.20.1, aplicada no app na F13-T49.
+- 06/11/2026: D5 aberta (o escalonamento por habilidade, para o filtro do Catálogo).
