@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "06/11/2026",
+   "add": [],
+   "aj": [
+    "o mapa é o de hoje: as paredes e as moitas do jogo atual, e um seletor de alma do Dragão e de forma do covil do Barão que muda o terreno"
+   ],
+   "rem": []
+  },
+  {
    "data": "05/11/2026",
    "add": [
     "Update Tracker: um quadro de cartazes com o que mudou em cada item a cada patch — o antes e o depois, em verde o que melhorou, em vermelho o que piorou e em amarelo o que foi ajustado",
