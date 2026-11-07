@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "07/11/2026",
+   "add": [],
+   "aj": [
+    "no mapa, a sentinela dentro de uma moita vê só aquela moita; as outras no raio ficam na névoa"
+   ],
+   "rem": []
+  },
+  {
    "data": "06/11/2026",
    "add": [],
    "aj": [
