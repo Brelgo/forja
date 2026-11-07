@@ -8666,6 +8666,22 @@ def checar_sentinelas(s, p):
           return null; })()""")
         p.conta("sentinelas", "o arbusto: a sentinela de fora não vê dentro dele; a de dentro vê", bool(mt) and mt["de_fora"] is False and mt["de_dentro"] is True, "%s" % mt)
 
+        # 7b. F13-T118 (Leo, 05/11/2026: "o mapa deve policiar melhor as moitas, porque não tem como ver do outro
+        #     lado"): de dentro de uma moita, só ela — nenhuma célula de outra moita no raio, mesmo com a linha livre
+        #     de parede (as que a regra antiga mostrava); uma sentinela em cada moita do mapa
+        mo = s.js("""(() => { const G = MAPA, NX = G.nx, NZ = G.nz, T = G.celula, r = Mesa.raio('sentinela'), n = Math.ceil(r / T), par = (i) => Mesa.tipo(i) & 1;
+          let viol = 0, casos = 0, ex = null; const regioes = new Set();
+          for (let i = 0; i < NX * NZ; i++) { const a = Mesa.moita(i); if (!a || regioes.has(a)) continue; regioes.add(a);
+            const k = i % NX, z = (i - k) / NX;
+            for (const c of Mesa.visao(G.min[0] + (k + .5) * T, G.min[1] + (z + .5) * T, r)) { const b = Mesa.moita(c[1] * NX + c[0]); if (b && b !== a) { viol++; if (!ex) ex = [k, z, c[0], c[1]]; } }
+            for (let dz = -n; dz <= n; dz++) for (let dx = -n; dx <= n; dx++) { if ((dx * dx + dz * dz) * T * T > r * r) continue;
+              const k2 = k + dx, z2 = z + dz; if (k2 < 0 || z2 < 0 || k2 >= NX || z2 >= NZ) continue; const b = Mesa.moita(z2 * NX + k2); if (!b || b === a) continue;
+              const pp = Math.max(Math.abs(dx), Math.abs(dz)); let ok = true; for (let t = 1; t < pp && ok; t++) if (par(Math.round(z + dz * t / pp) * NX + Math.round(k + dx * t / pp))) ok = false;
+              if (ok) casos++; } }
+          return { regioes: regioes.size, viol: viol, casos: casos, ex: ex }; })()""")
+        p.conta("sentinelas", "de dentro de uma moita, só ela: nenhuma célula de outra moita no raio, mesmo com a linha livre de parede (uma sentinela em cada moita do mapa)",
+                mo["regioes"] > 30 and mo["viol"] == 0 and mo["casos"] > 0, "%s" % mo)
+
         # 8. a névoa e o raio se desligam, e ficam desligados ao recarregar
         s.clicar("#mesa-raio-on", 0.3)
         s.clicar("#mesa-nevoa-on", 0.3)
