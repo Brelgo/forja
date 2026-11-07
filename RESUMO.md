@@ -28,6 +28,7 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
+| **primeiro** | **O catálogo no 16.22.1** (Capítulo 1 entregou em 07/11; está no ramo local `catalogo-16.22.1`, não publicado). Já feito: o catálogo copiado, o gerador lê o campo novo `Interações[]` (72 de 72; OK do Leo), `catalog.js` e `mudancas.js` gerados. O Leo escolheu deixar a Passiva do Ornn arredondada contar como mudança: 76 itens no 16.22.1, 70 só por ela — **consequência a confirmar com ele: as 44 builds publicadas ficam desatualizadas e a lista Públicas esvazia.** Falta: consertar 12 falhas do QA (os testes do robô presos ao 16.21.1, o Update Tracker, as Públicas, uma de redesenho), conferir o robô de patch no 16.22.1, captura, aprovado, merge no `main` | 4–6% |
 | depois | **O grupo "duas abas" da QA falha às vezes** (2 de 3 no código da T113; os testes do 16.22.1 já foram consertados em 07/11). Diário na aba antes de teorizar | 2–3% |
 | quando o Cap. 1 entregar | **Filtro "Escala com"** (PdH, DdA, Vida, Mana, Armadura, RM) no grupo Atributo, com Maior/Menor pela porcentagem. Com a base (base · bônus · total · máxima) à vista e filtrável. Espera a **D5** de `docs/pendencias_capitulo1.md` (Leo, 06/11/2026: adição ao Capítulo 1, não leitura do texto) | 2–3% |
 | depois | **A entrada da Ilha das Sombras** por workflow (2 opções + juiz), por `docs/direcao_regioes.md` (o estilo de Ruined King); o molde é o da T120 (Águas de Sentina) | 8–12% + 3–5% |
