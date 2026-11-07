@@ -56,9 +56,10 @@ RESOLUCOES = [(2560, 1440), (1920, 1080), (1600, 900), (1280, 800)]
 # F13-T99: a entrada da loja sorteia a região a cada visita; ?entrada=<regiao> força uma. A marca é um
 # elemento que só o desenho daquela região gera (prova que ela foi montada e desenhada).
 # F13-T120: a quarta, a popa do galeão de Águas de Sentina (a marca é a cidade de cascos virados na encosta).
-REGIOES_ENTRADA = ["freljord", "noxus", "shurima", "aguas"]
-NOME_REGIAO = {"freljord": "Freljord", "noxus": "Noxus", "shurima": "Shurima", "aguas": "Águas de Sentina"}
-MARCA_REGIAO = {"freljord": "en-pinheiros", "noxus": "en-torres", "shurima": "en-ruinas", "aguas": "en-cidade-casas"}
+# F13-T122: a quinta, o relicário de Helia na Ilha das Sombras (a marca é o grupo dos rostos que nascem da Névoa Negra).
+REGIOES_ENTRADA = ["freljord", "noxus", "shurima", "aguas", "sombras"]
+NOME_REGIAO = {"freljord": "Freljord", "noxus": "Noxus", "shurima": "Shurima", "aguas": "Águas de Sentina", "sombras": "Ilha das Sombras"}
+MARCA_REGIAO = {"freljord": "en-pinheiros", "noxus": "en-torres", "shurima": "en-ruinas", "aguas": "en-cidade-casas", "sombras": "en-bruma-rostos"}
 
 VERDE, VERMELHO, AMARELO, CINZA, FIM = "\033[32m", "\033[31m", "\033[33m", "\033[90m", "\033[0m"
 
