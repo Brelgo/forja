@@ -8208,9 +8208,9 @@ def checar_mesa(s, p):
         s.js(abre_mapa)
         time.sleep(0.5)
         j = janela()
-        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no Update Tracker (a adição mais recente); a linha diz de qual build é o mapa e, na de ARAM, que o mapa é o de Summoner's Rift; o minimapa de hoje (assets/mapa, F13-T113), numa janela quadrada",
+        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no Update Tracker (a adição mais recente); a linha diz que o plano é da mesa, à parte das builds (F13-T119; a de ARAM não muda nada); o minimapa de hoje (assets/mapa, F13-T113), numa janela quadrada",
                 a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["tracker-btn"] and a["novTxt"] == ["Novidade"] and a["novVis"]
-                and a["nome"] in a["dona"] and "ARAM" in dona_aram and "Summoner's Rift" in dona_aram
+                and "à parte das builds" in a["dona"] and dona_aram == a["dona"]
                 and a["src"].endswith("/assets/mapa/base_baron1.png") and a["w"] > 0 and abs(j["w"] - j["h"]) < 1.5,
                 "%s · ARAM: %s · janela %s" % (a, dona_aram, j))
 
@@ -8478,8 +8478,9 @@ def checar_terreno(s, p):
 def checar_sentinelas(s, p):
     """F13-T108 (Leo, 02/11/2026: "ao posicionar o ícone da ward ela concede visão expulsando a névoa de
     guerra, revelando o alcance e o que ela revela e o que não revela"; "o raio de visão deve ser equivalente
-    à escala… um círculo ciano"): as sentinelas na aba Mapa. O raio e o ícone vêm do catálogo; sem o Editar
-    nada muda; a névoa abre na visão de verdade (a parede barra, o arbusto só de dentro); o raio em ciano
+    à escala… um círculo ciano"): as sentinelas na aba Mapa. O raio e o ícone vêm do catálogo; F13-T119 (Leo,
+    06/11/2026: "pode editar o mapa sem a necessidade de uma build, já que é um recurso independente"): sem build
+    aberta e sem o Editar, as sentinelas se põem, e ficam no plano da mesa (no navegador), não na build; a névoa abre na visão de verdade (a parede barra, o arbusto só de dentro); o raio em ciano
     acompanha o zoom; a névoa e o raio se desligam (lembrado); as marcas ficam na build (salvar, recarregar,
     duplicar). F13-T112 (a névoa viva): arrastar do botão põe, arrastar a sentinela a leva (a névoa abre no
     novo lugar e volta a fechar no velho), soltar fora do mapa tira, arrastar o mapa só move; o Enter no botão
@@ -8488,8 +8489,7 @@ def checar_sentinelas(s, p):
     s.tela(1440, 900)
     s.limpar_memoria()
     s.entrar()
-    s.nova_build()
-    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")   # sem build aberta (F13-T119)
     time.sleep(0.8)
 
     def mouse(tipo, x, y, **k):
@@ -8555,27 +8555,22 @@ def checar_sentinelas(s, p):
         p.conta("sentinelas", "as três ferramentas levam o ícone do catálogo e o raio que o texto do item diz (Sentinela Invisível, Sentinela de Controle e Alteração Vidente)",
                 f["raios"] == f["doTexto"] and all(f["raios"]) and f["icones"] == f["doCat"] and f["rotulos"] == ["raio %d" % r for r in f["raios"]], "%s" % f)
 
-        # 2. sem o Editar, arrastar do botão para o mapa não põe nada e a mesa oferece o "Ligar Editar"
+        # 2. e 3. sem build aberta e sem o Editar (F13-T119), arrastar (de verdade) do botão até o mapa põe a
+        #    sentinela onde foi solta, no plano da mesa (nenhuma build fica "não salva"); a névoa abre ali e
+        #    continua fechada atrás da parede, dentro do raio, e longe
         a = s.js(achar)
-        x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, a["chao"][0], a["chao"][1]))
-        arrasta(botao("sentinela"), (x1, y1))
-        sem = s.js("({ n: build.mapa.visao.length, editing: build.editing, btn: !!document.querySelector('#mesa-pode [data-ligar-editar]'), fantasma: !!document.querySelector('.mesa-fantasma') })")
-        s.clicar("#mesa-pode [data-ligar-editar]", 0.6)
-        ligado = s.js("build.editing")
-        p.conta("sentinelas", "sem o Editar, arrastar do botão para o mapa não põe nada e a mesa oferece o \"Ligar Editar\", que liga",
-                sem == {"n": 0, "editing": False, "btn": True, "fantasma": False} and ligado is True, "%s · depois %s" % (sem, ligado))
-
-        # 3. com o Editar, arrastar (de verdade) do botão até o mapa põe a sentinela onde foi solta; a build fica
-        #    "não salva"; a névoa abre ali e continua fechada atrás da parede, dentro do raio, e longe
+        sem = s.js("({ id: build.id, editing: build.editing, motivo: document.getElementById('mesa-pode').textContent, btn: !!document.querySelector('#mesa-pode [data-ligar-editar]'), desligados: document.querySelectorAll('#mesa-ferras [data-ferra]:disabled').length })")
+        p.conta("sentinelas", "sem build aberta e sem o Editar, as ferramentas estão ligadas e a mesa não pede build nem o Editar",
+                sem["id"] is None and sem["editing"] is False and not sem["btn"] and sem["desligados"] == 0 and "build" not in sem["motivo"].lower() and "editar" not in sem["motivo"].lower(), "%s" % sem)
         x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, a["chao"][0], a["chao"][1]))
         arrasta(botao("sentinela"), (x1, y1))
         time.sleep(0.6)
-        v = s.js("({ m: build.mapa.visao, sujo: rascunho.sujo, svg: document.querySelectorAll('#mesa-marcas .mm-sent').length, ic: (document.querySelector('#mesa-marcas image') || {}).getAttribute && document.querySelector('#mesa-marcas image').getAttribute('href'), fantasma: !!document.querySelector('.mesa-fantasma') })")
+        v = s.js("({ m: Mesa.plano().visao, sujo: rascunho.sujo || !!build.id, svg: document.querySelectorAll('#mesa-marcas .mm-sent').length, ic: (document.querySelector('#mesa-marcas image') || {}).getAttribute && document.querySelector('#mesa-marcas image').getAttribute('href'), fantasma: !!document.querySelector('.mesa-fantasma') })")
         al = s.js("(() => { const f = %s; return { aqui: f(%r, %r), atras: %s, longe: f(MAPA.min[0] + 400, MAPA.min[1] + MAPA.nz * MAPA.celula - 400) }; })()"
                   % (alfa, a["chao"][0], a["chao"][1], ("f(%r, %r)" % tuple(a["atras"])) if a["atras"] else "null"))
         m = v["m"][0] if v["m"] else {}
-        p.conta("sentinelas", "com o Editar, arrastar do botão até o mapa põe a sentinela onde foi solta (a menos de uma célula) e a build fica \"não salva\"; a névoa abre ali e segue fechada atrás da parede (dentro do raio) e longe",
-                len(v["m"]) == 1 and m.get("t") == "sentinela" and abs(m["x"] - a["chao"][0]) <= 50 and abs(m["z"] - a["chao"][1]) <= 50 and v["sujo"] and v["svg"] == 1
+        p.conta("sentinelas", "sem build, arrastar do botão até o mapa põe a sentinela onde foi solta (a menos de uma célula), no plano da mesa (nenhuma build nasce nem fica \"não salva\"); a névoa abre ali e segue fechada atrás da parede (dentro do raio) e longe",
+                len(v["m"]) == 1 and m.get("t") == "sentinela" and abs(m["x"] - a["chao"][0]) <= 50 and abs(m["z"] - a["chao"][1]) <= 50 and not v["sujo"] and v["svg"] == 1
                 and not v["fantasma"] and v["ic"] == s.js("CATALOG.items.find(i => i.slug === 'stealth-ward').iconUrl")
                 and al["aqui"] is not None and al["aqui"] < 70 and al["atras"] is not None and al["atras"] > 120 and al["longe"] > 120,
                 "%s · névoa %s · ponto atrás %s" % (v, al, a["atras"]))
@@ -8604,17 +8599,17 @@ def checar_sentinelas(s, p):
             mouse("mouseMoved", x0 + 8 * k, y0 + 6 * k, buttons=1)
         mouse("mouseReleased", x0 + 40, y0 + 30, button="left", buttons=0, clickCount=1)
         time.sleep(0.6)
-        n_arr = s.js("build.mapa.visao.length")
+        n_arr = s.js("Mesa.plano().visao.length")
         s.js("Mesa.inteiro(); 'ok'")
         time.sleep(0.7)
         x1, y1 = s.js("(%s)(%r, %r)" % (tela_de, m["x"], m["z"]))
         arrasta((x1, y1), (x1 + 90, y1 - 70), passos=30)
-        levada = s.js("build.mapa.visao")
+        levada = s.js("Mesa.plano().visao")
         time.sleep(2.0)
         nv = s.js("(() => { const f = %s; return { velho: f(%r, %r), novo: f(%r, %r) }; })()" % (alfa, m["x"], m["z"], levada[0]["x"] if levada else 0, levada[0]["z"] if levada else 0))
         x2, y2 = s.js("(%s)(%r, %r)" % (tela_de, levada[0]["x"], levada[0]["z"])) if levada else (x1, y1)
         arrasta((x2, y2), (jan()["x"] + jan()["w"] + 90, y2), passos=25)
-        n_tira = s.js("build.mapa.visao.length")
+        n_tira = s.js("Mesa.plano().visao.length")
         p.conta("sentinelas", "arrastar o mapa não põe sentinela; arrastar a sentinela a leva (a névoa abre no lugar novo e volta a fechar no velho); soltá-la fora do mapa a tira",
                 n_arr == 1 and len(levada) == 1 and math.hypot(levada[0]["x"] - m["x"], levada[0]["z"] - m["z"]) > 1500
                 and nv["novo"] < 70 and nv["velho"] > 120 and n_tira == 0,
@@ -8623,7 +8618,7 @@ def checar_sentinelas(s, p):
         # 6. a Sentinela de Controle; e a solta numa parede escorrega para o chão
         xw, yw = s.js("(%s)(%r, %r)" % (tela_de, a["parede"][0], a["parede"][1]))
         arrasta(botao("controle"), (xw, yw))
-        c = s.js("""(() => { const v = build.mapa.visao[0]; if (!v) return null; const G = MAPA, k = Math.floor((v.x - G.min[0]) / G.celula), z = Math.floor((v.z - G.min[1]) / G.celula);
+        c = s.js("""(() => { const v = Mesa.plano().visao[0]; if (!v) return null; const G = MAPA, k = Math.floor((v.x - G.min[0]) / G.celula), z = Math.floor((v.z - G.min[1]) / G.celula);
           const t = atob(G.paredes), i = z * G.nx + k; return { t: v.t, parede: (t.charCodeAt(i >> 3) >> (i & 7)) & 1, dist: Math.hypot(v.x - %r, v.z - %r), cor: document.querySelector('#mesa-marcas .mm-sent.controle circle').getAttribute('fill') }; })()""" % (a["parede"][0], a["parede"][1]))
         p.conta("sentinelas", "a Sentinela de Controle se põe com a sua cor; a solta numa parede escorrega para o chão mais perto (não fica na parede)",
                 bool(c) and c["t"] == "controle" and c["parede"] == 0 and c["dist"] <= 250 and c["cor"] == "#d8434b", "%s" % c)
@@ -8633,10 +8628,10 @@ def checar_sentinelas(s, p):
         s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Enter", "code": "Enter", "windowsVirtualKeyCode": 13, "text": "\r"})
         s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Enter", "code": "Enter", "windowsVirtualKeyCode": 13})
         time.sleep(0.6)
-        meio = s.js("(() => { const l = build.mapa.visao, v = l[l.length - 1]; const p = Mesa.paraTela(v.x, v.z), L = Mesa.estado().lado; return { n: l.length, t: v.t, dx: Math.abs(p[0] - L / 2), dy: Math.abs(p[1] - L / 2), cor: [...document.querySelectorAll('#mesa-marcas .mm-sent.vidente circle')].map(c => c.getAttribute('fill')) }; })()")
+        meio = s.js("(() => { const l = Mesa.plano().visao, v = l[l.length - 1]; const p = Mesa.paraTela(v.x, v.z), L = Mesa.estado().lado; return { n: l.length, t: v.t, dx: Math.abs(p[0] - L / 2), dy: Math.abs(p[1] - L / 2), cor: [...document.querySelectorAll('#mesa-marcas .mm-sent.vidente circle')].map(c => c.getAttribute('fill')) }; })()")
         p.conta("sentinelas", "o Enter no botão da Alteração Vidente põe uma no meio do que se vê (perto do centro, no chão), com a cor dela",
                 meio["n"] == 2 and meio["t"] == "vidente" and meio["dx"] < 30 and meio["dy"] < 30 and meio["cor"] == ["#4fa3ff"], "%s" % meio)
-        mv = s.js("build.mapa.visao[1]")
+        mv = s.js("Mesa.plano().visao[1]")
         x3, y3 = s.js("(%s)(%r, %r)" % (tela_de, mv["x"], mv["z"]))
         arrasta((x3, y3), (x3, jan()["y"] - 80), passos=25)
 
@@ -8675,24 +8670,21 @@ def checar_sentinelas(s, p):
         s.clicar("#mesa-raio-on", 0.3)
         s.clicar("#mesa-nevoa-on", 0.3)
         d1 = s.js("({ raios: document.querySelectorAll('#mesa-marcas .mm-raio').length, nevoa: document.getElementById('mesa-nevoa').hidden })")
-        s.js("salvarAgora(); 'ok'")   # o Salvar da forja (o Ctrl+S chama o mesmo)
-        time.sleep(0.4)
         s.abrir("?r=108#mapa")
         time.sleep(0.6)
         s.entrar()
         time.sleep(0.8)
-        d2 = s.js("({ raioOn: document.getElementById('mesa-raio-on').checked, nevoaOn: document.getElementById('mesa-nevoa-on').checked, nevoa: document.getElementById('mesa-nevoa').hidden, n: build.mapa.visao.length, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
-        p.conta("sentinelas", "a névoa e o raio em ciano se desligam (o raio some, a névoa some) e continuam desligados ao recarregar; salva, a sentinela volta com a build",
+        d2 = s.js("({ raioOn: document.getElementById('mesa-raio-on').checked, nevoaOn: document.getElementById('mesa-nevoa-on').checked, nevoa: document.getElementById('mesa-nevoa').hidden, n: Mesa.plano().visao.length, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
+        p.conta("sentinelas", "a névoa e o raio em ciano se desligam (o raio some, a névoa some) e continuam desligados ao recarregar; a sentinela volta sozinha (o plano fica no navegador, sem Salvar)",
                 d1 == {"raios": 0, "nevoa": True} and d2 == {"raioOn": False, "nevoaOn": False, "nevoa": True, "n": 1, "marcas": 1}, "%s · %s" % (d1, d2))
         s.js("(() => { ['mesa-raio-on', 'mesa-nevoa-on'].forEach(id => { const c = document.getElementById(id); if (!c.checked) c.click(); }); return 1; })()")
 
-        # 9. duplicar a build leva as sentinelas
-        s.js("switchTab('build'); showBuildScreen('forja'); 'ok'")
-        time.sleep(0.5)
-        s.js("duplicateBuild(build.id); 'ok'")
-        time.sleep(0.8)
-        dup = s.js("({ nome: build.name, m: build.mapa.visao })")
-        p.conta("sentinelas", "duplicar a build leva as sentinelas", "(cópia)" in dup["nome"] and len(dup["m"]) == 1 and dup["m"][0]["t"] == "controle", "%s" % dup)
+        # 9. o plano é da mesa: abrir uma build nova não muda o plano, e a build não leva as sentinelas
+        s.nova_build()
+        s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+        time.sleep(0.6)
+        dup = s.js("({ id: build.id, naBuild: normMapa(build.mapa).visao.length, m: Mesa.plano().visao, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
+        p.conta("sentinelas", "abrir uma build não muda o plano da mesa, e a build não leva as sentinelas", bool(dup["id"]) and dup["naBuild"] == 0 and len(dup["m"]) == 1 and dup["m"][0]["t"] == "controle" and dup["marcas"] == 1, "%s" % dup)
     finally:
         s.js("try { ['mesa-raio-on', 'mesa-nevoa-on'].forEach(id => localStorage.setItem(id === 'mesa-raio-on' ? 'mesa.raio' : 'mesa.nevoa', '1')); } catch (e) {} 'ok'")
         s.tela(1440, 900)

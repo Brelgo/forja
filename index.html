@@ -9448,7 +9448,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.118";
+const ATUALIZACAO = "13.119";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -12177,7 +12177,7 @@ function renderBuildTotals() {
 // da aba Visão. O raio e o ícone são os do catálogo (o raio, lido do texto do item: se o texto não disser, a
 // ferramenta some e a tela diz que falta). A visão de cada sentinela é por célula da grade: a parede barra a
 // linha, e o arbusto só se vê de dentro dele (Gerador, fundamentos/visao_mecanica.md §1.3). Mexer pede o
-// Editar, como toda a build; as marcas são da build aberta.
+// Editar, como toda a build; as marcas eram da build aberta (desde a F13-T119, o plano da mesa, à parte).
 // F13-T112 (Leo, 04/11/2026: "a ideia é poder pegar a ward e arrastar com a visão dela expulsando a fog que vai
 // se juntando rapidamente como um líquido ou fumaça de verdade, não precisar clicar"; a opção A da amostra, a
 // fumaça): a névoa viva. Arrastar do botão para o mapa põe; arrastar a do mapa a leva, com a visão junto;
@@ -12272,7 +12272,22 @@ const Mesa = (function () {
   const doMapa = (mx, my) => [G.min[0] + mx / lado() * LX, G.min[1] + (1 - my / lado()) * LZ];
 
   // ---- as marcas: as da build e, durante o arrasto, a que está na mão (no lugar dela, ou fora do mapa)
-  function marcas() { return build.id ? normMapa(build.mapa).visao : []; }
+  // F13-T119 (Leo, 06/11/2026: "pode editar o mapa sem a necessidade de uma build, já que é um recurso
+  // independente"): as sentinelas são o plano da mesa, à parte das builds — guardado neste navegador, sem build
+  // aberta e sem o Editar. Na primeira vez, o plano adota as sentinelas da build aberta (as que eram dela)
+  let plano = null;
+  function marcas() {
+    if (!plano) {
+      let guardado = null;
+      try { guardado = JSON.parse(localStorage.getItem("mesa.plano") || "null"); } catch (e) { /* sem plano guardado */ }
+      plano = normMapa(guardado || (build.id ? build.mapa : null));
+      if (!guardado && plano.visao.length) guardarPlano();
+    }
+    return plano.visao.slice();
+  }
+  function guardarPlano() {
+    try { localStorage.setItem("mesa.plano", JSON.stringify(plano)); } catch (e) { /* vale só nesta visita */ }
+  }
   function vivas() {
     const l = marcas();
     if (!arraste || !arraste.marca) return l;
@@ -12502,8 +12517,6 @@ const Mesa = (function () {
 
   // ---- pôr, levar e tirar (com o Editar, numa build de Summoner's Rift)
   function podeMexer() {
-    if (!build.id) return "Abra uma build para pôr sentinelas: as marcas ficam guardadas nela.";
-    if (!rotaPossivel(build.mode)) return "Esta build é de " + build.mode + ": as sentinelas são de Summoner's Rift.";
     if (!G) return "Falta o data/mapa.js: sem a forma do mapa, a visão não se calcula.";
     return "";
   }
@@ -12557,34 +12570,33 @@ const Mesa = (function () {
     const a = arraste, lista = marcas();
     arraste = null;
     el("mesa-janela").classList.remove("arrastando", "levando");
-    if (a.i < 0 && (a.fora || !a.noMapa)) {   // a nova solta fora do mapa: não põe, e a build não muda
+    if (a.i < 0 && (a.fora || !a.noMapa)) {   // a nova solta fora do mapa: não põe, e o plano não muda
       sumirFantasma(true); sujo = true; desenharNevoa(); desenharMarcas(); return;
     }
     if (a.i >= 0) lista.splice(a.i, 1);
     if (!a.fora && a.noMapa) {
-      if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas por build."; sumirFantasma(true); mudou(); return; }
+      if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas no mapa."; sumirFantasma(true); mudou(); return; }
       lista.push({ t: a.marca.t, x: a.marca.x, z: a.marca.z });
       sumirFantasma(false);
     } else sumirFantasma(true);
-    build.mapa = normMapa({ visao: lista });
-    mudou(a.fora || !a.noMapa ? null : build.mapa.visao.length - 1);
+    plano = normMapa({ visao: lista });
+    mudou(a.fora || !a.noMapa ? null : plano.visao.length - 1);
   }
   // o clique (ou o Enter) no botão põe uma no meio do que se vê
   function porNoMeio(t) {
     if (podeMexer() || !raioDe(t)) return;
-    if (!build.editing) { chamarEditar(); return; }
     const lista = marcas();
-    if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas por build."; return; }
+    if (lista.length >= MAPA_MAX) { el("mesa-conta").textContent = "No máximo " + MAPA_MAX + " marcas no mapa."; return; }
     const L = lado(), [wx, wz] = doMapa((L / 2 - x) / z, (L / 2 - y) / z), lugar = noChao(wx, wz);
     if (!lugar) { el("mesa-conta").textContent = "Aí não: arraste para um ponto do chão."; return; }
     lista.push({ t: t, x: Math.round(lugar[0]), z: Math.round(lugar[1]) });
-    build.mapa = normMapa({ visao: lista });
-    mudou(build.mapa.visao.length - 1);
+    plano = normMapa({ visao: lista });
+    mudou(plano.visao.length - 1);
   }
   // a que acabou de pousar dá um quique (a marca do índice, pelo tempo da animação)
   let assentaI = -1, assentaTimer = 0;
   function mudou(assenta) {
-    saveBuild();
+    guardarPlano();
     if (assenta != null && !reduzido()) {
       assentaI = assenta;
       clearTimeout(assentaTimer);
@@ -12606,7 +12618,6 @@ const Mesa = (function () {
     }).join("");
     const pode = el("mesa-pode");
     if (motivo) pode.innerHTML = esc(motivo);
-    else if (!build.editing) pode.innerHTML = 'Para pôr e tirar, ligue o <b>Editar</b>. <button type="button" class="mesa-btn mesa-pode-btn" data-ligar-editar>Ligar Editar</button>';
     else pode.textContent = "Arraste uma do botão para o mapa; arraste a do mapa para levá-la, com a visão junto; solte fora do mapa para tirar.";
   }
   // o mapa sempre cobre a janela: o canto não entra
@@ -12658,7 +12669,6 @@ const Mesa = (function () {
       if (ev.button !== 0 || arraste) return;
       const r = janela.getBoundingClientRect(), i = marcaEm(ev.clientX - r.left, ev.clientY - r.top);
       if (i >= 0 && !podeMexer()) {
-        if (!build.editing) { chamarEditar(); return; }
         ev.preventDefault();
         arraste = { id: ev.pointerId, marca: Object.assign({}, marcas()[i]), i: i, fora: false, noMapa: true, alvo: janela };
         janela.setPointerCapture(ev.pointerId);
@@ -12695,7 +12705,6 @@ const Mesa = (function () {
       const b = ev.target.closest("[data-ferra]");
       if (!b || b.disabled || ev.button !== 0 || arraste) return;
       ev.preventDefault();
-      if (!build.editing) { chamarEditar(); return; }
       arraste = { id: ev.pointerId, marca: { t: b.dataset.ferra, x: 0, z: 0 }, i: -1, fora: true, noMapa: false, alvo: b, px: ev.clientX, py: ev.clientY, longe: false };
       b.setPointerCapture(ev.pointerId);
     });
@@ -12715,7 +12724,6 @@ const Mesa = (function () {
       const b = ev.target.closest("[data-ferra]");
       if (b && !b.disabled && ev.detail === 0) porNoMeio(b.dataset.ferra);
     });
-    el("mesa-pode").addEventListener("click", (ev) => { if (ev.target.closest("[data-ligar-editar]")) ligarEdicao(true); });
     // a névoa e o raio são do jeito de ver de cada um: ficam no navegador, não na build
     [["mesa-nevoa-on", "mesa.nevoa"], ["mesa-raio-on", "mesa.raio"]].forEach(([id, chave]) => {
       let v = "1";
@@ -12741,18 +12749,15 @@ const Mesa = (function () {
     el("mesa-inteiro").addEventListener("click", inteiro);
     addEventListener("resize", () => { if (!el("view-mapa").classList.contains("hidden")) aplicar(); });
   }
-  // ao abrir a aba (e a cada render da build, com a aba aberta): o mapa e de quem ele é
+  // ao abrir a aba (e a cada render da build, com a aba aberta): o plano é da mesa, não da build
   let donaDe = null;
   function mostrar() {
     if (el("view-mapa").classList.contains("hidden")) return;
     if (!montada) montar();
-    const dona = el("mesa-dona");
-    if (!build.id) dona.textContent = "sem build aberta — o mapa é só para ver";
-    else if (!rotaPossivel(build.mode)) dona.innerHTML = "<b>" + esc(build.name || "Build") + "</b> é de " + esc(build.mode) + ": este é o mapa de Summoner's Rift";
-    else dona.innerHTML = "o mapa de <b>" + esc(build.name || "Build") + "</b>";
+    el("mesa-dona").textContent = "o seu plano de visão — à parte das builds, guardado neste navegador";
     desenharFerras();
-    // outra build (ou a aba que volta): a névoa já assentada; a mesma, ela segue de onde estava
-    const chave = (build.id || "") + "|" + JSON.stringify(marcas());
+    // a aba que volta: a névoa já assentada se o plano mudou; o mesmo, ela segue de onde estava
+    const chave = JSON.stringify(marcas());
     if (!arraste) desenharNevoa(!laco && chave !== donaDe);
     donaDe = chave;
     aplicar();
@@ -12760,7 +12765,7 @@ const Mesa = (function () {
   return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; },
            visao: visao, raio: raioDe, paraTela: paraTela, livre: function (t) { return ferraDoCatalogo(t).livre; },
            nevoa: function () { return { ativo: ativo > 0 || sujo, laco: !!laco, caixa: caixa }; },
-           terreno: function () { return Object.assign({ imagem: imagemDoTerreno() }, terreno); }, tipo: function (i) { return TIPO[i]; } };
+           terreno: function () { return Object.assign({ imagem: imagemDoTerreno() }, terreno); }, plano: function () { return { visao: marcas() }; }, tipo: function (i) { return TIPO[i]; } };
 })();
 
 function renderBuild() {
