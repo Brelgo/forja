@@ -3,7 +3,9 @@ window.NOTAS = {
  "datas": [
   {
    "data": "07/11/2026",
-   "add": [],
+   "add": [
+    "a entrada da loja ganhou Águas de Sentina: a loja na popa de um galeão pirata no cais, sorteada junto com Freljord, Noxus e Shurima"
+   ],
    "aj": [
     "no mapa, a sentinela dentro de uma moita vê só aquela moita; as outras no raio ficam na névoa"
    ],
