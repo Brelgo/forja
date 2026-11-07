@@ -55,9 +55,10 @@ CHROMES = [
 RESOLUCOES = [(2560, 1440), (1920, 1080), (1600, 900), (1280, 800)]
 # F13-T99: a entrada da loja sorteia a região a cada visita; ?entrada=<regiao> força uma. A marca é um
 # elemento que só o desenho daquela região gera (prova que ela foi montada e desenhada).
-REGIOES_ENTRADA = ["freljord", "noxus", "shurima"]
-NOME_REGIAO = {"freljord": "Freljord", "noxus": "Noxus", "shurima": "Shurima"}
-MARCA_REGIAO = {"freljord": "en-pinheiros", "noxus": "en-torres", "shurima": "en-ruinas"}
+# F13-T120: a quarta, a popa do galeão de Águas de Sentina (a marca é a cidade de cascos virados na encosta).
+REGIOES_ENTRADA = ["freljord", "noxus", "shurima", "aguas"]
+NOME_REGIAO = {"freljord": "Freljord", "noxus": "Noxus", "shurima": "Shurima", "aguas": "Águas de Sentina"}
+MARCA_REGIAO = {"freljord": "en-pinheiros", "noxus": "en-torres", "shurima": "en-ruinas", "aguas": "en-cidade-casas"}
 
 VERDE, VERMELHO, AMARELO, CINZA, FIM = "\033[32m", "\033[31m", "\033[33m", "\033[90m", "\033[0m"
 
@@ -567,8 +568,8 @@ def checar_fundacao(s, p):
     # com o autor — escrito, à vista, e a placa inteira cabe na tela.
     # F13-T97: a placa é a de madeira do posto de troca (título na madeira, o resto no pergaminho
     # pregado nela, a nota na etiqueta de baixo); F13-T99: ou a chapa de ferro de Noxus, ou a tábua com o
-    # papiro de Shurima — as três com as mesmas classes. Cada canal tem o nome e o ID na mesma linha; a
-    # letra conta como aparece (a computada vezes a escala do palco e da câmera): rótulos ≥ 10 px,
+    # papiro de Shurima; F13-T120: ou a tábua de proa de Águas de Sentina — todas com as mesmas classes.
+    # Cada canal tem o nome e o ID na mesma linha; a letra conta como aparece (a computada vezes a escala do palco e da câmera): rótulos ≥ 10 px,
     # nota e IDs ≥ 12 px nas quatro resoluções.
     le = """(() => { const pl = document.querySelector('.entrada-placa'), t = pl ? pl.innerText.replace(/\\s+/g, ' ') : '';
       const grupo = pl && pl.parentElement, nota = document.querySelector('.entrada-nota');
@@ -586,7 +587,7 @@ def checar_fundacao(s, p):
                lol: /League of Legends Brelgo#RPG/i.test(t), discord: /Discord brelgo/i.test(t), ids,
                cabe: dentro(pl) && dentro(grupo) && dentro(nota), estouro: pl ? Math.max(...estouros) : null,
                letra: { rotulos: +px('.entrada-contato .ea-rot, .entrada-contato .ea-nome').toFixed(1), nota: +px('.entrada-nota').toFixed(1), ids: +px('.entrada-contato .ea-id').toFixed(1) } }; })()"""
-    # F13-T99: a placa é a de cada região (a entrada sorteia uma por visita): a conta vale para as três,
+    # F13-T99: a placa é a de cada região (a entrada sorteia uma por visita): a conta vale para todas,
     # cada uma forçada pelo ?entrada=
     ruins = []
     for rg in REGIOES_ENTRADA:
@@ -4731,10 +4732,10 @@ def checar_entrada_loja(s, p):
     o clique de verdade em qualquer lugar abre (portas girando, câmera, um som só) e fecha
     no fim; os IDs só se selecionam; o Enter abre uma vez; com menos movimento, nada de
     câmera; o link direto fecha na hora e mudo; e depois de fechada, nada da entrada roda.
-    F13-T99: a região é sorteada a cada visita (o Freljord, Noxus, Shurima) — tudo isso vale
-    para as três, cada uma forçada pelo ?entrada=; e o sorteio varia e monta só a sorteada.
+    F13-T99: a região é sorteada a cada visita (o Freljord, Noxus, Shurima e, desde a F13-T120, Águas de
+    Sentina) — tudo isso vale para todas, cada uma forçada pelo ?entrada=; e o sorteio varia e monta só a sorteada.
     F13-T100: o som da abertura pronto antes do clique e tocando em até 80 ms dele; o clique não baixa
-    os outros sons; a loja escondida não anima por baixo; e os quadros da abertura nas três regiões."""
+    os outros sons; a loja escondida não anima por baixo; e os quadros da abertura em todas as regiões."""
     print("\n%sENTRADA DA LOJA%s" % (AMARELO, FIM))
     # o som que toca de verdade (o elemento de áudio), contado desde o começo de cada página
     sonda = s.envia("Page.addScriptToEvaluateOnNewDocument", {"source": """(() => { window.__tocou = [];
@@ -5086,7 +5087,7 @@ def checar_entrada_loja(s, p):
                        propria: !!(rg && document.getElementById(marcas[rg])) }; })()""" % json.dumps(MARCA_REGIAO))
             vistas.append(v["rg"])
             if not (v["rg"] in REGIOES_ENTRADA and v["estilos"] == 1 and v["moldes"] == 0 and v["propria"] and not v["outras"]
-                    and v["palcos"] == 2):   # F13-T111: o palco do mundo e o da placa, nas três
+                    and v["palcos"] == 2):   # F13-T111: o palco do mundo e o da placa, em todas
                 ruins.append(v)
         repetidas = [i for i in range(1, len(vistas)) if vistas[i] == vistas[i - 1]]
         p.conta("entrada da loja", "sem o parâmetro, a região é sorteada a cada carga (12 cargas dão pelo menos duas regiões) e nunca repete a da visita anterior",
@@ -5094,8 +5095,8 @@ def checar_entrada_loja(s, p):
         p.conta("entrada da loja", "só a região sorteada está montada (um tema, um <style>, nenhum molde sobrando, nada das outras)",
                 not ruins, "%s" % (ruins[:2] or "12 de 12 cargas com uma região só"))
 
-        # (t) F13-T111 (anotado na T99): a neve do Freljord e a areia de Shurima passavam por cima da placa. Nas
-        # três regiões, a placa mora na camada .en-palco-placa, que vem DEPOIS da .en-neve-tela (pinta por
+        # (t) F13-T111 (anotado na T99): a neve do Freljord e a areia de Shurima passavam por cima da placa. Em
+        # todas as regiões, a placa mora na camada .en-palco-placa, que vem DEPOIS da .en-neve-tela (pinta por
         # cima dela), com o primeiro plano junto; a camada só pega o clique na placa
         placas = []
         for rg in REGIOES_ENTRADA:
@@ -5106,7 +5107,7 @@ def checar_entrada_loja(s, p):
               return { rg: e.dataset.regiao, camada: !!camada, depois: !!(t && camada && (t.compareDocumentPosition(camada) & Node.DOCUMENT_POSITION_FOLLOWING)),
                        perto: !!(perto && camada && camada.contains(perto)),
                        clique: camada ? [getComputedStyle(camada).pointerEvents, getComputedStyle(p).pointerEvents] : null }; })()"""))
-        p.conta("entrada da loja", "a neve e a areia não passam por cima da placa: nas três regiões a placa está na camada própria, depois do clima, com o primeiro plano junto; a camada só pega o clique na placa",
+        p.conta("entrada da loja", "a neve e a areia não passam por cima da placa: em todas as regiões a placa está na camada própria, depois do clima, com o primeiro plano junto; a camada só pega o clique na placa",
                 [x["rg"] for x in placas] == list(REGIOES_ENTRADA)
                 and all(x["camada"] and x["depois"] and x["perto"] and x["clique"] == ["none", "auto"] for x in placas),
                 "; ".join("%s: camada %s, depois do clima %s, primeiro plano %s, clique %s" % (x["rg"], x["camada"], x["depois"], x["perto"], x["clique"]) for x in placas))
@@ -5212,7 +5213,7 @@ def checar_entrada_loja(s, p):
             n_ab = sum(len(com[rg]) for rg in REGIOES_ENTRADA)
             media = sum(r["soma"] for rg in REGIOES_ENTRADA for r in com[rg]) / float(n_ab or 1)
             dur_ab = s.js("Math.round(EntradaLoja.FIM)")
-            p.conta("entrada da loja", "a abertura das três regiões fica abaixo do teto de quadro (%d ms) e os quadros longos somam no máximo 30%% dela, na média" % TETO,
+            p.conta("entrada da loja", "a abertura de todas as regiões fica abaixo do teto de quadro (%d ms) e os quadros longos somam no máximo 30%% dela, na média" % TETO,
                     all(v is not None and v <= TETO for v in melhor.values()) and media <= 0.3 * dur_ab,
                     "pior quadro (melhor de duas) %s; quadros > 34 ms por abertura: média %d ms de %d ms (%.0f%%); agora %s; com o comportamento antigo, na mesma rodada, %s"
                     % (melhor, media, dur_ab, 100.0 * media / dur_ab,
