@@ -7,7 +7,8 @@ window.NOTAS = {
     "a entrada da loja ganhou Águas de Sentina: a loja na popa de um galeão pirata no cais, sorteada junto com Freljord, Noxus e Shurima"
    ],
    "aj": [
-    "no mapa, a sentinela dentro de uma moita vê só aquela moita; as outras no raio ficam na névoa"
+    "no mapa, a sentinela dentro de uma moita vê só aquela moita; as outras no raio ficam na névoa",
+    "o Update Tracker: salvar a build tira o \"desatualizada\" do patch novo, e os cartazes ficaram retos, com o antes → depois legível e o nome do efeito em português"
    ],
    "rem": []
   },

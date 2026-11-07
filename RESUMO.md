@@ -4,7 +4,7 @@ Para começar uma sessão com pouco uso: ler o CLAUDE.md e **este arquivo**. O C
 histórico completo; leia só a seção que a tarefa pedir (procure pelo número `F13-T…` ou pela palavra).
 
 ## O que é e onde está
-- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.121**.
+- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.122**.
 - **O app:** `index.html` (tudo num arquivo, abre com dois cliques). Dados gerados em `data/` — `catalog.js` (225 itens,
   patch 16.21.1, do Capítulo 1; nunca editar à mão), `runas.js`, `habilidades.js` (Capítulo 1.1), `mudancas.js`,
   `notas.js`, `mapa.js`, `mapa_variantes.js`, `regioes.js`. Sons em `assets/audio`, mapa em `assets/mapa`.
