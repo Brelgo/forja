@@ -4,7 +4,8 @@ window.NOTAS = {
   {
    "data": "07/11/2026",
    "add": [
-    "a entrada da loja ganhou Águas de Sentina: a loja na popa de um galeão pirata no cais, sorteada junto com Freljord, Noxus e Shurima"
+    "a entrada da loja ganhou Águas de Sentina: a loja na popa de um galeão pirata no cais, sorteada junto com Freljord, Noxus e Shurima",
+    "a entrada da loja ganhou a Ilha das Sombras: o relicário de Helia em ruínas, tomado pela Névoa Negra"
    ],
    "aj": [
     "no mapa, a sentinela dentro de uma moita vê só aquela moita; as outras no raio ficam na névoa",
