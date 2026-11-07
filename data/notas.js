@@ -5,7 +5,8 @@ window.NOTAS = {
    "data": "06/11/2026",
    "add": [],
    "aj": [
-    "o mapa é o de hoje: as paredes e as moitas do jogo atual, e um seletor de alma do Dragão e de forma do covil do Barão que muda o terreno"
+    "o mapa é o de hoje: as paredes e as moitas do jogo atual, e um seletor de alma do Dragão e de forma do covil do Barão que muda o terreno",
+    "o mapa é independente: as sentinelas ficam num plano próprio, sem precisar de build aberta nem do Editar"
    ],
    "rem": []
   },
