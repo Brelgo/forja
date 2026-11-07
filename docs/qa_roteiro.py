@@ -5485,10 +5485,10 @@ def checar_publicas(s, p, online):
     p.conta("públicas", "o roteiro não registra evento no servidor de verdade", barrados > 0,
             "%d eventos segurados na página (impressões da lista)" % barrados)
     # e a lista de verdade não traz desatualizada
-    real = s.js("""(() => ({ desat: document.querySelectorAll('#bi-rows .bi-etiqueta.desatualizada').length,
+    real = s.js("""(() => ({ desat: [...document.querySelectorAll('#bi-rows .bi-etiqueta.desatualizada')].filter(e => /^Publicada no patch/.test(e.title)).length,
       fora: publicas.lista.filter(p => !publicaNoCatalogoAtual(p)).length,
       nota: !!document.querySelector('#bi-rows .bi-fora') }))()""")
-    p.conta("públicas", "a lista do servidor não mostra desatualizada", real["desat"] == 0 and real["nota"] == (real["fora"] > 0),
+    p.conta("públicas", "a lista do servidor não mostra desatualizada pelo patch em que foi publicada (a do patch novo do robô fica, com a etiqueta, F13-T82)", real["desat"] == 0 and real["nota"] == (real["fora"] > 0),
             "%d desatualizadas (item mudado desde o patch delas) no servidor, ficaram de fora; nota no pé: %s" % (real["fora"], real["nota"]))
 
     time.sleep(3)
@@ -6288,8 +6288,11 @@ def checar_camada_robo(s, p):
     preco_bb = next(i for i in cat["items"] if i["slug"] == "bastionbreaker")["priceGold"]
     preco_rd = next(i for i in cat["items"] if i["slug"] == "redemption")["priceGold"]
 
-    # a camada do repositório (vazia, do próprio patch) não liga nada
-    vazia = s.js("({ ativo: ROBO.ativo, selos: document.querySelectorAll('.robo-selo').length, aviso: document.getElementById('robo-aviso').hidden })")
+    # a camada do repositório é a de verdade (o robô grava no main): liga só se for do patch do catálogo e tiver o que
+    # aplicar ou conferir; aí os selos e o aviso aparecem, e sem ela nada aparece (desde o 16.22.1 do robô, 05/11/2026)
+    vazia = s.js("""(() => { const C = window.ATUALIZACAO_PATCH || {}, liga = C.de === CATALOG.meta.patch && (Object.keys(C.itens || {}).length + Object.keys(C.aConferir || {}).length) > 0;
+      const selos = document.querySelectorAll('.robo-selo').length, aviso = document.getElementById('robo-aviso').hidden;
+      return { ativo: ROBO.ativo, liga: liga, coerente: ROBO.ativo === liga && (selos > 0) === liga && aviso === !liga }; })()""")
     outro = s.js("""(() => { const r = { itens: {}, aConferir: {}, novos: [], statPricesVelhos: [] };
       aplicarCamadaDoRobo(JSON.parse(JSON.stringify(CATALOG)), { de: '16.20.1', para: '16.21.1', itens: { 'bastionbreaker': { campos: { priceGold: 1 }, base: { priceGold: byId['bastionbreaker'].priceGold } } } }, r);
       return { ativo: !!r.ativo, itens: Object.keys(r.itens).length }; })()""")
@@ -6320,8 +6323,8 @@ def checar_camada_robo(s, p):
         erros = list(r.erros)
     finally:
         r.fechar()
-    p.conta("camada do robô", "a camada do repositório (do próprio patch) não liga nada, e a de outro patch é ignorada",
-            vazia == {"ativo": False, "selos": 0, "aviso": True} and outro == {"ativo": False, "itens": 0}, "repositório %s · outro patch %s" % (vazia, outro))
+    p.conta("camada do robô", "a camada do repositório liga só quando é do patch do catálogo e tem o que aplicar (selos e aviso juntos), e a de outro patch é ignorada",
+            vazia["coerente"] and outro == {"ativo": False, "itens": 0}, "repositório %s · outro patch %s" % (vazia, outro))
     p.conta("camada do robô", "a camada do patch do catálogo entra: o preço e a Letalidade aplicados, o selo \"patch 16.22.1\" no card e o \"a conferir\" no que o robô não aplicou; o item que o Capítulo 1 mexeu depois fica como o catálogo diz",
             dado["ativo"] and dado["bb"] == preco_bb + 100 and dado["letal"] == [20] and dado["rd"] == preco_rd and dado["recusou"] and "priceGold" in dado["recusou"]
             and dado["selo_bb"].endswith(":patch 16.22.1") and "conferir" in dado["selo_am"] and dado["selo_rd"] == ""
@@ -8076,6 +8079,9 @@ def checar_tracker(s, p):
 
         # 1. o botão abre o quadro: um cartaz por item (e por item que saiu) do patch mais novo, as abas do mais novo ao mais velho
         s.clicar("#tracker-btn", 0.6)
+        novo = s.js("ROBO.ativo ? 'Patch ' + ROBO.para + ' · novo' : null")
+        if novo:   # o patch novo da camada abre primeiro; os cartazes do histórico estão na aba do patch mais novo dele
+            s.clicar('[data-tk-patch="1"]', 0.5)
         q = s.js("""(() => { const vs = MUDANCAS.versoes, u = vs[vs.length - 1];
           return { aberto: !document.getElementById('tracker').hidden, exp: document.getElementById('tracker-btn').getAttribute('aria-expanded'),
                    cartazes: [...document.querySelectorAll('.tk-cartaz')].map(c => c.dataset.slug),
@@ -8083,8 +8089,8 @@ def checar_tracker(s, p):
                    nomes: [...document.querySelectorAll('.tk-nome')].map(x => x.textContent),
                    nomesCat: Object.keys(u.detalhe).concat(u.removidos || []).map(sl => byId[sl] ? byId[sl].namePt : sl),
                    abas: [...document.querySelectorAll('[data-tk-patch]')].map(b => b.textContent), patches: vs.map(v => 'Patch ' + v.patch).reverse() }; })()""")
-        p.conta("update tracker", "o botão do topo abre o quadro: um cartaz por item que mudou no patch mais novo, com o nome do catálogo; as abas vão do patch mais novo ao mais velho",
-                q["aberto"] and q["exp"] == "true" and q["cartazes"] == q["esperado"] and q["nomes"] == q["nomesCat"] and q["abas"] == q["patches"], "%s" % q)
+        p.conta("update tracker", "o botão do topo abre o quadro: um cartaz por item que mudou no patch mais novo, com o nome do catálogo; as abas vão do patch mais novo ao mais velho (o novo da camada, se houver, primeiro)",
+                q["aberto"] and q["exp"] == "true" and q["cartazes"] == q["esperado"] and q["nomes"] == q["nomesCat"] and q["abas"] == ([novo] if novo else []) + q["patches"], "%s" % q)
 
         # 2. a Recompensa: o preço de antes riscado e o de hoje (o do catálogo)
         r = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
@@ -8142,6 +8148,7 @@ def checar_tracker(s, p):
           ROBO.itens = { 'doran-s-blade': { aplicados: ['priceGold'], recusados: [], contaVelha: [], mudou: [{ campo: 'preço', de: 450, para: 500, fonte: 'wiki e Data Dragon' }] } };
           ROBO.aConferir = { 'long-sword': [{ campo: 'atributos', porque: 'a wiki diz outro número' }] };
           Tracker.abrir(true);
+          document.querySelector('[data-tk-patch="0"]').click();   // a aba escolhida antes fica; a do patch novo é a primeira
           return { abas: [...document.querySelectorAll('[data-tk-patch]')].map(b => b.textContent), titulos: [...document.querySelectorAll('.tk-procurado')].map(x => x.textContent), fina: (document.querySelector('.tk-cartaz[data-slug="doran-s-blade"] .tk-linha-fina') || {}).textContent || '',
                    rec: (document.querySelector('.tk-cartaz[data-slug="doran-s-blade"] .tk-recompensa') || {}).textContent || '',
                    conf: (document.querySelector('.tk-cartaz[data-slug="long-sword"] .tk-resumo') || {}).textContent || '' }; })()""")
