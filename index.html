@@ -3755,7 +3755,7 @@ body.names-only .card.full .card-main { padding-bottom: 22px; }
   filter: drop-shadow(0 9px 10px rgba(0,0,0,.55)); transition: transform .2s ease, filter .2s ease; }
 .tk-cartaz:has(.tk-detalhe) { cursor: pointer; }
 .tk-cartaz:hover, .tk-cartaz:focus-visible, .tk-cartaz.aberto { transform: rotate(0) translateY(-4px); filter: drop-shadow(0 16px 16px rgba(0,0,0,.6)); z-index: 2; }
-.tk-cartaz.aberto { grid-column: 1 / -1; }
+.tk-cartaz.aberto { grid-column: span 2; }
 .tk-cartaz::before, .tk-cartaz::after { content: ""; position: absolute; top: 7px; z-index: 2; width: 11px; height: 11px; border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #c9c2b6, #4c4640 70%); box-shadow: 0 1px 2px rgba(0,0,0,.7); }
 .tk-cartaz::before { left: 14px; } .tk-cartaz::after { right: 14px; }
@@ -3787,7 +3787,7 @@ body.names-only .card.full .card-main { padding-bottom: 22px; }
 .tk-detalhe { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(58,28,14,.45); text-align: left; font: 14px/1.45 var(--loja-texto); }
 .tk-cartaz.aberto .tk-detalhe { display: block; }
 .tk-detalhe p { margin: 0 0 8px; }
-.tk-detalhe p > b { display: block; font: 600 10px var(--loja-gravado); letter-spacing: .12em; text-transform: uppercase; color: #6b4a2a; }
+.tk-detalhe p > b:first-child { display: block; font: 600 10px var(--loja-gravado); letter-spacing: .12em; text-transform: uppercase; color: #6b4a2a; }
 .tk-detalhe ins { text-decoration: none; font-weight: 700; padding: 0 2px; border-radius: 2px; }
 .tk-detalhe ins.melhorou { background: rgba(47,93,30,.16); color: #2f5d1e; }
 .tk-detalhe ins.piorou { background: rgba(155,28,24,.13); color: #9b1c18; }
@@ -10581,7 +10581,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.121";
+const ATUALIZACAO = "13.122";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -10731,7 +10731,7 @@ function newBuildId() {
 }
 
 function snapshotActive() {
-  return { id: build.id, name: build.name, cats: comNomes(build.cats), patch: build.patch || CATALOG.meta.patch, revisao: build.revisao || null, temp: !!build.temp, pubOrigem: build.pubOrigem || null, layout: layoutValido(build.layout), seq: build.seq, mode: build.mode, rota: rotaValida(build.rota), masterwork: !!build.masterwork, champion: build.champion || null, markers: normMarkers(build.markers), desc: build.desc || "", runas: normRunas(build.runas), habilidades: normHabilidades(build.habilidades), mapa: normMapa(build.mapa), fav: !!build.fav, updatedAt: build.updatedAt || 0, pubId: build.pubId || null, pubVersao: build.pubVersao || 0, pubEm: build.pubEm || 0, pubPatch: build.pubPatch || "", pubAssinatura: build.pubAssinatura || "" };
+  return { id: build.id, name: build.name, cats: comNomes(build.cats), patch: build.patch || CATALOG.meta.patch, revisao: build.revisao || null, roboVisto: build.roboVisto || null, temp: !!build.temp, pubOrigem: build.pubOrigem || null, layout: layoutValido(build.layout), seq: build.seq, mode: build.mode, rota: rotaValida(build.rota), masterwork: !!build.masterwork, champion: build.champion || null, markers: normMarkers(build.markers), desc: build.desc || "", runas: normRunas(build.runas), habilidades: normHabilidades(build.habilidades), mapa: normMapa(build.mapa), fav: !!build.fav, updatedAt: build.updatedAt || 0, pubId: build.pubId || null, pubVersao: build.pubVersao || 0, pubEm: build.pubEm || 0, pubPatch: build.pubPatch || "", pubAssinatura: build.pubAssinatura || "" };
 }
 
 // Em modo Editar as alterações ficam em rascunho (Leo, 14/09/2026): saveBuild() só
@@ -11575,8 +11575,11 @@ function refletirSalvar(msg) {
   if (erro) msg = erroGravacao ? "não deu para salvar" : "gravação recusada";
   const btn = document.getElementById("save-btn"), dis = document.getElementById("discard-btn"), st = document.getElementById("save-status");
   if (!btn) return;
-  btn.disabled = !rascunho.sujo;
-  btn.classList.toggle("sujo", rascunho.sujo);
+  // F13-T121: a build com item que o patch novo do robô mudou pode ser salva sem mudança — salvar a dá por revista
+  const reverRobo = !rascunho.sujo && !!build.id && !build.temp && itensDoRobo(build.cats, build.roboVisto).length > 0;
+  btn.disabled = !rascunho.sujo && !reverRobo;
+  btn.title = reverRobo ? "Salvar marca a build como revista para o patch " + ROBO.para + " (a etiqueta desatualizada sai)" : "";
+  btn.classList.toggle("sujo", rascunho.sujo || reverRobo);
   // F13-T30: sem rascunho o Descartar some, mas guarda o lugar — com hidden, o
   // "+ Nova categoria" andava 90 px e o segundo clique nele caía no Descartar.
   dis.classList.toggle("guardado", !rascunho.sujo);
@@ -11594,14 +11597,15 @@ function refletirSalvar(msg) {
 // da biblioteca na memória volta a ser a de antes — senão o Descartar
 // recarregava o rascunho, e a próxima gravação que passasse o levava ao disco.
 function salvarDeVerdade() {
-  const estavaSujo = rascunho.sujo, rev = build.revisao, patch = build.patch, data = build.updatedAt;
+  const estavaSujo = rascunho.sujo, rev = build.revisao, patch = build.patch, data = build.updatedAt, visto = build.roboVisto;
   const i = library.builds.findIndex(b => b.id === build.id);
   const antes = i >= 0 ? library.builds[i] : null;
   if (build.revisao) { build.revisao = null; build.patch = CATALOG.meta.patch; }
+  if (ROBO.ativo) build.roboVisto = ROBO.para;   // F13-T121: salvar também revê o patch novo do robô
   if (gravarBuild()) { erroGravacao = false; return true; }
   const j = library.builds.findIndex(b => b.id === build.id);
   if (antes && j >= 0) library.builds[j] = antes;
-  build.revisao = rev; build.patch = patch; build.updatedAt = data;   // o aviso de revisão fica
+  build.revisao = rev; build.patch = patch; build.updatedAt = data; build.roboVisto = visto;   // o aviso de revisão fica
   rascunho.sujo = estavaSujo;
   erroGravacao = estavaSujo;   // numa build limpa não há o que perder: fica a placa e o "gravação recusada"
   clearTimeout(salvarAgora._t);
@@ -11785,8 +11789,10 @@ function itensQueDesatualizam(cats, patch) {
 // conferir) desatualiza a build como a troca de catálogo — fora das Opcionais, como na regra de
 // sempre. Calculado na hora, da camada: quando o Capítulo 1 sobe o catálogo, a camada esvazia e
 // a revisão de sempre (data/mudancas.js) assume.
-function itensDoRobo(cats) {
-  if (!ROBO.ativo) return [];
+// F13-T121 (Leo, 07/11/2026: "to tentando atualizar as minhas builds e não ta mudando para atualizado"): a build
+// salva (ou publicada de novo) depois que o patch novo chegou já foi revista — `visto` é esse patch.
+function itensDoRobo(cats, visto) {
+  if (!ROBO.ativo || (visto && visto === ROBO.para)) return [];
   const out = [];
   (cats || []).forEach(c => {
     if (c.kind === "opcional") return;
@@ -11803,7 +11809,7 @@ const juntarMudados = (a, b) => b.length ? [...new Set((a || []).concat(b))] : (
 function itensMudadosDaBuild() {
   const base = build.revisao && Array.isArray(build.revisao.mudados) ? build.revisao.mudados
     : build.temp ? itensQueDesatualizam(build.cats, build.patch) : [];
-  return juntarMudados(base, itensDoRobo(build.cats));
+  return juntarMudados(base, itensDoRobo(build.cats, build.roboVisto));
 }
 
 function loadBuild() {
@@ -11846,6 +11852,7 @@ function loadBuild() {
           runas: b.runas || null,   // normalizada quando a build vira ativa
           habilidades: b.habilidades || null,
           mapa: b.mapa || null,   // F13-T108: as sentinelas (normalizadas quando a build vira ativa)
+          roboVisto: b.roboVisto || null,   // F13-T121: o patch novo do robô que a build já reviu
           fav: !!b.fav,
           updatedAt: Number(b.updatedAt) || 0,
           pubId: b.pubId || null, pubVersao: Number(b.pubVersao) || 0, pubEm: Number(b.pubEm) || 0, pubPatch: b.pubPatch || "", pubAssinatura: b.pubAssinatura || "",
@@ -11921,6 +11928,7 @@ function copiarParaBigorna(b) {
   build.pubId = b.pubId || null; build.pubVersao = Number(b.pubVersao) || 0; build.pubEm = Number(b.pubEm) || 0; build.pubPatch = b.pubPatch || ""; build.pubAssinatura = b.pubAssinatura || "";
   build.patch = b.patch || CATALOG.meta.patch;
   build.revisao = b.revisao || null;
+  build.roboVisto = b.roboVisto || null;
   build.temp = !!b.temp;
   // F13-T51 (revisão): uma pública aberta para ver não herda o Editar ligado da
   // build de antes — com ele, editava-se o que não se grava e o Ctrl+S dizia "salvo"
@@ -12839,7 +12847,7 @@ async function publicarBuild(id) {
       return;
     }
     const guardou = gravarMetadados(library.builds.find(x => x.id === id),
-      { pubId: r.id, pubVersao: r.versao, pubEm: Date.now(), pubPatch: CATALOG.meta.patch, patch: CATALOG.meta.patch, revisao: null, pubAssinatura: enviada });
+      { pubId: r.id, pubVersao: r.versao, pubEm: Date.now(), pubPatch: CATALOG.meta.patch, patch: CATALOG.meta.patch, revisao: null, pubAssinatura: enviada, roboVisto: ROBO.ativo ? ROBO.para : null });
     Som.play("build:save");
     // publicada de novo com outro ID (a de antes sumiu do servidor): o card é novo
     const antes = comCard && cardAntes && r.id === d.pubId ? await cardAntes : null;
@@ -14040,7 +14048,7 @@ function initChampPicker() {
 function marcarRevisada(id) {
   const alvo = id === build.id ? build : library.builds.find(b => b.id === id);
   if (!alvo) return;
-  alvo.revisao = null; alvo.patch = CATALOG.meta.patch;
+  alvo.revisao = null; alvo.patch = CATALOG.meta.patch; if (ROBO.ativo) alvo.roboVisto = ROBO.para;
   if (id === build.id) { rascunho.sujo = false; gravarBuild(); renderBuildAll(); } else { gravarBuild(); }
   if (buildScreen === "lista") renderBuildIndex();
 }
@@ -16213,7 +16221,7 @@ function buildResumo(b) {
     pubEm: (isActive ? build.pubEm : b.pubEm) || 0,
     pubPatch: (isActive ? build.pubPatch : b.pubPatch) || "",
     pubAssinatura: (isActive ? build.pubAssinatura : b.pubAssinatura) || "",
-    robo: itensDoRobo(cats),   // F13-T82
+    robo: itensDoRobo(cats, isActive ? build.roboVisto : b.roboVisto),   // F13-T82; F13-T121: a que já reviu, não
     revisao: (isActive ? build.revisao : b.revisao) || null,
     temp: !!(isActive ? build.temp : b.temp),
     pubOrigem: (isActive ? build.pubOrigem : b.pubOrigem) || null,
@@ -19370,6 +19378,14 @@ const Tracker = (function () {
   const rotulo = (c) => ROT[c] || c;
   let atual = 0;
 
+  // "efeito Vile Decay: mudou na wiki: o texto" → "Decadência Vil: o texto mudou na wiki — o Capítulo 1 confere"
+  function conferirTexto(slug, x) {
+    const m = /^efeito (.+)$/.exec(x.campo || ""), it = byId[slug];
+    const hab = m && it && (it.abilities || []).find(h => h.nameEn === m[1]);
+    const nome = hab ? hab.name : m ? m[1] : (x.campo || "");
+    const porque = String(x.porque || "").replace(/^mudou na wiki: (.+)$/, "$1 mudou na wiki");
+    return nome + ": " + porque + " — o Capítulo 1 confere";
+  }
   // as versões, da mais nova para a mais velha; o patch novo da camada vem primeiro
   function versoes() {
     const vs = ((window.MUDANCAS || {}).versoes || []).slice().reverse().map(v => ({
@@ -19380,7 +19396,7 @@ const Tracker = (function () {
         ? { campo: m.campo, antes: [], depois: [m.nota] }
         : { campo: m.campo, antes: [valorDoRobo(m.de)], depois: [valorDoRobo(m.para)], fonte: m.fonte }) }));
       Object.entries(ROBO.aConferir).forEach(([slug, l]) => {
-        if (!ROBO.itens[slug] || !ROBO.itens[slug].mudou.length) itens.push({ slug: slug, conferir: l.map(x => x.campo + ": " + x.porque), campos: [] });
+        if (!ROBO.itens[slug] || !ROBO.itens[slug].mudou.length) itens.push({ slug: slug, conferir: l.map(x => conferirTexto(slug, x)), campos: [] });
       });
       vs.unshift({ patch: ROBO.para, desde: ROBO.de, removidos: [], itens: itens, novo: true });
     }
@@ -19437,8 +19453,16 @@ const Tracker = (function () {
   const soRedacao = (a, b) => JSON.stringify(numeros(a)) === JSON.stringify(numeros(b));
   const ouro = (s) => { const m = /-?\d+(?:[.,]\d+)?/.exec(String(s)); return m ? Number(m[0].replace(",", ".")) : null; };
   const ehOuro = (c) => c.campo === "preço" || c.campo === "custo de combinação";
+  // F13-T121 (Leo, 07/11/2026: "as informações dos cartazes tão todas tortas e bugadas"): o que o robô viu mudar
+  // num número só ("Dano de Ataque" 8 → 7) sai como número, com a seta — não como texto riscado colado ("87")
+  const ehNumero = (c) => !!c.fonte && !ehOuro(c) && c.antes.length === 1 && c.depois.length === 1 && /^-?\d+(?:[.,]\d+)?%?$/.test(String(c.antes[0]).trim()) && /^-?\d+(?:[.,]\d+)?%?$/.test(String(c.depois[0]).trim());
   // o antes e o depois de um campo, e o tom dele
   function antesDepois(c) {
+    if (ehNumero(c)) {
+      const va = ouro(c.antes[0]), vb = ouro(c.depois[0]), tom = vb > va ? "melhorou" : vb < va ? "piorou" : "ajuste";   // atributo: mais é melhor
+      return { tom: tom, h: '<span class="tk-antes">' + esc(String(c.antes[0])) + '</span><span class="tk-seta">→</span><b class="tk-depois ' + tom + '">'
+        + esc(String(c.depois[0])) + "</b>" + ' <span class="tk-so">(' + esc(c.fonte) + ")</span>" };
+    }
     if (ehOuro(c)) {
       const va = ouro(c.antes[0]), vb = ouro(c.depois[0]);
       const tom = va != null && vb != null && va !== vb ? (vb > va ? "piorou" : "melhorou") : "ajuste";   // mais caro é pior para quem compra
@@ -19461,6 +19485,7 @@ const Tracker = (function () {
   // o resumo do cartaz: uma linha por campo, na cor do tom
   function resumo(c) {
     const tom = antesDepois(c).tom;
+    if (ehNumero(c)) return { tom: tom, t: rotulo(c.campo) + " " + c.antes[0] + " → " + c.depois[0] };
     if (ehOuro(c)) {
       const va = ouro(c.antes[0]), vb = ouro(c.depois[0]);
       return { tom: tom, t: rotulo(c.campo) + (va != null && vb != null ? " " + (vb > va ? "+" : "") + fmtNum(vb - va) + " g" : " mudou") };
@@ -19480,7 +19505,7 @@ const Tracker = (function () {
     const item = byId[it.slug], nome = item ? item.namePt : it.slug, preco = it.campos.find(c => c.campo === "preço");
     const tom = juntaTom(it.campos.map(c => antesDepois(c).tom));
     const titulo = it.conferir ? "A conferir" : it.fora ? "Fora do jogo" : tom === "melhorou" ? "Melhorou" : tom === "piorou" ? "Piorou" : "Ajustado";
-    const giro = (((i * 37) % 7) - 3) * .55;
+    const giro = 0;   // F13-T121: retos (Leo: "tortas")
     return '<article class="tk-cartaz' + (it.conferir ? " conferir" : "") + (it.fora ? " fora" : "") + '" tabindex="0" style="--giro:' + giro.toFixed(2) + 'deg" data-slug="' + esc(it.slug) + '">'
       + '<div class="tk-papel"><div class="tk-procurado' + (it.conferir || it.fora ? "" : " " + tom) + '">' + esc(titulo) + "</div>"
       + '<div class="tk-linha-fina">' + (v.novo ? "patch novo · " : "patch ") + esc(v.patch) + "</div>"
