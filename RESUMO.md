@@ -28,7 +28,7 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| sáb 07/11 | **A QA do Update Tracker com o patch 16.22.1:** 5 checagens do grupo "update tracker" esperam o 16.21.1 como o patch mais novo, e o robô trouxe o 16.22.1 (5 de 38 falham também no código de antes da T113); mais 1 das Públicas (2 builds desatualizadas no servidor). Conferir se é só a QA ou se a tela também precisa mudar. Junto: o grupo "duas abas" falha às vezes (2 de 3 no código da T113) — diário na aba antes de teorizar | 2–3% |
+| depois | **O grupo "duas abas" da QA falha às vezes** (2 de 3 no código da T113; os testes do 16.22.1 já foram consertados em 07/11). Diário na aba antes de teorizar | 2–3% |
 | quando o Cap. 1 entregar | **Filtro "Escala com"** (PdH, DdA, Vida, Mana, Armadura, RM) no grupo Atributo, com Maior/Menor pela porcentagem. Com a base (base · bônus · total · máxima) à vista e filtrável. Espera a **D5** de `docs/pendencias_capitulo1.md` (Leo, 06/11/2026: adição ao Capítulo 1, não leitura do texto) | 2–3% |
 | sáb 07/11 (até 17:00) | **As entradas de Águas de Sentina e da Ilha das Sombras** por workflow (2 opções + juiz cada), por `docs/direcao_regioes.md`; as amostras de 05/11 são o que não fazer | 16–24% |
 | sáb 07/11 | Integrar as entradas aprovadas (`<template id="en-tema-…">`) | 3–5% cada |
