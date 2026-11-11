@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "11/11/2026",
+   "add": [],
+   "aj": [
+    "o catálogo no patch 16.22.1; o arredondamento da Passiva do Ornn não desatualiza mais as builds"
+   ],
+   "rem": []
+  },
+  {
    "data": "07/11/2026",
    "add": [
     "a entrada da loja ganhou Águas de Sentina: a loja na popa de um galeão pirata no cais, sorteada junto com Freljord, Noxus e Shurima",
