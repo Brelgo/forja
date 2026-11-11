@@ -14,7 +14,7 @@ SRC, OUT, REPORT = (sys.argv + ["Catalogo_Itens_LoL.md", "catalog.json", "Relato
 
 HEADER = re.compile(r"^([^\[\]\n]+?): ([^\[\]\n]+?)\[$")          # "Nome PT: Nome EN["
 FIELD  = re.compile(r"^    ([^\[\]]+?): ?(.*)$")                   # "    Campo: valor"
-SECTION = re.compile(r"^    (Atributo|Habilidade|Análise de custo|Ápice numérico|Ápice|Fragmentos)\[$")
+SECTION = re.compile(r"^    (Atributo|Habilidade|Análise de custo|Ápice numérico|Ápice|Fragmentos|Interações)\[$")
 ABILITY = re.compile(r"^\[(.+?)\]\[(.*)\]$")                        # "[Nome — tipo][texto oficial]"
 
 def num_br(s):
@@ -161,6 +161,22 @@ def parse_fragments(lines, avisos, nome):
                     "goldRaw": ouro, "raw": s})
     return out
 
+def parse_interacoes(lines, avisos, nome):
+    """Bloco "Interações[]" (Capítulo 1, 16.22.1 — 07/11/2026): uma linha por interação, 5 campos separados por
+    " · " — tipo (Item | Mecânica | Campeão), com quem, o efeito (ativa | não ativa | amplifica…), o texto e a fonte.
+    Sem o bloco: None (ainda não conferido); "none": []."""
+    if lines is None: return None
+    out = []
+    for l in lines:
+        s = l.strip()
+        if not s or s.lower() == "none": continue
+        partes = s.split(" · ")
+        if len(partes) < 5 or not partes[4].startswith("Fonte:"):
+            avisos.append(f"{nome}: interação não lida → `{s[:80]}`"); continue
+        out.append({"kind": partes[0], "with": partes[1], "effect": partes[2],
+                    "text": " · ".join(partes[3:-1]), "source": partes[-1][len("Fonte:"):].strip(), "raw": s})
+    return out
+
 def parse_price_tables(all_lines):
     """As duas tabelas do topo: preço de atributo (wiki) e do Mestre Forjador (Ornn#Notes)."""
     stat, mw, alvo = [], [], None
@@ -261,6 +277,7 @@ def build(it):
     o["apex"] = "\n".join(l.strip() for l in it.get("_sec_Ápice", []) if l.strip())
     o["apexNumeric"] = parse_apex_numeric(it.get("_sec_Ápice numérico"), avisos_novos, o["nameEn"])
     o["fragments"] = parse_fragments(it.get("_sec_Fragmentos"), avisos_novos, o["nameEn"])
+    o["interactions"] = parse_interacoes(it.get("_sec_Interações"), avisos_novos, o["nameEn"])
     o["notes"] = None if f("Notas").lower() == "none" else f("Notas")
     o["aramNotes"] = None if f("Notas de ARAM").lower() == "none" else f("Notas de ARAM")
     o["mayhemNotes"] = None if f("Notas de ARAM: Mayhem").lower() == "none" else f("Notas de ARAM: Mayhem")

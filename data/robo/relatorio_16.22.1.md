@@ -6,16 +6,16 @@ Gerado por `data/robo/ler_fonte.py` em 2026-11-04T20:26:56Z. **Só leitura**: na
 |---|---|
 | Data Dragon | patch do dia **16.22.1** · `item.json` pt_BR com 863 itens |
 | Wiki `Module:ItemData/data` | revisão 4092074 de 2026-11-03T21:25:43Z · 334 itens lidos (334 entradas contadas por fora) |
-| Catálogo | `data/catalog.js`, patch 16.21.1 · 225 itens |
+| Catálogo | `data/catalog.js`, patch 16.22.1 · 225 itens |
 
-**4 diferenças a conferir.** 225 itens do catálogo casados com a wiki (0 sem par); 3 em que a wiki diverge e o catálogo segue o Data Dragon.
+**2 diferenças a conferir.** 225 itens do catálogo casados com a wiki (0 sem par); 3 em que a wiki diverge e o catálogo segue o Data Dragon.
 
 | Campo | Itens comparados | A conferir |
 |---|---:|---:|
 | Id | 225 | 0 |
 | Preço (buy) | 225 | 0 |
 | Receita (recipe) | 178 | 0 |
-| Atributos (stats) | 517 | 3 |
+| Atributos (stats) | 517 | 1 |
 | Modos (modes) | 225 | 0 |
 | Efeitos com nome (pass/act) | 162 | 1 |
 | Grupo "Limitado a 1" (itemlimit) | 73 | 0 |
@@ -25,9 +25,7 @@ Gerado por `data/robo/ler_fonte.py` em 2026-11-04T20:26:56Z. **Só leitura**: na
 
 | Item | Catálogo | Fonte |
 |---|---|---|
-| Arco de Doran (Doran's Bow) | Dano de Ataque 8 | Dano de Ataque 7 |
 | Acerto de Contas de Atma (Atma's Reckoning) | Aceleração de Habilidade 10 | Aceleração de Habilidade — |
-| Armadura Sangrenta do Suserano (Overlord's Bloodmail) | Dano de Ataque 30 | Dano de Ataque 40 |
 
 ## A conferir — Efeitos com nome (pass/act)
 

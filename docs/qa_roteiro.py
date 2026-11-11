@@ -6117,11 +6117,15 @@ def checar_robo_regra(p):
     import subprocess
     bruto = subprocess.run(["git", "-C", RAIZ, "show", "3c9c754:data/catalog.js"], capture_output=True).stdout.decode("utf-8")
     velho = json.loads(bruto[bruto.index("{"): bruto.rindex("}") + 1]) if bruto else None
-    if velho is None or not os.path.isdir(os.path.join(RAIZ, "data", "robo", "fonte", "16.20.1")):
+    # o catálogo 16.21.1 (o da reconciliação, c296c1d): desde que o catálogo subiu para o 16.22.1 (F13-T123), o
+    # "o que o Capítulo 1 fez" vem do git, não do catálogo atual
+    bruto21 = subprocess.run(["git", "-C", RAIZ, "show", "c296c1d:data/catalog.js"], capture_output=True).stdout.decode("utf-8")
+    cat21 = json.loads(bruto21[bruto21.index("{"): bruto21.rindex("}") + 1]) if bruto21 else None
+    if velho is None or cat21 is None or not os.path.isdir(os.path.join(RAIZ, "data", "robo", "fonte", "16.20.1")):
         p.conta("robô", "o teste com dado real (16.20.1 → 16.21.1)", False, "sem o catálogo 16.20.1 no git ou sem a foto do 16.20.1")
     else:
-        hist = ap.regra(velho, lf.ler_foto("16.20.1"), lf.ler_foto(cat["meta"]["patch"]))
-        V, N_ = {i["slug"]: i for i in velho["items"]}, {i["slug"]: i for i in cat["items"]}
+        hist = ap.regra(velho, lf.ler_foto("16.20.1"), lf.ler_foto("16.21.1"))
+        V, N_ = {i["slug"]: i for i in velho["items"]}, {i["slug"]: i for i in cat21["items"]}
         attrs = lambda l: sorted((a.get("stat"), a.get("unit"), a.get("value")) for a in (l or []) if isinstance(a, dict))
         def igual(campo, x, y):
             if campo == "attributes":
@@ -6275,6 +6279,8 @@ def checar_camada_robo(s, p):
     ap = importlib.import_module("aplicar_patch")
     cat = lf.ler_catalogo()
     patch = cat["meta"]["patch"]
+    # o patch "seguinte" da camada simulada: um acima do catálogo (era 16.22.1 fixo até o catálogo chegar nele)
+    NOVO = "%s.%d.1" % (patch.split(".")[0], int(patch.split(".")[1]) + 1)
     w0, dd0, m0 = lf.ler_foto(patch)
     w1, dd1, m1 = copy.deepcopy(w0), copy.deepcopy(dd0), copy.deepcopy(m0)
     idc = {i["nameEn"]: str(i["id"]).split(" ")[0] for i in cat["items"]}
@@ -6284,7 +6290,7 @@ def checar_camada_robo(s, p):
     dd1["data"][idc["Redemption"]]["gold"]["total"] += 50; dd1["data"][idc["Redemption"]]["gold"]["base"] += 50
     w1["Abyssal Mask"]["buy"] = 2700
     c = ap.regra(cat, (w0, dd0, m0), (w1, dd1, m1))
-    camada = {"de": patch, "para": "16.22.1", "itens": c["itens"], "aConferir": c["aConferir"], "novos": c["novos"], "statPricesVelhos": c.get("statPricesVelhos", [])}
+    camada = {"de": patch, "para": NOVO, "itens": c["itens"], "aConferir": c["aConferir"], "novos": c["novos"], "statPricesVelhos": c.get("statPricesVelhos", [])}
     # o Capítulo 1 mexeu na Redenção depois que a camada nasceu: o "base" não bate e ela fica como o catálogo diz
     camada["itens"]["redemption"]["base"]["priceGold"] = 9999
     preco_bb = next(i for i in cat["items"] if i["slug"] == "bastionbreaker")["priceGold"]
@@ -6321,7 +6327,7 @@ def checar_camada_robo(s, p):
           switchTab('build'); showBuildScreen('forja'); renderBuildAll();
           const tile = (s) => { const t = [...document.querySelectorAll('.item-tile')].find(x => build.cats[Number(x.dataset.catId === 'qa-r1' ? 0 : 1)].items[Number(x.dataset.index)].itemId === s); return t ? t.classList.contains('mudou') : null; };
           const html = etiquetaHtml(buildResumo({ id: build.id }));
-          return { robo: itensDoRobo(build.cats), borda_bb: tile('bastionbreaker'), borda_ls: tile('long-sword'), borda_am: tile('abyssal-mask'), etiqueta: /desatualizada/.test(html) && /patch 16\\.22\\.1/.test(html) }; })()""")
+          return { robo: itensDoRobo(build.cats), borda_bb: tile('bastionbreaker'), borda_ls: tile('long-sword'), borda_am: tile('abyssal-mask'), etiqueta: /desatualizada/.test(html) && html.includes('patch ' + ROBO.para) }; })()""")
         erros = list(r.erros)
     finally:
         r.fechar()
@@ -6329,10 +6335,10 @@ def checar_camada_robo(s, p):
             vazia["coerente"] and outro == {"ativo": False, "itens": 0}, "repositório %s · outro patch %s" % (vazia, outro))
     p.conta("camada do robô", "a camada do patch do catálogo entra: o preço e a Letalidade aplicados, o selo \"patch 16.22.1\" no card e o \"a conferir\" no que o robô não aplicou; o item que o Capítulo 1 mexeu depois fica como o catálogo diz",
             dado["ativo"] and dado["bb"] == preco_bb + 100 and dado["letal"] == [20] and dado["rd"] == preco_rd and dado["recusou"] and "priceGold" in dado["recusou"]
-            and dado["selo_bb"].endswith(":patch 16.22.1") and "conferir" in dado["selo_am"] and dado["selo_rd"] == ""
-            and dado["aviso"].startswith("Patch 16.22.1") and not erros, "%s · erros %s" % (dado, erros[:2]))
+            and dado["selo_bb"].endswith(":patch " + NOVO) and "conferir" in dado["selo_am"] and dado["selo_rd"] == ""
+            and dado["aviso"].startswith("Patch " + NOVO) and not erros, "%s · erros %s" % (dado, erros[:2]))
     p.conta("camada do robô", "na ficha, o bloco do robô diz o que já foi aplicado (de → para, de onde), o que está a conferir e as contas do patch anterior",
-            "Patch 16.22.1 · pelo Update Tracker" in ficha and "Já aplicado" in ficha and "%s → %s" % (ap.fmt_num(preco_bb), ap.fmt_num(preco_bb + 100)) in ficha
+            ("Patch %s · pelo Update Tracker" % NOVO) in ficha and "Já aplicado" in ficha and "%s → %s" % (ap.fmt_num(preco_bb), ap.fmt_num(preco_bb + 100)) in ficha
             and "A conferir" in ficha and "Shaped Charge" in ficha and "Do patch %s" % patch in ficha and "análise de custo" in ficha, ficha[:400])
     p.conta("camada do robô", "a build com item que o robô viu mudar fica desatualizada, com a borda vermelha nele (o da Opcional não conta, o que não mudou também não)",
             etiqueta["robo"] == ["bastionbreaker"] and etiqueta["borda_bb"] is True and etiqueta["borda_ls"] is False and etiqueta["borda_am"] is False and etiqueta["etiqueta"],
@@ -7038,12 +7044,16 @@ def checar_card(s, p):
         casos = r.js(r"""(() => {
           const C = CATALOG.items, T = t => C.filter(i => i.tier === t);
           const pecaDe = (a, b) => (b.components || []).some(c => c.namePt === a.namePt);
-          const dadiva = C.find(i => i.tier === 'Lendário (Evolução)');
+          // a Dádiva dos Mundos pela receita (F13-T123: no 16.22.1 o tier dela virou "Evolução"): a Evolução que vem de
+          // uma Evolução que vem de um Starter
+          const porN = Object.fromEntries(C.map(i => [i.namePt, i])), comp = i => i && (i.components || [])[0] && porN[i.components[0].namePt];
+          const dadiva = C.find(i => i.tier === 'Lendário (Evolução)') || C.find(i => i.tier === 'Evolução' && (comp(i) || {}).tier === 'Evolução' && (comp(comp(i)) || {}).tier === 'Starter');
           // os Lendários que não são o item de suporte (o que a Dádiva vira também é tier Lendário)
           const L = T('Lendário').filter(i => !pecaDe(dadiva, i)), B = T('Bota'), S = T('Starter'), Co = T('Consumível'), Tr = T('Trinket'), E = T('Épico');
           const porNome = Object.fromEntries(C.map(i => [i.namePt, i]));
           const deBota = i => (i.components || []).some(c => (porNome[c.namePt] || {}).tier === 'Bota');
-          const evB = C.find(i => i.tier === 'Evolução' && deBota(i)), evL = C.find(i => i.tier === 'Evolução' && !deBota(i));
+          const linhaSup = i => { for (let x = i, n = 0; x && n < 6; n++) { if (x.tier === 'Starter') return true; x = comp(x); } return false; };
+          const evB = C.find(i => i.tier === 'Evolução' && deBota(i)), evL = C.find(i => i.tier === 'Evolução' && !deBota(i) && !linhaSup(i));
           const cx = (kind, ...its) => ({ kind, items: its.map(i => ({ itemId: typeof i === 'string' ? i : i.slug })) });
           const botaBase = B.find(b => B.some(o => pecaDe(b, o))), botaFinal = B.find(o => pecaDe(botaBase, o)), outraFinal = B.find(o => o !== botaFinal && pecaDe(botaBase, o));
           const evBpeca = C.find(i => i.tier === 'Bota' && pecaDe(i, evB));
@@ -7110,7 +7120,8 @@ def checar_card(s, p):
         def desenha(build):
             return r.js("desenhar(%s)" % json.dumps(build, ensure_ascii=False))
 
-        caixas = r.js("""(() => { const C = CATALOG.items, dadiva = C.find(i => i.tier === 'Lendário (Evolução)'), B = C.filter(i => i.tier === 'Bota');
+        caixas = r.js("""(() => { const C = CATALOG.items, porN = Object.fromEntries(C.map(i => [i.namePt, i])), comp = i => i && (i.components || [])[0] && porN[i.components[0].namePt];
+          const dadiva = C.find(i => i.tier === 'Lendário (Evolução)') || C.find(i => i.tier === 'Evolução' && (comp(i) || {}).tier === 'Evolução' && (comp(comp(i)) || {}).tier === 'Starter'), B = C.filter(i => i.tier === 'Bota');
           const L = C.filter(i => i.tier === 'Lendário' && !(i.components || []).some(c => c.namePt === dadiva.namePt));
           const S = C.filter(i => i.tier === 'Starter'), Co = C.filter(i => i.tier === 'Consumível');
           return [{ kind: 'comum', items: [{ itemId: S[0].slug }, { itemId: Co[0].slug }] }, { kind: 'comum', items: [{ itemId: B[1].slug }] },
@@ -8095,7 +8106,9 @@ def checar_tracker(s, p):
                 q["aberto"] and q["exp"] == "true" and q["cartazes"] == q["esperado"] and q["nomes"] == q["nomesCat"] and q["abas"] == ([novo] if novo else []) + q["patches"], "%s" % q)
 
         # 2. a Recompensa: o preço de antes riscado e o de hoje (o do catálogo)
-        r = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
+        #    (no patch mais novo que mudou preço: o 16.22.1 não mudou nenhum — a aba dele se abre, e depois volta a do mais novo)
+        r = s.js("""(() => { const u = MUDANCAS.versoes.slice().reverse().find(v => Object.values(v.detalhe).some(l => l.some(x => x[0] === 'preço'))); if (!u) return null;
+          const aba = (p) => [...document.querySelectorAll('[data-tk-patch]')].find(b => b.textContent.trim() === 'Patch ' + p); const b = aba(u.patch); if (b) b.click();
           const sl = Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'preço')); if (!sl) return null;
           const c = document.querySelector('.tk-cartaz[data-slug="' + sl + '"] .tk-recompensa'), pr = u.detalhe[sl].find(x => x[0] === 'preço');
           return { sl: sl, antes: c && c.querySelector('.tk-antes').textContent, depois: c && c.querySelector('.tk-depois').textContent,
@@ -8103,6 +8116,8 @@ def checar_tracker(s, p):
                    caro: c && c.querySelector('.tk-depois').classList.contains(Number(pr[2][0]) > Number(pr[1][0]) ? 'piorou' : 'melhorou') }; })()""")
         p.conta("update tracker", "no cartaz de preço, a Recompensa mostra o preço de antes riscado e o de hoje (o do catálogo), com a cor de mais caro ou mais barato",
                 bool(r) and r["antes"] == r["esperaAntes"] and r["depois"] == r["esperaDepois"] and r["caro"], "%s" % r)
+        s.js("""(() => { const aba = (p) => [...document.querySelectorAll('[data-tk-patch]')].find(b => b.textContent.trim() === 'Patch ' + p); const b = aba(MUDANCAS.versoes[MUDANCAS.versoes.length - 1].patch); if (b) b.click(); return 1; })()""")
+        time.sleep(0.3)
 
         # 2b. as cores (Leo, 05/11/2026: "vermelho se é uma mudança negativa, verde para positiva e amarelo para ajuste
         #     ou reformulação"; "percebi pelo Quebra-Bastião PERDENDO letalidade e estando verde"): o atributo que cai é
@@ -8128,9 +8143,11 @@ def checar_tracker(s, p):
           const c = document.querySelector('.tk-cartaz[data-slug="' + sl + '"]'); c.click();
           const det = c.querySelector('.tk-detalhe'), vis = getComputedStyle(det).display !== 'none';
           const txt = det.textContent.replace(/\\s+/g, ' '), ins = [...det.querySelectorAll('ins')].map(x => x.textContent), del = [...det.querySelectorAll('del')].map(x => x.textContent);
-          const hoje = (byId[sl].abilities || []).map(h => (h.mechanics || h.description || '').replace(/\\\\n/g, ' ').replace(/\\s+/g, ' '));
+          const hab = u.detalhe[sl].find(x => x[0] === 'habilidades'), mudou = hab[2].filter((d, i) => d !== hab[1][i]).map(d => d.replace(/\\\\n/g, ' ').replace(/\\s+/g, ' '));
+          const hoje = (byId[sl].abilities || []).map(h => (h.mechanics || h.description || '').replace(/\\\\n/g, ' ').replace(/\\s+/g, ' '))
+            .filter(h => mudou.some(d => d.includes(h.slice(0, 60))));
           const semDel = (() => { const cl = det.cloneNode(true); cl.querySelectorAll('del').forEach(x => x.remove()); return cl.textContent.replace(/\\s+/g, ' '); })();
-          return { sl: sl, aberto: c.classList.contains('aberto') && vis, ins: ins.length, del: del.length, hoje: hoje.every(h => semDel.includes(h.slice(0, 60))) }; })()""")
+          return { sl: sl, aberto: c.classList.contains('aberto') && vis, ins: ins.length, del: del.length, hoje: hoje.length > 0 && hoje.every(h => semDel.includes(h.slice(0, 60))) }; })()""")
         p.conta("update tracker", "o clique no cartaz abre o antes e o depois: o que saiu riscado, o que entrou realçado; sem o riscado, fica o texto de hoje da Mecânica",
                 bool(d) and d["aberto"] and d["ins"] > 0 and d["del"] > 0 and d["hoje"], "%s" % d)
 
