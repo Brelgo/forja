@@ -95,9 +95,23 @@ function ehBota(it) {
   if (it.tier === "Bota") return true;
   return /Evolução/.test(it.tier || "") && lista(it.components).some(c => (porNome.get(c.namePt) || {}).tier === "Bota");
 }
+// a linha do suporte: as Evoluções que nascem de um Starter (o Atlas Mundial → a Bússola Rúnica → a Dádiva dos
+// Mundos). F13-T123: no catálogo 16.22.1 a Dádiva e a Bússola deixaram o tier "Lendário/Épico (Evolução)" e
+// viraram "Evolução"; a linha se reconhece pela receita, não pelo nome do tier
+function daLinhaDoSuporte(it) {
+  if (!it || it.tier !== "Evolução") return false;
+  for (let x = it, n = 0; x && n < 6; n++) {
+    if (x.tier === "Starter") return true;
+    const c = lista(x.components)[0];
+    x = c && porNome.get(c.namePt);
+  }
+  return false;
+}
+// a Dádiva dos Mundos: a da linha do suporte que vem de outra da linha (a Bússola vem do Atlas, um Starter)
+const ehDadiva = it => !!it && (it.tier === "Lendário (Evolução)" || (daLinhaDoSuporte(it) && lista(it.components).some(c => daLinhaDoSuporte(porNome.get(c.namePt)))));
 // o item de suporte: a Dádiva dos Mundos e o que ela vira (Trenó do Solstício, Canção de Sangue…)
-const ehSuporte = it => it.tier === "Lendário (Evolução)" || lista(it.components).some(c => (porNome.get(c.namePt) || {}).tier === "Lendário (Evolução)");
-function ehLendario(it) { return (/^Lendário/.test(it.tier || "") || (it.tier === "Evolução" && !ehBota(it))) && !ehSuporte(it); }
+const ehSuporte = it => ehDadiva(it) || lista(it.components).some(c => ehDadiva(porNome.get(c.namePt)));
+function ehLendario(it) { return (/^Lendário/.test(it.tier || "") || (it.tier === "Evolução" && !ehBota(it) && !daLinhaDoSuporte(it))) && !ehSuporte(it); }
 const ehInicial = it => it.tier === "Starter" || it.tier === "Consumível" || it.tier === "Trinket";
 
 // Os quadros da Ficha. A build é lida como o "Total (sem opcionais)" do app: sem as caixas Opcionais,
@@ -122,7 +136,7 @@ function fichaDaBuild(build) {
   const finais = botas.filter(x => !pecas.has(x.it.slug));
   const bota = (finais.length ? finais : botas).slice(0, 1);
   const sups = contados.filter(x => ehSuporte(x.it) && !noCore.has(x.it.slug));
-  const viradas = sups.filter(x => x.it.tier !== "Lendário (Evolução)");
+  const viradas = sups.filter(x => !ehDadiva(x.it));
   const suporte = (viradas.length ? viradas : sups).slice(0, 1);
   const iniciais = contados.filter(x => ehInicial(x.it) && !noCore.has(x.it.slug)).slice(0, 6);
   const mostrados = new Set([...core, ...bota, ...suporte, ...iniciais].map(x => x.it.slug));

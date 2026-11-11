@@ -30,6 +30,8 @@ Gerado por `gerar_catalog_json.py` a partir do `Catalogo_Itens_LoL.md`. Supercon
                     // null = Ápice "igual ao base"; goldValue/efficiency null com Raw = valor condicional ("sem teto…", "525g se…")
     fragments     : null | [{tier: "Prata"|"Ouro"|"Prismático", name (EN, fragmento composto) | null,
                              stats: [{stat, value, unit, note}], gold (nº | null), goldRaw, raw}]      // só o Atributo adicional (23/09/2026)
+    interactions  : null | [{kind: "Item"|"Mecânica"|"Campeão", with, effect: "ativa"|"não ativa"|…, text, source, raw}]
+                    // bloco "Interações[]" do Capítulo 1 (16.22.1, 07/11/2026): null = sem bloco (ainda não conferido); [] = "none"
     notes, aramNotes, mayhemNotes
     attributeCategory[], specialEffects[], recommendedArchetype[]
     itemClass     : {core: "AD"|"AP"|"Vitalidade"|"AD e AP", sums: {AD, Vitalidade, AP}, raw}

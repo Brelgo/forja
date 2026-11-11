@@ -26,7 +26,8 @@ continuam lendo só o "itens".
 
 A saída não tem data nem hash: rodar duas vezes dá o mesmo arquivo.
 """
-import json, os, re, subprocess, sys
+import json
+import math, os, re, subprocess, sys
 from collections import OrderedDict
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -78,8 +79,12 @@ CAMPOS = OrderedDict([
     ("habilidades", lambda i: [(h.get("name"), h.get("type"), h.get("description"), h.get("mechanics")) for h in i.get("abilities") or []]),
     ("modos", lambda i: sorted(i.get("gameModes") or [])),
     ("Reembolso", lambda i: [(i.get("cashback") or {}).get(k) for k in ("percent", "refundGold", "netGold")]),
+    # F13-T123 (Leo, 10/11/2026: "arredondamento não conta"): o Capítulo 1 passou, no 16.22.1, a arredondar para
+    # baixo o bônus da Passiva do Ornn (18,52 → 18) — correção do catálogo, não do jogo. Conta a base e o bônus
+    # inteiro (arredondado para baixo); o total é a soma dos dois e sai da conta.
     ("Passiva do Ornn", lambda i: [(i.get("masterwork") or {}).get("eligible"),
-                                   [(m.get("stat"), m.get("base"), m.get("bonus"), m.get("total")) for m in (i.get("masterwork") or {}).get("stats") or []]]),
+                                   [(m.get("stat"), m.get("base"), None if m.get("bonus") is None else math.floor(m.get("bonus")))
+                                    for m in (i.get("masterwork") or {}).get("stats") or []]]),
 ])
 
 

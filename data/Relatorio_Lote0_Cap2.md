@@ -1,6 +1,6 @@
 # Relatório — Lote 0 do Capítulo 2 (catálogo → JSON)
 
-Fonte: `Catalogo_Itens_LoL.md` · Patch: **16.21.1** · Itens: **225** · Saída: `catalog.json`
+Fonte: `Catalogo_Itens_LoL.md` · Patch: **16.22.1** · Itens: **225** · Saída: `catalog.json`
 
 ## Tiers
 
@@ -12,9 +12,7 @@ Fonte: `Catalogo_Itens_LoL.md` · Patch: **16.21.1** · Itens: **225** · Saída
 - Básico: 15
 - Épico: 44
 - Lendário: 114
-- Evolução: 11
-- Lendário (Evolução): 1
-- Épico (Evolução): 1
+- Evolução: 13
 
 ## Modos de jogo (contagem de itens)
 
