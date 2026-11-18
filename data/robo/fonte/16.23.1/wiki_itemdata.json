@@ -10609,7 +10609,7 @@
     "unique": true
    },
    "pass3": {
-    "description": "When fully {{tip|Energized}}, your next basic attack [[on-hit]] grants you {{as|{{rd|15|12}} lethality}} for 4 seconds and deals {{as|'''bonus''' physical damage}} equal to {{as|{{rd|9%|7%}} of the target's '''current''' health}}, capped at 200 against non-champions.",
+    "description": "When fully {{tip|Energized}}, your next basic attack [[on-hit]] grants you {{as|{{rd|15|12}} lethality}} for 4 seconds and deals {{as|'''bonus''' physical damage}} equal to {{as|{{rd|8%|6%}} of the target's '''current''' health}}, capped at 200 against non-champions.",
     "name": "Firmament",
     "unique": true
    }

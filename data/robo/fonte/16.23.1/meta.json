@@ -1,11 +1,11 @@
 {
  "patch": "16.23.1",
- "lido_em": "2026-11-17T21:48:38Z",
+ "lido_em": "2026-11-18T21:27:20Z",
  "wiki": {
   "pagina": "Module:ItemData/data",
-  "revid": 4092074,
-  "revisao_de": "2026-11-03T21:25:43Z",
-  "sha256": "c65e5de7b82fe65b672f4eee01ac193a76fa5dc8a109628d9005f70f54492a13",
+  "revid": 4095269,
+  "revisao_de": "2026-11-17T23:01:12Z",
+  "sha256": "b04f0406fb775c81549adcdbda40375b040c6ab5c699ea4becf87dfaa3cac230",
   "itens": 334
  },
  "ddragon": {
