@@ -3,7 +3,9 @@ window.NOTAS = {
  "datas": [
   {
    "data": "19/11/2026",
-   "add": [],
+   "add": [
+    "o limiar de 100% de eficiência na Análise de custo da ficha (catálogo no patch 16.23.1)"
+   ],
    "aj": [
     "a conferência automática das duas abas não falha mais à toa quando o computador está ocupado"
    ],

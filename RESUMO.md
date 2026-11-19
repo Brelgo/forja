@@ -4,9 +4,9 @@ Para começar uma sessão com pouco uso: ler o CLAUDE.md e **este arquivo**. O C
 histórico completo; leia só a seção que a tarefa pedir (procure pelo número `F13-T…` ou pela palavra).
 
 ## O que é e onde está
-- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.124**.
+- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.125**.
 - **O app:** `index.html` (tudo num arquivo, abre com dois cliques). Dados gerados em `data/` — `catalog.js` (225 itens,
-  patch 16.22.1, do Capítulo 1, com `interactions` lido do bloco Interações[]; nunca editar à mão), `runas.js`, `habilidades.js` (Capítulo 1.1), `mudancas.js`,
+  patch 16.23.1, do Capítulo 1, com `interactions` (bloco Interações[]), `scaling` (Escalonamento[], 52 itens até o D5-1a; sem bloco = não conferido) e `costAnalysis.threshold100` (Limiar de 100%); nunca editar à mão), `runas.js`, `habilidades.js` (Capítulo 1.1), `mudancas.js`,
   `notas.js`, `mapa.js`, `mapa_variantes.js`, `regioes.js`. Sons em `assets/audio`, mapa em `assets/mapa`.
 - **Servidor:** Supabase `okifbriwwxohkjxhqzfc` (builds publicadas, popularidade). SQL ou ação lá: só com o OK do Leo.
 - **Robôs no GitHub Actions** (gravam no `main` — `git pull --rebase` antes de enviar): `robo.yml` (o patch, diário,
@@ -28,8 +28,7 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| **primeiro** | **Puxar o Catálogo de 19/11** (patch 16.23.1, sem valor mudado; + bloco `Escalonamento[` em 52 itens, lotes D5 piloto e D5-1a; + rótulo `Limiar de 100%:` em 10 itens). O gerador passa a ler os dois campos novos: **muda o esquema, pede o aprovado do Leo**. Entregas em `Claude Projects/Capitulo 1/Catalogo_LoL_Capitulo1/docs/Entrega_ao_Capitulo2_2026-11-19*.md` (md5 `07ecb41c…`) | 3–5% |
-| depois | **Filtro "Escala com"** (PdH, DdA, Vida, Mana, Armadura, RM) no grupo Atributo, só linhas `seu`, Maior/Menor pela porcentagem (faixa: regra própria, ex. o teto). Base à vista e filtrável. Item sem bloco = "não conferido", nunca "não escala" (o Cap. 1 ainda faz D5-1b e D5-2) | 2–3% |
+| **primeiro** | **Filtro "Escala com"** (PdH, DdA, Vida, Mana, Armadura, RM) no grupo Atributo, só linhas `seu`, Maior/Menor pela porcentagem (faixa: regra própria, ex. o teto). Base à vista e filtrável. Item sem bloco = "não conferido", nunca "não escala" (o Cap. 1 ainda faz D5-1b e D5-2) | 2–3% |
 | depois | **Planos de mapa** (desde a T119 há um plano só, no navegador; tirar o `mapa` que as builds antigas ainda guardam; biblioteca própria Minhas/Publicadas, tabela própria no Supabase, link próprio; só a Selva liga com build) | grande |
 | depois | Calculadora de armadura · app instalável (PWA) · "Mandar para o jogo" · overlay (para pensar) | — |
 | depende | Capítulos de dado 1.1–1.4 (campeões, Bestiário, Gerador) e a calculadora de monstros épicos | — |
