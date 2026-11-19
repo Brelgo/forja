@@ -14,7 +14,7 @@ SRC, OUT, REPORT = (sys.argv + ["Catalogo_Itens_LoL.md", "catalog.json", "Relato
 
 HEADER = re.compile(r"^([^\[\]\n]+?): ([^\[\]\n]+?)\[$")          # "Nome PT: Nome EN["
 FIELD  = re.compile(r"^    ([^\[\]]+?): ?(.*)$")                   # "    Campo: valor"
-SECTION = re.compile(r"^    (Atributo|Habilidade|Análise de custo|Ápice numérico|Ápice|Fragmentos|Interações)\[$")
+SECTION = re.compile(r"^    (Atributo|Habilidade|Análise de custo|Ápice numérico|Ápice|Fragmentos|Interações|Escalonamento)\[$")
 ABILITY = re.compile(r"^\[(.+?)\]\[(.*)\]$")                        # "[Nome — tipo][texto oficial]"
 
 def num_br(s):
@@ -177,6 +177,49 @@ def parse_interacoes(lines, avisos, nome):
                     "text": " · ".join(partes[3:-1]), "source": partes[-1][len("Fonte:"):].strip(), "raw": s})
     return out
 
+ESC_BASES = {"bônus", "total", "base", "máxima", "atual", "perdida"}
+ESC_DE = {"seu", "alvo"}
+ESC_TIPOS = {"razão", "conversão"}
+
+def parse_escalonamento(lines, avisos, nome, habilidades):
+    """Bloco "Escalonamento[]" (Capítulo 1, pendência D5 — 19/11/2026): uma linha por escalonamento, 7 campos
+    separados por " · " — habilidade, atributo, %, base, de quem (seu | alvo), tipo (razão | conversão), efeito;
+    ou 2 campos, "<habilidade> · Sem scaling" (conferida, não escala). Sem o bloco: None (ainda não conferido —
+    nunca "não escala"); "none": [] (item sem habilidade). O % pode ser "50%", "2,5%", faixa "0–30%" ou faixa sem %
+    ("0–5"); pctMin/pctMax trazem os números (iguais quando não é faixa)."""
+    if lines is None: return None
+    out = []
+    for l in lines:
+        s = l.strip()
+        if not s or s.lower() == "none": continue
+        partes = s.split(" · ")
+        hab = partes[0]
+        if hab not in habilidades:
+            avisos.append(f"{nome}: escalonamento de habilidade que o item não tem → `{hab}`")
+        if len(partes) == 2 and partes[1] == "Sem scaling":
+            out.append({"ability": hab, "none": True, "raw": s}); continue
+        if len(partes) != 7:
+            avisos.append(f"{nome}: escalonamento não lido → `{s[:80]}`"); continue
+        _, stat, pct, base, de, tipo, efeito = partes
+        m = re.match(r"^([\d.,]+)(?:–([\d.,]+))?(%?)$", pct)
+        if not m or base not in ESC_BASES or de not in ESC_DE or tipo not in ESC_TIPOS:
+            avisos.append(f"{nome}: escalonamento fora do formato → `{s[:80]}`"); continue
+        lo = num_br(m.group(1)); hi = num_br(m.group(2)) if m.group(2) else lo
+        out.append({"ability": hab, "stat": stat, "pct": pct, "pctMin": lo, "pctMax": hi, "percent": m.group(3) == "%",
+                    "base": base, "of": de, "kind": tipo, "effect": efeito, "raw": s})
+    return out
+
+def parse_limiar(v, avisos, nome):
+    """"Limiar de 100%:" (Análise de custo, Capítulo 1 — 19/11/2026): "já na base" ou
+    "<número> de <atributo> (wiki | calculado…)" — o valor em que o item chega a 100% de eficiência."""
+    v = v.strip()
+    if v == "já na base": return {"already": True, "value": None, "what": None, "source": None, "raw": v}
+    m = re.match(r"^([\d.,]+) de (.+?) \((wiki|calculado[^)]*)\)$", v)
+    if not m:
+        avisos.append(f"{nome}: Limiar de 100% não lido → `{v[:80]}`")
+        return {"already": False, "value": None, "what": None, "source": None, "raw": v}
+    return {"already": False, "value": num_br(m.group(1)), "what": m.group(2), "source": m.group(3), "raw": v}
+
 def parse_price_tables(all_lines):
     """As duas tabelas do topo: preço de atributo (wiki) e do Mestre Forjador (Ornn#Notes)."""
     stat, mw, alvo = [], [], None
@@ -261,13 +304,14 @@ def build(it):
     o["abilities"] = abilities
     # goldValueStats = só Atributo[] (tabela da wiki); goldValueBase = numerador da
     # Eficiência de Ouro (base), com o que o artigo conta. Esquema de 23/09/2026.
-    ca = {"goldValue": None, "efficiency": None, "extra": [], "goldValueStats": None, "goldValueBase": None}
+    ca = {"goldValue": None, "efficiency": None, "extra": [], "goldValueStats": None, "goldValueBase": None, "threshold100": None}
     for l in it.get("_sec_Análise de custo", []):
         s = l.strip()
         if s.startswith("Valor de Ouro:"): ca["goldValue"] = s.split(":", 1)[1].strip()
         elif s.startswith("Valor de Ouro (atributos):"): ca["goldValueStats"] = gold_or_none(s.split(":", 1)[1])
         elif s.startswith("Valor de Ouro (base):"): ca["goldValueBase"] = gold_or_none(s.split(":", 1)[1])
         elif s.startswith("Eficiência de Ouro:"): ca["efficiency"] = s.split(":", 1)[1].strip()
+        elif s.startswith("Limiar de 100%:"): ca["threshold100"] = parse_limiar(s.split(":", 1)[1], avisos_novos, o["nameEn"])
         elif s: ca["extra"].append(s)
     m = re.search(r"total ([\d.,]+)g", ca["goldValue"] or "")
     ca["goldValueTotal"] = num_br(m.group(1)) if m else None
@@ -278,6 +322,8 @@ def build(it):
     o["apexNumeric"] = parse_apex_numeric(it.get("_sec_Ápice numérico"), avisos_novos, o["nameEn"])
     o["fragments"] = parse_fragments(it.get("_sec_Fragmentos"), avisos_novos, o["nameEn"])
     o["interactions"] = parse_interacoes(it.get("_sec_Interações"), avisos_novos, o["nameEn"])
+    nomes_hab = {f"{a['name']} ({a['nameEn']})" if a["nameEn"] else a["name"] for a in abilities}
+    o["scaling"] = parse_escalonamento(it.get("_sec_Escalonamento"), avisos_novos, o["nameEn"], nomes_hab)
     o["notes"] = None if f("Notas").lower() == "none" else f("Notas")
     o["aramNotes"] = None if f("Notas de ARAM").lower() == "none" else f("Notas de ARAM")
     o["mayhemNotes"] = None if f("Notas de ARAM: Mayhem").lower() == "none" else f("Notas de ARAM: Mayhem")

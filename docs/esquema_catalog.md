@@ -23,7 +23,9 @@ Gerado por `gerar_catalog_json.py` a partir do `Catalogo_Itens_LoL.md`. Supercon
     abilities     : [{name, nameEn, type: "passiva única"|"ativa única"|..., description (texto oficial pt_BR), mechanics (wiki)}]
     costAnalysis  : {goldValue (texto), goldValueTotal (nº), efficiency (texto), efficiencyBase (nº %), extra[],
                      goldValueStats (nº | null) — só Atributo[], igual à tabela da wiki          (23/09/2026)
-                     goldValueBase  (nº | null) — numerador da efficiencyBase (com o que o artigo conta)}
+                     goldValueBase  (nº | null) — numerador da efficiencyBase (com o que o artigo conta)
+                     threshold100   null | {already (bool), value (nº | null), what, source: "wiki"|"calculado…", raw}
+                                    — "Limiar de 100%:", o valor em que o item chega a 100% (19/11/2026); null = sem a linha}
     apex          : texto do Ápice
     apexNumeric   : null | {stats: [{stat, value, unit: "flat"|"percent", mode: "total"|"extra", note}],
                             goldValue (nº | null), goldValueRaw, efficiency (nº % | null), efficiencyRaw}   (23/09/2026)
@@ -32,6 +34,12 @@ Gerado por `gerar_catalog_json.py` a partir do `Catalogo_Itens_LoL.md`. Supercon
                              stats: [{stat, value, unit, note}], gold (nº | null), goldRaw, raw}]      // só o Atributo adicional (23/09/2026)
     interactions  : null | [{kind: "Item"|"Mecânica"|"Campeão", with, effect: "ativa"|"não ativa"|…, text, source, raw}]
                     // bloco "Interações[]" do Capítulo 1 (16.22.1, 07/11/2026): null = sem bloco (ainda não conferido); [] = "none"
+    scaling       : null | [{ability, stat, pct (texto), pctMin, pctMax (nº), percent (bool), base: "bônus"|"total"|"base"|
+                                 "máxima"|"atual"|"perdida", of: "seu"|"alvo", kind: "razão"|"conversão", effect, raw}
+                             | {ability, none: true, raw}]   // "<habilidade> · Sem scaling"
+                    // bloco "Escalonamento[]" do Capítulo 1 (pendência D5, 19/11/2026): null = sem bloco = AINDA NÃO
+                    // CONFERIDO (nunca "não escala"); [] = "none" (sem habilidade). Faixa "0–30%": pctMin 0, pctMax 30;
+                    // "0–5" (sem %) não é porcentagem. `ability` é igual a "name (nameEn)" de abilities[] (o gerador avisa se não).
     notes, aramNotes, mayhemNotes
     attributeCategory[], specialEffects[], recommendedArchetype[]
     itemClass     : {core: "AD"|"AP"|"Vitalidade"|"AD e AP", sums: {AD, Vitalidade, AP}, raw}

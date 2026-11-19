@@ -11489,7 +11489,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.124";
+const ATUALIZACAO = "13.125";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -20445,7 +20445,8 @@ const Tracker = (function () {
       + " · " + itens.length + (itens.length === 1 ? " cartaz" : " cartazes") + "</span>"
       + '<span class="tk-legenda"><i class="melhorou"></i>melhorou <i class="piorou"></i>piorou <i class="ajuste"></i>ajuste</span>'
       + '<div class="tk-patches" role="tablist" aria-label="Patch">' + vs.map((x, i) => '<button type="button" role="tab" data-tk-patch="' + i + '" aria-selected="' + (i === atual) + '">Patch ' + esc(x.patch) + (x.novo ? " · novo" : "") + "</button>").join("") + "</div></div>"
-      + '<div class="tk-cartazes">' + itens.map((it, i) => cartaz(it, v, i)).join("") + "</div></div>";
+      + (itens.length ? '<div class="tk-cartazes">' + itens.map((it, i) => cartaz(it, v, i)).join("") + "</div>"
+        : '<p class="tk-vazio">Nenhum item mudou do patch ' + esc(v.desde) + " para o " + esc(v.patch) + ".</p>") + "</div>";
   }
   function abrir(sim) {
     const caixa = el("tracker"), b = el("tracker-btn");
@@ -20596,6 +20597,7 @@ function openModal(id) {
       <div class="modal-section-title">Análise de custo</div>
       ${ca.goldValue ? `<div class="cost-line"><span class="k">Valor em ouro</span><span class="v">${ca.goldValue}</span></div>` : ""}
       ${ca.efficiency ? `<div class="cost-line eff"><span class="k">Eficiência</span><span class="v">${ca.efficiency}</span></div>` : ""}
+      ${ca.threshold100 ? `<div class="cost-line limiar"><span class="k">Limiar de 100%</span><span class="v">${ca.threshold100.raw}</span></div>` : ""}
       ${soAtributos !== null
         ? `<div class="cost-line"><span class="k">Só atributos</span><span class="v">${fmtEff(soAtributos)} (${fmtOuro(ca.goldValueStats)} ÷ ${fmtOuro(item.priceGold)}; a base conta ${fmtOuro(ca.goldValueBase - ca.goldValueStats)} de efeito)</span></div>` : ""}
       ${noApice}

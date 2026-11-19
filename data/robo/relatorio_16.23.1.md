@@ -6,7 +6,7 @@ Gerado por `data/robo/ler_fonte.py` em 2026-11-18T21:27:20Z. **Só leitura**: na
 |---|---|
 | Data Dragon | patch do dia **16.23.1** · `item.json` pt_BR com 863 itens |
 | Wiki `Module:ItemData/data` | revisão 4095269 de 2026-11-17T23:01:12Z · 334 itens lidos (334 entradas contadas por fora) |
-| Catálogo | `data/catalog.js`, patch 16.22.1 · 225 itens |
+| Catálogo | `data/catalog.js`, patch 16.23.1 · 225 itens |
 
 **2 diferenças a conferir.** 225 itens do catálogo casados com a wiki (0 sem par); 3 em que a wiki diverge e o catálogo segue o Data Dragon.
 

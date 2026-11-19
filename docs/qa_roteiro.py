@@ -575,6 +575,28 @@ def checar_fundacao(s, p):
             % (r["contadas"], r["meta"], r["frag"], r["metaFrag"]))
     patch = s.js("CATALOG.meta && CATALOG.meta.patch")
     p.conta("fundação", "o catálogo diz de que patch é", bool(patch), "patch %s" % patch)
+    # F13-T125: os blocos novos do Capítulo 1 contados por fora, no Markdown — um leitor calado não passa
+    md = open(os.path.join(RAIZ, "data", "Catalogo_Itens_LoL.md"), encoding="utf-8").read().split("\n")
+    fora = {"blocos": 0, "linhas": 0, "sem": 0, "limiar": 0}
+    dentro = False
+    for l in md:
+        if l == "    Escalonamento[":
+            fora["blocos"] += 1; dentro = True; continue
+        if dentro:
+            if l.strip() == "]" or not l.startswith("        "):
+                dentro = False; continue
+            if l.strip() and l.strip().lower() != "none":
+                fora["linhas"] += 1; fora["sem"] += l.strip().endswith(" · Sem scaling")
+        if l.startswith("        Limiar de 100%:"):
+            fora["limiar"] += 1
+    app = s.js("""(() => { const c = CATALOG.items, e = c.filter(i => Array.isArray(i.scaling));
+      return { blocos: e.length, linhas: e.reduce((a, i) => a + i.scaling.length, 0),
+               sem: e.reduce((a, i) => a + i.scaling.filter(x => x.none).length, 0),
+               limiar: c.filter(i => i.costAnalysis && i.costAnalysis.threshold100).length,
+               semFormato: e.reduce((a, i) => a + i.scaling.filter(x => !x.none && (typeof x.pctMax !== 'number' || !x.of || !x.kind)).length, 0) }; })()""")
+    p.conta("fundação", "Escalonamento[] e Limiar de 100%: o que o app recebeu bate com o Markdown, contado por fora",
+            fora["blocos"] > 0 and fora["limiar"] > 0 and all(app[k] == fora[k] for k in fora) and app["semFormato"] == 0,
+            "Markdown %s · app %s" % (fora, app))
     # F13-T54 (Leo, 19/10/2026): a placa de entrada diz que é hobby e como falar
     # com o autor — escrito, à vista, e a placa inteira cabe na tela.
     # F13-T97: a placa é a de madeira do posto de troca (título na madeira, o resto no pergaminho
@@ -873,6 +895,13 @@ def checar_ficha(s, p):
     time.sleep(0.8)
     s.clicar("#modal .rt .rt-no.folha", 1.0)
     aberta = s.js("(document.querySelector('#modal h2') || {}).textContent")
+    lim = s.js("""(() => { const it = CATALOG.items.find(i => i.costAnalysis && i.costAnalysis.threshold100 && !i.costAnalysis.threshold100.already);
+      const ja = CATALOG.items.find(i => i.costAnalysis && i.costAnalysis.threshold100 && i.costAnalysis.threshold100.already);
+      const sem = CATALOG.items.find(i => i.costAnalysis && i.costAnalysis.efficiency && !i.costAnalysis.threshold100);
+      const linha = (x) => { openModal(x.slug); const l = document.querySelector('#modal .cost-line.limiar'); return l ? l.textContent : null; };
+      return { item: it.namePt, quer: it.costAnalysis.threshold100.raw, tela: linha(it), ja: linha(ja), sem: linha(sem) }; })()""")
+    p.conta("ficha", "Limiar de 100% na Análise de custo: o texto do catálogo; \"já na base\" também; o item sem a linha não mostra nada",
+            lim["tela"] == "Limiar de 100%" + lim["quer"] and lim["ja"] == "Limiar de 100%já na base" and lim["sem"] is None, str(lim))
     p.conta("ficha", "o clique numa peça abre a ficha dela", aberta and aberta != r["nome"], "abriu: %s" % aberta)
 
     # a troca para a conta de somar, lembrada depois de recarregar
@@ -5267,8 +5296,8 @@ def checar_desatualizadas(s, p):
     # dela, não toda a de patch antigo. As "Velha…" levam um item que mudou no
     # último patch (do data/mudancas.js); as "Antiga…" são de patch antigo sem
     # item mudado (ou com ele só na Opcional) e continuam na lista.
-    s.js("""(() => { const agora = CATALOG.meta.patch, vs = MUDANCAS.versoes, velho = vs[vs.length - 1].desde;
-      const mud = Object.keys(vs[vs.length - 1].itens)[0];
+    s.js("""(() => { const agora = CATALOG.meta.patch, vs = MUDANCAS.versoes, ult = vs.slice().reverse().find(v => Object.keys(v.itens).length), velho = ult.desde;
+      const mud = Object.keys(ult.itens)[0];
       const comMudado = [{ name: 'Core', kind: 'comum', items: [{ itemId: 'long-sword' }, { itemId: mud }] }];
       const linha = (id, nome, patch, extra) => Object.assign({ id, nome, descricao: '', campeao: null, modo: '', marcadores: [],
         caixas: [{ name: 'Core', items: [{ itemId: 'long-sword' }] }], versao: 1, atualizado_em: new Date().toISOString(),
@@ -5329,8 +5358,8 @@ def checar_mudancas(s, p):
             reg["patch"] == reg["atual"] and (reg["patch"] != "16.21.1" or reg["itens"] == esperado),
             "%s → %s: %s" % (reg["desde"], reg["patch"], ", ".join(reg["itens"])))
 
-    s.js("""(() => { const agora = CATALOG.meta.patch, vs = MUDANCAS.versoes, u = vs[vs.length - 1], velho = u.desde;
-      const pen = vs.length > 1 ? vs[vs.length - 2] : null;
+    s.js("""(() => { const agora = CATALOG.meta.patch, vs = MUDANCAS.versoes, iu = vs.map(v => Object.keys(v.itens).length > 0).lastIndexOf(true), u = vs[iu], velho = u.desde;
+      const pen = iu > 0 ? vs[iu - 1] : null;
       const mud = Object.keys(u.itens)[0];
       const mudAntigo = pen ? Object.keys(pen.itens).find(sl => !u.itens[sl] && byId[sl]) : mud;
       const cx = (n, kind, ids) => ({ id: 'qa-c' + n, name: kind, kind, cols: 3, items: ids.map(i => ({ itemId: i, note: '' })) });
@@ -5403,7 +5432,7 @@ def checar_mudancas(s, p):
             opc == 0 and salvo["rev"] is None and salvo["bordas"] == 0, "opcional %s; depois de salvar %s" % (opc, salvo))
 
     # as cópias de uma pública desatualizada herdam a revisão (Copiar e editar, e o lote)
-    copia = s.js("""(() => { const vs = MUDANCAS.versoes, velho = vs[vs.length - 1].desde, mud = %s;
+    copia = s.js("""(() => { const vs = MUDANCAS.versoes, velho = vs.slice().reverse().find(v => Object.keys(v.itens).length).desde, mud = %s;
       publicas.lista = [{ id: 'qq0001', nome: 'Pública velha', descricao: 'x', campeao: null, modo: '', marcadores: [], versao: 1,
         atualizado_em: new Date().toISOString(), patch: velho, autor: '', engajamentos: 0, pop_dia: 0, popular_semana: false, dias_no_top: 0,
         layout: null, runas: null, habilidades: null, caixas: [{ name: 'Core', kind: 'comum', items: [{ itemId: 'long-sword' }, { itemId: mud }] }] }];
@@ -8120,7 +8149,11 @@ def checar_tracker(s, p):
                    esperado: Object.keys(u.detalhe).concat(u.removidos || []),
                    nomes: [...document.querySelectorAll('.tk-nome')].map(x => x.textContent),
                    nomesCat: Object.keys(u.detalhe).concat(u.removidos || []).map(sl => byId[sl] ? byId[sl].namePt : sl),
-                   abas: [...document.querySelectorAll('[data-tk-patch]')].map(b => b.textContent), patches: vs.map(v => 'Patch ' + v.patch).reverse() }; })()""")
+                   abas: [...document.querySelectorAll('[data-tk-patch]')].map(b => b.textContent), patches: vs.map(v => 'Patch ' + v.patch).reverse(),
+                   vazio: (document.querySelector('#tracker .tk-vazio') || {}).textContent || null,
+                   querVazio: Object.keys(u.detalhe).length + (u.removidos || []).length ? null : 'Nenhum item mudou do patch ' + u.desde + ' para o ' + u.patch + '.' }; })()""")
+        p.conta("update tracker", "o patch sem item mudado diz isso numa frase (F13-T125: o 16.23.1), em vez de um quadro vazio; o patch com mudança não tem a frase",
+                q["vazio"] == q["querVazio"], "frase %r · esperada %r" % (q["vazio"], q["querVazio"]))
         p.conta("update tracker", "o botão do topo abre o quadro: um cartaz por item que mudou no patch mais novo, com o nome do catálogo; as abas vão do patch mais novo ao mais velho (o novo da camada, se houver, primeiro)",
                 q["aberto"] and q["exp"] == "true" and q["cartazes"] == q["esperado"] and q["nomes"] == q["nomesCat"] and q["abas"] == ([novo] if novo else []) + q["patches"], "%s" % q)
 
@@ -8141,10 +8174,14 @@ def checar_tracker(s, p):
         # 2b. as cores (Leo, 05/11/2026: "vermelho se é uma mudança negativa, verde para positiva e amarelo para ajuste
         #     ou reformulação"; "percebi pelo Quebra-Bastião PERDENDO letalidade e estando verde"): o atributo que cai é
         #     vermelho; na recarga, o número que cai é verde; o texto trocado sem número é amarelo
-        tm = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
-          const cai = Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'atributos' && x[1].some((a, i) => {
+        tm = s.js("""(() => {
+          // o patch mais novo com um atributo que cai (o 16.21.1, o Quebra-Bastião, desde que o 16.23.1 só mudou habilidade)
+          const caiEm = (u) => Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'atributos' && x[1].some((a, i) => {
             const b = x[2][i], va = a && Number((a.match(/\\d+(?:,\\d+)?/) || [])[0]), vb = b && Number((b.match(/\\d+(?:,\\d+)?/) || [])[0]);
             return a && b && a.replace(/[\\d,+]/g, '') === b.replace(/[\\d,+]/g, '') && vb < va; })));
+          const u = MUDANCAS.versoes.slice().reverse().find(v => caiEm(v)) || MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
+          const aba = [...document.querySelectorAll('[data-tk-patch]')].find(b => b.textContent.trim() === 'Patch ' + u.patch); if (aba) aba.click();
+          const cai = caiEm(u);
           const c = cai && document.querySelector('.tk-cartaz[data-slug="' + cai + '"]');
           const li = c && [...c.querySelectorAll('.tk-resumo li')].find(x => x.textContent.includes('→'));
           const t = (a, b) => Tracker.difPalavras(a, b).tons.join();
@@ -8157,7 +8194,8 @@ def checar_tracker(s, p):
                 and tm["custo"] == "piorou" and tm["texto"] == "ajuste" and tm["sobe"] == "melhorou" and tm["junta"] == ["piorou", "ajuste", "ajuste", "melhorou"], "%s" % tm)
 
         # 3. o clique abre o antes e o depois: o que saiu riscado, o que entrou realçado, o texto de hoje da Mecânica
-        d = s.js("""(() => { const u = MUDANCAS.versoes[MUDANCAS.versoes.length - 1];
+        d = s.js("""(() => { const u = MUDANCAS.versoes.slice().reverse().find(v => Object.keys(v.detalhe).some(k => v.detalhe[k].some(x => x[0] === 'habilidades')));
+          if (!u) return null; const aba = [...document.querySelectorAll('[data-tk-patch]')].find(b => b.textContent.trim() === 'Patch ' + u.patch); if (aba) aba.click();
           const sl = Object.keys(u.detalhe).find(k => u.detalhe[k].some(x => x[0] === 'habilidades')); if (!sl) return null;
           const c = document.querySelector('.tk-cartaz[data-slug="' + sl + '"]'); c.click();
           const det = c.querySelector('.tk-detalhe'), vis = getComputedStyle(det).display !== 'none';
