@@ -3354,6 +3354,18 @@ body.nucleo .grid::before {
 .attr-order-btn:hover { border-color: var(--loja-cera); color: var(--loja-cera); }
 .attr-order-btn.active { background: var(--loja-cera); border-color: var(--loja-cera-borda); color: var(--loja-cera-texto); }
 
+/* ---- F13-T126: "Escala com" dentro do grupo Atributo ---- */
+.escala { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--loja-tinta-suave); }
+.filter-group.collapsed .escala { display: none; }
+.escala-titulo { font-family: var(--loja-titulos); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--loja-tinta-suave); margin-bottom: 6px; }
+.escala-titulo small { text-transform: none; letter-spacing: 0; font-style: italic; }
+.escala-bases:empty { display: none; }
+.escala-bases { margin-top: 6px; display: grid; gap: 4px; }
+.escala-base-linha { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.escala-base-rotulo { font: italic 12px var(--loja-texto); color: var(--loja-tinta-suave); margin-right: 2px; }
+.chip.chip-base { font-size: 11.5px; padding: 2px 8px; }
+.escala-nota { margin: 6px 0 0; font: italic 11.5px/1.35 var(--loja-texto); color: var(--loja-tinta-suave); }
+
 /* ---- T5: modal do item = pergaminho (textura 03) ---- */
 .overlay { background: rgba(12,8,4,.78); backdrop-filter: blur(2px); }
 .modal {
@@ -4667,6 +4679,7 @@ body:not(.editando) .build-totals.show { display: none; }
   box-shadow: 0 0 8px var(--forja-brasa-glow), 0 1px 2px rgba(0,0,0,.6); }
 /* o pulso é um halo por cima que só muda a opacidade (anda na placa de vídeo): a sombra animada repintava a
    página a cada quadro, até por trás da entrada — o roteiro mediu 80% da thread principal parada */
+.novidade.na-linha { position: relative; top: -1px; right: auto; margin-left: 8px; display: inline-block; }
 .novidade::after { content: ""; position: absolute; inset: -3px; border-radius: inherit; box-shadow: 0 0 12px 2px var(--forja-brasa-glow);
   opacity: 0; animation: novidade-pulsa 2.4s ease-in-out infinite; }
 @keyframes novidade-pulsa { 50% { opacity: 1; } }
@@ -10293,10 +10306,9 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4z"/><path d="M6 4a2 2 0 0 0-2 2v2h2M9 9h7M9 12h7M9 15h5"/></svg>
         <span class="nb-num" data-atualizacao></span>
       </button>
-      <!-- F13-T114: o Update Tracker — o quadro de cartazes do que mudou nos itens (e o balão "Novidade", a adição mais recente) -->
+      <!-- F13-T114: o Update Tracker — o quadro de cartazes do que mudou nos itens -->
       <button type="button" id="tracker-btn" class="som-btn tracker-btn" aria-label="Update Tracker — o que mudou nos itens" aria-haspopup="dialog" aria-expanded="false" title="Update Tracker — o que mudou nos itens, patch a patch">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 3.5l14 .8-.6 16.2-13.8-.7z"/><circle cx="8" cy="6" r=".9" fill="currentColor"/><circle cx="16" cy="6.4" r=".9" fill="currentColor"/><path d="M8 9.4h8M9.6 12.2h4.8M8 17h7.6"/><rect x="10" y="13.6" width="4" height="2" rx=".4"/></svg>
-        <span class="novidade" title="A adição mais recente do Montador">Novidade</span>
       </button>
       <div class="acess-ctl" id="acess-ctl">
         <button type="button" id="acess-btn" class="som-btn" aria-label="Acessibilidade" aria-haspopup="true" aria-expanded="false" title="Acessibilidade">
@@ -11489,7 +11501,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.125";
+const ATUALIZACAO = "13.126";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -18815,6 +18827,9 @@ const state = {
   prices: new Set(),     // faixas de custo (PRICE_BANDS), pelo preço efetivo
   efficiency: new Set(), // faixas de eficiência de ouro (EFF_BANDS)
   stats: new Set(),      // atributos concedidos (attributes[].stat)
+  escala: new Set(),     // F13-T126: "Escala com" — atributo do escalonamento das habilidades (item.scaling, só "seu")
+  escalaBase: {},        // por atributo da escala, as bases marcadas (vazio = todas)
+  ultimoAttr: "",        // o último chip ligado no grupo Atributo (o Maior/Menor usa a escala se foi ela)
   runes: new Set(),      // filtro: "mf-yes"
   applyCashback: false,  // modo de exibição: troca os preços pelos com Reembolso
   applyApex: false,      // modo de exibição: cards mostram o campo apex (status máximos)
@@ -18968,10 +18983,44 @@ const ATRIBUTO_MISTO = new Set((() => {
 })());
 // [parte, valor]: parte 0 = pontos (o valor plano, quando o item tem), 1 = %
 function chaveAtributo(item, stat) {
+  if (ehEscala(stat)) return chaveEscala(item, stat.slice(ESC.length));
   const vs = statValores(item, stat);
   if (!vs.length) return null;
   const plano = vs.find(x => !x.pct);
   return plano ? [0, plano.v] : [1, vs[0].v];
+}
+
+// F13-T126 (Leo, 06/11/2026; dado do Capítulo 1, pendência D5): "Escala com" — o escalonamento das habilidades.
+// Só as linhas do próprio campeão (of "seu"); o item sem o bloco (scaling null) ainda não foi conferido pelo
+// Capítulo 1 e fica de fora do filtro — nunca é tratado como "não escala". A ordem usa o teto da faixa (pctMax).
+const ESC = "escala:";
+const ORDEM_BASE = ["base", "bônus", "total", "máxima", "atual", "perdida"];
+const ESCALA_STATS = (() => {
+  const u = {};
+  CATALOG.items.forEach(it => (it.scaling || []).forEach(x => { if (!x.none && x.of === "seu") (u[x.stat] = u[x.stat] || new Set()).add(x.base); }));
+  return Object.keys(u).sort((a, b) => a.localeCompare(b, "pt-BR"))
+    .map(st => [st, [...u[st]].sort((a, b) => ORDEM_BASE.indexOf(a) - ORDEM_BASE.indexOf(b)), CATALOG.items.filter(it => (it.scaling || []).some(x => !x.none && x.of === "seu" && x.stat === st)).length]);
+})();
+function ehEscala(attr) { return typeof attr === "string" && attr.startsWith(ESC); }
+function rotuloAtributo(attr) { return ehEscala(attr) ? "Escala com " + attr.slice(ESC.length) : attr; }
+function linhasEscala(item, stat) {
+  const bases = state.escala.has(stat) ? (state.escalaBase[stat] || new Set()) : new Set();
+  return (item.scaling || []).filter(x => !x.none && x.of === "seu" && x.stat === stat && (!bases.size || bases.has(x.base)));
+}
+function chaveEscala(item, stat) {
+  const ls = linhasEscala(item, stat);
+  if (!ls.length) return null;
+  const pc = ls.filter(x => x.percent);
+  // a porcentagem primeiro; a faixa sem % (Escudo de Doran: 0–5 de Regeneração) vai depois, nas duas direções
+  return pc.length ? [0, Math.max(...pc.map(x => x.pctMax))] : [1, Math.max(...ls.map(x => x.pctMax))];
+}
+// O atributo do Maior/Menor: a escala, se foi o último chip ligado; senão o primeiro atributo; senão a primeira escala.
+function atributoDaOrdem() {
+  if (ehEscala(state.ultimoAttr) && state.escala.has(state.ultimoAttr.slice(ESC.length))) return state.ultimoAttr;
+  const st = [...state.stats][0];
+  if (st) return st;
+  const es = [...state.escala][0];
+  return es ? ESC + es : "";
 }
 
 // Elegibilidade de runa, derivada do JSON.
@@ -19100,7 +19149,7 @@ function refreshGroupCounts() {
     if (!badge) return;
     const n = key === "runes"
       ? state.runes.size + (state.applyCashback ? 1 : 0) + (state.applyApex ? 1 : 0)
-      : (state[key] ? state[key].size : 0);
+      : (state[key] ? state[key].size : 0) + (key === "stats" ? state.escala.size : 0);
     badge.textContent = n;
     badge.classList.toggle("show", n > 0);
   });
@@ -19184,6 +19233,13 @@ function buildFilterPanel() {
   groups.forEach(group => {
     const wrap = makeGroupHeader(group.title, group.collapsed);
     wrap.dataset.group = group.key;
+    if (group.key === "stats" && ESCALA_STATS.length) {   // F13-T126: o balão da adição mais recente ("Escala com")
+      const nov = document.createElement("span");
+      nov.className = "novidade na-linha";
+      nov.title = "A adição mais recente do Montador: Escala com";
+      nov.textContent = "Novidade";
+      wrap.querySelector(".filter-group-title > span").after(nov);
+    }
     const list = document.createElement("div");
     list.className = "chip-list";
     group.options.forEach(opt => {
@@ -19197,6 +19253,7 @@ function buildFilterPanel() {
       list.appendChild(chip);
     });
     wrap.appendChild(list);
+    if (group.key === "stats" && ESCALA_STATS.length) wrap.appendChild(montarEscala());
     // Grupo Atributo: "Maior primeiro / Menor primeiro" ordena pelo atributo marcado.
     if (group.attrOrder) {
       const row = document.createElement("div");
@@ -19218,6 +19275,83 @@ function buildFilterPanel() {
   refreshGroupCounts();
 }
 
+// F13-T126: o bloco "Escala com" do grupo Atributo — um chip por atributo que alguma habilidade escala
+// (do catálogo); o chip ligado abre as bases dele ("todas" é o padrão).
+function montarEscala() {
+  const box = document.createElement("div");
+  box.className = "escala";
+  const conferidos = CATALOG.items.filter(it => Array.isArray(it.scaling)).length;
+  box.innerHTML = `<div class="escala-titulo">Escala com <small>— nas habilidades</small></div>`;
+  const lista = document.createElement("div");
+  lista.className = "chip-list";
+  ESCALA_STATS.forEach(([stat, , n]) => {
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.type = "button";
+    chip.textContent = stat;
+    chip.title = `${n} ${n === 1 ? "item escala" : "itens escalam"} com ${stat}`;
+    chip.dataset.group = "escala";
+    chip.dataset.value = stat;
+    chip.addEventListener("click", () => toggleEscala(stat, chip));
+    lista.appendChild(chip);
+  });
+  box.appendChild(lista);
+  const bases = document.createElement("div");
+  bases.className = "escala-bases";
+  box.appendChild(bases);
+  const nota = document.createElement("p");
+  nota.className = "escala-nota";
+  nota.textContent = `${conferidos} de ${CATALOG.items.length} itens conferidos pelo Capítulo 1; os outros ficam de fora deste filtro até serem conferidos.`;
+  box.appendChild(nota);
+  return box;
+}
+
+function atualizarEscalaBases() {
+  const box = document.querySelector(".escala-bases");
+  if (!box) return;
+  box.innerHTML = "";
+  [...state.escala].forEach(stat => {
+    const bs = (ESCALA_STATS.find(e => e[0] === stat) || [null, []])[1];
+    const marcadas = state.escalaBase[stat] || new Set();
+    const linha = document.createElement("div");
+    linha.className = "escala-base-linha";
+    linha.innerHTML = `<span class="escala-base-rotulo">${stat}:</span>`;
+    [["", "todas"]].concat(bs.map(b => [b, b])).forEach(([v, rot]) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip chip-base" + ((v ? marcadas.has(v) : !marcadas.size) ? " active" : "");
+      b.textContent = rot;
+      b.dataset.escalaStat = stat;
+      b.dataset.base = v;
+      b.addEventListener("click", () => {
+        Som.play("catalog:tag_select");
+        if (!v) marcadas.clear();
+        else if (marcadas.has(v)) marcadas.delete(v);
+        else marcadas.add(v);
+        state.escalaBase[stat] = marcadas;
+        atualizarEscalaBases();
+        updateClearButton();
+        render();
+      });
+      linha.appendChild(b);
+    });
+    box.appendChild(linha);
+  });
+}
+
+function toggleEscala(stat, chip) {
+  Som.play("catalog:tag_select");
+  if (state.escala.has(stat)) { state.escala.delete(stat); delete state.escalaBase[stat]; chip.classList.remove("active"); }
+  else { state.escala.add(stat); chip.classList.add("active"); state.ultimoAttr = ESC + stat; }
+  if (state.sort === "attr-desc" || state.sort === "attr-asc") {
+    const f = atributoDaOrdem();
+    if (f) { state.sortAttr = f; syncSortControls(); }
+  }
+  atualizarEscalaBases();
+  updateClearButton();
+  render();
+}
+
 // Ordenação pelo atributo marcado no grupo Atributo (primeiro chip ativo).
 // Clicar no botão já ativo volta para Nome A–Z. Mantém o seletor de
 // ordenação do topo sincronizado.
@@ -19227,7 +19361,7 @@ function setAttrOrder(dir) {
     state.sort = "name-asc";
   } else {
     state.sort = want;
-    const first = [...state.stats][0];
+    const first = atributoDaOrdem();
     if (first) state.sortAttr = first;
   }
   syncSortControls();
@@ -19255,7 +19389,8 @@ function toggleFilter(group, value, chipEl) {
     if (group === "effects") Som.play("lojista:efeito_select", { efeito: value });
   }
   if (group === "stats") {
-    const first = [...state.stats][0];
+    if (set.has(value)) state.ultimoAttr = value;
+    const first = atributoDaOrdem();
     if (first && (state.sort === "attr-desc" || state.sort === "attr-asc")) { state.sortAttr = first; syncSortControls(); }
   }
   updateClearButton();
@@ -19266,7 +19401,7 @@ function updateClearButton() {
   const any = state.tiers.size || state.regions.size || state.archetypes.size ||
     state.categories.size || state.effects.size || state.runes.size ||
     state.modes.size || state.damage.size || state.prices.size || state.efficiency.size ||
-    state.stats.size || state.applyCashback || state.applyApex || state.query;
+    state.stats.size || state.escala.size || state.applyCashback || state.applyApex || state.query;
   document.getElementById("clear-filters").classList.toggle("show", !!any);
   refreshGroupCounts();
 }
@@ -19275,6 +19410,8 @@ function clearAllFilters() {
   state.query = "";
   document.getElementById("search-input").value = "";
   ["tiers", "regions", "archetypes", "categories", "effects", "runes", "modes", "damage", "prices", "efficiency", "stats"].forEach(k => state[k].clear());
+  state.escala.clear(); state.escalaBase = {}; state.ultimoAttr = "";
+  atualizarEscalaBases();
   state.classe = "";
   document.querySelectorAll(".class-tab").forEach(b => b.classList.toggle("active", b.dataset.classe === ""));
   if (typeof aplicarNucleo === "function") aplicarNucleo();   // F10-T13: limpar filtros apaga a régua
@@ -19379,6 +19516,7 @@ function itemMatchesFilters(item) {
     if (!EFF_BANDS.some(b => state.efficiency.has(b.value) && b.test(e))) return false;
   }
   if (state.stats.size && !temTodas((item.attributes || []).map(a => a.stat), state.stats)) return false;
+  for (const st of state.escala) if (!linhasEscala(item, st).length) return false;   // F13-T126: A e B, como os atributos
   return true;
 }
 
@@ -19723,6 +19861,14 @@ function renderCard(item, attrSorting) {
     const e = itemEfficiency(item);
     if (e === null) card.classList.add("dimmed");
     sortStatHtml = `<div class="card-sortstat${e === null ? " none" : ""}"><span class="label">Eficiência de ouro:</span> ${fmtEff(e)}</div>`;
+  } else if (attrSorting && ehEscala(state.sortAttr)) {
+    const st = state.sortAttr.slice(ESC.length), ls = linhasEscala(item, st);
+    if (!ls.length) {
+      card.classList.add("dimmed");
+      sortStatHtml = `<div class="card-sortstat none"><span class="label">Escala com ${st}:</span> ${Array.isArray(item.scaling) ? "não escala" : "ainda não conferido"}</div>`;
+    } else {
+      sortStatHtml = `<div class="card-sortstat"><span class="label">Escala com ${st}:</span> ${ls.map(x => `${x.pct} ${x.base}`).join(" · ")}</div>`;
+    }
   } else if (attrSorting) {
     const vs = statValores(item, state.sortAttr);
     if (!vs.length) {
@@ -19809,14 +19955,15 @@ function groupLabelFn(list) {
     case "attr-desc": {
       if (!state.sortAttr) return null;
       const chaves = list.map(it => chaveAtributo(it, state.sortAttr)).filter(Boolean);
-      if (!chaves.length) return () => `Nenhum item concede ${state.sortAttr}`;
+      const rot = rotuloAtributo(state.sortAttr), esc = ehEscala(state.sortAttr);
+      if (!chaves.length) return () => esc ? `Nenhum item escala com ${state.sortAttr.slice(ESC.length)}` :`Nenhum item concede ${state.sortAttr}`;
       // F13-T43b: a régua de cada parte é dela (pontos e % não dividem o passo)
       const passo = [0, 1].map(parte => { const vs = chaves.filter(k => k[0] === parte).map(k => k[1]); return vs.length ? niceStep(Math.max(...vs)) : 1; });
       const misto = ATRIBUTO_MISTO.has(state.sortAttr);
       return it => {
         const k = chaveAtributo(it, state.sortAttr);
-        if (k === null) return `Não concede ${state.sortAttr}`;
-        return `${state.sortAttr}${misto ? (k[0] ? " em %" : " em pontos") : ""}: ${bandLabel(k[1], passo[k[0]], k[0] ? "%" : "")}`;
+        if (k === null) return esc ? `Não escala com ${state.sortAttr.slice(ESC.length)}` : `Não concede ${state.sortAttr}`;
+        return `${rot}${misto ? (k[0] ? " em %" : " em pontos") : ""}: ${bandLabel(k[1], passo[k[0]], (esc ? !k[0] : k[0]) ? "%" : "")}`;
       };
     }
 
@@ -23691,6 +23838,17 @@ function init() {
     opt.textContent = `${stat} (${count} itens)`;
     attrSelect.appendChild(opt);
   });
+  if (ESCALA_STATS.length) {   // F13-T126
+    const og = document.createElement("optgroup");
+    og.label = "Escala com (habilidades)";
+    ESCALA_STATS.forEach(([stat, , n]) => {
+      const opt = document.createElement("option");
+      opt.value = ESC + stat;
+      opt.textContent = `Escala com ${stat} (${n} ${n === 1 ? "item" : "itens"})`;
+      og.appendChild(opt);
+    });
+    attrSelect.appendChild(og);
+  }
   state.sortAttr = ALL_STATS.length ? ALL_STATS[0][0] : "";
   attrSelect.value = state.sortAttr;
   attrSelect.addEventListener("change", (e) => {

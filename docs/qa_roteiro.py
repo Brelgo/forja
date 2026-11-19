@@ -664,6 +664,59 @@ def checar_fundacao(s, p):
     p.conta("fundação", "entrar na loja não gera erro", not s.erros, "; ".join(s.erros[:2]))
 
 
+def checar_escala_com(s, p):
+    """F13-T126 (Leo, 06/11/2026; o dado é do Capítulo 1, pendência D5): "Escala com" no grupo Atributo —
+    os chips vêm do item.scaling (só "seu"); o item sem o bloco fica de fora; a base filtra; o Maior/Menor
+    ordena pela porcentagem (o teto da faixa), a faixa sem % depois; limpar desfaz. Cliques de verdade."""
+    quer = s.js("""(() => { const u = {};
+      CATALOG.items.forEach(it => (it.scaling || []).forEach(x => { if (!x.none && x.of === 'seu') (u[x.stat] = u[x.stat] || new Set()).add(it.slug); }));
+      return { stats: Object.keys(u).sort((a, b) => a.localeCompare(b, 'pt-BR')), vida: [...(u['Vida'] || [])].sort(),
+               conferidos: CATALOG.items.filter(i => Array.isArray(i.scaling)).length, total: CATALOG.items.length }; })()""")
+    tela = s.js("""(() => { const g = document.querySelector('.filter-group[data-group="stats"]');
+      const n = [...document.querySelectorAll('.novidade')];
+      return { chips: [...g.querySelectorAll('.escala .chip[data-group="escala"]')].map(c => c.dataset.value),
+               nota: (g.querySelector('.escala-nota') || {}).textContent || '',
+               nov: n.length, novAqui: n.length === 1 && !!n[0].closest('.filter-group[data-group="stats"] .filter-group-title'),
+               novVis: n.length === 1 && n[0].getBoundingClientRect().width > 0 }; })()""")
+    p.conta("catálogo", "Escala com: um chip por atributo que alguma habilidade escala (do catálogo, só as linhas \"seu\"); a nota diz quantos itens o Capítulo 1 já conferiu; o balão \"Novidade\" é um só, no título do grupo Atributo, visível",
+            tela["chips"] == quer["stats"] and tela["nota"].startswith("%d de %d itens conferidos" % (quer["conferidos"], quer["total"]))
+            and tela["nov"] == 1 and tela["novAqui"] and tela["novVis"], "%s · quer %s" % (tela, quer["stats"]))
+    s.js("""(() => { const g = document.querySelector('.filter-group[data-group="stats"]'); if (g.classList.contains('collapsed')) g.querySelector('.filter-group-title').click();
+      g.querySelector('.escala').scrollIntoView({ block: 'center' }); return 1; })()""")
+    time.sleep(0.3)
+    le = """(() => { const cards = [...document.querySelectorAll('#grid .card')];
+      return { slugs: cards.map(c => c.dataset.slug || c.dataset.id).sort(), ordem: cards.map(c => c.dataset.slug || c.dataset.id),
+               linhas: cards.map(c => (c.querySelector('.card-sortstat') || {}).textContent || ''),
+               bases: [...document.querySelectorAll('.escala-bases .chip')].map(b => b.textContent + (b.classList.contains('active') ? '*' : '')),
+               conta: (document.querySelector('.filter-group[data-group="stats"] .active-count') || {}).textContent,
+               sel: document.getElementById('sort-attr-select').value }; })()"""
+    s.clicar('.escala .chip[data-value="Vida"]', 0.6)
+    a = s.js(le)
+    s.clicar('.attr-order-btn[data-dir="desc"]', 0.6)
+    b = s.js(le)
+    teto = s.js("""(() => { const k = (it) => { const l = it.scaling.filter(x => !x.none && x.of === 'seu' && x.stat === 'Vida'), pc = l.filter(x => x.percent);
+        return pc.length ? [0, Math.max(...pc.map(x => x.pctMax))] : [1, Math.max(...l.map(x => x.pctMax))]; };
+      return %s.map(sl => byId[sl]).sort((a, b) => k(a)[0] - k(b)[0] || k(b)[1] - k(a)[1] || a.namePt.localeCompare(b.namePt, 'pt-BR')).map(i => i.slug); })()""" % json.dumps(quer["vida"]))
+    s.clicar('.escala-bases .chip[data-base="bônus"]', 0.6)
+    c = s.js(le)
+    bonus = s.js("""CATALOG.items.filter(it => (it.scaling || []).some(x => !x.none && x.of === 'seu' && x.stat === 'Vida' && x.base === 'bônus')).map(i => i.slug).sort()""")
+    s.clicar("#clear-filters", 0.6)
+    d = s.js(le)
+    estado = s.js("({ escala: state.escala.size, sort: state.sort, bases: Object.keys(state.escalaBase).length })")
+    p.conta("catálogo", "Escala com Vida: só os itens com habilidade que escala com a Vida (o sem bloco fica de fora); a linha de bases abre com \"todas\"",
+            a["slugs"] == quer["vida"] and a["bases"][0] == "todas*" and len(a["bases"]) > 1 and a["conta"] == "1",
+            "%d itens · bases %s · quer %d" % (len(a["slugs"]), a["bases"], len(quer["vida"])))
+    p.conta("catálogo", "Maior primeiro pela escala: a maior porcentagem (o teto da faixa) primeiro, a faixa sem % por último; o card diz a escala e a base; o seletor do topo acompanha",
+            b["ordem"] == teto and b["sel"] == "escala:Vida" and all(l.startswith("Escala com Vida: ") for l in b["linhas"]),
+            "ordem %s · quer %s · %s" % (b["ordem"][:4], teto[:4], b["linhas"][:2]))
+    p.conta("catálogo", "a base filtra: \"bônus\" deixa só quem escala com a Vida bônus; Limpar filtros desfaz tudo",
+            c["slugs"] == bonus and "bônus*" in c["bases"] and "todas" in c["bases"] and len(d["slugs"]) == 225 and d["bases"] == []
+            and estado["escala"] == 0 and estado["bases"] == 0,
+            "bônus %d (quer %d) · depois de limpar %d cards, estado %s" % (len(c["slugs"]), len(bonus), len(d["slugs"]), estado))
+    s.js("(() => { state.sort = 'tier'; syncSortControls(); render(); window.scrollTo(0, 0); return 1; })()")
+    time.sleep(0.4)
+
+
 def checar_catalogo(s, p):
     print("\n%sCATÁLOGO%s" % (AMARELO, FIM))
     n = s.js("document.querySelectorAll('#grid .card').length")
@@ -677,6 +730,8 @@ def checar_catalogo(s, p):
     s.js("""(() => { const c = document.getElementById('search-input'); c.value = '';
             c.dispatchEvent(new Event('input', {bubbles: true})); })()""")
     time.sleep(0.6)
+
+    checar_escala_com(s, p)
 
     s.clicar(".class-tab[data-classe='AD']", 0.8)
     estado = s.js("""(() => { const o = document.getElementById('oficina');
@@ -8272,8 +8327,8 @@ def checar_mesa(s, p):
         a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')];
           return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
                    aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
-                   ondeNov: n.map(x => x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : (x.parentElement.id || '?')),
-                   novTxt: n.map(x => x.textContent.trim()), novVis: n.every(x => x.getBoundingClientRect().width > 0),
+                   ondeNov: n.map(x => x.closest('[data-group]') ? x.closest('[data-group]').dataset.group : x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : (x.parentElement.id || '?')),
+                   novTxt: n.map(x => x.textContent.trim()),
                    dona: document.getElementById('mesa-dona').textContent.trim(), nome: build.name,
                    src: document.getElementById('mesa-img').src, patch: CATALOG.meta.patch, w: document.getElementById('mesa-img').naturalWidth }; })()""")
         modos = s.js("[...document.getElementById('build-mode').options].map(o => o.value)")
@@ -8291,8 +8346,8 @@ def checar_mesa(s, p):
         s.js(abre_mapa)
         time.sleep(0.5)
         j = janela()
-        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no Update Tracker (a adição mais recente); a linha diz que o plano é da mesa, à parte das builds (F13-T119; a de ARAM não muda nada); o minimapa de hoje (assets/mapa, F13-T113), numa janela quadrada",
-                a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["tracker-btn"] and a["novTxt"] == ["Novidade"] and a["novVis"]
+        p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no grupo Atributo (a adição mais recente: Escala com, F13-T126); a linha diz que o plano é da mesa, à parte das builds (F13-T119; a de ARAM não muda nada); o minimapa de hoje (assets/mapa, F13-T113), numa janela quadrada",
+                a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["stats"] and a["novTxt"] == ["Novidade"]
                 and "à parte das builds" in a["dona"] and dona_aram == a["dona"]
                 and a["src"].endswith("/assets/mapa/base_baron1.png") and a["w"] > 0 and abs(j["w"] - j["h"]) < 1.5,
                 "%s · ARAM: %s · janela %s" % (a, dona_aram, j))
