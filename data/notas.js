@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "19/11/2026",
+   "add": [],
+   "aj": [
+    "a conferência automática das duas abas não falha mais à toa quando o computador está ocupado"
+   ],
+   "rem": []
+  },
+  {
    "data": "11/11/2026",
    "add": [],
    "aj": [

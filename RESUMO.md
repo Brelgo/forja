@@ -1,4 +1,4 @@
-# Resumo — a Forja em uma página (11/11/2026)
+# Resumo — a Forja em uma página (19/11/2026)
 
 Para começar uma sessão com pouco uso: ler o CLAUDE.md e **este arquivo**. O CHECKPOINT.md (≈320 mil caracteres) é o
 histórico completo; leia só a seção que a tarefa pedir (procure pelo número `F13-T…` ou pela palavra).
@@ -28,8 +28,8 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| **primeiro** | **O grupo "duas abas" da QA falha às vezes** (2 de 3 no código da T113; os testes do 16.22.1 já foram consertados em 07/11). Diário na aba antes de teorizar | 2–3% |
-| quando o Cap. 1 entregar | **Filtro "Escala com"** (PdH, DdA, Vida, Mana, Armadura, RM) no grupo Atributo, com Maior/Menor pela porcentagem. Com a base (base · bônus · total · máxima) à vista e filtrável. Espera a **D5** de `docs/pendencias_capitulo1.md` (Leo, 06/11/2026: adição ao Capítulo 1, não leitura do texto) | 2–3% |
+| **primeiro** | **Puxar o Catálogo de 19/11** (patch 16.23.1, sem valor mudado; + bloco `Escalonamento[` em 52 itens, lotes D5 piloto e D5-1a; + rótulo `Limiar de 100%:` em 10 itens). O gerador passa a ler os dois campos novos: **muda o esquema, pede o aprovado do Leo**. Entregas em `Claude Projects/Capitulo 1/Catalogo_LoL_Capitulo1/docs/Entrega_ao_Capitulo2_2026-11-19*.md` (md5 `07ecb41c…`) | 3–5% |
+| depois | **Filtro "Escala com"** (PdH, DdA, Vida, Mana, Armadura, RM) no grupo Atributo, só linhas `seu`, Maior/Menor pela porcentagem (faixa: regra própria, ex. o teto). Base à vista e filtrável. Item sem bloco = "não conferido", nunca "não escala" (o Cap. 1 ainda faz D5-1b e D5-2) | 2–3% |
 | depois | **Planos de mapa** (desde a T119 há um plano só, no navegador; tirar o `mapa` que as builds antigas ainda guardam; biblioteca própria Minhas/Publicadas, tabela própria no Supabase, link próprio; só a Selva liga com build) | grande |
 | depois | Calculadora de armadura · app instalável (PWA) · "Mandar para o jogo" · overlay (para pensar) | — |
 | depende | Capítulos de dado 1.1–1.4 (campeões, Bestiário, Gerador) e a calculadora de monstros épicos | — |
