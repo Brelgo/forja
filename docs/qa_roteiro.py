@@ -193,6 +193,7 @@ class Sessao:
         import tempfile
         # perfil próprio: dois Chromes no mesmo user-data-dir e o segundo não sobe
         perfil = tempfile.mkdtemp(prefix="qa-montador-")
+        self.perfil = perfil   # apagado no fechar: 3.209 sobras na Temp travaram o logon do Windows por 11 min (19/11)
         self.proc = subprocess.Popen(
             [chrome, "--headless=new", "--mute-audio", "--remote-debugging-port=%d" % porta, "--user-data-dir=" + perfil,
              "--window-size=1920,1080", "--no-first-run", "--hide-scrollbars", "about:blank"],
@@ -234,8 +235,17 @@ class Sessao:
         self.envia("Page.addScriptToEvaluateOnNewDocument", {"source": Sessao.BARREIRA})
 
     def fechar(self):
-        try: self.proc.kill()
+        try:
+            self.proc.kill(); self.proc.wait(timeout=10)
         except Exception: pass
+        perfil, self.perfil = getattr(self, "perfil", None), None
+        if perfil:
+            import shutil
+            for _ in range(5):                 # os processos filhos do Chrome soltam os arquivos com atraso
+                shutil.rmtree(perfil, ignore_errors=True)
+                if not os.path.exists(perfil):
+                    break
+                time.sleep(0.5)
 
     def nova_aba(self):
         """Uma segunda aba no MESMO Chrome — mesmo perfil, mesmo localStorage, e o
@@ -3342,10 +3352,19 @@ def checar_abas(s, p):
         b.clicar(carta(lend[1]), 0.6)
         f1 = {"faixa": texto_rem(b), "item": s.js("!!findInBuild(%r)" % lend[1]), "dialogo": s.js("!document.getElementById('save-dialog').hidden")}
         s.js("(() => { fecharPerguntaDeSaida(); descartarAlteracoes(); return 'ok'; })()")
-        # (g) a build trocou na dona entre o espelho e o clique: o pedido não vale para a outra build
-        b.js("(() => { remota.aviso = null; canalRemoto.postMessage({ tipo: 'pedido', de: remota.id, build: 'outra-build', em: Date.now(), acao: 'editar', on: false }); return 1; })()")
-        time.sleep(0.6)
+        # (g) a build trocou na dona entre o espelho e o clique: o pedido não vale para a outra build.
+        # Com a máquina carregada, a dona pode estar ocupada e responder "chegou atrasado… Clique de novo"
+        # (o diário da F13-T124 viu o pedido chegar em 2 ms com a máquina livre): o teste faz o que o
+        # recado manda, uma vez só, e guarda o primeiro recado no detalhe. Atrasado duas vezes é falha.
+        outra_build = "(() => { remota.aviso = null; atualizarFaixaRemota(); canalRemoto.postMessage({ tipo: 'pedido', de: remota.id, build: 'outra-build', em: Date.now(), acao: 'editar', on: false }); return 1; })()"
+        resposta = "/build mudou|chegou atrasado/.test((document.getElementById('remota-texto') || {}).textContent || '')"
+        b.js(outra_build)
+        espera(b, resposta, 3)
         g1 = {"faixa": texto_rem(b), "dona": s.js("build.editing")}
+        if "chegou atrasado" in g1["faixa"]:
+            b.js(outra_build)
+            espera(b, resposta, 3)
+            g1 = {"faixa": texto_rem(b), "dona": s.js("build.editing"), "na 1ª": "chegou atrasado"}
         # (h) a dona não responde (uma versão velha da página, por exemplo): o recado diz depois de 3 s
         s.js("(() => { window.__onm = canalRemoto.onmessage; canalRemoto.onmessage = (e) => { if (e.data && e.data.tipo !== 'pedido') window.__onm(e); }; return 'ok'; })()")
         b.js("(() => { remota.aviso = null; const s = document.getElementById('catalog-cat-select'); s.value = %r; s.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % cats[2])
