@@ -2143,6 +2143,13 @@ select.sort-select, .sort-attr-wrap select {
 /* ---- Contagem e cabeçalhos de grupo: escritos na madeira ---- */
 .grid-meta { color: var(--loja-legenda); font-family: var(--loja-texto); font-style: italic; font-size: 14px; }
 .grid-meta b { color: var(--loja-titulo); }
+.grid-meta .nc-fora { color: #e8957a; }   /* a cera, clareada para ler na madeira */
+.grid-meta .nc-btn { margin-left: 10px; padding: 1px 10px; font: 600 12.5px/1.6 var(--loja-texto); font-style: normal; color: var(--loja-titulo);
+  background: rgba(0,0,0,.22); border: 1px solid rgba(217,192,138,.5); border-radius: 3px; cursor: pointer; }
+.grid-meta .nc-btn:hover { background: rgba(217,192,138,.16); border-color: var(--loja-rotulo); }
+.grid-meta .nc-btn[aria-pressed="true"] { background: rgba(141,44,34,.45); border-color: #e8957a; }
+.group-head.nc-head { border-bottom-color: rgba(232,149,122,.45); }
+.group-head.nc-head .g-label { color: #e8957a; }
 .group-head { border-bottom: 1px solid rgba(217,192,138,.25); }
 .group-head .g-label { font-family: var(--loja-gravado); color: var(--loja-rotulo); letter-spacing: .2em; }
 .group-head .g-count { color: var(--loja-legenda); font-family: var(--loja-texto); font-style: italic; font-size: 12px; }
@@ -11507,7 +11514,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.127";
+const ATUALIZACAO = "13.128";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -18835,6 +18842,7 @@ const state = {
   stats: new Set(),      // atributos concedidos (attributes[].stat)
   escala: new Set(),     // F13-T126: "Escala com" — atributo do escalonamento das habilidades (item.scaling, só "seu")
   escalaBase: {},        // por atributo da escala, as bases marcadas (vazio = todas)
+  verNaoConf: false,     // F13-T128: com "Escala com" marcado, mostrar no fim os itens que o Capítulo 1 ainda não conferiu
   ultimoAttr: "",        // o último chip ligado no grupo Atributo (o Maior/Menor usa a escala se foi ela)
   runes: new Set(),      // filtro: "mf-yes"
   applyCashback: false,  // modo de exibição: troca os preços pelos com Reembolso
@@ -19416,7 +19424,7 @@ function clearAllFilters() {
   state.query = "";
   document.getElementById("search-input").value = "";
   ["tiers", "regions", "archetypes", "categories", "effects", "runes", "modes", "damage", "prices", "efficiency", "stats"].forEach(k => state[k].clear());
-  state.escala.clear(); state.escalaBase = {}; state.ultimoAttr = "";
+  state.escala.clear(); state.escalaBase = {}; state.ultimoAttr = ""; state.verNaoConf = false;
   atualizarEscalaBases();
   state.classe = "";
   document.querySelectorAll(".class-tab").forEach(b => b.classList.toggle("active", b.dataset.classe === ""));
@@ -19503,7 +19511,7 @@ function temTodas(valores, marcadas) {
   return true;
 }
 
-function itemMatchesFilters(item) {
+function itemMatchesFilters(item, semEscala) {
   if (!itemInClass(item, state.classe)) return false;
   if (state.modes.size && !temTodas(item.gameModes || [], state.modes)) return false;
   if (state.tiers.size && !state.tiers.has(item.tier)) return false;
@@ -19522,9 +19530,18 @@ function itemMatchesFilters(item) {
     if (!EFF_BANDS.some(b => state.efficiency.has(b.value) && b.test(e))) return false;
   }
   if (state.stats.size && !temTodas((item.attributes || []).map(a => a.stat), state.stats)) return false;
-  for (const st of state.escala) if (!linhasEscala(item, st).length) return false;   // F13-T126: A e B, como os atributos
+  if (!semEscala) for (const st of state.escala) if (!linhasEscala(item, st).length) return false;   // F13-T126: A e B, como os atributos
   return true;
 }
+
+// F13-T128 (pedido do Capítulo 1, 19/11/2026: o Leo achou que tinham sumido itens): com "Escala com" marcado,
+// os itens que passariam por todo o resto e ficaram de fora só porque o Capítulo 1 ainda não conferiu a escala.
+function naoConferidosFora() {
+  if (!state.escala.size) return [];
+  return CATALOG.items.filter(it => !Array.isArray(it.scaling) && itemMatchesQuery(it, state.query) && itemMatchesFilters(it, true))
+    .sort((a, b) => a.namePt.localeCompare(b.namePt, "pt-BR"));
+}
+const NAO_CONF_ROTULO = "Ainda não conferidos pelo Capítulo 1";
 
 function getFilteredSorted() {
   let list = CATALOG.items.filter(it => itemMatchesQuery(it, state.query) && itemMatchesFilters(it));
@@ -19557,7 +19574,10 @@ function getFilteredSorted() {
         const ka = chaveAtributo(a, state.sortAttr);
         const kb = chaveAtributo(b, state.sortAttr);
         // Itens que não concedem o atributo vão sempre para o fim, nas duas direções.
-        if (ka === null && kb === null) return a.namePt.localeCompare(b.namePt, "pt-BR");
+        if (ka === null && kb === null) {
+          const ca = ehEscala(state.sortAttr) && !Array.isArray(a.scaling), cb = ehEscala(state.sortAttr) && !Array.isArray(b.scaling);
+          return ca - cb || a.namePt.localeCompare(b.namePt, "pt-BR");   // F13-T128: o não conferido por último
+        }
         if (ka === null) return 1;
         if (kb === null) return -1;
         // F13-T43b: primeiro os pontos, depois a % — nas duas direções
@@ -19968,6 +19988,7 @@ function groupLabelFn(list) {
       const misto = ATRIBUTO_MISTO.has(state.sortAttr);
       return it => {
         const k = chaveAtributo(it, state.sortAttr);
+        if (k === null && esc && !Array.isArray(it.scaling)) return NAO_CONF_ROTULO;   // F13-T128: nunca "não escala"
         if (k === null) return esc ? `Não escala com ${state.sortAttr.slice(ESC.length)}` : `Não concede ${state.sortAttr}`;
         return `${rot}${misto ? (k[0] ? " em %" : " em pontos") : ""}: ${bandLabel(k[1], passo[k[0]], (esc ? !k[0] : k[0]) ? "%" : "")}`;
       };
@@ -20004,10 +20025,13 @@ function render() {
   const { list, attrSorting } = getFilteredSorted();
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
+  const fora = naoConferidosFora(), verFora = state.verNaoConf && fora.length > 0;
   document.getElementById("result-count").innerHTML =
-    `<b>${list.length}</b> de ${CATALOG.items.length} itens`;
+    `<b>${list.length}</b> de ${CATALOG.items.length} itens`
+    + (fora.length ? `<span class="nc-fora"> · ${fora.length} ainda não ${fora.length === 1 ? "conferido" : "conferidos"} pelo Capítulo 1</span>`
+      + `<button type="button" class="nc-btn" id="nc-btn" aria-pressed="${verFora}">${verFora ? "esconder" : "mostrar"} os não conferidos</button>` : "");
 
-  if (!list.length) {
+  if (!list.length && !verFora) {
     grid.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -20021,6 +20045,7 @@ function render() {
 
   if (!labelOf) {
     list.forEach(it => frag.appendChild(renderCard(it, attrSorting)));
+    if (verFora) anexarNaoConferidos(frag, fora, attrSorting);
     grid.appendChild(frag);
     return;
   }
@@ -20037,7 +20062,26 @@ function render() {
     frag.appendChild(groupHead(g.label, g.items.length));
     g.items.forEach(it => frag.appendChild(renderCard(it, attrSorting)));
   });
+  if (verFora) anexarNaoConferidos(frag, fora, attrSorting);
   grid.appendChild(frag);
+}
+
+// F13-T128: o grupo dos não conferidos, no fim da lista; o card diz "Escala com X: ainda não conferido"
+function anexarNaoConferidos(frag, fora, attrSorting) {
+  const head = groupHead(NAO_CONF_ROTULO, fora.length);
+  head.classList.add("nc-head");
+  frag.appendChild(head);
+  const rot = `Escala com ${[...state.escala].join(" e ")}:`;
+  fora.forEach(it => {
+    const card = renderCard(it, attrSorting);
+    card.classList.remove("dimmed");
+    card.classList.add("nao-conferido");
+    const velho = card.querySelector(".card-sortstat");
+    if (velho) velho.remove();
+    card.querySelector(".card-full").insertAdjacentHTML("beforebegin",
+      `<div class="card-sortstat none"><span class="label">${rot}</span> ainda não conferido</div>`);
+    frag.appendChild(card);
+  });
 }
 
 // ---------------- Animação de clique por tier (Fase 2, T9) ----------------
@@ -23883,6 +23927,12 @@ function init() {
   });
 
   document.getElementById("clear-filters").addEventListener("click", clearAllFilters);
+  document.getElementById("result-count").addEventListener("click", (e) => {   // F13-T128
+    if (!e.target.closest("#nc-btn")) return;
+    state.verNaoConf = !state.verNaoConf;
+    render();
+    if (state.verNaoConf) { const h = document.querySelector("#grid .nc-head"); if (h) h.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  });
 
   document.getElementById("overlay").addEventListener("click", (e) => {
     if (e.target.id === "overlay") closeModal();

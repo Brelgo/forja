@@ -692,6 +692,28 @@ def checar_escala_com(s, p):
                sel: document.getElementById('sort-attr-select').value }; })()"""
     s.clicar('.escala .chip[data-value="Vida"]', 0.6)
     a = s.js(le)
+    # F13-T128 (pedido do Capítulo 1): a contagem diz quem ficou de fora; o botão mostra o grupo no fim; de novo esconde
+    lenc = """(() => { const nc = [...document.querySelectorAll('#grid .card.nao-conferido')], hs = [...document.querySelectorAll('#grid .group-head')];
+      return { conta: document.getElementById('result-count').textContent, btn: (document.getElementById('nc-btn') || {}).textContent || '',
+               nc: nc.map(c => c.dataset.slug || c.dataset.id).sort(), ncLinhas: [...new Set(nc.map(c => (c.querySelector('.card-sortstat') || {}).textContent))],
+               ultimo: hs.length ? hs[hs.length - 1].querySelector('.g-label').textContent : '',
+               depois: (() => { const h = document.querySelector('#grid .nc-head'); if (!h) return -1; let n = 0, el = h.nextElementSibling; while (el) { if (el.classList.contains('card') && !el.classList.contains('nao-conferido')) n++; el = el.nextElementSibling; } return n; })(),
+               cards: document.querySelectorAll('#grid .card').length }; })()"""
+    semConf = s.js("CATALOG.items.filter(i => !Array.isArray(i.scaling)).map(i => i.slug).sort()")
+    n0 = s.js(lenc)
+    s.clicar('#nc-btn', 0.8)
+    n1 = s.js(lenc)
+    s.js("window.scrollTo(0, 0)")
+    time.sleep(0.3)
+    s.clicar('#nc-btn', 0.6)
+    n2 = s.js(lenc)
+    p.conta("catálogo", "os não conferidos no Escala com (F13-T128): a contagem diz quantos ficaram de fora; o botão acrescenta no fim o grupo deles, com \"Escala com Vida: ainda não conferido\"; de novo, esconde",
+            n0["conta"].startswith("%d de 225 itens · %d ainda não conferidos pelo Capítulo 1" % (len(quer["vida"]), len(semConf))) and n0["nc"] == []
+            and n0["btn"] == "mostrar os não conferidos"
+            and n1["nc"] == semConf and n1["ncLinhas"] == ["Escala com Vida: ainda não conferido"] and n1["ultimo"] == "Ainda não conferidos pelo Capítulo 1"
+            and n1["depois"] == 0 and n1["cards"] == len(quer["vida"]) + len(semConf) and n1["btn"] == "esconder os não conferidos"
+            and n2["nc"] == [] and n2["cards"] == len(quer["vida"]) and n2["btn"] == "mostrar os não conferidos",
+            "antes %s · mostrando %d (quer %d), linhas %s, último %r · escondido %d cards" % (n0["conta"], len(n1["nc"]), len(semConf), n1["ncLinhas"], n1["ultimo"], n2["cards"]))
     s.clicar('.attr-order-btn[data-dir="desc"]', 0.6)
     b = s.js(le)
     teto = s.js("""(() => { const k = (it) => { const l = it.scaling.filter(x => !x.none && x.of === 'seu' && x.stat === 'Vida'), pc = l.filter(x => x.percent);
@@ -713,7 +735,18 @@ def checar_escala_com(s, p):
             c["slugs"] == bonus and "bônus*" in c["bases"] and "todas" in c["bases"] and len(d["slugs"]) == 225 and d["bases"] == []
             and estado["escala"] == 0 and estado["bases"] == 0,
             "bônus %d (quer %d) · depois de limpar %d cards, estado %s" % (len(c["slugs"]), len(bonus), len(d["slugs"]), estado))
-    s.js("(() => { state.sort = 'tier'; syncSortControls(); render(); window.scrollTo(0, 0); return 1; })()")
+    # F13-T128: ordenar por "Escala com Vida" sem o chip — o conferido sem escala no "Não escala", o não conferido no grupo dele, por último
+    gs = s.js("""(() => { state.sort = 'attr-desc'; state.sortAttr = 'escala:Vida'; syncSortControls(); render();
+      const by = Object.fromEntries(CATALOG.items.map(i => [i.slug, i])), gr = []; let g = null;
+      document.querySelectorAll('#grid > *').forEach(el => { if (el.classList.contains('group-head')) { g = { l: el.querySelector('.g-label').textContent, conf: 0, nao: 0 }; gr.push(g); }
+        else if (el.classList.contains('card') && g) { if (Array.isArray(by[el.dataset.slug || el.dataset.id].scaling)) g.conf++; else g.nao++; } });
+      return gr; })()""")
+    nao_esc = [g for g in gs if g["l"] == "Não escala com Vida"]
+    p.conta("catálogo", "ordenar por Escala com Vida sem o chip: o \"Não escala\" só tem conferido; o não conferido fica no grupo dele, por último (F13-T128)",
+            len(nao_esc) == 1 and nao_esc[0]["nao"] == 0 and gs[-1]["l"] == "Ainda não conferidos pelo Capítulo 1" and gs[-1]["conf"] == 0
+            and gs[-1]["nao"] == len(semConf),
+            "%s" % [(g["l"], g["conf"], g["nao"]) for g in gs[-3:]])
+    s.js("(() => { state.sort = 'tier'; state.sortAttr = ''; syncSortControls(); render(); window.scrollTo(0, 0); return 1; })()")
     time.sleep(0.4)
 
 
