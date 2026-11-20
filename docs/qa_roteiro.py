@@ -957,6 +957,26 @@ def checar_ficha(s, p):
       return { item: it.namePt, quer: it.costAnalysis.threshold100.raw, tela: linha(it), ja: linha(ja), sem: linha(sem) }; })()""")
     p.conta("ficha", "Limiar de 100% na Análise de custo: o texto do catálogo; \"já na base\" também; o item sem a linha não mostra nada",
             lim["tela"] == "Limiar de 100%" + lim["quer"] and lim["ja"] == "Limiar de 100%já na base" and lim["sem"] is None, str(lim))
+    # F13-T127: a escala de cada habilidade na ficha, com a base destacada; o item sem o bloco diz que não foi conferido
+    esc = s.js("""(() => { const r = { erradas: [], conferidos: 0, semBloco: 0, notaSem: 0 };
+      CATALOG.items.forEach(it => {
+        openModal(it.slug); const m = document.getElementById('modal');
+        const linhas = [...m.querySelectorAll('.ability-escala .esc-linha')], nota = !!m.querySelector('.escala-nao-conferida');
+        if (Array.isArray(it.scaling)) {
+          r.conferidos++;
+          const nomes = new Set((it.abilities || []).map(a => a.nameEn ? a.name + ' (' + a.nameEn + ')' : a.name));
+          const quer = it.scaling.filter(x => nomes.has(x.ability));
+          const ok = linhas.length === quer.length && !nota && quer.every((x, i) => x.none ? linhas[i].textContent === 'não escala'
+            : linhas[i].textContent.startsWith(x.pct + ' de ' + x.stat + ' ' + x.base) && (linhas[i].querySelector('.esc-base') || {}).textContent === x.base);
+          if (!ok) r.erradas.push(it.namePt);
+        } else if ((it.abilities || []).length) { r.semBloco++; if (nota && !linhas.length) r.notaSem++; }   // sem habilidade, sem seção: nada a dizer
+      });
+      openModal(CATALOG.items.find(i => i.nameEn === "Sterak's Gage").slug);
+      r.sterak = (document.querySelector('#modal .ability-escala') || {}).textContent;
+      return r; })()""")
+    p.conta("ficha", "a escala de cada habilidade (F13-T127): a linha do catálogo com a base destacada, em todos os itens conferidos; o sem bloco diz \"ainda não conferida\"",
+            esc["conferidos"] > 0 and not esc["erradas"] and esc["notaSem"] == esc["semBloco"] and "50% de Dano de Ataque base" in (esc["sterak"] or ""),
+            "%s" % {k: (v[:8] if isinstance(v, list) else v) for k, v in esc.items()})
     p.conta("ficha", "o clique numa peça abre a ficha dela", aberta and aberta != r["nome"], "abriu: %s" % aberta)
 
     # a troca para a conta de somar, lembrada depois de recarregar

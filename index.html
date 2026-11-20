@@ -3412,6 +3412,12 @@ body.nucleo .grid::before {
 .ability-name { font-family: var(--loja-titulos); font-weight: 400; font-size: 16px; color: var(--loja-tinta); margin-bottom: 2px; }
 .ability-desc { font-size: 14px; color: var(--loja-tinta); line-height: 1.5; }
 .ability-mech { margin-top: 5px; font-size: 13px; line-height: 1.5; color: var(--loja-tinta-suave); padding-left: 10px; border-left: 2px solid rgba(90,70,48,.35); }
+.ability-escala { margin-top: 5px; font-size: 13px; line-height: 1.5; color: var(--loja-tinta); display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.ability-escala .mech-label { font-family: var(--loja-gravado); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--loja-tinta-suave); }
+.ability-escala .esc-base { font-weight: 700; color: var(--loja-cera, #8b2a1a); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.ability-escala .esc-efeito { color: var(--loja-tinta-suave); font-style: italic; }
+.ability-escala .esc-nao { color: var(--loja-tinta-suave); font-style: italic; }
+.escala-nao-conferida { margin-top: 8px; font-style: italic; }
 .ability-mech .mech-label { font-family: var(--loja-gravado); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; margin-right: 6px; color: var(--loja-tinta-suave); }
 .ability-block { margin-bottom: 12px; }
 .recipe-chip {
@@ -11501,7 +11507,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.126";
+const ATUALIZACAO = "13.127";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -20697,13 +20703,27 @@ function openModal(id) {
     ? attrList.map(a => `<div class="attr-line${a.changed ? " apex-changed" : ""}">+${fmtNum(a.value)}${a.unit === "percent" ? "%" : ""} de ${a.stat}${a.changed ? `<span class="base">${a.added ? "só no ápice" : "base " + esc(a.baseRaw)}${a.note ? " · " + esc(a.note) : ""}</span>` : ""}</div>`).join("")
     : "";
 
+  // F13-T127 (Leo, 06/11/2026: "conheço muita gente que confunde a Sterak"): a escala de cada habilidade, do
+  // item.scaling (Capítulo 1, D5), com a base destacada — "50% de Dano de Ataque base", nunca só "50% do DdA".
+  // O item sem o bloco ainda não foi conferido: a seção diz isso uma vez, no fim.
+  const escalaDe = (a) => {
+    const chave = a.nameEn ? `${a.name} (${a.nameEn})` : a.name;
+    const ls = (item.scaling || []).filter(x => x.ability === chave);
+    if (!ls.length) return "";
+    const partes = ls.map(x => x.none ? `<span class="esc-linha esc-nao">não escala</span>`
+      : `<span class="esc-linha">${x.pct} de ${x.stat} <b class="esc-base">${x.base}</b>${x.of === "alvo" ? " do alvo" : ""}`
+        + ` <span class="esc-efeito">→ ${x.kind === "conversão" ? "vira " : ""}${x.effect}</span></span>`);
+    return `<div class="ability-escala"><span class="mech-label">Escala</span>${partes.join("")}</div>`;
+  };
   const abilitiesHtml = (item.abilities || []).length
     ? item.abilities.map(a => `
         <div class="ability-block">
           ${a.name && a.name !== "—" ? `<div class="ability-name">${a.name}${a.type ? ` <span class="attr-note">· ${a.type}</span>` : ""}</div>` : ""}
           <div class="ability-desc">${a.description}</div>
+          ${escalaDe(a)}
           ${a.mechanics ? `<div class="ability-mech"><span class="mech-label">Mecânica</span>${a.mechanics}</div>` : ""}
         </div>`).join("")
+      + (Array.isArray(item.scaling) ? "" : `<div class="attr-note escala-nao-conferida">Escala das habilidades: ainda não conferida pelo Capítulo 1.</div>`)
     : "";
 
   // Atributos: quando o catálogo diz que não há (ex.: Stat Bonus), mostra a nota dele.
