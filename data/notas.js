@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "20/11/2026",
+   "add": [
+    "com \"Escala com\" marcado, a lista diz quantos itens ainda não foram conferidos e um botão mostra todos eles no fim"
+   ],
+   "aj": [],
+   "rem": []
+  },
+  {
    "data": "19/11/2026",
    "add": [
     "o limiar de 100% de eficiência na Análise de custo da ficha (catálogo no patch 16.23.1)",
