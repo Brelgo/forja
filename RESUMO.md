@@ -4,7 +4,7 @@ Para começar uma sessão com pouco uso: ler o CLAUDE.md e **este arquivo**. O C
 histórico completo; leia só a seção que a tarefa pedir (procure pelo número `F13-T…` ou pela palavra).
 
 ## O que é e onde está
-- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.126**.
+- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.127**.
 - **O app:** `index.html` (tudo num arquivo, abre com dois cliques). Dados gerados em `data/` — `catalog.js` (225 itens,
   patch 16.23.1, do Capítulo 1, com `interactions` (bloco Interações[]), `scaling` (Escalonamento[], 52 itens até o D5-1a; sem bloco = não conferido) e `costAnalysis.threshold100` (Limiar de 100%); nunca editar à mão), `runas.js`, `habilidades.js` (Capítulo 1.1), `mudancas.js`,
   `notas.js`, `mapa.js`, `mapa_variantes.js`, `regioes.js`. Sons em `assets/audio`, mapa em `assets/mapa`.
@@ -28,7 +28,7 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| **primeiro** | **A escala na ficha** (Leo, 06/11/2026: "conheço muita gente que confunde a Sterak"): na ficha e no resumo, a razão sai com a base destacada ("50% do DdA **base**"), lida do `item.scaling`. O filtro "Escala com" já está no ar (F13-T126) | 2–3% |
+| **primeiro** | **Os não conferidos no filtro "Escala com"** (pedido do Capítulo 1, 19/11/2026: o Leo achou que tinham sumido itens): a contagem da lista diz quantos ficaram de fora ("9 de 225 itens · 173 ainda não conferidos pelo Capítulo 1") e um botão "mostrar os não conferidos" acrescenta no fim o grupo deles, com o card "Escala com X: ainda não conferido". Proposta em captura antes de aplicar (F13-T128) | 3–4% |
 | quando o Cap. 1 entregar | Lotes D5-1b e D5-2 do Escalonamento[]: só puxar o catálogo (o filtro e a nota "N de 225 conferidos" se ajustam sozinhos) | 1–2% |
 | depois | **Planos de mapa** (desde a T119 há um plano só, no navegador; tirar o `mapa` que as builds antigas ainda guardam; biblioteca própria Minhas/Publicadas, tabela própria no Supabase, link próprio; só a Selva liga com build) | grande |
 | depois | Calculadora de armadura · app instalável (PWA) · "Mandar para o jogo" · overlay (para pensar) | — |

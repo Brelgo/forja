@@ -5,7 +5,8 @@ window.NOTAS = {
    "data": "19/11/2026",
    "add": [
     "o limiar de 100% de eficiência na Análise de custo da ficha (catálogo no patch 16.23.1)",
-    "o filtro \"Escala com\" no grupo Atributo: os itens cuja habilidade escala com PdH, DdA, Vida, Mana, Armadura ou RM, com a base (bônus, total, máxima…)"
+    "o filtro \"Escala com\" no grupo Atributo: os itens cuja habilidade escala com PdH, DdA, Vida, Mana, Armadura ou RM, com a base (bônus, total, máxima…)",
+    "a ficha mostra com que atributo cada habilidade escala, com a base destacada"
    ],
    "aj": [
     "a conferência automática das duas abas não falha mais à toa quando o computador está ocupado"
