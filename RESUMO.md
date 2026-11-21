@@ -36,7 +36,7 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 
 ## Esperando o Leo
 - Regra do catálogo (Leo, 10/11/2026): **o arredondamento da Passiva do Ornn não conta como mudança** (`gerar_mudancas.py` compara o bônus arredondado para baixo).
-- Conferir se o Freljord ainda pula quadros em 1440×900: medir eu mesmo no navegador embutido (roda no PC do Leo), com o painel à vista — escondido, o Chromium freia a animação.
+- Freljord em 1440×900, medido em 21/11 no navegador embutido (PC do Leo, painel à vista): parada a 57 fps (4 de 286 quadros acima de 25 ms, nenhum acima de 50); na abertura, 68 fps nos 3 s depois do clique, 9 quadros de 25–50 ms entre 1,2 e 1,6 s. Decidir se esses tropeços pedem tarefa.
 
 ## Regras que mais pegam
 - Nada de dado digitado: o que o catálogo não tem é pedido ao Capítulo 1 (item) ou 1.1 (campeão).
