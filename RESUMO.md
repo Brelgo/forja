@@ -28,13 +28,15 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| depois | **Planos de mapa** (desde a T119 há um plano só, no navegador; tirar o `mapa` que as builds antigas ainda guardam; biblioteca própria Minhas/Publicadas, tabela própria no Supabase, link próprio; só a Selva liga com build) | grande |
-| depois | Calculadora de armadura · app instalável (PWA) · "Mandar para o jogo" · overlay (para pensar) | — |
+| **primeiro** | **As interações na ficha**: o catálogo traz as Interações[] dos 225 itens (975 linhas, `item.interactions`) e nenhuma tela mostra; uma seção na ficha, como a escala (F13-T127) | 3–5% |
+| depois | **Planos de mapa** (Leo, 21/11/2026): **só o mapa padrão** (as almas quase não mexem nos campos da selva). Plano publicado à parte (biblioteca Minhas/Publicadas, tabela própria no Supabase, link próprio); no máximo atrelado a build de **selva**, que mostra até **dois minimapas** — a rota de farm e a primeira rota (com desvio para alguma lane) —, com opções que o usuário escolhe ao criar: lado azul/vermelho, full clear ou gank. Tirar o `mapa` que as builds antigas ainda guardam | grande |
+| depois | **Estudo do app instalável (PWA)** antes de construir (Leo, 21/11: "essa função exerce mais do que qualquer criador consegue imaginar"): o que a instalação dá além de um site comum | estudo |
+| final | **O app com overlay** só de builds (Leo, 21/11): na seleção de campeões, builds de outros usuários do campeão escolhido, informação rápida, counters (do Gerador) e os minimapas; na partida, ordem de level up, rota e a fila de itens com o ouro que falta. Só depois de o resto estar todo funcional. Exige app nativo (um PWA não desenha sobre o jogo) e a política de apps de terceiros da Riot | — |
 | depende | Capítulos de dado 1.1–1.4 (campeões, Bestiário, Gerador) e a calculadora de monstros épicos | — |
 
 ## Esperando o Leo
 - Regra do catálogo (Leo, 10/11/2026): **o arredondamento da Passiva do Ornn não conta como mudança** (`gerar_mudancas.py` compara o bônus arredondado para baixo).
-- Conferir no navegador dele se o Freljord ainda pula quadros em 1440×900.
+- Conferir se o Freljord ainda pula quadros em 1440×900: medir eu mesmo no navegador embutido (roda no PC do Leo), com o painel à vista — escondido, o Chromium freia a animação.
 
 ## Regras que mais pegam
 - Nada de dado digitado: o que o catálogo não tem é pedido ao Capítulo 1 (item) ou 1.1 (campeão).
