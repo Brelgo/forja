@@ -687,7 +687,7 @@ def checar_escala_com(s, p):
       return { stats: Object.keys(u).sort((a, b) => a.localeCompare(b, 'pt-BR')), vida: [...(u['Vida'] || [])].sort(),
                conferidos: CATALOG.items.filter(i => Array.isArray(i.scaling)).length, total: CATALOG.items.length }; })()""")
     tela = s.js("""(() => { const g = document.querySelector('.filter-group[data-group="stats"]');
-      const n = [...document.querySelectorAll('.novidade')];
+      const n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal'));   // F13-T133: o da ficha é à parte
       return { chips: [...g.querySelectorAll('.escala .chip[data-group="escala"]')].map(c => c.dataset.value),
                nota: (g.querySelector('.escala-nota') || {}).textContent || '',
                nov: n.length, novAqui: n.length === 1 && !!n[0].closest('.filter-group[data-group="stats"] .filter-group-title'),
@@ -1046,12 +1046,13 @@ def checar_ficha(s, p):
         openModal(it.slug); const sec = document.querySelector('#modal .interacoes');
         const ls = it.interactions;
         if (!sec) { r.erradas.push(it.namePt + ' (sem seção)'); return; }
+        if (sec.querySelectorAll('.modal-section-title .novidade').length !== 1) { r.erradas.push(it.namePt + ' (balão)'); return; }   // F13-T133
         if (ls === null || ls === undefined) { r.nulas++; if (!/Ainda não conferidas/.test(sec.textContent)) r.erradas.push(it.namePt); return; }
         if (!ls.length) { r.vazias++; if (!sec.querySelector('.inter-nenhuma') || sec.querySelector('.inter-linha')) r.erradas.push(it.namePt); return; }
         r.com++;
         const lis = [...sec.querySelectorAll('.inter-linha')], vis = lis.filter(l => l.offsetParent).length;
         const chips = [...sec.querySelectorAll('[data-inter]')].slice(1).map(b => +b.textContent.match(/\\d+$/)[0]);
-        const ok = lis.length === ls.length && sec.querySelector('.modal-section-title').textContent === 'Interações · ' + ls.length
+        const ok = lis.length === ls.length && sec.querySelector('.modal-section-title').firstChild.textContent === 'Interações · ' + ls.length
           && vis === Math.min(ls.length, INTER_VISIVEIS)
           && (chips.length === 0 || chips.reduce((a, b) => a + b, 0) === ls.length)
           && ls.every((x, i) => lis[i].querySelector('.inter-com').textContent === x.with && lis[i].querySelector('.inter-efeito').textContent === x.effect
@@ -1071,7 +1072,7 @@ def checar_ficha(s, p):
     de_volta = s.js(vis)
     g = s.js("""(() => { const ls = CATALOG.items.find(i => i.nameEn === "Guinsoo's Rageblade").interactions;
       return { n: ls.length, item: ls.filter(x => x.kind === 'Item').length }; })()""")
-    p.conta("ficha", "as interações de cada item (F13-T130): todas as linhas do catálogo, com o efeito e com quem; seis à vista e o resto no \"ver todas\"; [] diz \"nenhuma\"",
+    p.conta("ficha", "as interações de cada item (F13-T130): todas as linhas do catálogo, com o efeito e com quem; seis à vista e o resto no \"ver todas\"; [] diz \"nenhuma\"; o título leva o balão \"Novidade\" (F13-T133)",
             inter["com"] > 0 and not inter["erradas"] and inter["com"] + inter["vazias"] + inter["nulas"] == 225 and inter["recolhidas"] > 0,
             "%s" % {k: (v[:8] if isinstance(v, list) else v) for k, v in inter.items()})
     p.conta("ficha", "as interações da Guinsoo com cliques: \"ver todas\" mostra as %d; o chip Item deixa só as %d de item; Todas volta" % (g["n"], g["item"]),
@@ -8478,7 +8479,7 @@ def checar_mesa(s, p):
         #    recente (desde a F13-T114, o botão do Update Tracker);
         #    a linha diz de quem é o mapa — e a build de ARAM avisa que o mapa é o de Summoner's Rift
         s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
-        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')];
+        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal'));
           return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
                    aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
                    ondeNov: n.map(x => x.closest('[data-group]') ? x.closest('[data-group]').dataset.group : x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : (x.parentElement.id || '?')),

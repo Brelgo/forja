@@ -11546,7 +11546,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.132";
+const ATUALIZACAO = "13.133";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -20925,10 +20925,12 @@ function openModal(id) {
   // "ver todas". [] = conferido, sem interação; null = ainda não conferido (nunca "não interage").
   const interacoesHtml = (() => {
     const ls = item.interactions;
+    // F13-T133 (Leo, 21/11/2026: "é muito interessante ter mais de um balão novidade"): o balão da adição, no título
+    const nov = `<span class="novidade na-linha" title="Adição recente do Montador: as interações do item">Novidade</span>`;
     if (ls === null || ls === undefined)
-      return `<div class="modal-section interacoes"><div class="modal-section-title">Interações</div><div class="attr-note">Ainda não conferidas pelo Capítulo 1.</div></div>`;
+      return `<div class="modal-section interacoes"><div class="modal-section-title">Interações${nov}</div><div class="attr-note">Ainda não conferidas pelo Capítulo 1.</div></div>`;
     if (!ls.length)
-      return `<div class="modal-section interacoes"><div class="modal-section-title">Interações</div><div class="attr-note inter-nenhuma">Nenhuma interação registrada para este item.</div></div>`;
+      return `<div class="modal-section interacoes"><div class="modal-section-title">Interações${nov}</div><div class="attr-note inter-nenhuma">Nenhuma interação registrada para este item.</div></div>`;
     const tipos = INTER_TIPOS.filter(t => ls.some(x => x.kind === t)).concat([...new Set(ls.map(x => x.kind))].filter(t => !INTER_TIPOS.includes(t)));
     const fonte = (src) => src.split(/;\s*/).filter(Boolean).map(u => /^https?:\/\//.test(u)
       ? `<a class="inter-fonte" href="${esc(u)}" target="_blank" rel="noopener">wiki</a>` : `<span class="inter-fonte">${esc(u)}</span>`).join(" ");
@@ -20937,7 +20939,7 @@ function openModal(id) {
         <span class="inter-corpo"><b class="inter-com">${esc(x.with)}</b> <span class="inter-tipo">· ${esc(INTER_ROTULO[x.kind] || x.kind)}</span>
         <span class="inter-texto">${esc(x.text).replace(/`([^`]+)`/g, "<i>$1</i>")} ${fonte(x.source || "")}</span></span></li>`).join("");
     return `<div class="modal-section interacoes${ls.length > INTER_VISIVEIS ? " recolhida" : ""}">
-      <div class="modal-section-title">Interações · ${ls.length}</div>
+      <div class="modal-section-title">Interações · ${ls.length}${nov}</div>
       ${tipos.length > 1 ? `<div class="ficha-vistas inter-tipos" role="group" aria-label="Filtrar as interações por tipo">
         <button type="button" class="ativo" data-inter="">Todas ${ls.length}</button>${tipos.map(t =>
         `<button type="button" data-inter="${esc(t)}">${esc(INTER_ROTULO[t] || t)} ${ls.filter(x => x.kind === t).length}</button>`).join("")}</div>` : ""}
