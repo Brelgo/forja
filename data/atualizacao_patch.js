@@ -3,10 +3,10 @@
 window.ATUALIZACAO_PATCH = {
  "de": "16.23.1",
  "para": "16.23.1",
- "gerado": "2026-11-19T20:07:19Z",
+ "gerado": "2026-11-21T20:07:59Z",
  "catalogo": {
   "patch": "16.23.1",
-  "sha256": "bf6f25f8dfae632c5e288106aea6e21a76a76c530bee1e844cf137a1b3b7e90a"
+  "sha256": "f4b8456559561fc7cb1925e9511c59f307c0cf91b013d9a2f65b798db98d4c19"
  },
  "fonte": {
   "wiki": {
