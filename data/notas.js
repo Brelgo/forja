@@ -3,9 +3,13 @@ window.NOTAS = {
  "datas": [
   {
    "data": "21/11/2026",
-   "add": [],
+   "add": [
+    "a ficha de cada item mostra as interações dele (o que ativa, o que não ativa, com quem), filtradas por tipo"
+   ],
    "aj": [
-    "todos os 225 itens já dizem com que atributo cada habilidade escala, e o Update Tracker não conta mais troca só de palavras como mudança"
+    "todos os 225 itens já dizem com que atributo cada habilidade escala, e o Update Tracker não conta mais troca só de palavras como mudança",
+    "a abertura da loja ficou mais lisa logo depois que a porta se abre",
+    "as habilidades que mostravam \"\\n\" escrito agora quebram a linha"
    ],
    "rem": []
   },
