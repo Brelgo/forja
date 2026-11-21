@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "21/11/2026",
+   "add": [],
+   "aj": [
+    "todos os 225 itens já dizem com que atributo cada habilidade escala, e o Update Tracker não conta mais troca só de palavras como mudança"
+   ],
+   "rem": []
+  },
+  {
    "data": "20/11/2026",
    "add": [
     "com \"Escala com\" marcado, a lista diz quantos itens ainda não foram conferidos e um botão mostra todos eles no fim"
