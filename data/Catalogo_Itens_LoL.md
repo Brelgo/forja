@@ -100,6 +100,11 @@ Abatedora: Cull[
     Notas: O contador de Ceifar não é reiniciado ao vender a Abatedora. Abates de tropa compartilhados por um aliado com Atlas Mundial ou Bússola Rúnica via Riquezas Compartilhadas contam para Ceifar.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Torres e sentinelas (Turrets, wards) · ativa · A cura ao contato do Ceifar ativa também contra torres e sentinelas. · Fonte: https://wiki.leagueoflegends.com/en-us/Cull#Notes
+        Item · Atlas Mundial (World Atlas) — — (Shared Riches) · ativa · Se um aliado com o Atlas Mundial divide um abate de tropa pelas Riquezas Compartilhadas, o abate conta para o Ceifar. · Fonte: https://wiki.leagueoflegends.com/en-us/Cull#Notes
+        Item · Bússola Rúnica (Runic Compass) — Riquezas Compartilhadas (Shared Riches) · ativa · Se um aliado com a Bússola Rúnica divide um abate de tropa pelas Riquezas Compartilhadas, o abate conta para o Ceifar. · Fonte: https://wiki.leagueoflegends.com/en-us/Cull#Notes
+    ]
     Escalonamento[
         Ceifar (Reap) · Sem scaling
     ]
@@ -145,6 +150,12 @@ Lacre Sombrio: Dark Seal[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Glória (Glory) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida
     Classe: AP (AD 0g · Vitalidade 133,33g · AP 300g)
     Arquétipo Recomendado: Mago
@@ -182,6 +193,12 @@ Lâmina de Doran: Doran's Blade[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Vida, Vampirismo
     Classe: AD (AD 350g · Vitalidade 213,33g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -219,6 +236,12 @@ Arco de Doran: Doran's Bow[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Vampirismo
     Classe: AD (AD 620g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -257,6 +280,9 @@ Elmo de Doran: Doran's Helm[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
     Escalonamento[
         Ajudinha (Helping Hand) · Sem scaling
     ]
@@ -303,6 +329,9 @@ Anel de Doran: Doran's Ring[
     Notas: Drenar cura em vez de restaurar Mana se o usuário não usa Mana ou está com Mana cheia.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana ou com Mana cheia (Manaless or full mana) · ativa · O Drenar cura em vez de restaurar Mana quando o portador não usa Mana ou está com a Mana cheia. · Fonte: https://wiki.leagueoflegends.com/en-us/Doran's_Ring#Notes
+    ]
     Escalonamento[
         Drenar (Drain) · Sem scaling
         Ajudinha (Helping Hand) · Sem scaling
@@ -350,6 +379,9 @@ Escudo de Doran: Doran's Shield[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos, invulnerabilidade e dano reduzido a 0 (Shields, invulnerability, 0 damage) · não ativa · O Foco Definitivo não ativa se o dano for reduzido a 0 ou menos, se for causado a escudos ou se for absorvido por invulnerabilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Doran's_Shield#Notes
+    ]
     Escalonamento[
         Foco Definitivo (Enduring Focus) · Vida · 0–5 · perdida · seu · conversão · Regeneração de Vida bônus por segundo, por 8s após dano de campeão: 0,066 a cada 1% de Vida perdida atual, até 5 com 75% (corpo a corpo)
         Foco Definitivo (Enduring Focus) · Vida · 0–3,75 · perdida · seu · conversão · Regeneração de Vida bônus por segundo, por 8s após dano de campeão: 0,05 a cada 1% de Vida perdida atual, até 3,75 com 75% (à distância, e dano em área, ao longo do tempo ou de proc)
@@ -392,6 +424,12 @@ Lâmina do Guardião: Guardian's Blade[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Vida
     Classe: AD (AD 1.050g · Vitalidade 400g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador, Tanque
@@ -429,6 +467,12 @@ Martelo do Guardião: Guardian's Hammer[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Vida, Roubo de Vida
     Classe: AD (AD 1.142,75g · Vitalidade 400g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -468,6 +512,9 @@ Berrante do Guardião: Guardian's Horn[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
     Escalonamento[
         Recuperação (Recovery) · Sem scaling
         Impassível (Undaunted) · Sem scaling
@@ -509,6 +556,9 @@ Orbe do Guardião: Guardian's Orb[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões que usam Mana (Mana users) · não ativa · A Recuperação não restaura Vida para campeões que usam Mana, mesmo com a Mana cheia (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian's_Orb#Notes
+    ]
     Escalonamento[
         Recuperação (Recovery) · Sem scaling
     ]
@@ -554,6 +604,13 @@ Cria de Andabrisas: Gustwalker Hatchling[
     Notas: Efeitos de item de selva listados em Notes: +10% de dano contra monstros não épicos (não se aplica a dano verdadeiro, inclusive Golpear); sofre 50% do dano de monstros não épicos (redução de 50%; confirmado pelo tooltip do cliente — "sofra 50% de dano contra monstros" — captura do usuário em 12/09/2026); na selva ou no rio, Regeneração de Mana bônus igual a 8,62%–19,08% (por nível) da Mana perdida; abater monstro grande concede 80 de experiência bônus (+150 no primeiro), +50 por nível inteiro de desvantagem se estiver mais de 1,1 nível abaixo da média da partida, cura entre 0 e 90–250 (pelo nível médio dos campeões) após 0,3s (+1,25% por 1% de Vida perdida), restaura 19–87 de Mana (pelo nível médio) após 0,3s (+1,25% por 1% de Mana perdida) → 67 de Mana com nível médio 13 (reconferido na wiki em 12/09/2026: 19–87 é a base; com 100% de Mana perdida, +125% → 43–196, que é o "até 43-196 de Mana" do tooltip do cliente — sem divergência), e restaura 15 de Energia. Experiência de tropas de rota reduzida em 70%–0% (por minutos), exceto se 1,5 nível abaixo da média. Monster Hunter: se o ouro de tropas superar 40% do ouro de monstros, abater tropa de rota concede 13 de ouro a menos e 50% menos experiência; penalidade removida aos 14 min. Abater Sentinela Azul Dracônica ou Brutamontes Vermelho deixa um fogo-fátuo por 60s que concede o buff Crest of Insight / Crest of Cinders ao ser coletado (se um aliado abateu, só você coleta; se você abateu, um aliado pode coletar).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Golpear (Smite) · ativa · Com 15 petiscos o companheiro evolui e melhora o Golpear para Unleashed Smite; com 35, melhora para Primal Smite e o item é consumido. · Fonte: https://wiki.leagueoflegends.com/en-us/Gustwalker_Hatchling#Notes
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · O aumento de 10% de dano contra monstros não épicos não se aplica a dano verdadeiro, inclusive o do Golpear; a página Damage modifier lista o Golpear entre as fontes de dano que os modificadores não afetam e o Cria de Andabrisas entre os modificadores de dano causado. · Fonte: https://wiki.leagueoflegends.com/en-us/Gustwalker_Hatchling#Notes; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e Cria de Andabrisas entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Mecânica · Vampirismo (Omnivamp) · não ativa · O dano do companheiro conta como dano em área, seja qual for o número de alvos, e não se beneficia de Vampirismo. · Fonte: https://wiki.leagueoflegends.com/en-us/Gustwalker_Hatchling#Notes
+        Mecânica · Monstros épicos (Epic monsters) · não ativa · O companheiro não causa dano letal a monstros épicos. · Fonte: https://wiki.leagueoflegends.com/en-us/Gustwalker_Hatchling#Notes
+    ]
     Escalonamento[
         Companheiros da Selva (Jungle Companions) · Dano de Ataque · 10% · bônus · seu · razão · dano verdadeiro do companheiro a cada monstro, por ataque
         Companheiros da Selva (Jungle Companions) · Poder de Habilidade · 16% · total · seu · razão · dano verdadeiro do companheiro a cada monstro, por ataque
@@ -604,6 +661,13 @@ Broto de Esmagamusgo: Mosstomper Seedling[
     Notas: Efeitos de item de selva listados em Notes: +10% de dano contra monstros não épicos (não se aplica a dano verdadeiro, inclusive Golpear); sofre 50% do dano de monstros não épicos (redução de 50%; confirmado pelo tooltip do cliente — "sofra 50% de dano contra monstros" — captura do usuário em 12/09/2026); na selva ou no rio, Regeneração de Mana bônus igual a 8,62%–19,08% (por nível) da Mana perdida; abater monstro grande concede 80 de experiência bônus (+150 no primeiro), +50 por nível inteiro de desvantagem se estiver mais de 1,1 nível abaixo da média da partida, cura entre 0 e 90–250 (pelo nível médio dos campeões) após 0,3s (+1,25% por 1% de Vida perdida), restaura 19–87 de Mana (pelo nível médio) após 0,3s (+1,25% por 1% de Mana perdida) → 67 de Mana com nível médio 13 (reconferido na wiki em 12/09/2026: 19–87 é a base; com 100% de Mana perdida, +125% → 43–196, que é o "até 43-196 de Mana" do tooltip do cliente — sem divergência), e restaura 15 de Energia. Experiência de tropas de rota reduzida em 70%–0% (por minutos), exceto se 1,5 nível abaixo da média. Monster Hunter: se o ouro de tropas superar 40% do ouro de monstros, abater tropa de rota concede 13 de ouro a menos e 50% menos experiência; penalidade removida aos 14 min. Abater Sentinela Azul Dracônica ou Brutamontes Vermelho deixa um fogo-fátuo por 60s que concede o buff Crest of Insight / Crest of Cinders ao ser coletado (se um aliado abateu, só você coleta; se você abateu, um aliado pode coletar).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Golpear (Smite) · ativa · Com 15 petiscos o companheiro evolui e melhora o Golpear para Unleashed Smite; com 35, melhora para Primal Smite e o item é consumido. · Fonte: https://wiki.leagueoflegends.com/en-us/Mosstomper_Seedling#Notes
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · O aumento de 10% de dano contra monstros não épicos não se aplica a dano verdadeiro, inclusive o do Golpear; a página Damage modifier lista o Golpear entre as fontes de dano que os modificadores não afetam e o Broto de Esmagamusgo entre os modificadores de dano causado. · Fonte: https://wiki.leagueoflegends.com/en-us/Mosstomper_Seedling#Notes; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e Broto de Esmagamusgo entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Mecânica · Vampirismo (Omnivamp) · não ativa · O dano do companheiro conta como dano em área, seja qual for o número de alvos, e não se beneficia de Vampirismo. · Fonte: https://wiki.leagueoflegends.com/en-us/Mosstomper_Seedling#Notes
+        Mecânica · Monstros épicos (Epic monsters) · não ativa · O companheiro não causa dano letal a monstros épicos. · Fonte: https://wiki.leagueoflegends.com/en-us/Mosstomper_Seedling#Notes
+    ]
     Escalonamento[
         Companheiros da Selva (Jungle Companions) · Dano de Ataque · 10% · bônus · seu · razão · dano verdadeiro do companheiro a cada monstro, por ataque
         Companheiros da Selva (Jungle Companions) · Poder de Habilidade · 16% · total · seu · razão · dano verdadeiro do companheiro a cada monstro, por ataque
@@ -654,6 +718,14 @@ Filhote de Garrabrasa: Scorchclaw Pup[
     Notas: Efeitos de item de selva listados em Notes: +10% de dano contra monstros não épicos (não se aplica a dano verdadeiro, inclusive Golpear); sofre 50% do dano de monstros não épicos (redução de 50%; confirmado pelo tooltip do cliente — "sofra 50% de dano contra monstros" — captura do usuário em 12/09/2026); na selva ou no rio, Regeneração de Mana bônus igual a 8,62%–19,08% (por nível) da Mana perdida; abater monstro grande concede 80 de experiência bônus (+150 no primeiro), +50 por nível inteiro de desvantagem se estiver mais de 1,1 nível abaixo da média da partida, cura entre 0 e 90–250 (pelo nível médio dos campeões) após 0,3s (+1,25% por 1% de Vida perdida), restaura 19–87 de Mana (pelo nível médio) após 0,3s (+1,25% por 1% de Mana perdida) → 67 de Mana com nível médio 13 (reconferido na wiki em 12/09/2026: 19–87 é a base; com 100% de Mana perdida, +125% → 43–196, que é o "até 43-196 de Mana" do tooltip do cliente — sem divergência), e restaura 15 de Energia. Experiência de tropas de rota reduzida em 70%–0% (por minutos), exceto se 1,5 nível abaixo da média. Monster Hunter: se o ouro de tropas superar 40% do ouro de monstros, abater tropa de rota concede 13 de ouro a menos e 50% menos experiência; penalidade removida aos 14 min. Abater Sentinela Azul Dracônica ou Brutamontes Vermelho deixa um fogo-fátuo por 60s que concede o buff Crest of Insight / Crest of Cinders ao ser coletado (se um aliado abateu, só você coleta; se você abateu, um aliado pode coletar).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Golpear (Smite) · ativa · Com 15 petiscos o companheiro evolui e melhora o Golpear para Unleashed Smite; com 35, melhora para Primal Smite e o item é consumido. · Fonte: https://wiki.leagueoflegends.com/en-us/Scorchclaw_Pup#Notes
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · O aumento de 10% de dano contra monstros não épicos não se aplica a dano verdadeiro, inclusive o do Golpear; a página Damage modifier lista o Golpear entre as fontes de dano que os modificadores não afetam e o Filhote de Garrabrasa entre os modificadores de dano causado. · Fonte: https://wiki.leagueoflegends.com/en-us/Scorchclaw_Pup#Notes; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e Filhote de Garrabrasa entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Mecânica · Vampirismo (Omnivamp) · não ativa · O dano do companheiro conta como dano em área, seja qual for o número de alvos, e não se beneficia de Vampirismo. · Fonte: https://wiki.leagueoflegends.com/en-us/Scorchclaw_Pup#Notes
+        Mecânica · Monstros épicos (Epic monsters) · não ativa · O companheiro não causa dano letal a monstros épicos. · Fonte: https://wiki.leagueoflegends.com/en-us/Scorchclaw_Pup#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O dano do Arranhão do Garrabrasa é dano de proc, marcado como periódico, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Scorchclaw_Pup#Notes
+    ]
     Escalonamento[
         Companheiros da Selva (Jungle Companions) · Dano de Ataque · 10% · bônus · seu · razão · dano verdadeiro do companheiro a cada monstro, por ataque
         Companheiros da Selva (Jungle Companions) · Poder de Habilidade · 16% · total · seu · razão · dano verdadeiro do companheiro a cada monstro, por ataque
@@ -706,6 +778,10 @@ Lágrima da Deusa: Tear of the Goddess[
     Notas: Vender um item do grupo Fluxo de Mana remove a Mana bônus obtida, mas os acúmulos são mantidos se um item do grupo for comprado de novo, independentemente de qual item os gerou.
     Notas de ARAM: Cada carga consumida de Fluxo de Mana gera 50% mais Mana.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana (Manaless champions) · não ativa · Campeões sem Mana não ativam o Fluxo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Tear_of_the_Goddess#Notes
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · conta como · Vender um item de Fluxo de Mana tira a Mana bônus ganha com o efeito, mas os acúmulos ficam guardados se esses itens forem comprados de novo, não importa qual item gerou os acúmulos. · Fonte: https://wiki.leagueoflegends.com/en-us/Tear_of_the_Goddess#Notes
+    ]
     Escalonamento[
         Fluxo de Mana (Manaflow) · Sem scaling
         Ajudinha (Helping Hand) · Sem scaling
@@ -754,6 +830,10 @@ Atlas Mundial: World Atlas[
     Notas: Vinculação de Função (Role Binding): em filas permanentes com matchmaking de Summoner's Rift, o item inicial de Suporte (Atlas Mundial) é comprado automaticamente com o ouro inicial pelo jogador escolhido como Suporte e fica inacessível aos demais. Bug: o Suporte do lado azul vê o item no inventário do Suporte do lado vermelho mesmo sem visão dele. Não pode ser vendido.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Abatedora (Cull) — Ceifar (Reap) · ativa · Um abate de tropa dividido pelas Riquezas Compartilhadas com um aliado que tem a Abatedora conta para o Ceifar. A execução de tropas das Riquezas Compartilhadas conta como abate de tropa para o campeão aliado que recebe o ouro. · Fonte: https://wiki.leagueoflegends.com/en-us/Cull#Notes; https://wiki.leagueoflegends.com/en-us/World_Atlas#Notes
+        Mecânica · Combate com campeões (Champion combat) · não ativa · Se a Missão de Suporte (Support Quest) for concluída em combate com campeões, a transformação do Atlas Mundial espera até 5s depois de sair do combate. · Fonte: https://wiki.leagueoflegends.com/en-us/World_Atlas#Notes
+    ]
     Escalonamento[
         — (Support Quest) · Sem scaling
         — (Shared Riches) · Sem scaling
@@ -798,6 +878,11 @@ Sentinela de Controle: Control Ward[
     Notas: Com a Missão de Suporte concluída, o preço cai para 40g e as Sentinelas de Controle passam a ocupar o espaço da Missão de Função, separado do inventário; as que estiverem no inventário na conclusão da missão são movidas para lá. Sentinelas e armadilhas furtivas afetadas por uma Sentinela de Controle deixam de conceder visão do entorno e ficam com um choque estático vermelho. A Sentinela de Controle tem 4 de Vida e regenera 1 de Vida a cada 3s após 6s sem sofrer dano. Não revela campeões camuflados de forma contínua: faz varreduras periódicas, com intervalo suficiente para o campeão camuflado sumir brevemente.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão de Suporte (Support Quest) · ativa · Com a Missão de Suporte concluída, a Sentinela de Controle custa 40 de ouro e vai para o espaço da Missão de Rota, separado do inventário; as que estiverem no inventário vão para esse espaço ao concluir a missão. · Fonte: https://wiki.leagueoflegends.com/en-us/Control_Ward#Notes
+        Mecânica · Sentinelas e armadilhas furtivas (Wards, stealthed traps) · ativa · Sentinelas e armadilhas furtivas afetadas pela Sentinela de Controle deixam de conceder visão do entorno e ficam envoltas num choque estático vermelho. · Fonte: https://wiki.leagueoflegends.com/en-us/Control_Ward#Notes
+        Mecânica · Camuflagem (Camouflage) · ativa · A Sentinela de Controle não revela campeões camuflados de forma contínua: ela faz varreduras periódicas, e o intervalo entre elas deixa o campeão camuflado sem ser visto por um instante. · Fonte: https://wiki.leagueoflegends.com/en-us/Control_Ward#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -843,6 +928,9 @@ Elixir de Ferro: Elixir of Iron[
     Notas: Comprar um Elixir impede a compra de outro Elixir por 5s. Não há limite de quantos Elixires podem estar no inventário (respeitando os espaços). Só um efeito de Elixir fica ativo por vez: consumir outro substitui o buff existente, ou o renova se for o mesmo Elixir. Elixires são consumidos automaticamente se o inventário estiver cheio ao comprá-los, inclusive com o usuário morto. Consumir um Elixir enquanto morto renova a duração do buff até o renascimento. A duração não pausa se o usuário morrer com o buff ativo.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Outros Elixires (Other Elixirs) · não acumula · Comprar um Elixir impede a compra de outros Elixires por 5s. Só um efeito de Elixir fica ativo por vez: consumir um Elixir substitui o efeito do anterior, ou renova o dele se for o mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Iron#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -888,6 +976,13 @@ Elixir da Feitiçaria: Elixir of Sorcery[
     Notas: O dano bônus é dano de proc e NÃO ativa efeitos de habilidade. "Causar dano" inclui efeitos que causam 0 de dano. Torres só recebem o dano verdadeiro bônus de dano que aplique efeitos ao contato ou efeitos de habilidade (exceto dano de pets). Habilidades que afetam torres e causam dano em várias instâncias que apliquem esses efeitos (ex.: Escolha uma Carta, do Twisted Fate) ativam o dano verdadeiro mais de uma vez. Comprar um Elixir impede a compra de outro Elixir por 5s. Não há limite de quantos Elixires podem estar no inventário (respeitando os espaços). Só um efeito de Elixir fica ativo por vez: consumir outro substitui o buff existente, ou o renova se for o mesmo Elixir. Elixires são consumidos automaticamente se o inventário estiver cheio ao comprá-los, inclusive com o usuário morto. Consumir um Elixir enquanto morto renova a duração do buff até o renascimento. A duração não pausa se o usuário morrer com o buff ativo.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Outros Elixires (Other Elixirs) · não acumula · Comprar um Elixir impede a compra de outros Elixires por 5s. Só um efeito de Elixir fica ativo por vez: consumir um Elixir substitui o efeito do anterior, ou renova o dele se for o mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Sorcery#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O dano bônus causa dano de proc e não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Sorcery#Notes
+        Mecânica · Efeitos com 0 de dano (0 damage effects) · ativa · "Causar dano" inclui efeitos que causam 0 de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Sorcery#Notes
+        Mecânica · Torres (Turrets) · ativa · As torres só recebem o dano verdadeiro bônus de dano que aplica efeitos ao contato ou efeitos de habilidade, sem contar dano de mascote. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Sorcery#Notes
+        Campeão · Twisted Fate — Escolha uma Carta (Pick a Card) · ativa · Caso citado pela fonte: habilidades que afetam torres e causam dano em várias instâncias, cada uma aplicando efeitos ao contato ou de habilidade, ativam o dano verdadeiro mais de uma vez. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Sorcery#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -932,6 +1027,13 @@ Elixir da Ira: Elixir of Wrath[
     Notas: O Elixir da Ira é um efeito de dreno (drain). Comprar um Elixir impede a compra de outro Elixir por 5s. Não há limite de quantos Elixires podem estar no inventário (respeitando os espaços). Só um efeito de Elixir fica ativo por vez: consumir outro substitui o buff existente, ou o renova se for o mesmo Elixir. Elixires são consumidos automaticamente se o inventário estiver cheio ao comprá-los, inclusive com o usuário morto. Consumir um Elixir enquanto morto renova a duração do buff até o renascimento. A duração não pausa se o usuário morrer com o buff ativo.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Outros Elixires (Other Elixirs) · não acumula · Comprar um Elixir impede a compra de outros Elixires por 5s. Só um efeito de Elixir fica ativo por vez: consumir um Elixir substitui o efeito do anterior, ou renova o dele se for o mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Wrath#Notes
+        Mecânica · Dreno (Drain) · conta como · O Elixir da Ira é um efeito de dreno. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Wrath#Notes
+    ]
+    Escalonamento[
+        — (Consume) · Sem scaling
+    ]
     Categoria de Atributo: none
     Classe: AD (AD 1.050g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -968,6 +1070,9 @@ Poção de Vida: Health Potion[
     Notas: O efeito concede 40 de Regeneração de Vida bônus durante a duração. NÃO pode ser consumida com a Vida cheia. Várias Poções de Vida podem ser consumidas com uma já ativa: as seguintes entram em fila e são consumidas cada uma após a anterior terminar, sem limite de fila, e são consumidas mesmo com o usuário de Vida cheia.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Várias Poções de Vida (Multiple Health Potions) · acumula · Várias Poções de Vida podem ser consumidas com uma já ativa: elas entram numa fila e cada uma começa quando a anterior termina, mesmo com a Vida cheia, sem limite de fila. · Fonte: https://wiki.leagueoflegends.com/en-us/Health_Potion#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -1013,6 +1118,10 @@ Poção com Refil: Refillable Potion[
     Notas: O Data Dragon lista `into: 2033` (Poção Corrupta, Corrupting Potion), item fora da loja (`inStore` e `gold.purchasable` falsos no Data Dragon 16.22.1) e removido do jogo no patch V14.10 segundo a wiki — desconsiderado. O efeito concede 41,666… de Regeneração de Vida bônus durante a duração. NÃO pode ser consumida com a Vida cheia nem na base aliada; entrar no centro da base encerra o efeito ativo antes do fim. Várias Poções com Refil podem ser consumidas com uma já ativa, entrando em fila (até 2 por vez) e sendo consumidas mesmo com a Vida cheia. Vender a Poção com Refil encerra imediatamente todos os efeitos ativos dela.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Várias Poções com Refil (Multiple Refillable Potions) · acumula · Várias Poções com Refil podem ser consumidas com uma já ativa: elas entram numa fila de até 2 e cada uma começa quando a anterior termina, mesmo com a Vida cheia. · Fonte: https://wiki.leagueoflegends.com/en-us/Refillable_Potion#Notes
+        Mecânica · Base aliada (Allied spawn) · não ativa · A Poção com Refil não pode ser consumida na base aliada, e as que estiverem ativas acabam ao entrar no centro da base. · Fonte: https://wiki.leagueoflegends.com/en-us/Refillable_Potion#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
         — (Passive) · Sem scaling
@@ -1094,6 +1203,13 @@ Atributo adicional: Stat Bonus[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: Item exclusivo do modo; a wiki não lista diferenças numéricas em relação a outro modo.
+    Interações[
+        Mecânica · Fragmentos de penetração percentual (Percent penetration shards) · acumula · Os fragmentos de Penetração de Armadura e de Penetração Mágica percentual acumulam de forma multiplicativa entre si. · Fonte: https://wiki.leagueoflegends.com/en-us/Stat_Bonus_(ARAM:_Mayhem)#Notes
+        Mecânica · Tenacidade de itens (Tenacity from items) · acumula · O fragmento de Tenacidade acumula de forma aditiva com a Tenacidade de itens e de forma multiplicativa consigo mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Stat_Bonus_(ARAM:_Mayhem)#Notes
+    ]
+    Escalonamento[
+        — (Consume) · Sem scaling
+    ]
     Categoria de Atributo: none (os fragmentos possíveis estão em Habilidade)
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1130,6 +1246,14 @@ Alteração Vidente: Farsight Alteration[
     Notas: Sentinela Vidente: não é alvejável por aliados, portanto não é alvo válido de efeitos aliados direcionados a unidade; tem raio de visão menor (500) que as Sentinelas Totem, de Controle e Invisível (900) e 1 de Vida contra 3 delas; concede 15g ao inimigo que a destruir; não conta para o limite máximo de sentinelas e dura para sempre; também ativa o raio aumentado e se destrói se outra sentinela conceder visão de um campeão inimigo dentro do raio dela, mesmo desativada (comportamento inesperado). Posicionar a sentinela exibe um VFX breve, visível para o time inimigo através da névoa de guerra, mas não no minimapa. Trinkets contam como itens ativos e suas recargas são afetadas por Aceleração de Itens. Campeões inimigos revelados pela sentinela são pingados automaticamente no minimapa.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Aceleração de Item (Item haste) · ativa · Os Amuletos contam como itens ativos, e a recarga deles é afetada pela Aceleração de Item. · Fonte: https://wiki.leagueoflegends.com/en-us/Farsight_Alteration#Notes
+        Mecânica · Outras sentinelas (Other wards) · ativa · A sentinela da Alteração Vidente (Farsight Ward) aumenta o raio e se destrói também quando outra sentinela concede visão de um campeão inimigo dentro do raio dela, mesmo com ela desativada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Farsight_Alteration#Notes
+        Mecânica · Efeitos aliados com alvo (Allied unit-targeted effects) · não ativa · A sentinela da Alteração Vidente (Farsight Ward) é inalvejável para aliados e não é alvo válido de efeitos aliados com alvo. · Fonte: https://wiki.leagueoflegends.com/en-us/Farsight_Alteration#Notes
+    ]
+    Escalonamento[
+        — (Trinket) · Sem scaling
+    ]
     Categoria de Atributo: none
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1170,6 +1294,15 @@ Lente do Oráculo: Oracle Lens[
     Notas: Drone Varredor: concede visão obscurecida das unidades inimigas próximas que não estejam visíveis. Sentinelas e armadilhas furtivas são reveladas; sentinelas furtivas também são desativadas, permanecendo assim por 2s após deixarem de ser reveladas. Cada tipo de unidade detectada tem uma silhueta de cor diferente: campeões em vermelho, não campeões em roxo escuro, sentinelas em azul claro. Com a Lente do Oráculo ativa, o usuário revela por 2s as sentinelas que atingir com ataques. O alcance é medido da borda a partir do centro do usuário; sentinelas têm raio 1, portanto ainda têm 149 de alcance de visão a mais do que a distância em que são detectadas e desativadas. Detecta unidades mesmo que estejam inalvejáveis. Trinkets contam como itens ativos e suas recargas são afetadas por Aceleração de Itens.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Aceleração de Item (Item haste) · ativa · Os Amuletos contam como itens ativos, e a recarga deles é afetada pela Aceleração de Item. · Fonte: https://wiki.leagueoflegends.com/en-us/Oracle_Lens#Notes
+        Mecânica · Sentinelas e armadilhas furtivas (Stealthed wards, traps) · ativa · O drone da Lente do Oráculo (Sweeper Drone) revela sentinelas e armadilhas furtivas e desativa as sentinelas furtivas por 2s depois que deixam de ser reveladas. Com a Lente ativa, as sentinelas atingidas por ataques ficam reveladas por 2s. · Fonte: https://wiki.leagueoflegends.com/en-us/Oracle_Lens#Notes
+        Mecânica · Inalvejável (Untargetable) · ativa · A Lente do Oráculo detecta unidades mesmo quando estão inalvejáveis. · Fonte: https://wiki.leagueoflegends.com/en-us/Oracle_Lens#Notes
+        Item · Glaive Sombria (Umbral Glaive) — Blecaute (Blackout) · não ativa · O Blecaute da Glaive Sombria não ativa se o portador estiver com o drone da Lente do Oráculo ativo. · Fonte: https://wiki.leagueoflegends.com/en-us/Umbral_Glaive#Notes
+    ]
+    Escalonamento[
+        — (Active) · Sem scaling
+    ]
     Categoria de Atributo: none
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1210,6 +1343,13 @@ Sentinela Invisível: Stealth Ward[
     Notas: Sentinelas Totem e Invisíveis: ficam visíveis por alguns segundos ao serem posicionadas e depois entram em furtividade; têm raio de visão de 900 e 3 de Vida; concedem 10g ao inimigo que as destruir; são limitadas a 3 posicionadas por vez (limite compartilhado entre elas) e têm vida útil curta. A Sentinela Invisível é adicionada automaticamente ao inventário se o usuário sair da base sem nenhum trinket. Trinkets contam como itens ativos e suas recargas são afetadas por Aceleração de Itens.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Aceleração de Item (Item haste) · ativa · Os Amuletos contam como itens ativos, e a recarga deles é afetada pela Aceleração de Item. · Fonte: https://wiki.leagueoflegends.com/en-us/Stealth_Ward#Notes
+        Mecânica · Sentinelas Totem (Totem Wards) · conta como · Sentinelas Totem e Invisíveis dividem o limite de 3 colocadas ao mesmo tempo. · Fonte: https://wiki.leagueoflegends.com/en-us/Stealth_Ward#Notes
+    ]
+    Escalonamento[
+        — (Trinket) · Sem scaling
+    ]
     Categoria de Atributo: none
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1250,6 +1390,9 @@ Elixir da Avareza: Elixir of Avarice[
     Notas: Data Dragon registra 50g com `purchasable: false`; campo Preço usa o 0g da wiki. O dano bônus vale tanto contra tropas de rota quanto contra invocações que tenham o tipo tropa.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Invocações do tipo tropa (Summons with minion type) · ativa · O dano bônus vale contra tropas de rota e contra invocações que têm o tipo tropa. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Avarice#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -1295,6 +1438,9 @@ Elixir da Força: Elixir of Force[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -1334,6 +1480,9 @@ Elixir da Habilidade: Elixir of Skill[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Campeão · Udyr · não ativa · Caso citado pela fonte: o Elixir da Habilidade não passa do nível máximo, que é 18 para todos os campeões menos o Udyr; o ponto de habilidade extra só vale se for usado antes do nível 18, inclusive no Udyr. · Fonte: https://wiki.leagueoflegends.com/en-us/Elixir_of_Skill#Notes
+    ]
     Escalonamento[
         — (Consume) · Sem scaling
     ]
@@ -1374,6 +1523,10 @@ Botas Levemente Mágicas: Slightly Magical Footwear[
     Notas: Data Dragon registra 300g com `purchasable: false`; campo Preço usa o 0g da wiki. Conta como item componente para todas as Botas de tier 2; ao aprimorar, o efeito de Slightly Quicker é mantido. Vender as Botas Levemente Mágicas não faz o efeito ser perdido: uma vez obtido o item, o bônus passivo se aplica a qualquer item de Botas comprado depois. Se vendidas, podem ser obtidas de novo comprando Botas.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Botas de nível 2 (Tier-2 Boots) · conta como · As Botas Levemente Mágicas contam como componente de todas as Botas de nível 2, e o efeito Slightly Quicker continua ao melhorar para elas. · Fonte: https://wiki.leagueoflegends.com/en-us/Slightly_Magical_Boots#Notes
+        Item · Botas (Boots) · ativa · Vender as Botas Levemente Mágicas não tira o efeito: depois de obtido, o bônus vale para qualquer Bota comprada. Vendidas, elas podem ser obtidas de novo comprando as Botas. · Fonte: https://wiki.leagueoflegends.com/en-us/Slightly_Magical_Boots#Notes
+    ]
     Escalonamento[
         — (Slightly Quicker) · Sem scaling
     ]
@@ -1417,6 +1570,10 @@ Biscoito Total da Determinação Eterna: Total Biscuit of Everlasting Will[
     Notas: Atributo registrado pelo tooltip do cliente (captura do usuário em 12/09/2026: "Consumir ou vender um biscoito concede 30 de Vida máxima permanentemente"); a wiki atribui o bônus à runa Entrega de Biscoitos sem dar o valor. Data Dragon registra 50g com `purchasable: false`; campo Preço usa o 0g da wiki; valor de venda 5g (10%, tooltip do cliente). O tooltip do cliente descreve a cura como "30 = (1,5% da Vida máxima + 20) ao longo de 5s, aumentado em até 100% com base na Vida perdida" e "cura máxima obtida com 30% de Vida". Consumir Biscoitos Totais concedidos pela Entrega de Biscoitos faz com que eles concedam Vida bônus. Podem ser consumidos mesmo com a Vida cheia. Vários podem ser consumidos com um já ativo, entrando em fila (até 3 por vez) e sendo consumidos após o anterior terminar. A regeneração é calculada pela Vida perdida no momento do consumo; para os biscoitos em fila, o cálculo é refeito após o anterior terminar. Pode regenerar um tique adicional de Vida no fim da duração (comportamento inesperado).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Runa · Entrega de Biscoitos (Biscuit Delivery) · ativa · Os Biscoitos Totais da Determinação Eterna dados pela Entrega de Biscoitos concedem Vida bônus ao serem consumidos. · Fonte: https://wiki.leagueoflegends.com/en-us/Total_Biscuit_of_Everlasting_Will#Notes
+        Mecânica · Vários Biscoitos (Multiple Biscuits) · acumula · Vários Biscoitos podem ser consumidos com um já ativo: entram numa fila de até 3, e cada um calcula a Vida perdida quando o anterior termina. · Fonte: https://wiki.leagueoflegends.com/en-us/Total_Biscuit_of_Everlasting_Will#Notes
+    ]
     Escalonamento[
         — (Consume) · Vida · 1,5% · máxima · seu · razão · cura em 5s (0,15% a cada 0,5s)
         — (Consume) · Vida · 0–100% · perdida · seu · razão · aumento da cura conforme a Vida perdida, até 100% com 70% de Vida perdida (até 3% da Vida máxima no total)
@@ -1461,6 +1618,13 @@ Grevas do Berserker: Berserker's Greaves[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Berserker's_Greaves#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Berserker's_Greaves#Notes
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Velocidade de Ataque, Movimento
     Classe: AD (AD 750g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -1496,6 +1660,13 @@ Botas: Boots[
     Notas: Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Boots#Notes
+        Item · Botas Levemente Mágicas (Slightly Magical Footwear) · ativa · Comprar as Botas devolve as Botas Levemente Mágicas a quem as vendeu. · Fonte: https://wiki.leagueoflegends.com/en-us/Slightly_Magical_Boots#Notes
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Movimento
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1533,6 +1704,13 @@ Botas da Rapidez: Boots of Swiftness[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Boots_of_Swiftness#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Boots_of_Swiftness#Notes
+    ]
+    Escalonamento[
+        Pés Velozes (Fleetfooted) · Sem scaling
+    ]
     Categoria de Atributo: Movimento, Resistência a Lentidão
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1575,6 +1753,13 @@ Grevas Vorazes: Gluttonous Greaves[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Gluttonous_Greaves#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Gluttonous_Greaves#Notes
+    ]
+    Escalonamento[
+        Eliminar (Slay) · Sem scaling
+    ]
     Categoria de Atributo: Movimento, Vampirismo
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, sobrevivência)
     Arquétipo Recomendado: Universal
@@ -1613,6 +1798,13 @@ Botas Ionianas da Lucidez: Ionian Boots of Lucidity[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Ionian_Boots_of_Lucidity#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Ionian_Boots_of_Lucidity#Notes
+    ]
+    Escalonamento[
+        Perspicácia Ioniana (Ionian Insight) · Sem scaling
+    ]
     Categoria de Atributo: Aceleração de Habilidade, Movimento, Aceleração de Feitiços de Invocador
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -1650,6 +1842,13 @@ Passos de Mercúrio: Mercury's Treads[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Mercury's_Treads#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercury's_Treads#Notes
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Resistência Mágica, Movimento, Tenacidade
     Classe: Vitalidade (AD 0g · Vitalidade 710g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -1688,6 +1887,92 @@ Botas Galvanizadas de Aço: Plated Steelcaps[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota. Bug documentado: a porção de dano verdadeiro do Protocolo de Precisão da Camille pode ou não ser reduzida, de forma aleatória, conforme a ordem dos buffs — particularidade dessa habilidade, válida também para outros efeitos de redução de dano.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Armadura e outras reduções de dano (Armor, other damage reduction) · acumula · A redução de dano da Barricada acumula de forma multiplicativa com Armadura e outros efeitos de redução de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Torres (Turrets) · não reduz · A Barricada não reduz o dano de disparos de torre. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Efeitos ao contato (On-hit effects) · não reduz · A Barricada não reduz o dano de efeitos ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Dano básico (Basic damage) · reduz · A Barricada reduz o dano de todas as fontes marcadas como dano básico, inclusive habilidades de campeão, itens e monstros. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Dano mágico (Magic damage) · reduz · A Barricada reduz os componentes válidos de dano mágico. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Mecânica · Dano verdadeiro (True damage) · não reduz · A Barricada não reduz os componentes válidos de dano verdadeiro. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Camille — Protocolo de Precisão (Precision Protocol) · reduz · Caso citado pela fonte: a parte de dano verdadeiro (sem contar a conversão do dano bônus da Lâmina Arcana) pode ou não ser reduzida pela Barricada, ao acaso e conforme a ordem dos buffs (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Akshan — Lutando Sujo (Dirty Fighting) e Impulso Heroico (Heroic Swing) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Dirty Fighting: segundo acerto). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Aphelios — Calibrum (Calibrum) e Onslaught (Onslaught) e Infernum (Infernum) e Crescendum (Crescendum) e Duskwave (Duskwave) e Vigília do Plenilúnio (Moonlight Vigil) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Calibrum: dano da marca; Infernum: só alvos principais; Crescendum: ataque principal; Moonlight Vigil: ataques seguintes). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Ashe — Concentração (Ranger's Focus) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Caitlyn — Bem na Mira (Headshot) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Headshot: sem o dano bônus da Yordle Snap Trap). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Corki — Munição Hextec (Hextech Munitions) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Draven — Revolução do Machado (Spinning Axe) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Ekko — Mergulho Fásico (Phase Dive) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Phase Dive: sem o dano bônus). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Fiora — Esgrima (Bladework) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Galio — Esmagada Colossal (Colossal Smash) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Colossal Smash: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Graves — Nova Destino (New Destiny) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Jayce — Hipercarga (Hyper Charge) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Jhin — Sussurro (Whisper) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Whisper: quarto ataque). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Jinx — Fishbones (Fishbones) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Fishbones: só alvos principais). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Kayle — Lâmina de Fogo Estelar (Starfire Spellblade) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Starfire Spellblade: sem o dano bônus). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Kled — Tendências Violentas (Violent Tendencies) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Violent Tendencies: quarto acerto). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Lucian — Disparo Iluminado (Lightslinger) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Lightslinger: segundo acerto). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Malphite — Trovoada (Thunderclap) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Thunderclap: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Master Yi — Ataque duplo (Double Strike) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Nautilus — Âncora Impactante (Staggering Blow) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Nocturne — Lâminas Sombrias (Umbra Blades) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Umbra Blades: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Nunu e Willump — Chamado de Freljord (Call of the Freljord) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Pantheon — Escudo-Cometa (Shield Vault) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Shield Vault: fortalecido). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Quinn — Rapina (Harrier) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Rek'Sai — Ira da Rainha (Queen's Wrath) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Queen's Wrath: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Renekton — Predador Desumano (Ruthless Predator) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Rengar — Predador Oculto (Unseen Predator) e Selvageria (Savagery) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Samira — Impulso Audacioso (Daredevil Impulse) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Daredevil Impulse: ataque em rajada). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Sett — Ousadia da Arena (Pit Grit) e Pancadaria (Knuckle Down) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Shaco — Apunhalar (Backstab) e Enganar (Deceive) e Alucinações (Hallucinate) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Hallucinate: ataques do clone). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Shyvana — Golpe de Brasas (Emberstrike) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Emberstrike: só o primeiro acerto na Forma Humana). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Sivir — Ricochete (Ricochet) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Ricochet: primeiro acerto). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Sylas — Explosão de Petricita (Petricite Burst) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Petricite Burst: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Twitch — Passando Fogo (Spray and Pray) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Spray and Pray: todos os alvos). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Udyr — Investida Ardente (Blazing Stampede) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Urgot — Expurgar (Purge) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Vi — Força Implacável (Relentless Force) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Relentless Force: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Viego — Espada do Rei Destruído (Blade of the Ruined King) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Blade of the Ruined King: os dois acertos dos ataques de marca e o dano bônus aos alvos marcados durante Sovereign's Domination). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Wukong — Guerreiro Trapaceiro (Warrior Trickster) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Warrior Trickster: ataques do clone). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Xayah — Plumagem Mortífera (Deadly Plumage) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Deadly Plumage: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Xin Zhao — Golpe de Três Garras (Three Talon Strike) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Yasuo — Tempestade de Aço (Steel Tempest) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Steel Tempest: no primeiro e mais próximo alvo atingido). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Yone — Estilo do Caçador (Way of the Hunter) e Aço Mortal (Mortal Steel) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Mortal Steel: no primeiro e mais próximo alvo atingido). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Zeri — Rajada Reluzente (Burst Fire) · reduz · Caso citado pela fonte: habilidade que age como ataque básico; o dano dela é reduzido pela Barricada (Burst Fire: todos os acertos, inclusive com Lightning Crash). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Annie — Invocar: Tibbers (Summon: Tibbers) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Summon: Tibbers: ataques do mascote). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Bel'Veth — Impulso do Vazio (Void Surge) e Turbilhão da Realeza (Royal Maelstrom) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Blitzcrank — Punho do Poder (Power Fist) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Camille — Protocolo de Precisão (Precision Protocol) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Precision Protocol: parte de dano físico). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Darius — Ataque Mutilador (Crippling Strike) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Dr. Mundo — Traumatismo (Blunt Force Trauma) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Ezreal — Disparo Místico (Mystic Shot) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Fiora — Estocada (Lunge) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Gangplank — Negociarrr (Parrrley) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Garen — Acerto Decisivo (Decisive Strike) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Hecarim — Ataque Devastador (Devastating Charge) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Illaoi — Lição Dura (Harsh Lesson) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Harsh Lesson: sem o dano bônus). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Irelia — Surto da Lâmina (Bladesurge) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Ivern — Margarida! (Daisy!) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Daisy!: ataques do mascote). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Malzahar — Enxame do Vazio (Void Swarm) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Void Swarm: ataques dos mascotes). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Miss Fortune — Dois por Um (Double Up) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Double Up: os dois acertos). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Nasus — Ataque Sifão (Siphoning Strike) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Nidalee — Bote (Takedown) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Senna — Escuridão Perfurante (Piercing Darkness) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Piercing Darkness: todos os alvos atingidos). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Shyvana — Golpe de Brasas (Emberstrike) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Emberstrike: segundo acerto na Forma Humana e todos os alvos na Forma de Dragão). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Trundle — Mordida (Chomp) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Udyr — Manto de Ferro (Iron Mantle) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Vayne — Rolamento (Tumble) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Tumble: sem o dano bônus). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Viego — Destruidor de Corações (Heartbreaker) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Heartbreaker: alvo principal). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Viktor — Discharge (Discharge) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Volibear — Esmagamento Trovejante (Thundering Smash) e Fúria Selvagem (Frenzied Maul) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Warwick — Presas da Fera (Jaws of the Beast) e Coerção Infinita (Infinite Duress) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada. · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Wukong — Golpe Destruidor (Crushing Blow) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Crushing Blow: sem o dano bônus). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+        Campeão · Yorick — Extrema-Unção (Last Rites) e Névoa dos Lamentos (Mourning Mist) e Louvor das Ilhas (Eulogy of the Isles) · reduz · Caso citado pela fonte: habilidade que aplica efeitos de proc ou de habilidade; o dano dela é reduzido pela Barricada (Eulogy of the Isles: ataques da Donzela). · Fonte: https://wiki.leagueoflegends.com/en-us/Plated_Steelcaps#Notes
+    ]
+    Escalonamento[
+        Barricada (Plating) · Sem scaling
+    ]
     Categoria de Atributo: Armadura, Movimento
     Classe: Vitalidade (AD 0g · Vitalidade 500g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -1724,6 +2009,13 @@ Sapatos do Feiticeiro: Sorcerer's Shoes[
     Notas: Com a Missão do Meio concluída, esta Bota é aprimorada para a variante de tier 3 sem custo; a transformação também ocorre de forma proativa ao equipar qualquer Bota de tier 2 e bloqueia o usuário da função Desfazer (bug). Com a Missão da Rota Inferior concluída, esta Bota passa a ocupar exclusivamente o espaço da Missão de Função, separado do inventário, liberando um espaço; se estiver no inventário na conclusão da missão, é movida para lá. A troca de espaço também ocorre de forma proativa ao equipar qualquer Bota.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Missão da Rota do Meio (Midlane Quest) · ativa · Com a Missão da Rota do Meio concluída, este item de Botas vira a variante de nível 3 sem custo, também ao equipar qualquer Bota de nível 2; a transformação bloqueia a função Desfazer (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Sorcerer's_Shoes#Notes
+        Mecânica · Missão da Rota Inferior (Botlane Quest) · ativa · Com a Missão da Rota Inferior concluída, este item de Botas vai para o espaço da Missão de Rota, separado do inventário; se estiver no inventário, vai para lá ao concluir a missão ou ao equipar qualquer Bota. · Fonte: https://wiki.leagueoflegends.com/en-us/Sorcerer's_Shoes#Notes
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Penetração Mágica, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 560g)
     Arquétipo Recomendado: Assassino, Mago
@@ -1763,6 +2055,12 @@ Tomo Amplificador: Amplifying Tome[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 400g)
     Arquétipo Recomendado: Mago, Suporte
@@ -1798,6 +2096,12 @@ Espada G. p. C.: B. F. Sword[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 1.400g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -1833,6 +2137,12 @@ Varinha Explosiva: Blasting Wand[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 900g)
     Arquétipo Recomendado: Mago, Suporte
@@ -1868,6 +2178,12 @@ Capa da Agilidade: Cloak of Agility[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Acerto Crítico
     Classe: AD (AD 600g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -1903,6 +2219,12 @@ Couraça de Pano: Cloth Armor[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Armadura
     Classe: Vitalidade (AD 0g · Vitalidade 300g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -1938,6 +2260,12 @@ Adaga: Dagger[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Velocidade de Ataque
     Classe: AD (AD 250g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -1973,6 +2301,12 @@ Amuleto da Fada: Faerie Charm[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 200g)
     Arquétipo Recomendado: Mago, Suporte
@@ -2008,6 +2342,12 @@ Partícula Brilhante: Glowing Mote[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -2043,6 +2383,12 @@ Espada Longa: Long Sword[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 350g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -2078,6 +2424,12 @@ Bastão Desnecessariamente Grande: Needlessly Large Rod[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.300g)
     Arquétipo Recomendado: Mago
@@ -2113,6 +2465,12 @@ Manto Anula-Magia: Null-Magic Mantle[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 400g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -2148,6 +2506,12 @@ Picareta: Pickaxe[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 875g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -2183,6 +2547,12 @@ Pérola do Rejuvenescimento: Rejuvenation Bead[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 300g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -2218,6 +2588,12 @@ Cristal de Rubi: Ruby Crystal[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Vida
     Classe: Vitalidade (AD 0g · Vitalidade 400g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -2253,6 +2629,12 @@ Cristal de Safira: Sapphire Crystal[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 300g)
     Arquétipo Recomendado: Mago, Tanque
@@ -2293,6 +2675,12 @@ Cintilação Etérea: Aether Wisp[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 600g)
     Arquétipo Recomendado: Mago
@@ -2330,6 +2718,11 @@ Brasa de Bami: Bami's Cinder[
     Notas: A aura aumenta se o usuário aumentar de tamanho, mas não é afetada pelo tamanho base. O bug em que a aura de Imolar deixou de aumentar com tamanho bônus foi corrigido no V26.20. A aura não pode ser reduzida abaixo do raio base por modificadores negativos de tamanho.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Imolar ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Imolar causa dano de proc, marcado como periódico e em área e não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Bami's_Cinder#Notes
+        Mecânica · Tamanho (Size) · amplifica · A aura do Imolar aumenta se o tamanho do portador aumentar, sem depender do tamanho base, e não fica menor que o raio base com modificadores negativos de tamanho. · Fonte: https://wiki.leagueoflegends.com/en-us/Bami's_Cinder#Notes
+    ]
     Escalonamento[
         Imolar (Immolate) · Sem scaling
     ]
@@ -2370,6 +2763,12 @@ Espelho de Bandópolis: Bandleglass Mirror[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade, Regeneração de Mana, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 800g)
     Arquétipo Recomendado: Suporte
@@ -2406,6 +2805,12 @@ Joia da Ruína: Blighting Jewel[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica Percentual
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.099,95g)
     Arquétipo Recomendado: Mago
@@ -2442,6 +2847,16 @@ Colete Espinhoso: Bramble Vest[
     Notas: O texto oficial pt_BR exibe "0 de Dano Mágico" (placeholder não resolvido no Data Dragon); o valor real (10) está em Mecânica. Ferimentos Graves é aplicado ao atacante mesmo protegido por escudo ou invulnerabilidade. Curas disparadas pelo ataque básico (Roubo de Vida, Determinação do Xin Zhao etc.) já são reduzidas pelos Ferimentos Graves do próprio ataque que ativa a passiva.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · Quem tem este item e é atingido pelo Golpe Fantasma (Phantom Hit) reflete o dano dos Espinhos de novo. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Espinhos ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · Os Espinhos causam dano reativo e não ativam efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Bramble_Vest#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Os Espinhos não são bloqueados por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Bramble_Vest#Notes
+        Mecânica · Escudos e invulnerabilidade (Shields, invulnerability) · ativa · Os Espinhos ativam mesmo se o ataque básico não causar dano, inclusive quando o portador anula todo o dano com escudo ou invulnerabilidade, e as Feridas Dolorosas são aplicadas ao atacante mesmo que ele esteja protegido por escudo ou invulnerabilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Bramble_Vest#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · Os Espinhos não ativam se o ataque for esquivado, bloqueado ou errado com o atacante sob Cegueira. · Fonte: https://wiki.leagueoflegends.com/en-us/Bramble_Vest#Notes
+        Mecânica · Roubo de Vida (Life steal) · reduz · Curas que ativam com o ataque básico, como o Roubo de Vida, são reduzidas primeiro pelas Feridas Dolorosas do Colete Espinhoso: elas já valem para o ataque que ativa os Espinhos. · Fonte: https://wiki.leagueoflegends.com/en-us/Bramble_Vest#Notes
+        Campeão · Xin Zhao — Determinação (Determination) · reduz · Caso citado pela fonte: a cura da Determinação ativada pelo ataque básico é reduzida primeiro pelas Feridas Dolorosas do Colete Espinhoso. · Fonte: https://wiki.leagueoflegends.com/en-us/Bramble_Vest#Notes
+    ]
     Escalonamento[
         Espinhos (Thorns) · Sem scaling
     ]
@@ -2482,6 +2897,9 @@ Catalisador das Eras: Catalyst of Aeons[
     Notas: Eternidade ativa com qualquer fonte de custo de Mana.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Custos de Mana (Mana costs) · ativa · A Eternidade ativa com toda fonte de custo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Catalyst_of_Aeons#Notes
+    ]
     Escalonamento[
         Eternidade (Eternity) · Sem scaling
     ]
@@ -2521,6 +2939,12 @@ Martelo de Guerra de Caulfield: Caulfield's Warhammer[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade
     Classe: AD (AD 700g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -2556,6 +2980,12 @@ Cota de Malha: Chain Vest[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Armadura
     Classe: Vitalidade (AD 0g · Vitalidade 800g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador, Tanque
@@ -2592,6 +3022,12 @@ Braçadeira Cristalina: Crystalline Bracer[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 833,33g · AP 0g)
     Arquétipo Recomendado: Suporte, Tanque
@@ -2628,6 +3064,9 @@ Chamado do Carrasco: Executioner's Calling[
     Notas: Ferimentos Graves é aplicado ao campeão atingido mesmo protegido por escudo.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos (Shields) · não reduz · As Feridas Dolorosas são aplicadas ao campeão atingido mesmo que ele esteja protegido por escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Executioner's_Calling#Notes
+    ]
     Escalonamento[
         Feridas Dolorosas (Grievous Wounds) · Sem scaling
     ]
@@ -2667,6 +3106,11 @@ Cinzas do Destino: Fated Ashes[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · O Inflamar gera acúmulos do Impassível da Força da Natureza mais de uma vez por segundo, mesmo quando o dano mágico coincide com outra instância de dano, independentemente da instância de conjuração (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Inflamar causa dano de proc, marcado como periódico e não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Fated_Ashes#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Inflamar, por si só, não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Fated_Ashes#Notes
+    ]
     Escalonamento[
         Inflamar (Inflame) · Sem scaling
     ]
@@ -2706,6 +3150,12 @@ Códex Demoníaco: Fiendish Codex[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 500g)
     Arquétipo Recomendado: Mago
@@ -2742,6 +3192,12 @@ Códex Demoníaco: Fiendish Codex[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Regeneração de Mana, Poder de Cura e Escudo
     Classe: AP (AD 0g · Vitalidade 0g · AP 200g)
     Arquétipo Recomendado: Suporte
@@ -2777,6 +3233,12 @@ Cinto do Gigante: Giant's Belt[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Vida
     Classe: Vitalidade (AD 0g · Vitalidade 933,33g · AP 0g)
     Arquétipo Recomendado: Lutador, Mago, Tanque
@@ -2814,6 +3276,12 @@ Broquel Glacial: Glacial Buckler[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Armadura, Mana, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 500g · AP 300g)
     Arquétipo Recomendado: Suporte, Tanque
@@ -2859,6 +3327,14 @@ Máscara Assustadora: Haunting Guise[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Multiplicadores de dano (Damage multipliers) · acumula · O aumento de dano da Loucura acumula de forma multiplicativa consigo mesmo e com outros multiplicadores de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Haunting_Guise#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e a Máscara Assustadora entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e a Máscara Assustadora entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
+    Escalonamento[
+        Loucura (Madness) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida
     Classe: AP (AD 0g · Vitalidade 533,33g · AP 600g)
     Arquétipo Recomendado: Mago
@@ -2895,6 +3371,12 @@ Machado Termestre: Hearthbound Axe[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque
     Classe: AD (AD 1.200g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -2932,6 +3414,12 @@ Hexdrinker: Hexdrinker[
     Notas: A passiva interage com a própria Resistência Mágica do item: com o mínimo possível de RM (30 base + 35 do item = 65; a wiki soma 35), o escudo absorve cerca de 182 a 462 de dano mágico bruto. Salva-Vidas ainda ativa se o dano for sofrido já abaixo de 30% da Vida máxima.
     Notas de ARAM: Recarga de Salva-Vidas alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Mandíbula de Malmortius (Maw of Malmortius) — Salva-Vidas (Lifeline) · não acumula · A recarga em andamento do Salva-Vidas do Hexdrinker não passa para o Salva-Vidas da Mandíbula de Malmortius quando o item é melhorado. · Fonte: https://wiki.leagueoflegends.com/en-us/Hexdrinker#Notes
+    ]
+    Escalonamento[
+        Salva-Vidas (Lifeline) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Resistência Mágica
     Classe: AD (AD 875g · Vitalidade 500g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -2968,6 +3456,12 @@ Alternador Hextec: Hextech Alternator[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Entusiasmo ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Entusiasmo causa dano de proc e não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Alternator#Notes
+        Mecânica · Efeitos com 0 de dano (0 damage effects) · ativa · O Entusiasmo ativa com efeitos que causam 0 de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Alternator#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Entusiasmo, por si só, não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Alternator#Notes
+    ]
     Escalonamento[
         Entusiasmo (Revved) · Sem scaling
     ]
@@ -3007,6 +3501,12 @@ Gema Ardente: Kindlegem[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Vida, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 533,33g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -3043,6 +3543,12 @@ Gema Ardente: Kindlegem[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Penetração de Armadura
     Classe: AD (AD 1.450g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -3081,6 +3587,12 @@ Salva-Vidas: Lifeline[
     Notas: O texto oficial pt_BR exibe recarga "0s" (placeholder não resolvido); o valor real (45s) está em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Âncora Espiritual (Soul Anchor) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Movimento
     Classe: AD (AD 1.025g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -3119,6 +3631,12 @@ Capítulo Perdido: Lost Chapter[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Iluminar (Enlighten) · Mana · 20% · máxima · seu · razão · Mana restaurada em 3s ao subir de nível
+    ]
     Categoria de Atributo: Poder de Habilidade, Mana, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.100g)
     Arquétipo Recomendado: Mago
@@ -3154,6 +3672,12 @@ Capa Negatron: Negatron Cloak[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 900g · AP 0g)
     Arquétipo Recomendado: Lutador, Suporte, Tanque
@@ -3190,6 +3714,12 @@ Aljava Vespertina: Noonquiver[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Acerto Crítico
     Classe: AD (AD 1.325g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -3226,6 +3756,9 @@ Orbe do Oblívio: Oblivion Orb[
     Notas: Ferimentos Graves é aplicado ao campeão atingido mesmo protegido por escudo.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos (Shields) · não reduz · As Feridas Dolorosas são aplicadas ao campeão atingido mesmo que ele esteja protegido por escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Oblivion_Orb#Notes
+    ]
     Escalonamento[
         Feridas Dolorosas (Grievous Wounds) · Sem scaling
     ]
@@ -3271,6 +3804,9 @@ Fago: Phage[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
     Escalonamento[
         Fúria (Rage) · Sem scaling
     ]
@@ -3310,6 +3846,27 @@ Bandana de Mercúrio: Quicksilver Sash[
     Notas: A recarga de Mercúrio não é transferida entre itens que tenham essa ativa. Apesar de não poder ser purificado, Mercúrio entra em recarga estática de 3s sob Destino Temperado do Bard e de 0,5s com Ampulheta de Zhonya.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Anjo Guardião (Guardian Angel) — Renascimento (Rebirth) · ativa · O Mercúrio pode ser usado durante o Renascimento do Anjo Guardião. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Mecânica · Arremessar ao ar (Airborne) · não ativa · O Mercúrio fica desativado durante efeitos de arremessar ao ar. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Mecânica · Suspensão (Suspension) · ativa · O Mercúrio remove totalmente a suspensão. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Mecânica · Suprimir (Suppression) e Nearsight · ativa · Diferente de Purificar, o Mercúrio remove a supressão e Nearsight. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Mecânica · Efeitos negativos de Feitiços de Invocador (Summoner spell debuffs) · não ativa · Diferente de Purificar, o Mercúrio não remove efeitos negativos de Feitiços de Invocador e não concede Tenacidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Campeão · Malzahar — Aperto Ínfero (Nether Grasp) · não ativa · Caso citado pela fonte: o Mercúrio não remove o vínculo que acompanha o controle de grupo da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Campeão · Warwick — Coerção Infinita (Infinite Duress) · não ativa · Caso citado pela fonte: o Mercúrio não remove os ataques ao contato que acompanham o controle de grupo da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Feitiço de Invocador · Exaustão (Exhaust) · não ativa · Caso citado pela fonte: o Mercúrio não remove a redução de dano da Exaustão. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Mecânica · Estase (Stasis) · não ativa · O Mercúrio não remove estase. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Campeão · Bardo — Têmpera do Destino (Tempered Fate) · não ativa · Caso citado pela fonte: sob o efeito da habilidade, que não pode ser removido, o Mercúrio entra numa recarga fixa de 3s. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Item · Ampulheta de Zhonya (Zhonya's Hourglass) — Tempo Paralisado (Time Stop) · não ativa · O Mercúrio entra numa recarga de 0,5s quando o Tempo Paralisado da Ampulheta de Zhonya é ativado. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes; https://wiki.leagueoflegends.com/en-us/Zhonya's_Hourglass#Notes
+        Item · Armaguarda da Caçadora (Seeker's Armguard) — Tempo Paralisado (Time Stop) · não ativa · O Mercúrio entra numa recarga de 0,5s quando o Tempo Paralisado da Armaguarda da Caçadora é ativado. · Fonte: https://wiki.leagueoflegends.com/en-us/Seeker's_Armguard#Notes
+        Mecânica · Lentidão própria (Self slows) · não ativa · O Mercúrio não remove lentidões que o portador aplica em si mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Campeão · Blitzcrank — Turbo (Overdrive) · ativa · Caso citado pela fonte: exceção à regra das lentidões próprias; o Mercúrio remove a lentidão da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Campeão · Quinn — Retaguarda do Inimigo (Behind Enemy Lines) · ativa · Caso citado pela fonte: exceção à regra das lentidões próprias; o Mercúrio remove a lentidão da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+        Item · Cimitarra Mercurial (Mercurial Scimitar) — Mercúrio (Quicksilver) · não acumula · A recarga do Mercúrio não passa de um item para outro entre os itens que têm essa ativa. · Fonte: https://wiki.leagueoflegends.com/en-us/Quicksilver_Sash#Notes
+    ]
+    Escalonamento[
+        Mercúrio (Quicksilver) · Sem scaling
+    ]
     Categoria de Atributo: Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 600g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -3346,6 +3903,12 @@ Retriz: Rectrix[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Movimento
     Classe: AD (AD 525g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Lutador
@@ -3383,6 +3946,13 @@ Arco Recurvo: Recurve Bow[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus da Ferroada mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · não ativa · Caso citado pela página do Cutelo Negro: este item não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Ferroada causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Recurve_Bow#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato da Ferroada não se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Recurve_Bow#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Ferroada se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Recurve_Bow#Notes
+    ]
     Escalonamento[
         Ferroada (Sting) · Sem scaling
     ]
@@ -3426,6 +3996,11 @@ Estilingue do Patrulheiro: Scout's Slingshot[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Tiro Certeiro ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · O Tiro Certeiro causa dano de habilidade e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Scout's_Slingshot#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Tiro Certeiro, por si só, não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Scout's_Slingshot#Notes
+    ]
     Escalonamento[
         Tiro Certeiro (Bullseye) · Sem scaling
     ]
@@ -3466,6 +4041,13 @@ Armaguarda da Caçadora: Seeker's Armguard[
     Notas: Pós-uso: ao ativar Tempo Paralisado, o item vira Armaguarda Despedaçada (Shattered Armguard, ID 2421) — mesma receita, mesmos atributos (+40 de Poder de Habilidade, +25 de Armadura), mesmo preço (1.600g), sem a ativa, e ainda aprimorável para Ampulheta de Zhonya; depois da primeira quebra, a loja só vende a versão despedaçada. A Armaguarda Despedaçada não recebe bloco próprio (decisão do usuário, 12/09/2026). Valor de venda: 40% do custo (sellratio 0,4 no módulo de dados).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Bandana de Mercúrio (Quicksilver Sash) — Mercúrio (Quicksilver) · não ativa · Ativar o Tempo Paralisado põe o Mercúrio da Bandana de Mercúrio numa recarga de 0,5s. · Fonte: https://wiki.leagueoflegends.com/en-us/Seeker's_Armguard#Notes
+        Item · Cimitarra Mercurial (Mercurial Scimitar) — Mercúrio (Quicksilver) · não ativa · Ativar o Tempo Paralisado põe o Mercúrio da Cimitarra Mercurial numa recarga de 0,5s. · Fonte: https://wiki.leagueoflegends.com/en-us/Seeker's_Armguard#Notes
+    ]
+    Escalonamento[
+        Tempo Paralisado (Time Stop) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Armadura
     Classe: AP (AD 0g · Vitalidade 500g · AP 800g)
     Arquétipo Recomendado: Mago
@@ -3502,6 +4084,12 @@ Punhal Serrilhado: Serrated Dirk[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade
     Classe: AD (AD 1.000g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -3538,6 +4126,21 @@ Fulgor: Sheen[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Sheen#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame (o Fulgor "e outros efeitos de Lâmina Arcana"; instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+    ]
+    Escalonamento[
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 100% · base · seu · razão · dano físico bônus do ataque fortalecido
+    ]
     Categoria de Atributo: Aceleração de Habilidade
     Classe: AD (AD 0g · Vitalidade 0g · AP 0g; desempate 2: dano físico)
     Arquétipo Recomendado: Atirador, Lutador, Mago
@@ -3575,6 +4178,12 @@ Capuz do Espectro: Spectre's Cowl[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Vida, Resistência Mágica, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 1.533,33g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -3611,6 +4220,12 @@ Sigilo de Aço: Steel Sigil[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Armadura
     Classe: Vitalidade (AD 525g · Vitalidade 600g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -3648,6 +4263,12 @@ Brutalizador: The Brutalizer[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Letalidade
     Classe: AD (AD 1.025g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -3686,6 +4307,20 @@ Tiamat: Tiamat[
     Notas: Mudar a Tiamat de slot durante a conjuração de Crescente cancela a área de efeito (bug).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus da Fenda mais uma vez. A fonte marca o item com asterisco, sem legenda. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Fenda causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Tiamat#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Fenda não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Tiamat#Notes
+        Mecânica · Estruturas (Structures) · não ativa · A Fenda não ativa em ataques contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Tiamat#Notes
+        Mecânica · Invulnerabilidade (Invulnerability) · ativa · A Fenda ativa mesmo se o ataque básico não causar dano, como contra um alvo invulnerável. · Fonte: https://wiki.leagueoflegends.com/en-us/Tiamat#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · O Crescente causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Tiamat#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · O Crescente é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Tiamat#Notes
+    ]
+    Escalonamento[
+        Fenda (Cleave) · Dano de Ataque · 40% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo (corpo a corpo)
+        Fenda (Cleave) · Dano de Ataque · 20% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo (à distância)
+        Crescente (Crescent) · Dano de Ataque · 75% · total · seu · razão · dano físico aos inimigos num raio de 450 à frente
+    ]
     Categoria de Atributo: Dano de Ataque
     Classe: AD (AD 875g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Lutador, Tanque
@@ -3722,6 +4357,12 @@ Tunelizador: Tunneler[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Vida
     Classe: Vitalidade (AD 525g · Vitalidade 666,67g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -3758,6 +4399,12 @@ Cetro Vampírico: Vampiric Scepter[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Dano de Ataque, Roubo de Vida
     Classe: AD (AD 899,85g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -3795,6 +4442,12 @@ Barreira Verdejante: Verdant Barrier[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Clones (Clones) · ativa · O Anular fica ativo em clones do portador logo que eles surgem, se o portador estiver com escudo de feitiço, ou depois de 2s. · Fonte: https://wiki.leagueoflegends.com/en-us/Verdant_Barrier#Notes
+    ]
+    Escalonamento[
+        Anular (Annul) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Resistência Mágica
     Classe: AP (AD 0g · Vitalidade 500g · AP 800g)
     Arquétipo Recomendado: Mago
@@ -3831,6 +4484,12 @@ Carapaça do Vigia: Warden's Mail[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Dança da Morte (Death's Dance) — Dor Ignorada (Ignore Pain) · acumula · A Dor Ignorada da Dança da Morte se aplica depois da redução do Duro como Pedra. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+    ]
+    Escalonamento[
+        Duro como Pedra (Rock Solid) · Sem scaling
+    ]
     Categoria de Atributo: Armadura
     Classe: Vitalidade (AD 0g · Vitalidade 800g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -3867,6 +4526,12 @@ Couraça Lunar Alada: Winged Moonplate[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Vida, Movimento
     Classe: Vitalidade (AD 0g · Vitalidade 533,33g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -3904,6 +4569,12 @@ Zelo: Zeal[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Velocidade de Ataque, Acerto Crítico, Movimento
     Classe: AD (AD 975g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -3946,6 +4617,10 @@ Máscara Abissal: Abyssal Mask[
     Notas: O indicador visual da redução dura até 60s, embora o debuff dure indefinidamente enquanto o campeão estiver dentro da aura de Destroçar (bug).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e a Máscara Abissal entre os modificadores de dano recebido: o dano mágico a mais do Destroçar não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_received_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e a Máscara Abissal entre os modificadores de dano recebido: o dano mágico a mais do Destroçar não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_received_modifier
+    ]
     Escalonamento[
         Destroçar (Unmake) · Sem scaling
     ]
@@ -3994,6 +4669,13 @@ Concretizador: Actualizer[
     Notas: O texto oficial pt_BR exibe "0 de dano de habilidade" e recarga "(0s)" (placeholders); valores reais em Mecânica. Pode ser comprado por campeões sem Mana, que não conseguem ativar Mana Concretizado.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana (Manaless champions) · não ativa · Campeões sem Mana podem comprar o Concretizador, mas não podem ativar o Mana Concretizado. · Fonte: https://wiki.leagueoflegends.com/en-us/Actualizer#Notes
+        Mecânica · Poder de Cura e Escudo (Heal and shield power) · conta como · O aumento de cura e escudo do Mana Concretizado segue as mesmas regras do Poder de Cura e Escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Actualizer#Notes
+        Mecânica · Modificadores de cura (Heal modifiers) · acumula · O aumento de cura do Mana Concretizado acumula de forma multiplicativa com outros modificadores de cura. · Fonte: https://wiki.leagueoflegends.com/en-us/Actualizer#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e o Concretizador entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e o Concretizador entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
     Escalonamento[
         Mana Concretizado (Mana Made Real) · Mana · 0,5% · bônus · seu · razão · dano de habilidade e de pet, cura e escudo aumentados por 8s: +0,5% a cada 100 de Mana bônus (mais 15%)
     ]
@@ -4049,6 +4731,10 @@ Cajado do Arcanjo: Archangel's Staff[
     Notas: none
     Notas de ARAM: Cada carga consumida de Fluxo de Mana gera 50% mais Mana.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana (Manaless champions) · não ativa · Campeões sem Mana não ativam o Fluxo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Archangel's_Staff#Notes
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · conta como · Vender um item de Fluxo de Mana tira a Mana bônus ganha com o efeito, mas os acúmulos ficam guardados se esses itens forem comprados de novo, não importa qual item gerou os acúmulos. · Fonte: https://wiki.leagueoflegends.com/en-us/Archangel's_Staff#Notes
+    ]
     Escalonamento[
         Fascínio (Awe) · Mana · 1% · bônus · seu · conversão · Poder de Habilidade
         Fluxo de Mana (Manaflow) · Sem scaling
@@ -4102,6 +4788,12 @@ Turíbulo Ardente: Ardent Censer[
     Notas: O cliente pt_BR grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo". O dano ao contato de Santificar aparece como acerto crítico para o portador e como dano mágico comum para o aliado fortalecido.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Santificar ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Santificar causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Ardent_Censer#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato do Santificar não se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Ardent_Censer#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus do Santificar se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Ardent_Censer#Notes
+    ]
     Escalonamento[
         Santificar (Sanctify) · Sem scaling
     ]
@@ -4199,6 +4891,10 @@ Arco do Axioma: Axiom Arc[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Ultimate (Ultimate ability) · reduz · Se o Fluxo fosse zerar a recarga da ultimate, ela fica em 0,5s, mesmo se a recarga restante já for menor que 0,5s (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Axiom_Arc#Notes
+        Mecânica · Ultimates com recarga adiada (Ultimates with delayed cooldown) · acumula · Se a ultimate não entra em recarga logo ao ser conjurada e o Fluxo ativa nesse meio-tempo, a devolução de recarga vale depois que a habilidade entra em recarga; várias ativações nesse caso se somam. · Fonte: https://wiki.leagueoflegends.com/en-us/Axiom_Arc#Notes
+    ]
     Escalonamento[
         Fluxo (Flux) · Letalidade · 0,25% · total · seu · razão · reembolso da recarga total da ultimate: +0,25% a cada 1 de Letalidade (mais 10%)
     ]
@@ -4250,6 +4946,12 @@ Bandocanos: Bandlepipes[
     Notas: O texto oficial pt_BR exibe "por 0s" e "0 de Velocidade de Ataque" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Imobilização (Immobilize) · ativa · A Fanfarra vale para todo efeito que a wiki classifica como Imobilização: arremessar ao ar (Airborne), Berserk (Berserk), encantar (Charm), Temor (Flee), provocar (Taunt), enraizar (Root), adormecer (Sleep), estase (Stasis), atordoar (Stun), inclusive a suspensão (Suspension), e suprimir (Suppression). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Notes; https://wiki.leagueoflegends.com/en-us/Module:ItemData/data
+        Mecânica · Lentidão (Slow) · ativa · Causar Lentidão a um campeão inimigo também ativa a Fanfarra. A página Types of Crowd Control lista os Bandocanos entre o que interage com Imobilização e Lentidão. · Fonte: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data; https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Interactions_with_Crowd_Control
+        Mecânica · Sonolência (Drowsy) · ativa · A unidade sob Sonolência sofre Lentidão e depois adormece. A Lentidão da Sonolência ativa a Fanfarra, e o sono que vem depois também (linha Imobilização) (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Drowsy
+        Mecânica · Preso ao chão (Ground) · não ativa · Preso ao chão não é Imobilização nem Lentidão. A fonte diz que as fontes de Preso ao chão que existem também aplicam Lentidão; essa Lentidão ativa a Fanfarra (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Notes
+    ]
     Escalonamento[
         Fanfarra (Fanfare) · Sem scaling
     ]
@@ -4293,6 +4995,12 @@ Véu da Banshee: Banshee's Veil[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Clones (Clones) · ativa · O Anular fica ativo em clones do portador logo que eles surgem, se o portador estiver com escudo de feitiço, ou depois de 2s. · Fonte: https://wiki.leagueoflegends.com/en-us/Banshee's_Veil#Notes
+    ]
+    Escalonamento[
+        Anular (Annul) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Resistência Mágica
     Classe: AP (AD 0g · Vitalidade 800g · AP 2.100g)
     Arquétipo Recomendado: Mago
@@ -4340,6 +5048,16 @@ Quebra-Bastião: Bastionbreaker[
     Notas: O texto oficial pt_BR exibe "0 de Dano Verdadeiro" nas duas passivas e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Investida Esculpida causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Bastionbreaker#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · A Investida Esculpida é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Bastionbreaker#Notes
+    ]
+    Escalonamento[
+        Investida Esculpida (Shaped Charge) · Letalidade · 1,5 · total · seu · razão · dano verdadeiro bônus da próxima habilidade contra campeão ou monstro épico: 1,5 a cada 1 de Letalidade (corpo a corpo)
+        Investida Esculpida (Shaped Charge) · Letalidade · 0,75 · total · seu · razão · dano verdadeiro bônus da próxima habilidade contra campeão ou monstro épico: 0,75 a cada 1 de Letalidade (à distância)
+        Sabotagem (Sabotage) · Letalidade · 25 · total · seu · razão · dano verdadeiro bônus em 3s do ataque contra torre ou monstro épico: 25 a cada 1 de Letalidade (corpo a corpo)
+        Sabotagem (Sabotage) · Letalidade · 20 · total · seu · razão · dano verdadeiro bônus em 3s do ataque contra torre ou monstro épico: 20 a cada 1 de Letalidade (à distância)
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Aceleração de Habilidade
     Classe: AD (AD 2.465g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -4388,6 +5106,63 @@ Cutelo Negro: Black Cleaver[
     Notas: O texto oficial pt_BR exibe "0 de Velocidade de Movimento" (placeholder); valor real em Mecânica. Talhar ativa também com 0 de dano físico de ataques básicos. Fervor pode conceder a Velocidade de Movimento a partir de clones; acúmulos de Talhar são transferidos a clones. Talhar por si NÃO é bloqueado por escudo de feitiço. Ativa na maioria dos casos de dano físico, inclusive pets e efeitos que aplicam várias instâncias. A primeira instância de dano físico NÃO se beneficia da redução de Armadura: o dano é calculado antes e o debuff aplicado depois — cada instância só aproveita a redução dos acúmulos anteriores. NÃO acumula mais de uma vez por frame nos seguintes efeitos (EN, como na wiki) — parte de uma instância de conjuração: Aphelios — Sentry; Camille — Tactical Sweep (dano adicional); Illaoi — múltiplos ataques de Tentacle; Naafiri — Packmates; Qiyana — Royal Privilege (dano adicional de habilidades); Yorick — múltiplos golpes de Mist Walkers; Zed — Razor Shurikens dele e das Shadows; Eclipse — Ever Rising Moon se vários acúmulos forem gerados no mesmo frame. Instância de dano básico seguida de instâncias não básicas: Ambessa — Drakehound's Step; Briar — Snack Attack; Aphelios — Chakram; Illaoi — Harsh Lesson; Jarvan IV — Martial Cadence; K'Sante — Dauntless Instinct; Riven — Runic Blade; Vayne — Tumble; Viego — Blade of the Ruined King (ao contato); Xin Zhao — Determination; itens Blade of the Ruined King, Hullbreaker, Muramana, Recurve Bow, Titanic Hydra (passiva/ativa); runa Dark Harvest. Dano em instância única embrulhada no ataque básico principal. Exclusões especiais (comportamento inesperado): Kindred — Mounting Dread; Miss Fortune — Love Tap; Udyr — Wilding Claw (ao contato permanente). ACUMULA mais de uma vez por frame nos seguintes efeitos — múltiplas instâncias de dano básico: Aphelios — marcas de Calibrum; Graves — New Destiny; Ivern — Daisy!; Kled — Violent Tendencies; Malphite — Thunderclap; Rengar — Savagery e Thrill of the Hunt; Viego — marca de possessão de Blade of the Ruined King; itens Heartsteel, Kraken Slayer. Instância não básica seguida de instâncias básicas: Qiyana — Royal Privilege (de ataques básicos); Senna — Absolution; Sion — Glory in Death; Udyr — Wilding Claw (ao contato temporário); Urgot — Echoing Flames; Vi — Denting Blows; itens Dead Man's Plate, Eclipse, Runaan's Hurricane (0 de dano físico ao contato no alvo primário), Sheen e outros efeitos Lâmina Arcana, Voltaic Cyclosword; runas Press the Attack, Shield Bash. Aleatoriamente, acúmulos podem deixar de ser aplicados mais de uma vez (inesperado). Inclusões especiais: Kled — Pocket Pistol; Xayah — Bladecaller.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Furacão de Runaan (Runaan's Hurricane) — Fúria do Vento (Wind's Fury) · ativa · A Fúria do Vento causa 0 de dano físico ao contato no alvo principal, e esse dano consegue acumular o Talhar. · Fonte: https://wiki.leagueoflegends.com/en-us/Runaan's_Hurricane#Notes
+        Mecânica · Ataques básicos com 0 de dano físico (0 physical damage basic attacks) · ativa · O Talhar ativa também com 0 de dano físico causado por ataques básicos. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Clones (Clones) · ativa · O Fervor pode conceder a Velocidade de Movimento bônus a partir de clones, e os acúmulos de Talhar passam para os clones. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Talhar, por si só, não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Mascotes e efeitos com várias instâncias (Pets and multiple-instance effects) · ativa · O Talhar ativa na maioria dos casos de dano físico, inclusive o de mascotes e o de efeitos que aplicam várias instâncias desse tipo de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Dano básico (Basic damage) · não ativa · Quando um acúmulo de Talhar é aplicado por uma instância de dano básico, essa instância não se beneficia da redução de Armadura do próprio acúmulo: o dano é calculado antes, e o debuff é aplicado depois. Quando o acúmulo vem de uma instância de dano não básico, ela se beneficia da redução do próprio acúmulo (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Vários acúmulos no mesmo frame (Multiple stacks per frame) · não ativa · A fonte separa os efeitos que não aplicam mais de um acúmulo de Talhar no mesmo frame (partes da mesma instância de conjuração; uma instância de dano básico seguida de instâncias não básicas; dano numa só instância junto com o ataque principal) dos que aplicam (várias instâncias de dano básico; uma instância não básica seguida de instâncias básicas). Os casos citados estão nas linhas de Item, Runa e Campeão. Às vezes, de forma aleatória, os acúmulos deixam de ser aplicados mais de uma vez (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Eclipse (Eclipse) — Lua Sempre Crescente (Ever Rising Moon) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame quando vários acúmulos seriam gerados no mesmo frame. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Espada do Rei Destruído (Blade of The Ruined King) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Quebracascos (Hullbreaker) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Muramana (Muramana) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Arco Recurvo (Recurve Bow) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Hidra Titânica (Titanic Hydra) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (passiva e ativa; instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Coração de Aço (Heartsteel) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Mata-Cráquens (Kraken Slayer) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Couraça do Defunto (Dead Man's Plate) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Eclipse (Eclipse) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Furacão de Runaan (Runaan's Hurricane) — Fúria do Vento (Wind's Fury) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame: o 0 de dano físico ao contato da Fúria do Vento no alvo principal (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Fulgor (Sheen) — Lâmina Arcana (Spellblade) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (o Fulgor "e outros efeitos de Lâmina Arcana"; instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Cicloespada Voltaica (Voltaic Cyclosword) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Runa · Colheita Sombria (Dark Harvest) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Runa · Pressione o Ataque (Press the Attack) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Runa · Golpe de Escudo (Shield Bash) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Aphelios — Sentry (Sentry) e Chakram (Chakram) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (Sentry: parte da mesma instância de conjuração; Chakram: dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Illaoi — Lição Dura (Harsh Lesson) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame: vários ataques de Tentáculos (mesma instância de conjuração) e a Lição Dura (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Naafiri · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame: os Packmates (mesma instância de conjuração; a fonte não diz de qual habilidade eles vêm). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Qiyana — Privilégio da Realeza (Royal Privilege) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame com o dano adicional do Privilégio da Realeza vindo de habilidades (mesma instância de conjuração). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Yorick · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame: vários golpes dos Andarilhos da Névoa (Mist Walkers), mesma instância de conjuração. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Zed — Shuriken Laminado (Razor Shuriken) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame: as Shurikens lançadas por ele e pelas Sombras (mesma instância de conjuração). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Ambessa — Passo do Cão-dragão (Drakehound's Step) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Briar — Snack Attack (Snack Attack) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Jarvan IV — Cadência Marcial (Martial Cadence) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · K'Sante — Instinto Valente (Dauntless Instinct) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Riven — Lâmina Rúnica (Runic Blade) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Vayne — Rolamento (Tumble) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Viego — Espada do Rei Destruído (Blade of the Ruined King) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame com o efeito ao contato (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Xin Zhao — Determinação (Determination) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (dano básico seguido de não básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Kindred — Pesar Crescente (Mounting Dread) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (exclusão especial, inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Miss Fortune — Batida do Amor (Love Tap) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame (exclusão especial, inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Udyr — Garra Selvagem (Wilding Claw) · não ativa · Caso citado pela fonte: não aplica mais de um acúmulo de Talhar no mesmo frame com o efeito ao contato permanente (exclusão especial, inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Aphelios — Calibrum (Calibrum) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame: as marcas do Calibrum (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Graves — Nova Destino (New Destiny) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Ivern — Margarida! (Daisy!) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Kled — Tendências Violentas (Violent Tendencies) e Pocket Pistol (Pocket Pistol) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (Violent Tendencies: várias instâncias de dano básico; Pocket Pistol: inclusão especial). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Malphite — Trovoada (Thunderclap) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Rengar — Selvageria (Savagery) e Furor da Caçada (Thrill of the Hunt) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Viego — Espada do Rei Destruído (Blade of the Ruined King) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame com a marca de possessão (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Qiyana — Privilégio da Realeza (Royal Privilege) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame com o Royal Privilege vindo de ataques básicos (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Senna — Absolvição (Absolution) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Sion — In Gloria Mori (Glory in Death) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Udyr — Garra Selvagem (Wilding Claw) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame com o efeito ao contato temporário (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Urgot — Chamas Ecoantes (Echoing Flames) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Vi — Pancada Certeira (Denting Blows) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Campeão · Xayah — Invocadora das Lâminas (Bladecaller) · ativa · Caso citado pela fonte: aplica mais de um acúmulo de Talhar no mesmo frame (inclusão especial). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Eclipse (Eclipse) — Lua Sempre Crescente (Ever Rising Moon) · ativa · Caso citado pela página do Eclipse: o Talhar causa dano de proc e ainda gera acúmulo da Lua Sempre Crescente, porque aplica efeito negativo. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+    ]
     Escalonamento[
         Talhar (Carve) · Sem scaling
         Fervor (Fervor) · Sem scaling
@@ -4441,6 +5216,14 @@ Tocha de Chamas Negras: Blackfire Torch[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Vários usuários (Multiple users) · acumula · A Labareda Nefasta acumula num alvo quando aplicada por vários usuários, sem renovar o debuff de todas as fontes seguintes de uma vez. · Fonte: https://wiki.leagueoflegends.com/en-us/Blackfire_Torch#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Labareda Nefasta causa dano de proc, marcado como periódico, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Blackfire_Torch#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Labareda Nefasta, por si só, não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Blackfire_Torch#Notes
+        Item · Capuz da Morte de Rabadon (Rabadon's Deathcap) — Apogeu Mágico (Magical Opus) · acumula · O multiplicador das Chamas Negras acumula de forma aditiva com outras fontes de % de Poder de Habilidade, como o Apogeu Mágico do Capuz da Morte de Rabadon. · Fonte: https://wiki.leagueoflegends.com/en-us/Blackfire_Torch#Notes
+        Mecânica · Infernal Might (Infernal Might) · acumula · O multiplicador das Chamas Negras acumula de forma aditiva com o Infernal Might, que a fonte cita sem explicar e que não tem nome no Data Dragon pt_BR. · Fonte: https://wiki.leagueoflegends.com/en-us/Blackfire_Torch#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Labareda Nefasta ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
     Escalonamento[
         Labareda Nefasta (Baleful Blaze) · Poder de Habilidade · 6% · total · seu · razão · dano mágico total da queimadura em 3s (1% a cada 0,5s)
         Chamas Negras (Blackfire) · Poder de Habilidade · 4% · total · seu · conversão · Poder de Habilidade, por campeão, monstro épico ou monstro grande sob a queimadura
@@ -4493,6 +5276,19 @@ Espada do Rei Destruído: Blade of The Ruined King[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus do Gume da Névoa mais uma vez. Se um ataque à distância ainda estiver em voo após 0,15s, o Golpe Fantasma chega primeiro e pode mudar a ordem dos efeitos ao contato, como no exemplo da fonte com a Espada do Rei Destruído. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · não ativa · Caso citado pela página do Cutelo Negro: este item não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · As Sombras da Tirania não são bloqueadas por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Blade_of_the_Ruined_King#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Gume da Névoa causa dano de proc ao contato e não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Blade_of_the_Ruined_King#Notes
+        Mecânica · Roubo de Vida e Vampirismo (Life steal, Omnivamp) · ativa · O dano do Gume da Névoa aplica Roubo de Vida e Vampirismo. · Fonte: https://wiki.leagueoflegends.com/en-us/Blade_of_the_Ruined_King#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O Gume da Névoa não se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Blade_of_the_Ruined_King#Notes
+    ]
+    Escalonamento[
+        Gume da Névoa (Mist's Edge) · Vida · 9% · atual · alvo · razão · dano físico bônus ao contato, até 100 contra tropas e monstros (corpo a corpo)
+        Gume da Névoa (Mist's Edge) · Vida · 6% · atual · alvo · razão · dano físico bônus ao contato, até 100 contra tropas e monstros (à distância)
+        Sombras da Tirania (Clawing Shadows) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Roubo de Vida
     Classe: AD (AD 2.560,5g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador, Lutador
@@ -4538,6 +5334,16 @@ Maldição Sanguinária: Bloodletter's Curse[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Decadência Vil, por si só, não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodletter's_Curse#Notes
+        Mecânica · Habilidades inatas de campeão (Innate champion abilities) · ativa · Habilidades inatas de campeão que causam dano mágico também aplicam a Decadência Vil, inclusive as que causam esse tipo de dano por ataques básicos. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodletter's_Curse#Notes
+        Campeão · Orianna — Dando Corda (Clockwork Windup) · ativa · Caso citado pela fonte: habilidade inata que causa dano mágico por ataques básicos e aplica a Decadência Vil. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodletter's_Curse#Notes
+        Campeão · Yone — Estilo do Caçador (Way of the Hunter) · ativa · Caso citado pela fonte: habilidade inata que causa dano mágico por ataques básicos e aplica a Decadência Vil. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodletter's_Curse#Notes
+        Campeão · Yunara — Voto às Primeiras Terras (Vow of the First Lands) · ativa · Caso citado pela fonte: habilidade inata que causa dano mágico por ataques básicos e aplica a Decadência Vil. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodletter's_Curse#Notes
+    ]
+    Escalonamento[
+        Decadência Vil (Vile Decay) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 1.066,67g · AP 1.300g)
     Arquétipo Recomendado: Mago
@@ -4586,6 +5392,23 @@ Canção de Sangue: Bloodsong[
     Notas: Item final da linha de Suporte (Atlas Mundial → Bússola Rúnica → Dádiva dos Mundos → Canção de Sangue); custo de combinação 0g. Valor de venda: 40% do custo (sellratio 0,4).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodsong#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e a Canção de Sangue entre os modificadores de dano recebido: a Fraqueza Exposta (Expose Weakness) da Lâmina Arcana não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_received_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e a Canção de Sangue entre os modificadores de dano recebido: a Fraqueza Exposta (Expose Weakness) da Lâmina Arcana não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_received_modifier
+    ]
+    Escalonamento[
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 100% · base · seu · razão · dano físico bônus do ataque fortalecido
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 758,33g · AP 300g)
     Arquétipo Recomendado: Suporte
@@ -4630,6 +5453,12 @@ Sedenta por Sangue: Bloodthirster[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Poder de Cura e Escudo (Heal and shield power) · não amplifica · O valor máximo do escudo do Ícor-escudo não é afetado por Poder de Cura e Escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Bloodthirster#Notes
+    ]
+    Escalonamento[
+        Ícor-escudo (Ichorshield) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Roubo de Vida
     Classe: AD (AD 3.603,25g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -4682,6 +5511,13 @@ Oposição Celestial: Celestial Opposition[
     Notas: Item final da linha de Suporte (Atlas Mundial → Bússola Rúnica → Dádiva dos Mundos); custo de combinação 0g. Valor de venda: 40% do custo (sellratio 0,4). Sacrifício do Juramento do Cavaleiro tem tratamento especial: o dano redirecionado ao usuário NÃO ativa a Bênção.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Juramento do Cavaleiro (Knight's Vow) — Sacrifício (Sacrifice) · não ativa · Caso especial: o dano redirecionado pelo Sacrifício do Juramento do Cavaleiro ao portador não ativa o efeito Abençoado da Bênção da Montanha. · Fonte: https://wiki.leagueoflegends.com/en-us/Celestial_Opposition#Notes
+    ]
+    Escalonamento[
+        Bênção da Montanha (Blessing of the Mountain) · Sem scaling
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 758,33g · AP 300g)
     Arquétipo Recomendado: Suporte
@@ -4723,6 +5559,9 @@ Serrespada Quimiopunk: Chempunk Chainsword[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos (Shields) · não reduz · As Feridas Dolorosas são aplicadas ao campeão atingido mesmo que ele esteja protegido por escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Chempunk_Chainsword#Notes
+    ]
     Escalonamento[
         Cisalhar (Hackshorn) · Sem scaling
     ]
@@ -4773,6 +5612,9 @@ Serrespada Quimiopunk: Chempunk Chainsword[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
     Escalonamento[
         Dança Enfeitiçada (Spelldance) · Sem scaling
     ]
@@ -4817,6 +5659,12 @@ Criptoflora: Cryptbloom[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Vida na Morte (Life From Death) · Poder de Habilidade · 20% · total · seu · razão · cura da nova em você e nos campeões aliados atingidos
+    ]
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica Percentual, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.884,5g)
     Arquétipo Recomendado: Mago, Suporte
@@ -4849,6 +5697,7 @@ Auronúcleo: Dawncore[
     Análise de custo[
         Valor de Ouro: 45 PdH = 900g; 100% Regeneração de Mana base = 400g; 16% Poder de Cura e Escudo = 800g; total 2.100g. Primeira Luz (dos atributos base): 15 PdH = 300g + 2% Poder de Cura e Escudo = 100g; total 2.500g. Por 100% de Regeneração de Mana base: 400g
         Eficiência de Ouro: 100% (base); +16% por 100% de Regeneração de Mana base de outras fontes
+        Limiar de 100%: já na base
         Valor de Ouro (atributos): 2.100g
         Valor de Ouro (base): 2.500g
     ]
@@ -4862,6 +5711,13 @@ Auronúcleo: Dawncore[
     Notas: O cliente pt_BR grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo".
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Primeira Luz (First Light) · Regeneração de Mana · 2% · bônus · seu · conversão · Poder de Cura e Escudo: 2% a cada 100% de Regeneração de Mana base adicional
+        Primeira Luz (First Light) · Regeneração de Mana · 15 · bônus · seu · conversão · Poder de Habilidade: 15 a cada 100% de Regeneração de Mana base adicional
+    ]
     Categoria de Atributo: Poder de Habilidade, Poder de Cura e Escudo, Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.300g)
     Arquétipo Recomendado: Suporte
@@ -4911,6 +5767,19 @@ Couraça do Defunto: Dead Man's Plate[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Lança de Shojin (Spear of Shojin) — Determinação Concentrada (Focused Will) · amplifica · Os acúmulos da Determinação Concentrada da Lança de Shojin amplificam o dano do Naufrágio (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Naufrágio causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Dead_Man's_Plate#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Naufrágio não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Dead_Man's_Plate#Notes
+        Mecânica · Torres (Turrets) · ativa · O Naufrágio se aplica contra torres. · Fonte: https://wiki.leagueoflegends.com/en-us/Dead_Man's_Plate#Notes
+        Mecânica · Teleportes curtos (Blinks) · ativa · Teleportes curtos sempre concedem 7 acúmulos de Ímpeto (Momentum), seja qual for a distância. · Fonte: https://wiki.leagueoflegends.com/en-us/Dead_Man's_Plate#Notes
+        Mecânica · Preso a uma unidade (Attached to a unit) · ativa · Os acúmulos de Ímpeto (Momentum) são gerados mesmo com o portador preso a uma unidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Dead_Man's_Plate#Notes
+    ]
+    Escalonamento[
+        Naufrágio (Shipwrecker) · Dano de Ataque · 0–100% · base · seu · razão · dano físico bônus ao contato ao consumir o Ímpeto: 1% a cada acúmulo, até 100% com 100 acúmulos
+        Inafundável (Unsinkable) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Armadura, Movimento, Resistência a Lentidão
     Classe: Vitalidade (AD 0g · Vitalidade 2.033,33g · AP 0g)
     Arquétipo Recomendado: Lutador, Tanque
@@ -4954,6 +5823,22 @@ Dança da Morte: Death's Dance[
     Notas: none
     Notas de ARAM: Razão de DdA bônus de Desafiar alterada para 100%.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Vampirismo (Omnivamp) · ativa · O dano adiado pela Dor Ignorada é atribuído à fonte do dano e aplica o Vampirismo dela. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Mecânica · Modificadores de dano (Damage modifiers) · não reduz · O dano adiado pela Dor Ignorada não é afetado por modificadores de dano, exceto invulnerabilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O dano adiado pela Dor Ignorada é sempre dano de proc, marcado como periódico, sem aplicar efeitos de habilidade, seja qual for a classificação do efeito original. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Mecânica · Retornar (Recall) · não ativa · O dano adiado pela Dor Ignorada não interrompe o Retornar. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Mecânica · Efeitos fora de combate (Out-of-combat effects) · não ativa · Cada instância do dano adiado pela Dor Ignorada renova o estado de combate do portador, atrasando e interrompendo efeitos que exigem estar fora de combate. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Mecânica · Escudos (Shields) · ativa · A Dor Ignorada reduz e guarda também o dano absorvido por escudos. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Mecânica · Escudos físicos e mágicos (Physical and magic shields) · não reduz · O dano adiado pela Dor Ignorada só é absorvido por escudos normais, e não por escudos físicos ou mágicos. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Item · Carapaça do Vigia (Warden's Mail) — Duro como Pedra (Rock Solid) · acumula · A Dor Ignorada se aplica depois da redução do Duro como Pedra da Carapaça do Vigia. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Item · Presságio de Randuin (Randuin's Omen) — Resiliência (Resilience) · acumula · A Dor Ignorada se aplica depois da redução da Resiliência do Presságio de Randuin. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+        Item · Juramento do Cavaleiro (Knight's Vow) — Sacrifício (Sacrifice) · acumula · A redução do Sacrifício no aliado Digno ativa antes da Dor Ignorada. · Fonte: https://wiki.leagueoflegends.com/en-us/Knight's_Vow#Notes
+    ]
+    Escalonamento[
+        Dor Ignorada (Ignore Pain) · Sem scaling
+        Desafiar (Defy) · Dano de Ataque · 75% · bônus · seu · razão · cura em 2s quando o campeão inimigo danificado nos últimos 3s morre
+    ]
     Categoria de Atributo: Dano de Ataque, Armadura, Aceleração de Habilidade
     Classe: AD (AD 2.100g · Vitalidade 1.000g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -5002,6 +5887,13 @@ Criassonhos: Dream Maker[
     Notas: Item final da linha de Suporte (Atlas Mundial → Bússola Rúnica → Dádiva dos Mundos); custo de combinação 0g. Valor de venda: 40% do custo (sellratio 0,4). 
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Runa · Fonte da Vida (Font of Life) · não ativa · A passiva da Criassonhos não ativa em aliados curados pela Fonte da Vida (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Dream_Maker#Notes
+    ]
+    Escalonamento[
+        Criassonhos (Dream Maker) · Sem scaling
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 758,33g · AP 300g)
     Arquétipo Recomendado: Suporte
@@ -5044,6 +5936,26 @@ Aurora e Crepúsculo: Dusk and Dawn[
     Notas: O texto oficial pt_BR exibe "0 de Dano Mágico", "cura você em 0" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Mecânica · Efeitos ao contato (On-hit effects) · ativa · A Lâmina Arcana da Aurora e Crepúsculo aplica os efeitos ao contato ao alvo mais uma vez. O dano bônus e a cura da Lâmina Arcana ativam ao contato e não se repetem nessa segunda aplicação, porque a Lâmina Arcana não ativa mais de uma vez pelo mesmo ataque. A segunda aplicação causa dano de proc e transforma no mesmo tipo o tipo de dano de todo efeito ao contato aplicado assim (inesperado). A página Attack effects lista a Aurora e Crepúsculo entre os itens que aplicam efeitos ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes; https://wiki.leagueoflegends.com/en-us/Attack_effects#Items
+        Mecânica · Efeitos ao contato contra estruturas (On-hit effects against structures) · não ativa · A Lâmina Arcana da Aurora e Crepúsculo não aplica efeitos ao contato contra estruturas (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Dusk_and_Dawn#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Lâmina Arcana ao portador da Força da Natureza gera acúmulos do Impassível normalmente. A fonte marca este caso com asterisco, sem legenda. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
+    Escalonamento[
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 75% · base · seu · razão · dano mágico bônus do ataque fortalecido
+        Lâmina Arcana (Spellblade) · Poder de Habilidade · 10% · total · seu · razão · dano mágico bônus do ataque fortalecido
+        Lâmina Arcana (Spellblade) · Poder de Habilidade · 10% · total · seu · razão · cura ao contato do ataque fortalecido
+        Lâmina Arcana (Spellblade) · Vida · 3% · bônus · seu · razão · cura ao contato do ataque fortalecido
+    ]
     Categoria de Atributo: Vida, Poder de Habilidade, Aceleração de Habilidade, Velocidade de Ataque
     Classe: AP (AD 500g · Vitalidade 800g · AP 1.200g)
     Arquétipo Recomendado: Assassino, Mago
@@ -5090,6 +6002,12 @@ Ecos de Helia: Echoes of Helia[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Sifão da Alma (Soul Siphon) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade, Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 533,33g · AP 1.200g)
     Arquétipo Recomendado: Suporte
@@ -5134,6 +6052,24 @@ Eclipse: Eclipse[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · não ativa · Caso citado pela página do Cutelo Negro: este item não aplica mais de um acúmulo de Talhar no mesmo frame quando vários acúmulos seriam gerados no mesmo frame. · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lua Sempre Crescente causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Mecânica · Modificadores de dano ao contato (On-hit damage modifiers) · amplifica · O dano da Lua Sempre Crescente é afetado por modificadores de dano ao contato (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O dano da Lua Sempre Crescente, por si só, não é bloqueado por escudo de feitiço; ele é bloqueado se o efeito que aplicou o segundo acúmulo foi bloqueado. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Mecânica · Cegueira (Blind), Cripple, Sonolência (Drowsy), Kinematics, Nearsight e estase (Stasis) · não ativa · Esses controles de grupo não contam como controle válido para gerar acúmulos da Lua Sempre Crescente. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Mecânica · Dano de proc (Proc damage) · não ativa · Efeitos que causam dano de proc não geram acúmulo da Lua Sempre Crescente, a menos que também sejam marcados como dano de mascote; os que aplicam efeito negativo ainda geram acúmulo. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela fonte: o Cutelo Negro causa dano de proc e ainda gera acúmulo da Lua Sempre Crescente, porque aplica efeito negativo. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Campeão · Ambessa — Execução Pública (Public Execution) · ativa · Caso especial citado pela fonte: aplica um acúmulo da Lua Sempre Crescente na aplicação da supressão e outro no dano causado. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+        Campeão · Zed — Shuriken Laminado (Razor Shuriken) e Corte Sombrio (Shadow Slash) · ativa · Caso especial citado pela fonte: usadas com as Sombras, aplicam um acúmulo da Lua Sempre Crescente a cada tique de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Eclipse#Notes
+    ]
+    Escalonamento[
+        Lua Sempre Crescente (Ever Rising Moon) · Vida · 8% · máxima · alvo · razão · dano físico bônus ao aplicar 2 acúmulos em 2s (corpo a corpo)
+        Lua Sempre Crescente (Ever Rising Moon) · Vida · 5% · máxima · alvo · razão · dano físico bônus ao aplicar 2 acúmulos em 2s (à distância)
+        Lua Sempre Crescente (Ever Rising Moon) · Dano de Ataque · 40% · bônus · seu · razão · escudo por 2s (corpo a corpo)
+        Lua Sempre Crescente (Ever Rising Moon) · Dano de Ataque · 20% · bônus · seu · razão · escudo por 2s (à distância)
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade
     Classe: AD (AD 2.100g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -5175,6 +6111,12 @@ Limiar da Noite: Edge of Night[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Clones (Clones) · ativa · O Anular fica ativo em clones do portador 2s depois que eles surgem. · Fonte: https://wiki.leagueoflegends.com/en-us/Edge_of_Night#Notes
+    ]
+    Escalonamento[
+        Anular (Annul) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Vida
     Classe: AD (AD 2.200g · Vitalidade 666,67g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -5209,6 +6151,7 @@ Fome Eterna: Endless Hunger[
     Análise de custo[
         Valor de Ouro: 65 DdA = 2.275g; 5% Vampirismo = 280g; 20% Tenacidade = 206,67g; total 2.761,67g. Fome (dos atributos base): 13 / 11 AdH = 650g / 550g; total 3.411,67g / 3.311,67g; por 10 de DdA bônus de outras fontes: 1,3 / 1 AdH = 65g / 50g. Banquete: 15% Vampirismo = 840g
         Eficiência de Ouro: 89,09% (base); 110,05% / 106,83% com a Aceleração de Fome só do item; +1,61% por 7,69 / 10 de DdA bônus de outras fontes; 137,15% / 133,92% com Banquete ativo
+        Limiar de 100%: 13,59 de Dano de Ataque bônus (calculado; corpo a corpo; 17,67 à distância; os 65 de DdA bônus do próprio item já bastam)
         Valor de Ouro (atributos): 2.761,67g
         Valor de Ouro (base): 2.761,67g
     ]
@@ -5224,6 +6167,14 @@ Fome Eterna: Endless Hunger[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Fome (Famine) · Dano de Ataque · 13% · bônus · seu · conversão · Aceleração de Habilidade (corpo a corpo)
+        Fome (Famine) · Dano de Ataque · 10% · bônus · seu · conversão · Aceleração de Habilidade (à distância)
+        Banquete (Feast) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Vampirismo, Tenacidade, Aceleração de Habilidade
     Classe: AD (AD 2.275g · Vitalidade 206,67g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -5269,6 +6220,23 @@ Colhedor de Essência: Essence Reaver[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Essence_Reaver#Notes
+    ]
+    Escalonamento[
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 125% · base · seu · razão · dano físico bônus do ataque fortalecido
+        Lâmina Arcana (Spellblade) · Acerto Crítico · 0–50 · total · seu · razão · dano físico bônus do ataque fortalecido: 0,5 a cada 1% de Chance de Acerto Crítico, até 50 com 100%
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 62,5% · base · seu · razão · Mana restaurada pelo ataque fortalecido (50% do dano bônus)
+        Lâmina Arcana (Spellblade) · Acerto Crítico · 0–25 · total · seu · razão · Mana restaurada pelo ataque fortalecido: 0,25 a cada 1% de Chance de Acerto Crítico, até 25 com 100%
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Acerto Crítico
     Classe: AD (AD 2.750g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -5319,6 +6287,31 @@ Hexoplaca Experimental: Experimental Hexplate[
     Notas: O texto oficial pt_BR exibe "0%" nos dois valores de Turbo (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Ultimate (Ultimate ability) · ativa · O Turbo ativa assim que a ultimate é conjurada. Se a ultimate tem tempo de conjuração, o efeito pode ativar até 0,25s depois do início da conjuração, por imprecisão (inesperado). Em algumas ultimates específicas, a ativação fica para o fim dos efeitos da habilidade ou para durante eles (linhas de Campeão). · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Udyr — conjuração Despertar (Awakened) · ativa · No Udyr, o Turbo ativa com uma conjuração Despertar. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Briar — Morte Certa (Certain Death) · ativa · O Turbo ativa no fim do tempo de conjuração inicial. Se o míssil atingir um alvo, a duração do efeito é renovada no fim do avanço. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Elise — Forma de Aranha (Spider Form) · ativa · O Turbo ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Fiddlesticks — Tempestade de Corvos (Crowstorm) · ativa · O Turbo ativa no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Galio — Entrada Heroica (Hero's Entrance) · ativa · O Turbo ativa no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Jayce — Canhão de Mercúrio (Mercury Cannon) · ativa · O Turbo ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Kled — Avançaaaaaaar!!! (Chaaaaaaaarge!!!) · ativa · O Turbo ativa no fim da investida, ou no fim do avanço ao perseguir um inimigo. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Nidalee — Aspecto do Puma (Aspect of the Cougar) · ativa · O Turbo ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Nocturne — Paranoia (Paranoia) · ativa · O Turbo ativa logo na primeira conjuração. Se a reconjuração for usada, a duração do efeito é renovada no fim do avanço. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Pantheon — Constelação Cadente (Grand Starfall) · ativa · O Turbo ativa no fim da segunda canalização, ou no fim da canalização inicial se ela for interrompida. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Poppy — Veredito da Guardiã (Keeper's Verdict) · ativa · O Turbo ativa 0,2s depois do início do tempo de conjuração da reconjuração. Não ativa se a canalização da primeira conjuração for interrompida ou expirar. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Rek'Sai — Investida do Vazio (Void Rush) · ativa · O Turbo ativa quando ela emerge do chão. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Rengar — Furor da Caçada (Thrill of the Hunt) · ativa · O Turbo ativa depois que a camuflagem termina. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Shen — Manter a União (Stand United) · ativa · O Turbo ativa no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Sion — Investida Incontrolável (Unstoppable Onslaught) · ativa · O Turbo ativa 0,65s depois do fim da canalização se a investida não colidir com um inimigo, ou logo depois do fim da canalização se colidir com uma parede. Se a investida terminar colidindo com um inimigo, ativa 0,1s depois do fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Tahm Kench — Devorar (Devour) · ativa · O Turbo ativa depois que ele conjura Regurgitate, no fim do deslocamento do alvo, ou depois da supressão do Devorar se ele terminar sem Regurgitate. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Vi — Saque e Enterrada (Cease and Desist) · ativa · O Turbo ativa 0,5s depois de agarrar o alvo, ou no fim do avanço se a habilidade for cancelada em certas circunstâncias. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+        Campeão · Warwick — Coerção Infinita (Infinite Duress) · ativa · O Turbo ativa no fim do avanço. Se o avanço colidir com um inimigo, ativa 0,45s depois do início da canalização, e a duração do efeito é renovada no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Experimental_Hexplate#Notes
+    ]
+    Escalonamento[
+        Hexcarregado (Hexcharged) · Sem scaling
+        Turbo (Overdrive) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Vida, Aceleração de Ultimate
     Classe: AD (AD 1.900g · Vitalidade 1.200g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -5396,6 +6389,13 @@ Dardos de Caça-Demônios: Fiendhunter Bolts[
         Campeão · Tahm Kench — Devorar (Devour) · ativa · A Barragem de Abertura ativa depois que ele conjura Regurgitate, no fim do deslocamento do alvo, ou depois da supressão do Devorar se ele terminar sem Regurgitate. · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
         Campeão · Vi — Saque e Enterrada (Cease and Desist) · ativa · A Barragem de Abertura ativa 0,5s depois de agarrar o alvo, ou no fim do avanço se a habilidade for cancelada em certas circunstâncias. · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
         Campeão · Warwick — Coerção Infinita (Infinite Duress) · ativa · A Barragem de Abertura ativa no fim do avanço. Se o avanço colidir com um inimigo, ativa 0,45s depois do início da canalização, e a duração do efeito é renovada no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
+        Campeão · Elise — Forma de Aranha (Spider Form) · ativa · A Barragem de Abertura ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
+        Campeão · Jayce — Canhão de Mercúrio (Mercury Cannon) · ativa · A Barragem de Abertura ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
+        Campeão · Nidalee — Aspecto do Puma (Aspect of the Cougar) · ativa · A Barragem de Abertura ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
+    ]
+    Escalonamento[
+        Vigília Noturna (Night Vigil) · Sem scaling
+        Barragem de Abertura (Opening Barrage) · Sem scaling
     ]
     Categoria de Atributo: Velocidade de Ataque, Acerto Crítico, Movimento, Aceleração de Ultimate
     Classe: AD (AD 2.125g · Vitalidade 0g · AP 0g)
@@ -5424,7 +6424,7 @@ Força da Natureza: Force of Nature[
     ]
     Habilidade[
         [Impassível (Steadfast) — passiva única][Recebe 70 de Resistência Mágica e 6% de Velocidade de Movimento adicional depois de sofrer Dano Mágico de Campeões 8x.]
-        Mecânica (wiki): sofrer dano mágico de campeões gera 1 acúmulo por 7s, até 8; a duração renova a cada novo dano mágico deles e sempre que você causa dano a eles. Ser imobilizado por campeão inimigo gera 2 acúmulos e renova. Cada ataque básico, habilidade ou efeito de item só gera 1 acúmulo por instância de conjuração a cada 1s. Com 8 acúmulos: +70 de Resistência Mágica bônus e +6% de Velocidade de Movimento bônus. Todas as habilidades de campeão geram acúmulos ao causar dano mágico ao usuário. Runas: só Ritmo Fatal, Chamuscar e Golpe de Escudo geram acúmulos; Alma do Dragão Infernal gera. Inflamar (Cinzas do Destino) gera acúmulos mais de uma vez por segundo, mesmo coincidindo com outra instância (bug). NÃO geram acúmulos (bug): Santificar (Turíbulo Ardente); Imolar (Brasa de Bami, Resplendor Vazio, Égide de Fogo Solar); Ira (Lâmina da Fúria de Guinsoo); Desolar (Resplendor Vazio); Fogo Coordenado (Mandato Imperial); Névoa do Ódio (Malevolência); Eletrofaísca (Faca de Statikk); Rajada (Ápice da Tempestade); Angústia (Desespero Eterno); Tempestade Gelofogo (Convergência de Zeke). Geram normalmente: Labareda Nefasta (Tocha), Espinhos (Colete Espinhoso, Armadura de Espinhos), Lâmina Arcana (Aurora e Crepúsculo, Perdição de Lich), Inflamar, Entusiasmo (Alternador), Disparo Elétrico (Pistola Laminar), Supersônico (Explocinturão), Promessa (Juramento do Cavaleiro), Tormento (Liandry), Eco (Luden), Mordida Icathiana (Dente de Na'Shor), Atirador de Elite (Canhão Fumegante), Tiro Certeiro (Estilingue), Raio (Chuva de Canivete), Sombra (Terminus), Refrega (Limite da Razão), Explosão do Vazio (Invadomínio de Zaz'Zak).
+        Mecânica (wiki): sofrer dano mágico de campeões gera 1 acúmulo por 7s, até 8; a duração renova a cada novo dano mágico deles e sempre que você causa dano a eles. Ser imobilizado por campeão inimigo gera 2 acúmulos e renova. Cada ataque básico, habilidade ou efeito de item só gera 1 acúmulo por instância de conjuração a cada 1s. Com 8 acúmulos: +70 de Resistência Mágica bônus e +6% de Velocidade de Movimento bônus. Todas as habilidades de campeão geram acúmulos ao causar dano mágico ao usuário. Runas: só Ritmo Fatal, Chamuscar e Golpe de Escudo geram acúmulos; Alma do Dragão Infernal gera. Inflamar (Cinzas do Destino) gera acúmulos mais de uma vez por segundo, mesmo coincidindo com outra instância (bug). NÃO geram acúmulos (bug): Santificar (Turíbulo Ardente); Imolar (Brasa de Bami, Resplendor Vazio, Égide de Fogo Solar); Ira (Lâmina da Fúria de Guinsoo); Desolar (Resplendor Vazio); Névoa Odiosa (Malevolência); Eletrofaísca (Faca de Statikk); Rajada (Ápice da Tempestade); Angústia (Desespero Eterno); Tempestade Gelofogo (Convergência de Zeke). Geram normalmente: Labareda Nefasta (Tocha), Espinhos (Colete Espinhoso, Armadura de Espinhos), Lâmina Arcana (Aurora e Crepúsculo, Perdição de Lich), Inflamar, Entusiasmo (Alternador), Disparo Elétrico (Pistola Laminar), Supersônico (Explocinturão), Promessa (Juramento do Cavaleiro), Tormento (Liandry), Eco (Luden), Mordida Icathiana (Dente de Na'Shor), Atirador de Elite (Canhão Fumegante), Tiro Certeiro (Estilingue), Raio (Chuva de Canivete), Sombra (Terminus), Duelo (Limite da Razão), Explosão do Vazio (Invadomínio de Zaz'Zak).
     ]
     Análise de custo[
         Valor de Ouro: 400 Vida = 1.066,67g; 55 RM = 1.100g; 4% Velocidade de Movimento = 260,42g; total 2.427,09g. Impassível: 6% Velocidade de Movimento = 390,63g; 70 RM = 1.400g; total 4.217,72g
@@ -5444,6 +6444,48 @@ Força da Natureza: Force of Nature[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Imobilização (Immobilize) · ativa · Ser imobilizado por um campeão inimigo gera 2 acúmulos do Impassível (Steadfast) e renova a duração. A página Types of Crowd Control lista a Força da Natureza entre o que interage com Imobilização e Lentidão. · Fonte: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data; https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Interactions_with_Crowd_Control
+        Mecânica · Habilidades de campeão (Champion abilities) · ativa · Todas as habilidades de campeão geram acúmulos do Impassível ao causar dano mágico ao portador. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Runa · Ritmo Fatal (Lethal Tempo) · ativa · O Ritmo Fatal gera acúmulos do Impassível ao causar dano mágico ao portador. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Runa · Chamuscar (Scorch) · ativa · O Chamuscar gera acúmulos do Impassível ao causar dano mágico ao portador. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Runa · Golpe de Escudo (Shield Bash) · ativa · O Golpe de Escudo gera acúmulos do Impassível ao causar dano mágico ao portador. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Runa · Toque Ígneo (Deathfire Touch) · não ativa · A fonte cita o Toque Ígneo entre as outras runas, que não geram acúmulos do Impassível ao causar dano mágico ao portador. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Alma do Dragão Infernal (Infernal Dragon Soul) · ativa · A Alma do Dragão Infernal gera acúmulos do Impassível ao causar dano mágico ao portador. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Turíbulo Ardente (Ardent Censer) — Santificar (Sanctify) · não ativa · Dano mágico causado por Santificar ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Brasa de Bami (Bami's Cinder) — Imolar (Immolate) · não ativa · Dano mágico causado por Imolar ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Resplendor Vazio (Hollow Radiance) — Imolar (Immolate) · não ativa · Dano mágico causado por Imolar ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Égide de Fogo Solar (Sunfire Aegis) — Imolar (Immolate) · não ativa · Dano mágico causado por Imolar ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Ira (Wrath) · não ativa · Dano mágico causado por Ira ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Resplendor Vazio (Hollow Radiance) — Desolar (Desolate) · não ativa · Dano mágico causado por Desolar ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Malevolência (Malignance) — Névoa Odiosa (Hatefog) · não ativa · Dano mágico causado por Névoa Odiosa ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Faca de Statikk (Statikk Shiv) — Eletrocentelha (Electrospark) · não ativa · Dano mágico causado por Eletrocentelha ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Ápice da Tempestade (Stormsurge) — Dilúvio (Squall) · não ativa · Dano mágico causado por Dilúvio ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Desespero Eterno (Unending Despair) — Angústia (Anguish) · não ativa · Dano mágico causado por Angústia ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Convergência de Zeke (Zeke's Convergence) — Tempestade do Raio de Gelo (Frostfire Tempest) · não ativa · Dano mágico causado por Tempestade do Raio de Gelo ao portador não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Cinzas do Destino (Fated Ashes) — Inflamar (Inflame) · ativa · O Inflamar gera acúmulos do Impassível mais de uma vez por segundo, mesmo quando o dano mágico coincide com outra instância de dano, independentemente da instância de conjuração (bug). A fonte também põe o Inflamar na lista dos efeitos que geram acúmulos normalmente, com asterisco sem legenda. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Tocha de Chamas Negras (Blackfire Torch) — Labareda Nefasta (Baleful Blaze) · ativa · Dano mágico causado por Labareda Nefasta ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Colete Espinhoso (Bramble Vest) — Espinhos (Thorns) · ativa · Dano mágico causado por Espinhos ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Aurora e Crepúsculo (Dusk and Dawn) — Lâmina Arcana (Spellblade) · ativa · Dano mágico causado por Lâmina Arcana ao portador gera acúmulos do Impassível normalmente. A fonte marca este caso com asterisco, sem legenda. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Alternador Hextec (Hextech Alternator) — Entusiasmo (Revved) · ativa · Dano mágico causado por Entusiasmo ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Pistola Laminar Hextec (Hextech Gunblade) — Disparo Elétrico (Lightning Bolt) · ativa · Dano mágico causado por Disparo Elétrico ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Explocinturão Hextec (Hextech Rocketbelt) — Supersônico (Supersonic) · ativa · Dano mágico causado por Supersônico ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Juramento do Cavaleiro (Knight's Vow) — Pacto (Pledge) · ativa · Dano mágico causado por Pacto ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Tormento de Liandry (Liandry's Torment) — Tormento (Torment) · ativa · Dano mágico causado por Tormento ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Perdição de Lich (Lich Bane) — Lâmina Arcana (Spellblade) · ativa · Dano mágico causado por Lâmina Arcana ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Eco de Luden (Luden's Echo) — Eco (Echo) · ativa · Dano mágico causado por Eco ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Dente de Na'Shor (Nashor's Tooth) — Mordida Icathiana (Icathian Bite) · ativa · Dano mágico causado por Mordida Icathiana ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Canhão Fumegante (Rapid Firecannon) — Atirador de Elite (Sharpshooter) · ativa · Dano mágico causado por Atirador de Elite ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Estilingue do Patrulheiro (Scout's Slingshot) — Tiro Certeiro (Bullseye) · ativa · Dano mágico causado por Tiro Certeiro ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Chuva de Canivete (Stormrazor) — Raio (Bolt) · ativa · Dano mágico causado por Raio ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Terminus (Terminus) — Sombra (Shadow) · ativa · Dano mágico causado por Sombra ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Armadura de Espinhos (Thornmail) — Espinhos (Thorns) · ativa · Dano mágico causado por Espinhos ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Limite da Razão (Wit's End) — Duelo (Fray) · ativa · Dano mágico causado por Duelo ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Invadomínio de Zaz'Zak (Zaz'Zak's Realmspike) — Explosão do Vazio (Void Explosion) · ativa · Dano mágico causado por Explosão do Vazio ao portador gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
+    Escalonamento[
+        Impassível (Steadfast) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Resistência Mágica, Movimento
     Classe: Vitalidade (AD 0g · Vitalidade 2.166,67g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -5485,6 +6527,12 @@ Coração Congelado: Frozen Heart[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Carícia do Inverno (Winter's Caress) · Sem scaling
+    ]
     Categoria de Atributo: Armadura, Mana, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.500g · AP 400g)
     Arquétipo Recomendado: Suporte, Tanque
@@ -5525,6 +6573,22 @@ Anjo Guardião: Guardian Angel[
     Notas: Valor de venda: 40% do custo (sellratio 0,4).
     Notas de ARAM: Item desativado em ARAM.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Feitiços de Invocador (Summoner spells), todos · não ativa · Ao ativar o Renascimento, os Feitiços de Invocador que não estiverem em recarga entram numa recarga de 4s. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Campeão · Anivia — Renascimento (Rebirth) · não ativa · Caso citado pela fonte: o Renascimento do Anjo Guardião tem prioridade sobre a passiva da Anivia. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Campeão · Zac — Divisão Celular (Cell Division) · não ativa · Caso citado pela fonte: o Renascimento do Anjo Guardião tem prioridade sobre a passiva do Zac. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Mecânica · Estados zumbi (Zombie states) · não ativa · O Renascimento tem prioridade sobre todos os efeitos de estado zumbi. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Campeão · Zilean — Alteração Temporal (Chronoshift) · não ativa · Caso citado pela fonte: o Renascimento não tem prioridade sobre a ultimate do Zilean. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Mecânica · Obelisco do Nexus (Nexus Obelisk) · não ativa · O Renascimento não ativa quando o portador é abatido pelo Obelisco do Nexus. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Item · Semblante Espiritual (Spirit Visage) — Vitalidade Imensurável (Boundless Vitality) · amplifica · A Vida restaurada pelo Renascimento conta como cura e é aumentada pela Vitalidade Imensurável, chegando a 62,5% da Vida base no total. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Item · Bandana de Mercúrio (Quicksilver Sash) — Mercúrio (Quicksilver) · ativa · O Mercúrio pode ser usado durante o Renascimento. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Item · Cimitarra Mercurial (Mercurial Scimitar) — Mercúrio (Quicksilver) · ativa · O Mercúrio pode ser usado durante o Renascimento. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Mecânica · Projéteis em voo (In-flight projectiles) · não ativa · A inalvejabilidade do Renascimento não destrói projéteis em voo. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+    ]
+    Escalonamento[
+        Renascimento (Rebirth) · Vida · 50% · base · seu · razão · cura ao fim da ressurreição
+        Renascimento (Rebirth) · Mana · 100% · máxima · seu · razão · Mana restaurada ao fim da ressurreição
+    ]
     Categoria de Atributo: Dano de Ataque, Armadura
     Classe: AD (AD 1.925g · Vitalidade 900g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -5555,7 +6619,7 @@ Lâmina da Fúria de Guinsoo: Guinsoo's Rageblade[
         [Ira (Wrath) — passiva única][Ataques causam 30 de Dano Mágico adicional ao contato.]
         Mecânica (wiki): ataques básicos causam 30 de dano mágico bônus ao contato. Sem scaling. Dano de proc: NÃO ativa efeitos de habilidade. NÃO se aplica a estruturas. Beneficia-se de Roubo de Vida.
         [Golpe Fervente (Seething Strike) — passiva única][Ataques concedem 8% de Velocidade de Ataque por 4s (acumula 4x).\nEnquanto estiver com o máximo de acúmulos, cada terceiro Ataque aplica efeitos ao contato duas vezes.]
-        Mecânica (wiki): ataques básicos (ao atacar) concedem +8% de Velocidade de Ataque bônus por 4s, até 4 acúmulos (+32%). No máximo, ataques básicos também concedem 1 acúmulo de Fantasma por 4s, até 2; com 2, o próximo ataque consome todos (ao atacar) para disparar um Golpe Fantasma que aplica efeitos ao contato ao alvo após 0,15s. NÃO é bloqueado por escudo de feitiço. Ataques a estruturas NÃO concedem, renovam nem afetam acúmulos de Fantasma (concedem e renovam Golpe Fervente). O Golpe Fantasma ocorre num atraso fixo após o disparo do ataque (corpo a corpo ou à distância) e ocorre mesmo se o ataque for destruído (ex.: Muralha de Vento) ou perdido (inalvejabilidade). Pode gerar acúmulos e disparar em habilidades que aplicam efeitos ao atacar. Efeitos ao contato de uso único (ataques fortalecidos) NÃO se beneficiam: são consumidos no golpe inicial. O Golpe Fantasma NÃO interage com efeitos ao atacar. Interações registradas do Golpe Fantasma (EN, como na wiki; a wiki avisa que a lista pode estar desatualizada). Aplicam mais uma vez — geração de acúmulos: Akshan — Dirty Fighting; Diana — Moonsilver Blade; Ekko — Z-Drive Resonance; Gnar — Hyper; Gwen — Snip Snip!; Jax — Grandmaster-at-Arms; Kai'Sa — Second Skin; Kalista — Rend; Master Yi — Double Strike; Neeko — Shapesplitter; Orianna — Clockwork Windup; Tahm Kench — An Acquired Taste; Tristana — Explosive Charge; Twisted Fate — Stacked Deck; Vayne — Silver Bolts; Vi — Denting Blows; Varus — Blighted Quiver; Xin Zhao — Determination; Kraken Slayer (não aplica o golpe fortalecido duas vezes). Dano bônus (duas vezes): Braum — Concussive Blows*; Elise — Spider Form; Fizz — Seastone Trident; Gwen — A Thousand Cuts e Skip 'n Slash; Kassadin — Nether Blade; Kayle — Starfire Spellblade; Kog'Maw — Bio-Arcane Barrage; Master Yi — Wuju Style; Malphite — Thunderclap*; Mordekaiser — Darkness Rise; Qiyana — Terrashape; Rumble — Junkyard Titan; Senna — Absolution; Shen — Twilight Assault; Shyvana — Emberstrike; Sion — Glory in Death; Tahm Kench — An Acquired Taste; Teemo — Toxic Shot; Thresh — Flay; Varus — Blighted Quiver; Viego — Blade of the Ruined King; Volibear — The Relentless Storm; Warwick — Eternal Hunger; Yunara — Cultivation of Spirit; itens Blade of the Ruined King, Guinsoo's Rageblade, Muramana, Nashor's Tooth, Recurve Bow, Stridebreaker*, Tiamat*, Titanic Hydra*, Wit's End. Cura (duas vezes): Elise — Spider Form; Warwick — Eternal Hunger. Redução de recarga (duas vezes): Master Yi — Alpha Strike; Nocturne — Umbra Blades; Olaf — Reckless Swing; Senna — Piercing Darkness; Shyvana — Twin Bite. Geração de Fúria (dobro): Gnar — Rage Gene; Rek'Sai — Fury of the Xer'Sai; Renekton — Reign of Anger; Tryndamere — Battle Fury; Shyvana — Dragon's Descent. Outros: Illaoi — Harsh Lesson (comanda Tentáculos sem consumir o ataque fortalecido); Lee Sin — Flurry (retorno de energia dobrado consumindo 1 acúmulo); Shaco — Hallucinate (ataques do clone); Trinity Force (Velocidade de Movimento bônus). Ao ser atingido pelo Golpe Fantasma: Amumu — Tantrum; Braum — Concussive Blows (acúmulo); Jax — Counter Strike; Rammus — Defensive Ball Curl (reflexão); Bramble Vest e Thornmail (reflexão). NÃO interagem: Akshan — Dirty Fighting (acúmulo durante Heroic Swing) (bug); Aurora — Spirit Abjuration; Jax — Relentless Assault; Jinx — Pow-Pow (acúmulos) e Fishbones (10% de dano bônus e dano em área); Tryndamere — Spinning Slash; Mordekaiser — Darkness Rise (acúmulos da aura). O Golpe Fantasma NÃO faz atacar duas vezes: efeitos que disparam ao completar o windup ativam uma vez só — Ashe — Ranger's Focus; Bard — Meeps; Cho'Gath — Vorpal Spikes; Darius — Hemorrhage; Kennen — Electrical Surge; Lulu — Pix; Jayce — Hyper Charge (decremento); Nami — Tidecaller's Blessing; Rek'Sai — Queen's Wrath; Sivir — Ricochet; Sylas — Petricite Burst (decremento); Xin Zhao — Three Talon Strike (dano bônus e arremesso); Yone — Way of the Hunter (dano bônus); Guinsoo's Rageblade (geração de acúmulos); Runaan's Hurricane (dardos menores).
+        Mecânica (wiki): ataques básicos (ao atacar) concedem +8% de Velocidade de Ataque bônus por 4s, até 4 acúmulos (+32%). No máximo, ataques básicos também concedem 1 acúmulo de Fantasma por 4s, até 2; com 2, o próximo ataque consome todos (ao atacar) para disparar um Golpe Fantasma que aplica efeitos ao contato ao alvo após 0,15s. NÃO é bloqueado por escudo de feitiço. Ataques a estruturas NÃO concedem, renovam nem afetam acúmulos de Fantasma (concedem e renovam Golpe Fervente). O Golpe Fantasma ocorre num atraso fixo após o disparo do ataque (corpo a corpo ou à distância) e ocorre mesmo se o ataque for destruído (ex.: Parede de Vento) ou perdido (inalvejabilidade). Pode gerar acúmulos e disparar em habilidades que aplicam efeitos ao atacar. Efeitos ao contato de uso único (ataques fortalecidos) NÃO se beneficiam: são consumidos no golpe inicial. O Golpe Fantasma NÃO interage com efeitos ao atacar. Interações registradas do Golpe Fantasma (EN, como na wiki; a wiki avisa que a lista pode estar desatualizada). Aplicam mais uma vez — geração de acúmulos: Akshan — Dirty Fighting; Diana — Moonsilver Blade; Ekko — Z-Drive Resonance; Gnar — Hyper; Gwen — Snip Snip!; Jax — Grandmaster-at-Arms; Kai'Sa — Second Skin; Kalista — Rend; Master Yi — Double Strike; Neeko — Shapesplitter; Orianna — Clockwork Windup; Tahm Kench — An Acquired Taste; Tristana — Explosive Charge; Twisted Fate — Stacked Deck; Vayne — Silver Bolts; Vi — Denting Blows; Varus — Blighted Quiver; Xin Zhao — Determination; Kraken Slayer (não aplica o golpe fortalecido duas vezes). Dano bônus (duas vezes): Braum — Concussive Blows*; Elise — Spider Form; Fizz — Seastone Trident; Gwen — A Thousand Cuts e Skip 'n Slash; Kassadin — Nether Blade; Kayle — Starfire Spellblade; Kog'Maw — Bio-Arcane Barrage; Master Yi — Wuju Style; Malphite — Thunderclap*; Mordekaiser — Darkness Rise; Qiyana — Terrashape; Rumble — Junkyard Titan; Senna — Absolution; Shen — Twilight Assault; Shyvana — Emberstrike; Sion — Glory in Death; Tahm Kench — An Acquired Taste; Teemo — Toxic Shot; Thresh — Flay; Varus — Blighted Quiver; Viego — Blade of the Ruined King; Volibear — The Relentless Storm; Warwick — Eternal Hunger; Yunara — Cultivation of Spirit; itens Blade of the Ruined King, Guinsoo's Rageblade, Muramana, Nashor's Tooth, Recurve Bow, Stridebreaker*, Tiamat*, Titanic Hydra*, Wit's End. Cura (duas vezes): Elise — Spider Form; Warwick — Eternal Hunger. Redução de recarga (duas vezes): Master Yi — Alpha Strike; Nocturne — Umbra Blades; Olaf — Reckless Swing; Senna — Piercing Darkness; Shyvana — Twin Bite. Geração de Fúria (dobro): Gnar — Rage Gene; Rek'Sai — Fury of the Xer'Sai; Renekton — Reign of Anger; Tryndamere — Battle Fury; Shyvana — Dragon's Descent. Outros: Illaoi — Harsh Lesson (comanda Tentáculos sem consumir o ataque fortalecido); Lee Sin — Flurry (retorno de energia dobrado consumindo 1 acúmulo); Shaco — Hallucinate (ataques do clone); Trinity Force (Velocidade de Movimento bônus). Ao ser atingido pelo Golpe Fantasma: Amumu — Tantrum; Braum — Concussive Blows (acúmulo); Jax — Counter Strike; Rammus — Defensive Ball Curl (reflexão); Bramble Vest e Thornmail (reflexão). NÃO interagem: Akshan — Dirty Fighting (acúmulo durante Heroic Swing) (bug); Aurora — Spirit Abjuration; Jax — Relentless Assault; Jinx — Pow-Pow (acúmulos) e Fishbones (10% de dano bônus e dano em área); Tryndamere — Spinning Slash; Mordekaiser — Darkness Rise (acúmulos da aura). O Golpe Fantasma NÃO faz atacar duas vezes: efeitos que disparam ao completar o windup ativam uma vez só — Ashe — Ranger's Focus; Bard — Meeps; Cho'Gath — Vorpal Spikes; Darius — Hemorrhage; Kennen — Electrical Surge; Lulu — Pix; Jayce — Hyper Charge (decremento); Nami — Tidecaller's Blessing; Rek'Sai — Queen's Wrath; Sivir — Ricochet; Sylas — Petricite Burst (decremento); Xin Zhao — Three Talon Strike (dano bônus e arremesso); Yone — Way of the Hunter (dano bônus); Guinsoo's Rageblade (geração de acúmulos); Runaan's Hurricane (dardos menores).
     ]
     Análise de custo[
         Valor de Ouro: 30 PdH = 600g; 30 DdA = 1.050g; 25% VdA = 625g; total 2.275g. Ira: 30 de dano ao contato = 650g; total 2.925g. Golpe Fervente: 8% VdA = 200g por acúmulo; 32% VdA = 800g no máximo; total 3.725g
@@ -5574,6 +6638,50 @@ Lâmina da Fúria de Guinsoo: Guinsoo's Rageblade[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Ira (Wrath) causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato da Ira não se aplica a estruturas. Ataques a estruturas não concedem, não renovam nem mudam a contagem dos acúmulos de Fantasma (Phantom), mas concedem e renovam os acúmulos do Golpe Fervente. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Ira se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Golpe Fervente não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Efeitos ao contato (On-hit effects) · ativa · O Golpe Fantasma (Phantom Hit) aplica os efeitos ao contato ao alvo mais uma vez. Nos efeitos da lista de interações registradas (que a fonte avisa poder estar desatualizada), isso gera um acúmulo a mais, aplica o dano bônus de novo, repete a cura, reduz a recarga duas vezes ou gera o dobro de Fúria; a lista completa, com os nomes em EN, está na `Mecânica (wiki)` do item. A página Attack effects lista a Lâmina da Fúria de Guinsoo entre os itens que aplicam efeitos ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes; https://wiki.leagueoflegends.com/en-us/Attack_effects#Items
+        Mecânica · Efeitos Ao Atacar (On-attack effects) · não ativa · O Golpe Fantasma não interage com efeitos ao atacar e não faz o campeão atacar duas vezes: efeitos que ativam ao completar a preparação do ataque (windup) ativam uma vez só. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Ataques fortalecidos de uso único (Single-use empowered attacks) · não ativa · Efeitos ao contato de ataques fortalecidos de uso único não se beneficiam do Golpe Fantasma e se aplicam uma vez só, porque o golpe inicial os consome. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Habilidades que aplicam efeitos ao atacar (Abilities that apply on-attack effects) · ativa · O Golpe Fantasma do Golpe Fervente pode gerar acúmulos e ativar em habilidades que aplicam efeitos ao atacar. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Ataque destruído ou perdido (Destroyed or popped attack) · não reduz · O Golpe Fantasma ocorre num atraso fixo após o disparo do ataque, em corpo a corpo ou à distância, e ocorre mesmo se o ataque for destruído (ex.: Parede de Vento) ou perdido (ex.: inalvejabilidade). Se um ataque à distância ainda estiver em voo após 0,15s, o Golpe Fantasma chega primeiro, o que pode mudar a ordem dos efeitos ao contato (ex.: Espada do Rei Destruído). · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Mata-Cráquens (Kraken Slayer) — Derrubar (Bring It Down) · ativa · O Golpe Fantasma gera um acúmulo a mais do Derrubar, sem aplicar duas vezes o golpe fortalecido. A página do Mata-Cráquens diz que a Lâmina da Fúria de Guinsoo tem tratamento especial para interagir com o Derrubar ao contato. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes; https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Item · Força da Trindade (Trinity Force) — Apressar (Quicken) · ativa · O Golpe Fantasma ativa o Apressar mais uma vez e concede de novo a Velocidade de Movimento bônus. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Furacão de Runaan (Runaan's Hurricane) — Fúria do Vento (Wind's Fury) · não ativa · O Golpe Fantasma não dispara de novo os dardos menores (minor bolts) da Fúria do Vento, que ativa ao completar a preparação do ataque. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Espada do Rei Destruído (Blade of The Ruined King) — Gume da Névoa (Mist's Edge) · ativa · O Golpe Fantasma aplica o dano bônus do Gume da Névoa mais uma vez. Se um ataque à distância ainda estiver em voo após 0,15s, o Golpe Fantasma chega primeiro e pode mudar a ordem dos efeitos ao contato, como no exemplo da fonte com a Espada do Rei Destruído. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Muramana (Muramana) — Choque (Shock) · ativa · O Golpe Fantasma aplica o dano bônus da Muramana mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Dente de Na'Shor (Nashor's Tooth) — Mordida Icathiana (Icathian Bite) · ativa · O Golpe Fantasma aplica o dano bônus da Mordida Icathiana mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Arco Recurvo (Recurve Bow) — Ferroada (Sting) · ativa · O Golpe Fantasma aplica o dano bônus da Ferroada mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Limite da Razão (Wit's End) — Duelo (Fray) · ativa · O Golpe Fantasma aplica o dano bônus do Duelo mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Quebrapassos (Stridebreaker) — Fenda (Cleave) · ativa · O Golpe Fantasma aplica o dano bônus da Fenda mais uma vez. A fonte marca o item com asterisco, sem legenda. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Tiamat (Tiamat) — Fenda (Cleave) · ativa · O Golpe Fantasma aplica o dano bônus da Fenda mais uma vez. A fonte marca o item com asterisco, sem legenda. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Hidra Titânica (Titanic Hydra) — Fenda (Cleave) · ativa · O Golpe Fantasma aplica o dano bônus da Fenda mais uma vez. A fonte marca o item com asterisco, sem legenda. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Colete Espinhoso (Bramble Vest) — Espinhos (Thorns) · ativa · Quem tem o Colete Espinhoso e é atingido pelo Golpe Fantasma reflete o dano dos Espinhos de novo. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Armadura de Espinhos (Thornmail) — Espinhos (Thorns) · ativa · Quem tem a Armadura de Espinhos e é atingido pelo Golpe Fantasma reflete o dano dos Espinhos de novo. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Yasuo — Parede de Vento (Wind Wall) · não reduz · Caso citado pela fonte: o Golpe Fantasma ocorre mesmo se o ataque for destruído pela Parede de Vento. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Akshan — Lutando Sujo (Dirty Fighting) · não ativa · Caso citado pela fonte: o Golpe Fantasma gera um acúmulo a mais do Lutando Sujo, mas não aplica acúmulo durante o Impulso Heroico (Heroic Swing) (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Aurora — Abjuração Espiritual (Spirit Abjuration) · não ativa · Caso citado pela fonte: o Golpe Fantasma não gera acúmulo da Abjuração Espiritual. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Jax — Investida Implacável (Relentless Assault) · não ativa · Caso citado pela fonte: o Golpe Fantasma não interage com a Investida Implacável. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Jinx — Pow-Pow (Pow-Pow) e Fishbones (Fishbones) · não ativa · Caso citado pela fonte: o Golpe Fantasma não gera acúmulo da Pow-Pow nem aplica o dano bônus de 10% e o dano em área da Fishbones. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Tryndamere — Corte Giratório (Spinning Slash) · não ativa · Caso citado pela fonte: o Golpe Fantasma não interage com o Corte Giratório. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Mordekaiser — Ascensão das Trevas (Darkness Rise) · não ativa · Caso citado pela fonte: o Golpe Fantasma aplica o dano bônus da Ascensão das Trevas mais uma vez, mas não gera acúmulo para o efeito de aura. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Illaoi — Lição Dura (Harsh Lesson) · ativa · Caso citado pela fonte: o Golpe Fantasma faz os Tentáculos atacarem sem consumir o ataque fortalecido da Lição Dura. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Lee Sin — Agitação (Flurry) · ativa · Caso citado pela fonte: o Golpe Fantasma dobra o retorno de Energia da Agitação, consumindo só 1 acúmulo. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Shaco — Alucinações (Hallucinate) · ativa · Caso citado pela fonte: a lista cita as Alucinações no grupo "Other", com a nota "clone attacks" (ataques do clone). · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Amumu — Chilique (Tantrum) · ativa · Caso citado pela fonte: ser atingido pelo Golpe Fantasma reduz as recargas do Amumu pelo Chilique. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Braum — Golpes Concussivos (Concussive Blows) · ativa · Caso citado pela fonte: ser atingido pelo Golpe Fantasma aplica acúmulo dos Golpes Concussivos; a lista também põe os Golpes Concussivos entre os danos bônus aplicados duas vezes, com asterisco sem legenda. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Jax — Contra-Ataque (Counter Strike) · ativa · Caso citado pela fonte: ser atingido pelo Golpe Fantasma gera dano no Contra-Ataque. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Campeão · Rammus — Bola Curva Defensiva (Defensive Ball Curl) · ativa · Caso citado pela fonte: ser atingido pelo Golpe Fantasma reflete dano pela Bola Curva Defensiva. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Ira ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Hidra Profana (Profane Hydra) — Fenda (Cleave) · não ativa · O Golpe Fantasma (Phantom Hit) não causa dano e não ativa a Fenda da Hidra Profana (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+    ]
+    Escalonamento[
+        Ira (Wrath) · Sem scaling
+        Golpe Fervente (Seething Strike) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Poder de Habilidade, Velocidade de Ataque, Efeitos ao Contato
     Classe: AD (AD 1.675g · Vitalidade 0g · AP 600g)
     Arquétipo Recomendado: Atirador, Lutador
@@ -5621,6 +6729,13 @@ Coração de Aço: Heartsteel[
     Notas: O texto oficial pt_BR exibe recarga "(0s) por alvo" (placeholder); valor real 30s por alvo.
     Notas de ARAM: Vida bônus permanente alterada para 5% do dano.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Consumo Colossal causa dano de proc, marcado como dano básico, e não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Heartsteel#Notes
+        Mecânica · Modificadores de dano ao contato (On-hit damage modifiers) · não amplifica · O dano do Consumo Colossal não é afetado por modificadores de dano ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Heartsteel#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O Consumo Colossal aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Heartsteel#Notes
+        Mecânica · Clones (Clones) · ativa · O Consumo Colossal ativa contra clones de campeões e concede os bônus a partir deles. · Fonte: https://wiki.leagueoflegends.com/en-us/Heartsteel#Notes
+    ]
     Escalonamento[
         Consumo Colossal (Colossal Consumption) · Vida · 6% · máxima · seu · razão · dano físico bônus ao contato do ataque fortalecido
         Consumo Colossal (Colossal Consumption) · Vida · 0,6% · máxima · seu · razão · Vida bônus permanente por ataque fortalecido (10% do dano)
@@ -5673,6 +6788,16 @@ Hexótica C44: Hexoptics C44[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Dano não básico (Non-basic damage) · não amplifica · O dano da Magnificação não se aplica a efeitos que não causam dano básico. · Fonte: https://wiki.leagueoflegends.com/en-us/Hexoptics_C44#Notes
+        Campeão · Jinx — Fishbones (Fishbones) · não amplifica · Caso citado pela fonte: o dano da Fishbones não é básico, e a Magnificação não se aplica a ele. O Data Dragon pt_BR não dá nome à Fishbones, que é uma forma da Q "Trocando!". · Fonte: https://wiki.leagueoflegends.com/en-us/Hexoptics_C44#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e a Hexótica C44 entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e a Hexótica C44 entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
+    Escalonamento[
+        Magnificação (Magnification) · Sem scaling
+        Mira Arcana (Arcane Aim) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Acerto Crítico
     Classe: AD (AD 2.925g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -5714,6 +6839,14 @@ Pistola Laminar Hextec: Hextech Gunblade[
     Notas: O texto oficial pt_BR exibe "0 de Dano Mágico" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Disparo Elétrico ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · O Disparo Elétrico causa dano de habilidade e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Gunblade#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · O Disparo Elétrico é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Gunblade#Notes
+    ]
+    Escalonamento[
+        Disparo Elétrico (Lightning Bolt) · Poder de Habilidade · 30% · total · seu · razão · dano mágico ao alvo
+    ]
     Categoria de Atributo: Poder de Habilidade, Dano de Ataque, Vampirismo
     Classe: AP (AD 1.400g · Vitalidade 0g · AP 1.600g)
     Arquétipo Recomendado: Mago
@@ -5755,6 +6888,20 @@ Explocinturão Hextec: Hextech Rocketbelt[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Supersônico ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · O Supersônico causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · O Supersônico é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Mecânica · Arremessar ao ar (Airborne) e Knockdown · não ativa · O avanço do Supersônico é interrompido por efeitos de Knockdown e de arremessar ao ar. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Mecânica · Preso ao chão (Ground) e enraizar (Root) · não ativa · O Supersônico fica desativado com o portador preso ao chão ou enraizado. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Runa · Chuva de Lâminas (Hail of Blades) · não ativa · A reinicialização de ataque básico do Supersônico não conta como reinicialização para a Chuva de Lâminas. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Feitiço de Invocador · Barreira (Barrier), Clareza (Clarity), Purificar (Cleanse), Exaustão (Exhaust), Fantasma (Ghost), Curar (Heal), Incendiar (Ignite) e Golpear (Smite) · ativa · Esses Feitiços de Invocador podem ser usados durante o avanço do Supersônico. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Feitiço de Invocador · Flash (Flash), Teleporte (Teleport) e Marca (Mark) · não ativa · Flash, Teleporte, Marca e o avanço dela, Hexflash e o Retornar ficam desativados durante o avanço do Supersônico. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+        Mecânica · Itens e consumíveis (Items, consumables) · não ativa · Todos os itens e consumíveis ficam desativados durante o avanço do Supersônico. · Fonte: https://wiki.leagueoflegends.com/en-us/Hextech_Rocketbelt#Notes
+    ]
+    Escalonamento[
+        Supersônico (Supersonic) · Poder de Habilidade · 15% · total · seu · razão · dano mágico do avanço e das explosões dos foguetes
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 933,33g · AP 1.200g)
     Arquétipo Recomendado: Assassino, Mago
@@ -5799,6 +6946,19 @@ Resplendor Vazio: Hollow Radiance[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Imolar ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Desolar ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Imolar causa dano de proc, marcado como periódico e em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Hollow_Radiance#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Desolar causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Hollow_Radiance#Notes
+        Mecânica · Tamanho (Size) · amplifica · A aura do Imolar aumenta se o tamanho do portador aumentar, sem depender do tamanho base, e não fica menor que o raio base com modificadores negativos de tamanho. · Fonte: https://wiki.leagueoflegends.com/en-us/Hollow_Radiance#Notes
+        Mecânica · Raio de colisão grande (Large collision radius) · não ativa · Como a aura do Imolar precisa alcançar o centro do inimigo, alguns campeões corpo a corpo não aplicam o efeito no alcance máximo de ataque contra campeões ou monstros com raio de colisão grande (a fonte cita o Dragon e o Rift Herald). · Fonte: https://wiki.leagueoflegends.com/en-us/Hollow_Radiance#Notes
+    ]
+    Escalonamento[
+        Imolar (Immolate) · Vida · 1% · bônus · seu · razão · dano mágico por segundo da aura, ativa por 3s ao sofrer ou causar dano (125% contra tropas e monstros)
+        Desolar (Desolate) · Vida · 2% · bônus · seu · razão · dano mágico da erupção ao matar unidade não campeã
+        Desolar (Desolate) · Vida · 4% · bônus · seu · razão · dano mágico da erupção maior ao abater ou assistir campeão
+    ]
     Categoria de Atributo: Vida, Resistência Mágica, Aceleração de Habilidade, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 2.166,67g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -5845,6 +7005,20 @@ Foco do Horizonte: Horizon Focus[
     Notas: O texto oficial pt_BR (Data Dragon 16.22.1) do Hiperdisparo não cita o aumento de 10% no dano causado ao alvo marcado; o valor está na Mecânica, que segue a infobox da wiki.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Mascotes e armadilhas (Pets, traps) · não ativa · O Hiperdisparo não ativa contra mascotes nem armadilhas. · Fonte: https://wiki.leagueoflegends.com/en-us/Horizon_Focus#Notes
+        Mecânica · Clones (Clones) · ativa · O Hiperdisparo ativa contra clones, e o Foco é consumido contra eles. · Fonte: https://wiki.leagueoflegends.com/en-us/Horizon_Focus#Notes
+        Mecânica · Habilidades de área que ficam no local (Persistent area abilities) · ativa · Nas habilidades de área que ficam num local por um tempo, só a conjuração inicial ativa o Hiperdisparo. · Fonte: https://wiki.leagueoflegends.com/en-us/Horizon_Focus#Notes
+        Campeão · Morgana — Sombra Atormentada (Tormented Shadow) · ativa · Caso citado pela fonte: só a conjuração inicial ativa o Hiperdisparo. · Fonte: https://wiki.leagueoflegends.com/en-us/Horizon_Focus#Notes
+        Campeão · Nasus — Fogo Espiritual (Spirit Fire) · ativa · Caso citado pela fonte: só a conjuração inicial ativa o Hiperdisparo. · Fonte: https://wiki.leagueoflegends.com/en-us/Horizon_Focus#Notes
+        Campeão · Rumble — O Equalizador (The Equalizer) · ativa · Caso citado pela fonte: só a conjuração inicial ativa o Hiperdisparo. · Fonte: https://wiki.leagueoflegends.com/en-us/Horizon_Focus#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e o Foco do Horizonte entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e o Foco do Horizonte entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
+    Escalonamento[
+        Hiperdisparo (Hypershot) · Sem scaling
+        Foco (Focus) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.500g)
     Arquétipo Recomendado: Mago
@@ -5890,6 +7064,12 @@ Húbris: Hubris[
     Notas: O texto oficial pt_BR exibe "0 de Dano de Ataque mais 0" na Eminência desde o 16.21.1 (placeholders); valores reais em Mecânica.
     Notas de ARAM: Variante própria (ID 126697). Preço 2.950g; Dano de Ataque 55; Aceleração de Habilidade 10; Eminência base 15 (corpo a corpo) / 10 (à distância); por acúmulo 2 / 1; duração 90s / 45s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Eminência (Eminence) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Aceleração de Habilidade
     Classe: AD (AD 2.465g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -5937,6 +7117,24 @@ Quebracascos: Hullbreaker[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · não ativa · Caso citado pela página do Cutelo Negro: este item não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Marujo causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Hullbreaker#Notes
+        Mecânica · Estruturas (Structures) · ativa · O dano ao contato do Marujo se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Hullbreaker#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus do Marujo se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Hullbreaker#Notes
+        Mecânica · Tropas inalvejáveis (Untargetable minions) · não ativa · A Invasão Pirata não afeta tropas inalvejáveis. · Fonte: https://wiki.leagueoflegends.com/en-us/Hullbreaker#Notes
+    ]
+    Escalonamento[
+        Marujo (Skipper) · Dano de Ataque · 120% · base · seu · razão · dano físico bônus ao consumir os acúmulos, contra campeão ou monstro épico (corpo a corpo)
+        Marujo (Skipper) · Dano de Ataque · 84% · base · seu · razão · dano físico bônus ao consumir os acúmulos, contra campeão ou monstro épico (à distância)
+        Marujo (Skipper) · Vida · 5% · máxima · seu · razão · dano físico bônus ao consumir os acúmulos, contra campeão ou monstro épico (corpo a corpo)
+        Marujo (Skipper) · Vida · 3,5% · máxima · seu · razão · dano físico bônus ao consumir os acúmulos, contra campeão ou monstro épico (à distância)
+        Marujo (Skipper) · Dano de Ataque · 300% · base · seu · razão · dano físico bônus ao consumir os acúmulos, contra estruturas (corpo a corpo)
+        Marujo (Skipper) · Dano de Ataque · 210% · base · seu · razão · dano físico bônus ao consumir os acúmulos, contra estruturas (à distância)
+        Marujo (Skipper) · Vida · 10% · máxima · seu · razão · dano físico bônus ao consumir os acúmulos, contra estruturas (corpo a corpo)
+        Marujo (Skipper) · Vida · 7% · máxima · seu · razão · dano físico bônus ao consumir os acúmulos, contra estruturas (à distância)
+        Invasão Pirata (Boarding Party) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Vida, Movimento
     Classe: AD (AD 1.400g · Vitalidade 1.333,33g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -5978,6 +7176,20 @@ Manopla dos Glacinatas: Iceborn Gauntlet[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Iceborn_Gauntlet#Notes
+    ]
+    Escalonamento[
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 150% · base · seu · razão · dano físico bônus ao contato do ataque fortalecido, que cria um campo de gelo de lentidão por 2s
+    ]
     Categoria de Atributo: Vida, Armadura, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.800g · AP 0g)
     Arquétipo Recomendado: Lutador, Tanque
@@ -6018,6 +7230,12 @@ Arco-escudo Imortal: Immortal Shieldbow[
     Notas: none
     Notas de ARAM: Recarga de Salva-Vidas alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Presa da Serpente (Serpent's Fang) — Ceifador de Escudos (Shield Reaver) · não reduz · O Ceifador de Escudos da Presa da Serpente só afeta o escudo do Salva-Vidas depois que ele foi ativado e já bloqueou dano (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Shieldbow#Notes
+    ]
+    Escalonamento[
+        Salva-Vidas (Lifeline) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Acerto Crítico
     Classe: AD (AD 2.925g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -6077,6 +7295,10 @@ Mandato Imperial: Imperial Mandate[
         Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e o Mandato Imperial entre os modificadores de dano recebido: a Vulnerabilidade do Comando não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_received_modifier
         Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e o Mandato Imperial entre os modificadores de dano recebido: a Vulnerabilidade do Comando não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_received_modifier
     ]
+    Escalonamento[
+        Controle (Control) · Sem scaling
+        Comando (Command) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Aceleração de Habilidade, Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.800g)
     Arquétipo Recomendado: Suporte
@@ -6122,6 +7344,9 @@ Gume do Infinito: Infinity Edge[
         Item · Presságio de Randuin (Randuin's Omen) — Resiliência (Resilience) · reduz · A Resiliência do alvo reduz em 30% o dano total do acerto crítico, de forma multiplicativa: um crítico normal causa 140% do DdA em vez de 200%; com o Gume do Infinito, 230% × 0,7 = 161% do DdA (conta pela regra da fonte). Nos críticos de Floregris com o Gume do Infinito, o bônus cai de 26% para 18,2%. · Fonte: https://wiki.leagueoflegends.com/en-us/Randuin's_Omen#Notes; https://wiki.leagueoflegends.com/en-us/Infinity_Edge#Notes; https://wiki.leagueoflegends.com/en-us/Shadowflame#Notes
         Mecânica · Dano de Acerto Crítico (Critical strike damage) · acumula · Na maioria dos casos, o Dano de Acerto Crítico acumula de forma aditiva, e os modificadores de dano se aplicam normalmente ao dano crítico: 200% + 30% = 230% do DdA para a maioria dos campeões. · Fonte: https://wiki.leagueoflegends.com/en-us/Critical_strike#Modifying_critical_strike_damage; https://wiki.leagueoflegends.com/en-us/Infinity_Edge#Notes
         Item · Céu Dividido (Sundered Sky) — Golpe de Lumescudo (Lightshield Strike) · amplifica · O Dano de Acerto Crítico deste item afeta o Golpe de Lumescudo, que funciona como acerto crítico para todos os fins e acerta criticamente com 80% do dano crítico total: com o Gume do Infinito, para a maioria dos campeões, 80% × 230% = 184% do DdA, em vez de 160% (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Sundered_Sky#Notes; https://wiki.leagueoflegends.com/en-us/Sundered_Sky; https://wiki.leagueoflegends.com/en-us/Infinity_Edge#Notes
+    ]
+    Escalonamento[
+        none
     ]
     Categoria de Atributo: Dano de Ataque, Acerto Crítico, Dano Crítico
     Classe: AD (AD 3.625g · Vitalidade 0g · AP 0g)
@@ -6170,6 +7395,14 @@ Jak'Sho, o Inconstante: Jak'Sho, The Protean[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Campeão · Ornn — Forja Viva (Living Forge) · acumula · Caso citado pela fonte: a Resiliência do Vazio acumula de forma aditiva com a passiva do Ornn. · Fonte: https://wiki.leagueoflegends.com/en-us/Jak'Sho,_The_Protean#Notes
+        Mecânica · Mountainous Vigor (Mountainous Vigor) · acumula · A Resiliência do Vazio acumula de forma multiplicativa com o Mountainous Vigor. · Fonte: https://wiki.leagueoflegends.com/en-us/Jak'Sho,_The_Protean#Notes
+    ]
+    Escalonamento[
+        Resiliência do Vazio (Voidborn Resilience) · Armadura · 30% · bônus · seu · conversão · Armadura bônus com 5 acúmulos, até o fim do combate
+        Resiliência do Vazio (Voidborn Resilience) · Resistência Mágica · 30% · bônus · seu · conversão · Resistência Mágica bônus com 5 acúmulos, até o fim do combate
+    ]
     Categoria de Atributo: Vida, Armadura, Resistência Mágica
     Classe: Vitalidade (AD 0g · Vitalidade 2.733,33g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -6215,6 +7448,12 @@ Rookern Lamúrico: Kaenic Rookern[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Perdição dos Magos (Magebane) · Vida · 15% · máxima · seu · razão · escudo contra dano mágico
+    ]
     Categoria de Atributo: Vida, Resistência Mágica, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 2.966,67g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -6259,6 +7498,18 @@ Juramento do Cavaleiro: Knight's Vow[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Pacto ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Vários usuários (Multiple users) · não acumula · O Pacto falha e entra numa recarga fixa de 10s se o aliado já foi designado Digno, pelo portador ou por outro aliado, ou se o alvo tem o Juramento do Cavaleiro e já designou um Digno. · Fonte: https://wiki.leagueoflegends.com/en-us/Knight's_Vow#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O dano redirecionado pelo Sacrifício é sempre dano de proc e não ativa efeitos de habilidade, seja qual for a classificação do efeito original. · Fonte: https://wiki.leagueoflegends.com/en-us/Knight's_Vow#Notes
+        Mecânica · Autocura (Self-healing) · conta como · A cura do Sacrifício é atribuída ao portador e conta como autocura. · Fonte: https://wiki.leagueoflegends.com/en-us/Knight's_Vow#Notes
+        Item · Dança da Morte (Death's Dance) — Dor Ignorada (Ignore Pain) · acumula · A redução do Sacrifício no aliado Digno ativa antes da Dor Ignorada da Dança da Morte. · Fonte: https://wiki.leagueoflegends.com/en-us/Knight's_Vow#Notes
+        Item · Oposição Celestial (Celestial Opposition) — Bênção da Montanha (Blessing of the Mountain) · não ativa · Caso especial: o dano redirecionado pelo Sacrifício ao portador não ativa o efeito Abençoado da Bênção da Montanha. · Fonte: https://wiki.leagueoflegends.com/en-us/Celestial_Opposition#Notes
+    ]
+    Escalonamento[
+        Pacto (Pledge) · Sem scaling
+        Sacrifício (Sacrifice) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Armadura, Aceleração de Habilidade, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 1.633,33g · AP 0g)
     Arquétipo Recomendado: Suporte, Tanque
@@ -6286,7 +7537,7 @@ Mata-Cráquens: Kraken Slayer[
     ]
     Habilidade[
         [Derrubar (Bring It Down) — passiva única][Cada terceiro Ataque causa Dano Físico adicional ao contato, aumentado com base na Vida perdida do alvo.]
-        Mecânica (wiki): ataques básicos ao contato concedem 1 acúmulo por 4s, até 2. Com 2, o próximo ataque consome todos para causar 150–200 (por nível, 9–19; corpo a corpo) / 120–160 (à distância) de dano físico bônus ao contato → 170 / 136 no nível 13, aumentado em 0%–75% pela Vida perdida do alvo (0%–100%) → até 297,5 / 238 com o alvo quase morto. Campeões à distância acumulam e consomem ao atacar, fortalecendo o ataque a aplicar ao contato; habilidades que ativam só efeitos ao contato (ex.: Investida do Aphelios) aplicam e consomem ao contato. Lâmina da Fúria de Guinsoo tem tratamento especial para interagir ao contato; Fúria do Vento (Furacão de Runaan) não. Novo Destino (Graves) aplica ao atacar e não repete nos demais alvos. Dano básico: NÃO ativa efeitos de habilidade; NÃO é bloqueado por escudo de feitiço; NÃO se aplica a estruturas (acúmulos ainda renovam ao atacá-las); beneficia-se de Roubo de Vida.
+        Mecânica (wiki): ataques básicos ao contato concedem 1 acúmulo por 4s, até 2. Com 2, o próximo ataque consome todos para causar 150–200 (por nível, 9–19; corpo a corpo) / 120–160 (à distância) de dano físico bônus ao contato → 170 / 136 no nível 13, aumentado em 0%–75% pela Vida perdida do alvo (0%–100%) → até 297,5 / 238 com o alvo quase morto. Campeões à distância acumulam e consomem ao atacar, fortalecendo o ataque a aplicar ao contato; habilidades que ativam só efeitos ao contato (ex.: Onslaught do Aphelios) aplicam e consomem ao contato. Lâmina da Fúria de Guinsoo tem tratamento especial para interagir ao contato; Fúria do Vento (Furacão de Runaan) não. Nova Destino (Graves) aplica ao atacar e não repete nos demais alvos. Dano básico: NÃO ativa efeitos de habilidade; NÃO é bloqueado por escudo de feitiço; NÃO se aplica a estruturas (acúmulos ainda renovam ao atacá-las); beneficia-se de Roubo de Vida.
     ]
     Análise de custo[
         Valor de Ouro: 45 DdA = 1.575g; 40% VdA = 1.000g; 4% Velocidade de Movimento = 260,42g; total 2.835,42g
@@ -6304,6 +7555,21 @@ Mata-Cráquens: Kraken Slayer[
     Notas: none
     Notas de ARAM: Dano de Derrubar alterado para 262,5–350 (por nível) para todos os usuários.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · A Lâmina da Fúria de Guinsoo tem tratamento especial para interagir com o Derrubar ao contato: o Golpe Fantasma gera um acúmulo a mais do Derrubar, sem aplicar duas vezes o golpe fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes; https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Furacão de Runaan (Runaan's Hurricane) — Fúria do Vento (Wind's Fury) · não ativa · A Fúria do Vento não interage com o Derrubar ao contato; só a Lâmina da Fúria de Guinsoo tem esse tratamento especial. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · ativa · Em campeões à distância, os ataques básicos acumulam e consomem o Derrubar ao atacar, fortalecendo o ataque para aplicar os efeitos ao contato. Habilidades que não ativam efeitos ao atacar mas ativam efeitos ao contato sempre aplicam e consomem o Derrubar ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Campeão · Aphelios — Onslaught (Onslaught) · ativa · Caso citado pela fonte: o Onslaught ativa efeitos ao contato e não ativa efeitos ao atacar, então sempre aplica e consome o Derrubar ao contato. O Data Dragon pt_BR não dá nome para o Onslaught, que faz parte da Q "Habilidades da arma". · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Campeão · Graves — Nova Destino (New Destiny) · não ativa · Caso citado pela fonte: a Nova Destino aplica o Derrubar ao atacar, e por isso não o aplica de novo ao contato nos outros alvos atingidos. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Derrubar causa dano básico e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Derrubar não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato do Derrubar não se aplica a estruturas; os acúmulos ainda se renovam ao atacá-las. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus do Derrubar se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame (várias instâncias de dano básico). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+    ]
+    Escalonamento[
+        Derrubar (Bring It Down) · Vida · 0–75% · perdida · alvo · razão · dano aumentado do ataque fortalecido: até 75% com 100% de Vida perdida do alvo
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Movimento
     Classe: AD (AD 2.575g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -6350,6 +7616,15 @@ Tormento de Liandry: Liandry's Torment[
     Notas: none
     Notas de ARAM: Dano por segundo de Sofrimento [sic, na wiki] alterado para 1,8% da Vida máxima do alvo.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Vários usuários (Multiple users) · acumula · O Tormento acumula num alvo quando aplicado por vários usuários, sem renovar o debuff de todas as fontes seguintes de uma vez. · Fonte: https://wiki.leagueoflegends.com/en-us/Liandry's_Torment#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Tormento causa dano de proc, marcado como periódico, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Liandry's_Torment#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Tormento, por si só, não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Liandry's_Torment#Notes
+        Mecânica · Multiplicadores de dano (Damage multipliers) · acumula · O aumento de dano do Sofrimento acumula de forma multiplicativa com outros multiplicadores de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Liandry's_Torment#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e o Tormento de Liandry entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e o Tormento de Liandry entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Tormento ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
     Escalonamento[
         Tormento (Torment) · Vida · 6% · máxima · alvo · razão · dano mágico total da queimadura em 3s (1% a cada 0,5s; até 120 contra monstros)
         Sofrimento (Suffering) · Sem scaling
@@ -6395,6 +7670,18 @@ Perdição de Lich: Lich Bane[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Lich_Bane#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Lâmina Arcana ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
     Escalonamento[
         Lâmina Arcana (Spellblade) · Dano de Ataque · 75% · base · seu · razão · dano mágico bônus ao contato do ataque fortalecido
         Lâmina Arcana (Spellblade) · Poder de Habilidade · 45% · total · seu · razão · dano mágico bônus ao contato do ataque fortalecido
@@ -6445,6 +7732,13 @@ Medalhão dos Solari de Ferro: Locket of the Iron Solari[
     Notas: none
     Notas de ARAM: Recarga de Devoção alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Aliados inalvejáveis (Untargetable allies) · ativa · A Devoção afeta aliados inalvejáveis. · Fonte: https://wiki.leagueoflegends.com/en-us/Locket_of_the_Iron_Solari#Notes
+        Mecânica · Vários usuários (Multiple users) · não acumula · A Devoção não acumula entre vários Medalhões dos Solari de Ferro: várias ativações na mesma unidade só renovam a duração do escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Locket_of_the_Iron_Solari#Notes
+    ]
+    Escalonamento[
+        Devoção (Devotion) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Armadura, Resistência Mágica, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.733,33g · AP 0g)
     Arquétipo Recomendado: Suporte, Tanque
@@ -6490,6 +7784,10 @@ Lembranças do Lorde Dominik: Lord Dominik's Regards[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e as Lembranças do Lorde Dominik entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e as Lembranças do Lorde Dominik entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
     Escalonamento[
         Mata-Gigantes (Giant Slayer) · Vida · 0–15% · bônus · alvo · razão · dano aumentado contra campeões: 1% a cada 100 de Vida bônus do alvo, até 15% com 1.500
     ]
@@ -6538,6 +7836,16 @@ Eco de Luden: Luden's Echo[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Eco ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Item · Redenção (Redemption) — Intervenção (Intervention) · ativa · A Intervenção da Redenção ativa o Eco, que escolhe os alvos pela proximidade do centro da área. · Fonte: https://wiki.leagueoflegends.com/en-us/Redemption#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Eco causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Luden's_Echo#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · O Eco é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Luden's_Echo#Notes
+    ]
+    Escalonamento[
+        Eco (Echo) · Poder de Habilidade · 5% · total · seu · razão · dano mágico bônus ao alvo e a cada alvo adicional
+        Eco (Echo) · Poder de Habilidade · 1–5% · total · seu · razão · dano mágico adicional ao alvo principal: 1% a cada acúmulo de Eco restante, até 5% com 5
+    ]
     Categoria de Atributo: Poder de Habilidade, Mana, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.600g)
     Arquétipo Recomendado: Mago
@@ -6586,6 +7894,72 @@ Malevolência: Malignance[
     Notas: none
     Notas de ARAM: Dano base por tique de Névoa Odiosa alterado para 40; razão de PdH por tique alterada para 2,8%.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Névoa Odiosa causa dano de proc, marcado como periódico e em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Névoa Odiosa não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Mecânica · Instâncias de 0 de dano e campeões invulneráveis (0 damage instances, invulnerable champions) · não ativa · A Névoa Odiosa não ativa com instâncias de 0 de dano nem contra campeões invulneráveis. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Mecânica · Ultimate (Ultimate ability) · ativa · A Névoa Odiosa ativa em cada instância de dano da ultimate; os casos especiais estão nas linhas de Campeão. Se o alvo ainda não estiver amaldiçoado, a primeira instância de dano mágico da ultimate não se beneficia da redução de Resistência Mágica. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Aatrox — Aniquilador de Mundos (World Ender) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Alistar — Vontade Indestrutível (Unbreakable Will) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Annie — Invocar: Tibbers (Summon: Tibbers) · ativa · Caso citado pela fonte: ativa pela invocação, pela queimadura em área e pelos ataques básicos do Tibbers, sempre que possível. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Bardo — Têmpera do Destino (Tempered Fate) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Briar — Morte Certa (Certain Death) · ativa · Caso citado pela fonte: só ativa na área onde ela aterrissa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Camille — Ultimato Hextec (The Hextech Ultimatum) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Dr. Mundo — Dosagem Máxima (Maximum Dosage) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Elise — Forma de Aranha (Spider Form) · não ativa · Caso citado pela fonte: Forma de Aranha / Forma Humana não ativam a Névoa Odiosa, apesar do dano das Aranhinhas (Spiderlings). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Fiora — Desafio Grandioso (Grand Challenge) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Heimerdinger — H-28Q Apex Turret (H-28Q Apex Turret) e Hextech Rocket Swarm (Hextech Rocket Swarm) e CH-3X Lightning Grenade (CH-3X Lightning Grenade) · ativa · Caso citado pela fonte: as versões melhoradas (Upgraded) ativam em cada instância de dano, sempre que possível. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Illaoi — Salto de Fé (Leap of Faith) · ativa · Caso citado pela fonte: o dano inicial ativa; os Tentáculos que nascem dessa habilidade não ativam. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Ivern — Margarida! (Daisy!) · ativa · Caso citado pela fonte: ativa nos ataques básicos normais da Daisy e no terceiro ataque fortalecido, em todos os inimigos atingidos. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Janna — Monção (Monsoon) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Jayce · não ativa · Caso citado pela fonte: o Jayce não ativa a Névoa Odiosa em nenhuma das formas. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · K'Sante — Forma Irrestrita (All Out) · ativa · Caso citado pela fonte: aplica num momento inconsistente (talvez dependa do tick de atualização de atributos em que o dano da ultimate ativa). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Kai'Sa — Instinto Assassino (Killer Instinct) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Karma — Mantra (Mantra) · ativa · Caso citado pela fonte: ativa nas habilidades de dano fortalecidas pelo Mantra (Soulflare e Renewal, sem nome no Data Dragon pt_BR). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Kha'Zix — Massacre do Vazio (Void Assault) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Kindred — Refúgio da Ovelha (Lamb's Respite) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Lillia — Cadência de Ninar (Lilting Lullaby) · ativa · Caso citado pela fonte: só ativa quando o alvo acorda; por isso, efeitos de purificação também impedem a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Lulu — Crescimento Virente (Wild Growth) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Master Yi — Highlander (Highlander) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Milio — Sopro de Vida (Breath of Life) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Mordekaiser — Reino da Morte (Realm of Death) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Nidalee · não ativa · Caso citado pela fonte: a Nidalee não ativa a Névoa Odiosa em nenhuma das formas. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Olaf — Ragnarok (Ragnarok) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Pyke — Morte das Profundezas (Death from Below) · ativa · Caso citado pela fonte: só ativa num campeão que está vivo no momento do salto e do dano, seja ele executado depois pelo Pyke ou não. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Renata Glasc — Apropriação Agressiva (Hostile Takeover) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Rengar — Furor da Caçada (Thrill of the Hunt) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Riven — Lâmina do Exílio (Blade of the Exile) · ativa · Caso citado pela fonte: não ativa sozinha; ativa só com um Wind Slash que acerte (Wind Slash não tem nome no Data Dragon pt_BR). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Ryze — Portal de Reinos (Realm Warp) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Shaco — Alucinações (Hallucinate) · ativa · Caso citado pela fonte: o clone ativa com os ataques básicos, com a explosão e com os ataques básicos das minicaixas. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Shen — Manter a União (Stand United) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Singed — Poção da Insanidade (Insanity Potion) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Sivir — Na Caçada (On the Hunt) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Soraka — Desejo (Wish) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Sylas — Usurpar (Hijack) · ativa · Caso citado pela fonte: a ultimate roubada segue as regras de todas as outras ultimates; roubar a ultimate de outro Sylas não ativa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Tahm Kench — Devorar (Devour) · ativa · Caso citado pela fonte: não ativa sozinho; ativa só com um Regurgitate que acerte (Regurgitate não tem nome no Data Dragon pt_BR). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Taliyah — Muro da Tecelã (Weaver's Wall) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Taric — Resplendor Cósmico (Cosmic Radiance) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Twisted Fate — Destino (Destiny) · não ativa · Caso citado pela fonte: Destiny e Gate (sem nome no Data Dragon pt_BR) não ativam a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Tryndamere — Fúria Sem Fim (Undying Rage) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Twitch — Passando Fogo (Spray and Pray) · ativa · Caso citado pela fonte: os projéteis ativam. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Udyr — Garra Selvagem (Wilding Claw) e Tempestade Alada (Wingborne Storm) · ativa · Caso citado pela fonte: ativa com as versões despertadas (Awakened). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Urgot — Pior que a Morte (Fear Beyond Death) · ativa · Caso citado pela fonte: ativa com a ultimate e com o Mercy (sem nome no Data Dragon pt_BR). · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Vayne — Hora Final (Final Hour) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Vex — Onda Sombria (Shadow Surge) · ativa · Caso citado pela fonte: ativa na conjuração inicial e na reconjuração, sempre que possível. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Viego — Destruidor de Corações (Heartbreaker) · ativa · Caso citado pela fonte: ativa no alvo principal e nos secundários. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Warwick — Coerção Infinita (Infinite Duress) · ativa · Caso citado pela fonte: ativa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Yorick — Louvor das Ilhas (Eulogy of the Isles) · ativa · Caso citado pela fonte: só ativa nos ataques da Donzela; o dano bônus do Yorick atacando o alvo da Donzela e o dano dos Andarilhos da Névoa (Mist Walkers) não ativam. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Yunara — Arc of Ruin (Arc of Ruin) · ativa · Caso citado pela fonte: ativa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Zeri — Impacto Eletrizante (Lightning Crash) · ativa · Caso citado pela fonte: só ativa na explosão inicial. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Zilean — Alteração Temporal (Chronoshift) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Zoe — Salto Dimensional (Portal Jump) · não ativa · Caso citado pela fonte: não ativa a Névoa Odiosa. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Campeão · Zyra — Espinhos Sufocantes (Stranglethorns) · ativa · Caso citado pela fonte: as plantas enfurecidas pela ultimate não ativam; o crescimento em si ativa em cada instância de dano, sempre que possível. · Fonte: https://wiki.leagueoflegends.com/en-us/Malignance#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Névoa Odiosa ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
+    Escalonamento[
+        Escárnio (Scorn) · Sem scaling
+        Névoa Odiosa (Hatefog) · Poder de Habilidade · 15% · total · seu · razão · dano mágico total da Maldição em 3s (1,25% a cada 0,25s)
+    ]
     Categoria de Atributo: Poder de Habilidade, Mana, Aceleração de Habilidade, Aceleração de Ultimate
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.400g)
     Arquétipo Recomendado: Mago
@@ -6622,6 +7996,7 @@ Manamune: Manamune[
     Análise de custo[
         Valor de Ouro: 35 DdA = 1.225g; 15 AdH = 750g; 500 Mana = 500g; total 2.475g; 10 DdA de Fascínio = 350g; total 2.825g. Por 100 de Mana de outras fontes: 2 DdA = 70g. Por carga: 3 Mana + 0,06 DdA = 5,1g (não campeão) / 6 Mana + 0,12 DdA = 10,2g (campeão)
         Eficiência de Ouro: 97,41% (base); +0,18% por carga de não campeões, +0,35% por carga de campeões; +2,41% por 100 de Mana máxima de outras fontes
+        Limiar de 100%: 44,12 de Mana bônus de Fluxo de Mana (calculado; ou 107,14 de Mana máxima de outras fontes)
         Valor de Ouro (atributos): 2.475g
         Valor de Ouro (base): 2.825g
     ]
@@ -6637,6 +8012,16 @@ Manamune: Manamune[
     Notas: O texto oficial pt_BR exibe "0 de Dano de Ataque adicional" (placeholder); valor real em Mecânica.
     Notas de ARAM: Cada carga consumida de Fluxo de Mana gera 50% mais Mana.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana (Manaless champions) · não ativa · Campeões sem Mana não ativam o Fluxo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Manamune#Notes
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · conta como · Vender um item de Fluxo de Mana tira a Mana bônus ganha com o efeito, mas os acúmulos ficam guardados se esses itens forem comprados de novo, não importa qual item gerou os acúmulos. · Fonte: https://wiki.leagueoflegends.com/en-us/Manamune#Notes
+        Mecânica · Ataques fortalecidos por habilidades (Ability-empowered attacks) · ativa · Ataques básicos fortalecidos ganhos por habilidades contam para o Fluxo de Mana ao consumir o ataque. · Fonte: https://wiki.leagueoflegends.com/en-us/Manamune#Notes
+    ]
+    Escalonamento[
+        Fascínio (Awe) · Mana · 2% · máxima · seu · conversão · Dano de Ataque bônus
+        Fluxo de Mana (Manaflow) · Sem scaling
+        — (transformação) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Mana, Aceleração de Habilidade
     Classe: AD (AD 1.225g · Vitalidade 0g · AP 500g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -6683,6 +8068,13 @@ Mandíbula de Malmortius: Maw of Malmortius[
     Notas: none
     Notas de ARAM: Recarga de Salva-Vidas alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Hexdrinker (Hexdrinker) — Salva-Vidas (Lifeline) · não acumula · A recarga em andamento do Salva-Vidas do Hexdrinker não passa para o Salva-Vidas da Mandíbula de Malmortius quando o item é melhorado. · Fonte: https://wiki.leagueoflegends.com/en-us/Hexdrinker#Notes
+    ]
+    Escalonamento[
+        Salva-Vidas (Lifeline) · Dano de Ataque · 150% · bônus · seu · razão · escudo contra dano mágico por 3s (corpo a corpo)
+        Salva-Vidas (Lifeline) · Dano de Ataque · 112,5% · bônus · seu · razão · escudo contra dano mágico por 3s (à distância)
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Resistência Mágica
     Classe: AD (AD 2.100g · Vitalidade 800g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador, Lutador
@@ -6729,6 +8121,12 @@ Ladrão de Almas de Mejai: Mejai's Soulstealer[
     Notas: none
     Notas de ARAM: Item desativado em ARAM.
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Glória (Glory) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida
     Classe: AP (AD 0g · Vitalidade 266,67g · AP 400g)
     Arquétipo Recomendado: Mago
@@ -6774,6 +8172,28 @@ Cimitarra Mercurial: Mercurial Scimitar[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Anjo Guardião (Guardian Angel) — Renascimento (Rebirth) · ativa · O Mercúrio pode ser usado durante o Renascimento do Anjo Guardião. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+        Mecânica · Arremessar ao ar (Airborne) · não ativa · O Mercúrio fica desativado durante efeitos de arremessar ao ar. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Mecânica · Suspensão (Suspension) · ativa · O Mercúrio remove totalmente a suspensão. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Mecânica · Suprimir (Suppression) e Nearsight · ativa · Diferente de Purificar, o Mercúrio remove a supressão e Nearsight. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Mecânica · Efeitos negativos de Feitiços de Invocador (Summoner spell debuffs) · não ativa · Diferente de Purificar, o Mercúrio não remove efeitos negativos de Feitiços de Invocador e não concede Tenacidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Campeão · Malzahar — Aperto Ínfero (Nether Grasp) · não ativa · Caso citado pela fonte: o Mercúrio não remove o vínculo que acompanha o controle de grupo da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Campeão · Warwick — Coerção Infinita (Infinite Duress) · não ativa · Caso citado pela fonte: o Mercúrio não remove os ataques ao contato que acompanham o controle de grupo da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Feitiço de Invocador · Exaustão (Exhaust) · não ativa · Caso citado pela fonte: o Mercúrio não remove a redução de dano da Exaustão. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Mecânica · Estase (Stasis) · não ativa · O Mercúrio não remove estase. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Campeão · Bardo — Têmpera do Destino (Tempered Fate) · não ativa · Caso citado pela fonte: sob o efeito da habilidade, que não pode ser removido, o Mercúrio entra numa recarga fixa de 3s. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Item · Ampulheta de Zhonya (Zhonya's Hourglass) — Tempo Paralisado (Time Stop) · não ativa · O Mercúrio entra numa recarga de 0,5s quando o Tempo Paralisado da Ampulheta de Zhonya é ativado. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes; https://wiki.leagueoflegends.com/en-us/Zhonya's_Hourglass#Notes
+        Item · Armaguarda da Caçadora (Seeker's Armguard) — Tempo Paralisado (Time Stop) · não ativa · O Mercúrio entra numa recarga de 0,5s quando o Tempo Paralisado da Armaguarda da Caçadora é ativado. · Fonte: https://wiki.leagueoflegends.com/en-us/Seeker's_Armguard#Notes
+        Mecânica · Lentidão própria (Self slows) · não ativa · O Mercúrio não remove lentidões que o portador aplica em si mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Campeão · Blitzcrank — Turbo (Overdrive) · ativa · Caso citado pela fonte: exceção à regra das lentidões próprias; o Mercúrio remove a lentidão da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Campeão · Quinn — Retaguarda do Inimigo (Behind Enemy Lines) · ativa · Caso citado pela fonte: exceção à regra das lentidões próprias; o Mercúrio remove a lentidão da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Item · Bandana de Mercúrio (Quicksilver Sash) — Mercúrio (Quicksilver) · não acumula · A recarga do Mercúrio não passa de um item para outro entre os itens que têm essa ativa. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+        Mecânica · Velocidade de Movimento percentual (Percentage movement speed) · acumula · A Velocidade de Movimento bônus do Mercúrio acumula de forma multiplicativa com outras fontes de aumento de Velocidade de Movimento. · Fonte: https://wiki.leagueoflegends.com/en-us/Mercurial_Scimitar#Notes
+    ]
+    Escalonamento[
+        Mercúrio (Quicksilver) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Resistência Mágica, Roubo de Vida
     Classe: AD (AD 2.285,5g · Vitalidade 700g · AP 0g)
     Arquétipo Recomendado: Atirador, Lutador
@@ -6816,6 +8236,14 @@ Bênção de Mikael: Mikael's Blessing[
     Notas: O cliente pt_BR grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo". O texto oficial cita apenas Arremesso ao Ar e Supressão como exceções; a wiki lista também Cegueira, Desarme e Miopia.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Controle de grupo aplicado logo depois (Crowd control applied shortly after) · ativa · O Purificar também remove controles de grupo aplicados até cerca de 0,5s depois do uso; o controle aplicado ainda ativa efeitos que disparam com a aplicação de controle de grupo. · Fonte: https://wiki.leagueoflegends.com/en-us/Mikael's_Blessing#Notes
+        Mecânica · Lentidão própria (Self slows) · não ativa · O Purificar não remove lentidões que o alvo aplica em si mesmo. · Fonte: https://wiki.leagueoflegends.com/en-us/Mikael's_Blessing#Notes
+        Campeão · Quinn — Retaguarda do Inimigo (Behind Enemy Lines) · ativa · Caso citado pela fonte: exceção à regra das lentidões próprias; o Purificar remove a lentidão da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Mikael's_Blessing#Notes
+    ]
+    Escalonamento[
+        Purificar (Purify) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Mana, Poder de Cura e Escudo, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 666,67g · AP 400g)
     Arquétipo Recomendado: Suporte
@@ -6858,6 +8286,12 @@ Regenerador de Pedra Lunar: Moonstone Renewer[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos físicos e mágicos (Physical and magic shields) · ativa · A Graça Estrelada ativa também com escudos físicos e mágicos, mas o escudo bônus não se adapta ao tipo de dano: o alvo sempre recebe um escudo normal, que bloqueia todos os tipos de dano. · Fonte: https://wiki.leagueoflegends.com/en-us/Moonstone_Renewer#Notes
+    ]
+    Escalonamento[
+        Graça Estrelada (Starlit Grace) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade, Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 533,33g · AP 1.000g)
     Arquétipo Recomendado: Suporte
@@ -6899,6 +8333,12 @@ Morellonomicon: Morellonomicon[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos (Shields) · não reduz · As Feridas Dolorosas são aplicadas ao campeão atingido mesmo que ele esteja protegido por escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Morellonomicon#Notes
+    ]
+    Escalonamento[
+        Feridas Dolorosas (Grievous Wounds) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 933,33g · AP 1.500g)
     Arquétipo Recomendado: Mago, Suporte
@@ -6940,6 +8380,12 @@ Lembrete Mortal: Mortal Reminder[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos (Shields) · não reduz · As Feridas Dolorosas são aplicadas ao campeão atingido mesmo que ele esteja protegido por escudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Mortal_Reminder#Notes
+    ]
+    Escalonamento[
+        Feridas Dolorosas (Grievous Wounds) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Penetração de Armadura, Acerto Crítico
     Classe: AD (AD 3.475g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -6986,6 +8432,16 @@ Dente de Na'Shor: Nashor's Tooth[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus da Mordida Icathiana mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Mordida Icathiana ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Mordida Icathiana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Nashor's_Tooth#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato da Mordida Icathiana não se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Nashor's_Tooth#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Mordida Icathiana se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Nashor's_Tooth#Notes
+    ]
+    Escalonamento[
+        Mordida Icathiana (Icathian Bite) · Poder de Habilidade · 15% · total · seu · razão · dano mágico bônus ao contato
+    ]
     Categoria de Atributo: Poder de Habilidade, Velocidade de Ataque, Aceleração de Habilidade, Efeitos ao Contato
     Classe: AP (AD 1.250g · Vitalidade 0g · AP 1.600g)
     Arquétipo Recomendado: Atirador, Mago
@@ -7027,6 +8483,18 @@ Adaga Oscilante Navori: Navori Flickerblade[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Cegueira (Blind) · não ativa · A Transcendência não ativa se o portador declarar o ataque sob Cegueira. · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+        Mecânica · Habilidades que aplicam efeitos ao atacar (Abilities that apply on-attack effects) · ativa · A Transcendência também ativa com habilidades que aplicam efeitos ao atacar. · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+        Mecânica · Estruturas e plantas da selva (Structures, jungle plants) · não ativa · A redução de recarga da Transcendência não é concedida ao atacar estruturas ou plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+        Campeão · Akshan — Lutando Sujo (Dirty Fighting) · ativa · Caso citado pela fonte: a habilidade ativa efeitos ao atacar e concede a redução de recarga da Transcendência mesmo ao atacar estruturas (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+        Campeão · Lucian — Disparo Iluminado (Lightslinger) · ativa · Caso citado pela fonte: a habilidade ativa efeitos ao atacar e concede a redução de recarga da Transcendência mesmo ao atacar estruturas (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+        Campeão · Master Yi — Ataque duplo (Double Strike) · ativa · Caso citado pela fonte: a habilidade ativa efeitos ao atacar e concede a redução de recarga da Transcendência mesmo ao atacar estruturas (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+        Campeão · Urgot — Expurgar (Purge) · ativa · Caso citado pela fonte: a habilidade ativa efeitos ao atacar e concede a redução de recarga da Transcendência mesmo ao atacar estruturas (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Navori_Flickerblade#Notes
+    ]
+    Escalonamento[
+        Transcendência (Transcendence) · Sem scaling
+    ]
     Categoria de Atributo: Velocidade de Ataque, Acerto Crítico, Movimento
     Classe: AD (AD 2.000g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -7075,6 +8543,9 @@ Armadura Sangrenta do Suserano: Overlord's Bloodmail[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
     Escalonamento[
         Tirania (Tyranny) · Vida · 2,5% · bônus · seu · conversão · Dano de Ataque bônus
         Retaliação (Retribution) · Dano de Ataque · 0–10% · total · seu · conversão · Dano de Ataque bônus, sobre o DdA total de outras fontes: 1% a cada 7% de Vida perdida, até 10% com 70%
@@ -7120,6 +8591,12 @@ Dançarina Fantasma: Phantom Dancer[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Valsa Espectral (Spectral Waltz) · Sem scaling
+    ]
     Categoria de Atributo: Velocidade de Ataque, Acerto Crítico, Movimento
     Classe: AD (AD 2.625g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -7163,6 +8640,20 @@ Hidra Profana: Profane Hydra[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Fenda causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Fenda não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+        Mecânica · Estruturas (Structures) · não ativa · A Fenda não ativa em ataques contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · A Fenda Herege causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · A Fenda Herege é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+        Mecânica · Invulnerabilidade (Invulnerability) · não ativa · A Fenda da Hidra Profana não ativa se o ataque básico não causar dano, como contra um alvo invulnerável, ao contrário da Tiamat, da Hidra Raivosa, do Quebrapassos e da Hidra Titânica (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · não ativa · A Fenda da Hidra Profana não ativa com o Golpe Fantasma (Phantom Hit), que não causa dano (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Profane_Hydra#Notes
+    ]
+    Escalonamento[
+        Fenda (Cleave) · Dano de Ataque · 40% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo (corpo a corpo)
+        Fenda (Cleave) · Dano de Ataque · 20% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo (à distância)
+        Fenda Herege (Heretical Cleave) · Dano de Ataque · 80% · total · seu · razão · dano físico aos inimigos num raio de 450 à frente
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Aceleração de Habilidade
     Classe: AD (AD 2.465g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -7210,6 +8701,13 @@ Couraça Protoplasmática: Protoplasm Harness[
     Notas: O texto oficial pt_BR exibe "0 de Vida máxima", "cura 0 de Vida" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: Recarga de Salva-Vidas alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Salva-Vidas (Lifeline) · Armadura · 175% · bônus · seu · razão · cura ao longo de 5s
+        Salva-Vidas (Lifeline) · Resistência Mágica · 175% · bônus · seu · razão · cura ao longo de 5s
+    ]
     Categoria de Atributo: Vida, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.600g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -7255,6 +8753,11 @@ Capuz da Morte de Rabadon: Rabadon's Deathcap[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Tocha de Chamas Negras (Blackfire Torch) — Chamas Negras (Blackfire) · acumula · O multiplicador das Chamas Negras da Tocha de Chamas Negras acumula de forma aditiva com o Apogeu Mágico. · Fonte: https://wiki.leagueoflegends.com/en-us/Blackfire_Torch#Notes
+        Mecânica · Infernal Might (Infernal Might) · acumula · O multiplicador de Poder de Habilidade do Apogeu Mágico acumula de forma aditiva com o Infernal Might, que a fonte cita sem explicar e que não tem nome no Data Dragon pt_BR. · Fonte: https://wiki.leagueoflegends.com/en-us/Rabadon's_Deathcap#Notes
+        Mecânica · Outras fontes de Poder de Habilidade (Other ability power sources) · amplifica · O Apogeu Mágico acumula de forma recursiva com outras fontes de Poder de Habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Rabadon's_Deathcap#Notes
+    ]
     Escalonamento[
         Apogeu Mágico (Magical Opus) · Poder de Habilidade · 30% · total · seu · conversão · Poder de Habilidade (aumenta o Poder de Habilidade total)
     ]
@@ -7305,6 +8808,11 @@ Presságio de Randuin: Randuin's Omen[
         Item · Gume do Infinito (Infinity Edge) · reduz · A Resiliência reduz em 30% o dano total do acerto crítico, de forma multiplicativa: o crítico de 230% do DdA de quem tem o Gume do Infinito cai para 161% do DdA (230% × 0,7, conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Randuin's_Omen#Notes; https://wiki.leagueoflegends.com/en-us/Infinity_Edge#Notes
         Mecânica · Acerto Crítico (Critical strike) · reduz · A redução de 30% é multiplicativa e vale para o dano total da instância que acertou criticamente, mesmo quando ela não recebe todos os modificadores de crítico (ex.: ataques embutidos em habilidades), inclusive em críticos de habilidades: um crítico normal causa 140% do DdA do atacante em vez de 200%. · Fonte: https://wiki.leagueoflegends.com/en-us/Randuin's_Omen#Notes; https://wiki.leagueoflegends.com/en-us/Critical_strike#Interacting_with_critical_strikes
         Campeão · Garen — Julgamento (Judgment) · reduz · Caso citado pela fonte: os acertos críticos do Julgamento também sofrem a redução de 30% da Resiliência. · Fonte: https://wiki.leagueoflegends.com/en-us/Randuin's_Omen#Notes
+        Item · Dança da Morte (Death's Dance) — Dor Ignorada (Ignore Pain) · acumula · A Dor Ignorada da Dança da Morte se aplica depois da redução da Resiliência. · Fonte: https://wiki.leagueoflegends.com/en-us/Death's_Dance#Notes
+    ]
+    Escalonamento[
+        Resiliência (Resilience) · Sem scaling
+        Humildade (Humility) · Sem scaling
     ]
     Categoria de Atributo: Vida, Armadura
     Classe: Vitalidade (AD 0g · Vitalidade 2.433,33g · AP 0g)
@@ -7354,6 +8862,20 @@ Canhão Fumegante: Rapid Firecannon[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Atirador de Elite ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · ativa · Atingir com habilidades que aplicam efeitos ao contato gera 6 acúmulos de Energizado, como um ataque básico. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+        Mecânica · Avanços, teleportes curtos e deslocamentos (Dashes, blinks, displacements) · ativa · Toda forma de movimento gera acúmulos de Energizado (1 a cada 24 unidades percorridas), inclusive avanços, teleportes curtos e deslocamentos para outro lugar. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Atirador de Elite causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Atirador de Elite não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+        Mecânica · Alcance de Ataque (Attack range) · acumula · O aumento de alcance do Atirador de Elite acumula de forma aditiva com outras fontes de Alcance de Ataque e interage com efeitos que escalam com o atributo; efeitos que concedem alcance de ataque fixo não interagem com ele. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+        Mecânica · Outros efeitos Energizados (Other Energized effects) · acumula · O Canhão Fumegante é um efeito Energizado e acumula com outras fontes de Energizado. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+        Mecânica · Estruturas (Structures) · ativa · Efeitos Energizados aplicam o dano ao contato deles a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Rapid_Firecannon#Notes
+    ]
+    Escalonamento[
+        Energizado (Energized) · Sem scaling
+        Atirador de Elite (Sharpshooter) · Sem scaling
+    ]
     Categoria de Atributo: Velocidade de Ataque, Acerto Crítico, Movimento
     Classe: AD (AD 1.875g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -7397,6 +8919,19 @@ Hidra Raivosa: Ravenous Hydra[
     Notas: none
     Notas de ARAM: Razão de DdA de Crescente Raivosa alterada para 100% do DdA.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Fenda causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Ravenous_Hydra#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Fenda não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Ravenous_Hydra#Notes
+        Mecânica · Estruturas (Structures) · não ativa · A Fenda não ativa em ataques contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Ravenous_Hydra#Notes
+        Mecânica · Invulnerabilidade (Invulnerability) · ativa · A Fenda ativa mesmo se o ataque básico não causar dano, como contra um alvo invulnerável. · Fonte: https://wiki.leagueoflegends.com/en-us/Ravenous_Hydra#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · A Crescente Raivosa causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Ravenous_Hydra#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · A Crescente Raivosa é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Ravenous_Hydra#Notes
+    ]
+    Escalonamento[
+        Fenda (Cleave) · Dano de Ataque · 40% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo, com Roubo de Vida a 100% (corpo a corpo)
+        Fenda (Cleave) · Dano de Ataque · 20% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo, com Roubo de Vida a 100% (à distância)
+        Crescente Raivosa (Ravenous Crescent) · Dano de Ataque · 80% · total · seu · razão · dano físico aos inimigos num raio de 450 à frente, com Roubo de Vida a 100%
+    ]
     Categoria de Atributo: Dano de Ataque, Aceleração de Habilidade, Roubo de Vida
     Classe: AD (AD 2.917,6g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -7443,6 +8978,15 @@ Redenção: Redemption[
     Notas: Preço de 2.300g confirmado no cliente pelo usuário (23/09/2026), igual ao Data Dragon 16.18.1; a wiki registra 2.250g (combinação 800g). Eficiência de Ouro recalculada sobre 2.300g (2.250g ÷ 2.300g = 97,83%); a Cost Analysis da wiki divide pelo preço de 2.250g e publica 100%. O cliente pt_BR grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo".
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · A Intervenção causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Redemption#Notes
+        Runa · Invocar Aery (Summon Aery) · ativa · Efeitos de habilidade como Invocar Aery escolhem os alvos da Intervenção pela proximidade do centro da área. · Fonte: https://wiki.leagueoflegends.com/en-us/Redemption#Notes
+        Item · Eco de Luden (Luden's Echo) — Eco (Echo) · ativa · Efeitos de habilidade como o Eco do Eco de Luden escolhem os alvos da Intervenção pela proximidade do centro da área. · Fonte: https://wiki.leagueoflegends.com/en-us/Redemption#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · A Intervenção é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Redemption#Notes
+    ]
+    Escalonamento[
+        Intervenção (Intervention) · Vida · 10% · máxima · alvo · razão · dano verdadeiro aos campeões inimigos na área
+    ]
     Categoria de Atributo: Poder de Habilidade, Aceleração de Habilidade, Regeneração de Mana, Poder de Cura e Escudo
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.000g)
     Arquétipo Recomendado: Suporte
@@ -7478,6 +9022,7 @@ Criafendas: Riftmaker[
     Análise de custo[
         Valor de Ouro: 70 PdH = 1.400g; 15 AdH = 750g; 350 Vida = 933,33g; total 3.083,33g. Infusão do Vazio (dos atributos base): 7 PdH = 140g; total 3.223,33g; por 100 de Vida bônus de outras fontes: 2 PdH = 40g. Vampirismo de Corrupção do Vazio: 10% / 6% = 560g / 336g
         Eficiência de Ouro: 103,98% (base); +1,29% por 100 de Vida bônus de outras fontes; +18,06% / +10,84% com Corrupção do Vazio no máximo
+        Limiar de 100%: já na base
         Valor de Ouro (atributos): 3.083,33g
         Valor de Ouro (base): 3.223,33g
     ]
@@ -7492,6 +9037,14 @@ Criafendas: Riftmaker[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e a Criafendas entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e a Criafendas entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
+    Escalonamento[
+        Corrupção do Vazio (Void Corruption) · Sem scaling
+        Infusão do Vazio (Void Infusion) · Vida · 2% · bônus · seu · conversão · Poder de Habilidade
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 933,33g · AP 1.400g)
     Arquétipo Recomendado: Mago
@@ -7526,6 +9079,7 @@ Bastão das Eras: Rod of Ages[
     Análise de custo[
         Valor de Ouro: 45 PdH = 900g; 350 Vida = 933,33g; 500 Mana = 500g; total 2.333,33g. Passiva por acúmulo: 3 PdH = 60g + 10 Vida = 26,67g + 30 Mana = 30g = 116,67g; com 10 acúmulos: 1.166,67g; total no ápice 3.500g
         Eficiência de Ouro: 89,74% (base); +4,49% por acúmulo; 134,62% no ápice
+        Limiar de 100%: 9 de Poder de Habilidade de Atemporal (calculado; 3 acúmulos, com +30 de Vida bônus e +90 de Mana bônus)
         Valor de Ouro (atributos): 2.333,33g
         Valor de Ouro (base): 2.333,33g
     ]
@@ -7542,6 +9096,13 @@ Bastão das Eras: Rod of Ages[
     Notas: none
     Notas de ARAM: Intervalo de acúmulo de Atemporal alterado para 40s (ápice em 6 min 40 s).
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Custos de Mana (Mana costs) · ativa · A Eternidade ativa com toda fonte de custo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Rod_of_Ages#Notes
+    ]
+    Escalonamento[
+        Atemporal (Timeless) · Sem scaling
+        Eternidade (Eternity) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida, Mana
     Classe: AP (AD 0g · Vitalidade 933,33g · AP 1.400g)
     Arquétipo Recomendado: Mago
@@ -7609,6 +9170,13 @@ Furacão de Runaan: Runaan's Hurricane[
         Campeão · Ashe — Concentração (Ranger's Focus) · ativa · Caso citado pela fonte: o dano da Fúria do Vento é afetado pelo dano modificado do ataque principal com a Concentração. Os dardos têm velocidade de míssil de 2.000, e, entre as variantes únicas que substituem o míssil (unique override variants), só os mísseis da Concentração da Ashe e do ataque básico da Kalista têm velocidade diferente, de 2.500. · Fonte: https://wiki.leagueoflegends.com/en-us/Runaan's_Hurricane#Notes
         Campeão · Kalista — ataque básico (Basic Attack) · ativa · Caso citado pela fonte: os dardos têm velocidade de míssil de 2.000, e, entre as variantes únicas que substituem o míssil (unique override variants), só os mísseis da Concentração da Ashe e do ataque básico da Kalista têm velocidade diferente, de 2.500. · Fonte: https://wiki.leagueoflegends.com/en-us/Runaan's_Hurricane#Notes
         Campeão · Corki — Munição Hextec (Hextech Munitions) · ativa · Caso citado pela fonte: o dano da Fúria do Vento é afetado pelo dano modificado do ataque principal com a Munição Hextec. · Fonte: https://wiki.leagueoflegends.com/en-us/Runaan's_Hurricane#Notes
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · não ativa · O Golpe Fantasma (Phantom Hit) da Lâmina da Fúria de Guinsoo não dispara de novo os dardos menores (minor bolts) da Fúria do Vento, que ativa ao completar a preparação do ataque. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Mata-Cráquens (Kraken Slayer) — Derrubar (Bring It Down) · não ativa · A Fúria do Vento não interage com o Derrubar ao contato; só a Lâmina da Fúria de Guinsoo tem esse tratamento especial. · Fonte: https://wiki.leagueoflegends.com/en-us/Kraken_Slayer#Notes
+        Item · Terminus (Terminus) — Justaposição (Juxtaposition) · não ativa · A Justaposição não interage com a Fúria do Vento, apesar de interagir com outros efeitos que aplicam efeitos ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Terminus#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame: o 0 de dano físico ao contato da Fúria do Vento no alvo principal (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+    ]
+    Escalonamento[
+        Fúria do Vento (Wind's Fury) · Dano de Ataque · 60% · total · seu · razão · dano físico de cada dardo adicional, em até 2 inimigos
     ]
     Categoria de Atributo: Velocidade de Ataque, Acerto Crítico, Movimento
     Classe: AD (AD 2.000g · Vitalidade 0g · AP 0g)
@@ -7650,6 +9218,12 @@ Cetro de Cristal de Rylai: Rylai's Crystal Scepter[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Dano ao longo do tempo (Damage over time) · ativa · A Geada é reaplicada a cada tique de efeitos de dano ao longo do tempo e dura todo o efeito negativo de dano, até 1s depois do último tique. · Fonte: https://wiki.leagueoflegends.com/en-us/Rylai's_Crystal_Scepter#Notes
+    ]
+    Escalonamento[
+        Geada (Rimefrost) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Vida
     Classe: AP (AD 0g · Vitalidade 1.066,67g · AP 1.300g)
     Arquétipo Recomendado: Mago
@@ -7690,6 +9264,18 @@ Presa da Serpente: Serpent's Fang[
     Notas: O texto oficial pt_BR exibe "0%" nos dois valores (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Escudos de dano físico (Physical damage shields) · reduz · O Ceifador de Escudos afeta todos os escudos, inclusive os de dano físico. · Fonte: https://wiki.leagueoflegends.com/en-us/Serpent's_Fang#Notes
+        Mecânica · Escudos de dano mágico (Magic damage shields) · não reduz · O Ceifador de Escudos não afeta escudos de dano mágico. · Fonte: https://wiki.leagueoflegends.com/en-us/Serpent's_Fang#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · O Ceifador de Escudos não ativa contra dano bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Serpent's_Fang#Notes
+        Campeão · Fiora — Ripostar (Riposte) · ativa · Caso citado pela fonte: como a Fiora fica imune a efeitos negativos durante a habilidade, o escudo atual dela pode ser perfurado pelo Ceifador de Escudos várias vezes (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Serpent's_Fang#Notes
+        Item · Arco-escudo Imortal (Immortal Shieldbow) — Salva-Vidas (Lifeline) · não reduz · O Ceifador de Escudos só afeta o escudo do Salva-Vidas do Arco-escudo Imortal depois que ele foi ativado e já bloqueou dano (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Shieldbow#Notes
+        Item · Sinal de Sterak (Sterak's Gage) — Salva-Vidas (Lifeline) · não reduz · O Ceifador de Escudos só afeta o escudo do Salva-Vidas do Sinal de Sterak depois que ele foi ativado e já bloqueou dano (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Sterak's_Gage#Notes
+        Item · Abraço de Seraph (Seraph's Embrace) — Salva-Vidas (Lifeline) · não reduz · O Ceifador de Escudos só afeta o escudo do Salva-Vidas do Abraço de Seraph depois que ele foi ativado e já bloqueou dano (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Seraph's_Embrace#Notes
+    ]
+    Escalonamento[
+        Ceifador de Escudos (Shield Reaver) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade
     Classe: AD (AD 2.375g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -7731,6 +9317,12 @@ Rancor de Serylda: Serylda's Grudge[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Dano ao longo do tempo (Damage over time) · ativa · O Frio Agonizante é reaplicado a cada tique de efeitos de dano ao longo do tempo e dura todo o efeito negativo de dano, até 1s depois do último tique. · Fonte: https://wiki.leagueoflegends.com/en-us/Serylda's_Grudge#Notes
+    ]
+    Escalonamento[
+        Frio Agonizante (Bitter Cold) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Penetração de Armadura, Aceleração de Habilidade
     Classe: AD (AD 3.033,33g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -7782,6 +9374,9 @@ Chama Sombria: Shadowflame[
         Feitiço de Invocador · Feitiços de Invocador (Summoner spells), todos · não ativa · Floregris afeta o dano de todas as fontes, menos o dos Feitiços de Invocador. · Fonte: https://wiki.leagueoflegends.com/en-us/Shadowflame#Notes
         Mecânica · Estruturas (Structures) · não ativa · Floregris não se aplica ao dano causado a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Shadowflame#Notes
     ]
+    Escalonamento[
+        Floregris (Cinderbloom) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.900g)
     Arquétipo Recomendado: Assassino, Mago
@@ -7824,6 +9419,12 @@ Hino Bélico de Shurelya: Shurelya's Battlesong[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Aliados inalvejáveis (Untargetable allies) · ativa · O Discurso Inspirador afeta aliados inalvejáveis. · Fonte: https://wiki.leagueoflegends.com/en-us/Shurelya's_Battlesong#Notes
+    ]
+    Escalonamento[
+        Discurso Inspirador (Inspiring Speech) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Aceleração de Habilidade, Movimento, Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.500g)
     Arquétipo Recomendado: Suporte
@@ -7874,6 +9475,17 @@ Trenó do Solstício: Solstice Sleigh[
     Notas: Item final da linha de Suporte (Atlas Mundial → Bússola Rúnica → Dádiva dos Mundos); custo de combinação 0g. Valor de venda: 40% do custo (sellratio 0,4). O texto oficial pt_BR diz "restaura Vida"; a wiki registra Vida bônus temporária, não cura.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Imobilização (Immobilize) · ativa · O Passeio de Trenó vale para todo efeito que a wiki classifica como Imobilização: arremessar ao ar (Airborne), Berserk (Berserk), encantar (Charm), Temor (Flee), provocar (Taunt), enraizar (Root), adormecer (Sleep), estase (Stasis), atordoar (Stun), inclusive a suspensão (Suspension), e suprimir (Suppression). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Notes; https://wiki.leagueoflegends.com/en-us/Module:ItemData/data
+        Mecânica · Lentidão (Slow) · ativa · Causar Lentidão a um campeão inimigo também ativa o Passeio de Trenó. A página Types of Crowd Control lista o Trenó do Solstício entre o que interage com Imobilização e Lentidão. · Fonte: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data; https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Interactions_with_Crowd_Control
+        Mecânica · Sonolência (Drowsy) · ativa · A unidade sob Sonolência sofre Lentidão e depois adormece. A Lentidão da Sonolência ativa o Passeio de Trenó, e o sono que vem depois também (linha Imobilização) (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Drowsy
+        Mecânica · Preso ao chão (Ground) · não ativa · Preso ao chão não é Imobilização nem Lentidão. A fonte diz que as fontes de Preso ao chão que existem também aplicam Lentidão; essa Lentidão ativa o Passeio de Trenó (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Notes
+        Item · Armadura de Warmog (Warmog's Armor) — Vitalidade de Warmog (Warmog's Vitality) · não amplifica · A Vitalidade de Warmog da Armadura de Warmog não aumenta a Vida bônus temporária do Passeio de Trenó. · Fonte: https://wiki.leagueoflegends.com/en-us/Warmog's_Armor#Notes
+    ]
+    Escalonamento[
+        Passeio de Trenó (Going Sledding) · Sem scaling
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 758,33g · AP 300g)
     Arquétipo Recomendado: Suporte
@@ -7921,6 +9533,27 @@ Lança de Shojin: Spear of Shojin[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Mascotes (Pets) · ativa · A Determinação Concentrada gera acúmulos com dano de mascotes, a menos que eles tenham sido invocados por uma habilidade inata. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Mecânica · Dano básico com outras marcas (Basic damage with other tags) · amplifica · Dano marcado como básico e também com outras marcas continua amplificado pela Determinação Concentrada. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Mordekaiser — Ascensão das Trevas (Darkness Rise) · ativa · Caso citado pela fonte: ativada pelo Obliterar (Obliterate) ou pelo Aperto Mortal (Death's Grasp), a Ascensão das Trevas conta como vinda da habilidade e gera acúmulos da Determinação Concentrada (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Udyr — Garra Selvagem (Wilding Claw) · ativa · Caso citado pela fonte: a Garra Selvagem gera 1 acúmulo enquanto o buff temporário está ativo e 2 acúmulos enquanto fica só o buff permanente (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Jax — Energizar (Empower) · ativa · Caso citado pela fonte: tratamento especial para gerar acúmulos (inesperado), porque o Energizar conta como vindo do ataque básico e normalmente não interage com efeitos que pedem habilidade como fonte. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Rengar — Predador Oculto (Unseen Predator) · ativa · Caso citado pela fonte: tratamento especial para gerar acúmulos (inesperado), porque o Predador Oculto não é dano de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Skarner — Shattered Earth (Shattered Earth) · ativa · Caso citado pela fonte: tratamento especial para gerar acúmulos (inesperado), porque o Shattered Earth não é dano de habilidade. O Data Dragon pt_BR não dá nome ao Shattered Earth. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Urgot — Chamas Ecoantes (Echoing Flames) · ativa · Caso citado pela fonte: tratamento especial para gerar acúmulos (inesperado), porque as Chamas Ecoantes são uma habilidade inata; nota dos desenvolvedores: senão ele nunca chegaria a 4 acúmulos nem os manteria. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Elise · não ativa · Caso citado pela fonte: tratamento especial para não gerar acúmulos (inesperado): as Aranhinhas (Spiderlings), que por padrão não contam como vindas de passiva. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Fizz — Tridente da Pedra do Mar (Seastone Trident) · não ativa · Caso citado pela fonte: o dano persistente do Tridente da Pedra do Mar vem da mesma instância de conjuração do ataque básico e não gera acúmulos; se o ataque fortalecido da ativa for usado, o dano ao longo do tempo conta como vindo da habilidade e gera acúmulos. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Aphelios — Crescendum (Crescendum) · não amplifica · Caso citado pela fonte: o dano adicional do Crescendum não é dano de habilidade, de mascote nem de proc, e não é amplificado (inesperado). O Data Dragon pt_BR não dá nome ao Crescendum. · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Campeão · Malphite — Trovoada (Thunderclap) · não amplifica · Caso citado pela fonte: o dano nos alvos adicionais e o cone da Trovoada não são dano de habilidade, de mascote nem de proc, e não são amplificados (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Item · Couraça do Defunto (Dead Man's Plate) — Naufrágio (Shipwrecker) · amplifica · Os acúmulos da Determinação Concentrada amplificam o dano do Naufrágio da Couraça do Defunto (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Spear_of_Shojin#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e a Lança de Shojin entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e a Lança de Shojin entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
+    Escalonamento[
+        Força Dracônica (Dragonforce) · Sem scaling
+        Determinação Concentrada (Focused Will) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Vida, Aceleração de Habilidade Básica
     Classe: AD (AD 1.575g · Vitalidade 1.200g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -7962,6 +9595,12 @@ Alfanje Espectral: Spectral Cutlass[
     Notas: O texto oficial pt_BR exibe recarga "(0s)" (placeholder); valor real 45s.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Âncora Espiritual (Soul Anchor) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Movimento
     Classe: AD (AD 2.200g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -8004,6 +9643,19 @@ Semblante Espiritual: Spirit Visage[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Caminho Imortal (Immortal Path) — Hoje e Sempre (Now and Forever) · acumula · A Vitalidade Imensurável acumula de forma recursiva com o Hoje e Sempre do Caminho Imortal quando os dois modificam Roubo de Vida e Vampirismo (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Mecânica · Modificadores de cura (Healing modifiers) · acumula · A Vitalidade Imensurável acumula de forma multiplicativa com outras fontes de modificadores de cura. · Fonte: https://wiki.leagueoflegends.com/en-us/Spirit_Visage#Notes
+        Mecânica · Modificadores de Regeneração de Vida (Health regeneration modifiers) · acumula · A Vitalidade Imensurável acumula de forma aditiva com outras fontes de modificadores de Regeneração de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Spirit_Visage#Notes
+        Mecânica · Roubo de Vida e Vampirismo (Life steal, Omnivamp) · não amplifica · A Vitalidade Imensurável não aumenta a cura do Roubo de Vida e do Vampirismo; ela aumenta diretamente o valor desses atributos (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Spirit_Visage#Notes
+        Campeão · Samira — Talento Natural (Flair) · não amplifica · Caso citado pela fonte: habilidades e efeitos que aplicam Roubo de Vida só se beneficiam do aumento de Roubo de Vida da Vitalidade Imensurável, sem o aumento de cura. · Fonte: https://wiki.leagueoflegends.com/en-us/Spirit_Visage#Notes
+        Campeão · Xin Zhao — Vento Vira Relâmpago (Wind Becomes Lightning) · amplifica · Caso citado pela fonte: a cura direta que escala com Roubo de Vida se beneficia do aumento de Roubo de Vida e do aumento de cura da Vitalidade Imensurável, num total de 56,25% (1,25 × 1,25) em vez de 25% (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Spirit_Visage#Notes
+        Campeão · Ambessa — Execução Pública (Public Execution) · amplifica · Caso citado pela fonte: a cura direta que escala com Roubo de Vida se beneficia do aumento de Roubo de Vida e do aumento de cura da Vitalidade Imensurável, num total de 56,25% (1,25 × 1,25) em vez de 25% (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Spirit_Visage#Notes
+        Item · Anjo Guardião (Guardian Angel) — Renascimento (Rebirth) · amplifica · A Vida restaurada pelo Renascimento conta como cura e é aumentada pela Vitalidade Imensurável, chegando a 62,5% da Vida base no total. · Fonte: https://wiki.leagueoflegends.com/en-us/Guardian_Angel#Notes
+    ]
+    Escalonamento[
+        Vitalidade Imensurável (Boundless Vitality) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Resistência Mágica, Aceleração de Habilidade, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 2.366,67g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -8052,6 +9704,12 @@ Cajado Aquafluxo: Staff of Flowing Water[
     Notas: O cliente pt_BR grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo".
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Corredeira (Rapids) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Poder de Cura e Escudo, Regeneração de Mana, Aceleração de Habilidade
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.200g)
     Arquétipo Recomendado: Suporte
@@ -8102,6 +9760,20 @@ Faca de Statikk: Statikk Shiv[
     Notas: none
     Notas de ARAM: Dano de Eletrocentelha contra campeões alterado para 70.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Eletrocentelha ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Eletrocentelha causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Statikk_Shiv#Notes
+        Mecânica · Modificadores de dano ao contato (On-hit damage modifiers) · não amplifica · O dano da Eletrocentelha não é afetado por modificadores de dano ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Statikk_Shiv#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Eletrocentelha não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Statikk_Shiv#Notes
+        Mecânica · Estruturas (Structures) · ativa · Como todo efeito Energizado, a Eletrocentelha ativa contra estruturas; ela só mira estruturas quando elas são o alvo atacado. · Fonte: https://wiki.leagueoflegends.com/en-us/Statikk_Shiv#Notes
+        Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · ativa · Atingir com habilidades que aplicam efeitos ao contato gera 6 acúmulos de Energizado, como um ataque básico. · Fonte: https://wiki.leagueoflegends.com/en-us/Statikk_Shiv#Notes
+        Mecânica · Avanços, teleportes curtos e deslocamentos (Dashes, blinks, displacements) · ativa · Toda forma de movimento gera acúmulos de Energizado (1 a cada 24 unidades percorridas), inclusive avanços, teleportes curtos e deslocamentos para outro lugar. · Fonte: https://wiki.leagueoflegends.com/en-us/Statikk_Shiv#Notes
+    ]
+    Escalonamento[
+        Energizado (Energized) · Sem scaling
+        Eletrochoque (Electroshock) · Sem scaling
+        Eletrocentelha (Electrospark) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Poder de Habilidade, Velocidade de Ataque, Movimento
     Classe: AD (AD 2.325g · Vitalidade 0g · AP 900g)
     Arquétipo Recomendado: Atirador
@@ -8154,6 +9826,9 @@ Sinal de Sterak: Sterak's Gage[
     Notas: none
     Notas de ARAM: Razão de Garras Caçadoras alterada para 50% do DdA base [sic, igual ao base]. Escudo de Salva-Vidas alterado para 70% da Vida bônus. Recarga de Salva-Vidas alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Presa da Serpente (Serpent's Fang) — Ceifador de Escudos (Shield Reaver) · não reduz · O Ceifador de Escudos da Presa da Serpente só afeta o escudo do Salva-Vidas depois que ele foi ativado e já bloqueou dano (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Sterak's_Gage#Notes
+    ]
     Escalonamento[
         Garras Caçadoras (The Claws that Catch) · Dano de Ataque · 50% · base · seu · conversão · Dano de Ataque bônus
         Salva-Vidas (Lifeline) · Vida · 60% · bônus · seu · razão · escudo que decai em 4,5s
@@ -8206,6 +9881,21 @@ Chuva de Canivete: Stormrazor[
     Notas: O texto oficial pt_BR exibe "0 de Dano Mágico" (placeholder); valor real 100.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Raio ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · ativa · Atingir com habilidades que aplicam efeitos ao contato gera 6 acúmulos de Energizado, como um ataque básico. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Avanços, teleportes curtos e deslocamentos (Dashes, blinks, displacements) · ativa · Toda forma de movimento gera acúmulos de Energizado (1 a cada 24 unidades percorridas), inclusive avanços, teleportes curtos e deslocamentos para outro lugar. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Raio causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Raio não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Sentinelas e plantas da selva (Wards, jungle plants) · não ativa · O Raio não é consumido contra sentinelas ou plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Outros efeitos Energizados (Other Energized effects) · acumula · O Raio é um efeito Energizado e acumula com outras fontes de Energizado. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Estruturas (Structures) · ativa · Efeitos Energizados aplicam o dano ao contato deles a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+        Mecânica · Inibidores e Nexus (Inhibitors, Nexus) · não ativa · O dano ao contato do Raio não se aplica a inibidores nem ao Nexus (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Stormrazor#Notes
+    ]
+    Escalonamento[
+        Energizado (Energized) · Sem scaling
+        Raio (Bolt) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Acerto Crítico
     Classe: AD (AD 3.375g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -8249,6 +9939,16 @@ Chuva de Canivete: Stormrazor[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Dilúvio ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Vários usuários (Multiple users) · acumula · O Dilúvio pode ser acumulado no mesmo alvo quando aplicado por vários portadores, sem renovar ao mesmo tempo o efeito negativo de todas as fontes seguintes. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormsurge#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · O Dilúvio causa dano de habilidade ao alvo principal, e o campo elétrico causa dano em área: os dois ativam efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormsurge#Notes
+        Mecânica · Adormecer (Sleep) · não ativa · Caso especial: o dano do Dilúvio não remove o efeito de adormecer. · Fonte: https://wiki.leagueoflegends.com/en-us/Stormsurge#Notes
+    ]
+    Escalonamento[
+        Invasor da Tempestade (Stormraider) · Sem scaling
+        Dilúvio (Squall) · Poder de Habilidade · 10% · total · seu · razão · dano mágico do raio (e do campo elétrico, se o alvo morrer antes)
+    ]
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 2.500g)
     Arquétipo Recomendado: Assassino, Mago
@@ -8297,6 +9997,20 @@ Quebrapassos: Stridebreaker[
     Notas: Substitui o antigo item Masterwork "Dreamshatter", removido (Trivia).
     Notas de ARAM: Dano de Onda de Choque alterado para 100% do DdA; Velocidade de Movimento alterada para 45% por campeão atingido.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus da Fenda mais uma vez. A fonte marca o item com asterisco, sem legenda. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Fenda causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Stridebreaker#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Fenda não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Stridebreaker#Notes
+        Mecânica · Estruturas (Structures) · não ativa · A Fenda não ativa em ataques contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Stridebreaker#Notes
+        Mecânica · Invulnerabilidade (Invulnerability) · ativa · A Fenda ativa mesmo se o ataque básico não causar dano, como contra um alvo invulnerável. · Fonte: https://wiki.leagueoflegends.com/en-us/Stridebreaker#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · A Onda de Choque Estonteante causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Stridebreaker#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · A Onda de Choque Estonteante é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Stridebreaker#Notes
+    ]
+    Escalonamento[
+        Fenda (Cleave) · Dano de Ataque · 40% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo (corpo a corpo)
+        Fenda (Cleave) · Dano de Ataque · 20% · total · seu · razão · dano físico ao contato nos outros inimigos a até 350 unidades do alvo (à distância)
+        Onda de Choque Estonteante (Breaking Shockwave) · Dano de Ataque · 80% · total · seu · razão · dano físico aos inimigos num raio de 450 à frente
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Vida
     Classe: AD (AD 2.025g · Vitalidade 1.200g · AP 0g)
     Arquétipo Recomendado: Lutador
@@ -8347,6 +10061,12 @@ Céu Dividido: Sundered Sky[
         Item · Dardos de Caça-Demônios (Fiendhunter Bolts) — Barragem de Abertura (Opening Barrage) · não ativa · A Barragem de Abertura não considera acerto crítico o crítico garantido do Golpe de Lumescudo, a menos que o ataque também role acerto crítico pela Chance de Acerto Crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Fiendhunter_Bolts#Notes
         Mecânica · Acerto Crítico (Critical strike) · conta como · O Golpe de Lumescudo funciona como acerto crítico para todos os fins, e seu dano é afetado por modificadores de dano crítico. A página Critical strike lista o Céu Dividido entre os itens com acerto crítico garantido e entre os que modificam o dano crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Sundered_Sky#Notes; https://wiki.leagueoflegends.com/en-us/Critical_strike#Guaranteed_critical_strikes; https://wiki.leagueoflegends.com/en-us/Critical_strike#Modifying_critical_strike_damage
         Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · não ativa · O Golpe de Lumescudo só afeta ataques básicos, e não as habilidades que aplicam efeitos ao contato e também podem acertar criticamente. · Fonte: https://wiki.leagueoflegends.com/en-us/Sundered_Sky#Notes
+        Item · Armadura de Warmog (Warmog's Armor) — Vitalidade de Warmog (Warmog's Vitality) · não amplifica · A Vitalidade de Warmog da Armadura de Warmog não aumenta a Vida bônus temporária do Golpe de Lumescudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Warmog's_Armor#Notes
+    ]
+    Escalonamento[
+        Golpe de Lumescudo (Lightshield Strike) · Dano de Ataque · 90% · base · seu · razão · cura do ataque fortalecido (corpo a corpo)
+        Golpe de Lumescudo (Lightshield Strike) · Dano de Ataque · 45% · base · seu · razão · cura do ataque fortalecido (à distância)
+        Golpe de Lumescudo (Lightshield Strike) · Vida · 4% · perdida · seu · razão · cura do ataque fortalecido
     ]
     Categoria de Atributo: Dano de Ataque, Vida, Aceleração de Habilidade
     Classe: AD (AD 1.400g · Vitalidade 1.066,67g · AP 0g)
@@ -8389,6 +10109,15 @@ Céu Dividido: Sundered Sky[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Imolar ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Imolar causa dano de proc, marcado como periódico, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Sunfire_Aegis#Notes
+        Mecânica · Tamanho (Size) · amplifica · A aura do Imolar aumenta se o tamanho do portador aumentar, sem depender do tamanho base, e não fica menor que o raio base com modificadores negativos de tamanho. · Fonte: https://wiki.leagueoflegends.com/en-us/Sunfire_Aegis#Notes
+        Mecânica · Raio de colisão grande (Large collision radius) · não ativa · Como a aura do Imolar precisa alcançar o centro do inimigo, alguns campeões corpo a corpo não aplicam o efeito no alcance máximo de ataque contra campeões ou monstros com raio de colisão grande (a fonte cita o Dragon e o Rift Herald). · Fonte: https://wiki.leagueoflegends.com/en-us/Sunfire_Aegis#Notes
+    ]
+    Escalonamento[
+        Imolar (Immolate) · Vida · 1,5% · bônus · seu · razão · dano mágico por segundo da aura, ativa por 3s ao sofrer ou causar dano (150% contra tropas e 180% contra monstros)
+    ]
     Categoria de Atributo: Vida, Armadura, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.933,33g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -8440,6 +10169,18 @@ Terminus: Terminus[
     Notas: O texto oficial pt_BR exibe "0 de Dano Mágico" (placeholder); valor real em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Furacão de Runaan (Runaan's Hurricane) — Fúria do Vento (Wind's Fury) · não ativa · A Justaposição (Juxtaposition) não interage com a Fúria do Vento, apesar de interagir com outros efeitos que aplicam efeitos ao contato. · Fonte: https://wiki.leagueoflegends.com/en-us/Terminus#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Sombra (Shadow) causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Terminus#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato da Sombra não se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Terminus#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Sombra se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Terminus#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Sombra ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+    ]
+    Escalonamento[
+        Sombra (Shadow) · Dano de Ataque · 10% · bônus · seu · razão · dano mágico bônus ao contato
+        Sombra (Shadow) · Poder de Habilidade · 10% · total · seu · razão · dano mágico bônus ao contato
+        Justaposição (Juxtaposition) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Efeitos ao Contato
     Classe: AD (AD 1.925g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador, Lutador
@@ -8483,6 +10224,17 @@ A Coletora: The Collector[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Morte causa dano bruto e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/The_Collector#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Morte não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/The_Collector#Notes
+        Mecânica · Efeitos Energizados (Energized effects) · não ativa · O dano bônus de efeitos Energizados não ativa a execução da Morte (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/The_Collector#Notes
+        Mecânica · Instâncias de 0 de dano e ataques aparados (0 damage instances, parried attacks) · não ativa · Instâncias de 0 de dano e ataques básicos aparados não ativam a execução da Morte. · Fonte: https://wiki.leagueoflegends.com/en-us/The_Collector#Notes
+        Campeão · Kled · não ativa · Caso especial citado pela fonte: a Morte não afeta o Kled enquanto ele está montado. · Fonte: https://wiki.leagueoflegends.com/en-us/The_Collector#Notes
+    ]
+    Escalonamento[
+        Morte (Death) · Sem scaling
+        Abrupta (Taxes) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Acerto Crítico
     Classe: AD (AD 3.050g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino, Atirador
@@ -8523,6 +10275,16 @@ Armadura de Espinhos: Thornmail[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · Quem tem este item e é atingido pelo Golpe Fantasma (Phantom Hit) reflete o dano dos Espinhos de novo. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Espinhos ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · Os Espinhos causam dano reativo e não ativam efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Thornmail#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Os Espinhos não são bloqueados por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Thornmail#Notes
+        Mecânica · Escudos e invulnerabilidade (Shields, invulnerability) · ativa · Os Espinhos ativam mesmo se o ataque básico não causar dano, inclusive quando o portador anula todo o dano com escudo ou invulnerabilidade, e as Feridas Dolorosas são aplicadas ao atacante mesmo que ele esteja protegido por escudo ou invulnerabilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Thornmail#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · Os Espinhos não ativam se o ataque for esquivado, bloqueado ou errado com o atacante sob Cegueira. · Fonte: https://wiki.leagueoflegends.com/en-us/Thornmail#Notes
+        Mecânica · Roubo de Vida (Life steal) · reduz · Curas que ativam com o ataque básico, como o Roubo de Vida, são reduzidas primeiro pelas Feridas Dolorosas: elas já valem para o ataque que ativa os Espinhos. · Fonte: https://wiki.leagueoflegends.com/en-us/Thornmail#Notes
+        Campeão · Xin Zhao — Determinação (Determination) · reduz · Caso citado pela fonte: a cura da Determinação ativada pelo ataque básico é reduzida primeiro pelas Feridas Dolorosas. · Fonte: https://wiki.leagueoflegends.com/en-us/Thornmail#Notes
+    ]
     Escalonamento[
         Espinhos (Thorns) · Armadura · 10% · bônus · seu · razão · dano mágico ao atacante
     ]
@@ -8572,6 +10334,24 @@ Hidra Titânica: Titanic Hydra[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus da Fenda mais uma vez. A fonte marca o item com asterisco, sem legenda. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · não ativa · Caso citado pela página do Cutelo Negro: este item não aplica mais de um acúmulo de Talhar no mesmo frame (passiva e ativa; instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Fenda causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Titanic_Hydra#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano ao contato da Fenda se beneficia de Roubo de Vida; o dano do cone em área não se beneficia. · Fonte: https://wiki.leagueoflegends.com/en-us/Titanic_Hydra#Notes
+        Mecânica · Estruturas (Structures) · ativa · O dano ao contato da Fenda se aplica a estruturas, mas o cone não ativa em ataques contra elas. · Fonte: https://wiki.leagueoflegends.com/en-us/Titanic_Hydra#Notes
+        Mecânica · Invulnerabilidade (Invulnerability) · ativa · A Fenda ativa mesmo se o ataque básico não causar dano, como contra um alvo invulnerável. · Fonte: https://wiki.leagueoflegends.com/en-us/Titanic_Hydra#Notes
+    ]
+    Escalonamento[
+        Fenda (Cleave) · Vida · 1% · máxima · seu · razão · dano físico bônus ao contato no alvo (corpo a corpo)
+        Fenda (Cleave) · Vida · 0,5% · máxima · seu · razão · dano físico bônus ao contato no alvo (à distância)
+        Fenda (Cleave) · Vida · 3% · máxima · seu · razão · dano físico aos outros inimigos num cone na direção do alvo (corpo a corpo)
+        Fenda (Cleave) · Vida · 1,5% · máxima · seu · razão · dano físico aos outros inimigos num cone na direção do alvo (à distância)
+        Crescente Titânica (Titanic Crescent) · Vida · 4% · máxima · seu · razão · dano físico bônus da Fenda fortalecida no alvo principal (corpo a corpo)
+        Crescente Titânica (Titanic Crescent) · Vida · 2% · máxima · seu · razão · dano físico bônus da Fenda fortalecida no alvo principal (à distância)
+        Crescente Titânica (Titanic Crescent) · Vida · 9% · máxima · seu · razão · dano físico da Fenda fortalecida nos alvos secundários (corpo a corpo)
+        Crescente Titânica (Titanic Crescent) · Vida · 4,5% · máxima · seu · razão · dano físico da Fenda fortalecida nos alvos secundários (à distância)
+    ]
     Categoria de Atributo: Dano de Ataque, Vida
     Classe: Vitalidade (AD 1.400g · Vitalidade 1.600g · AP 0g)
     Arquétipo Recomendado: Lutador, Tanque
@@ -8621,6 +10401,22 @@ Força da Trindade: Trinity Force[
     Notas: Item com mais atributos de campeão num só item (Trivia).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Lâmina Arcana causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · Aplicada por ataque básico, a Lâmina Arcana não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não ativa · Aplicada por habilidade que ativa efeitos ao contato, a Lâmina Arcana é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Esquiva (Dodge), bloqueio (Block) e Cegueira (Blind) · não ativa · O ataque fortalecido pode ser bloqueado, esquivado e errado sob Cegueira. O bloqueio anula o dano, consome o efeito e põe a Lâmina Arcana em recarga; a esquiva e a Cegueira impedem o efeito sem consumir o ataque fortalecido. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Acerto Crítico (Critical strike) · não amplifica · A Lâmina Arcana não é afetada por modificadores de acerto crítico. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus da Lâmina Arcana aplica Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Estruturas (Structures) · ativa · A Lâmina Arcana ativa contra estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Plantas da selva (Jungle plants) · não ativa · A Lâmina Arcana não ativa nem é consumida contra plantas da selva. · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Mecânica · Habilidade cancelada (Cancelled ability) · ativa · O buff da Lâmina Arcana é concedido no início do tempo de conjuração da habilidade e não é removido se ela for cancelada (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Trinity_Force#Notes
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) do Golpe Fervente ativa o Apressar (Quicken) da Força da Trindade mais uma vez e concede de novo a Velocidade de Movimento bônus. Caso da lista de interações registradas da Lâmina da Fúria de Guinsoo, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+    ]
+    Escalonamento[
+        Lâmina Arcana (Spellblade) · Dano de Ataque · 200% · base · seu · razão · dano físico bônus do ataque fortalecido
+        Apressar (Quicken) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Vida, Aceleração de Habilidade
     Classe: AD (AD 2.010g · Vitalidade 888g · AP 0g)
     Arquétipo Recomendado: Atirador, Lutador
@@ -8668,6 +10464,16 @@ Glaive Sombria: Umbral Glaive[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Sentinelas e armadilhas furtivas (Wards, stealthed traps) · ativa · O Blecaute afeta todos os tipos de sentinela e as armadilhas furtivas; a desativação continua por 2s depois que o portador sai do alcance. · Fonte: https://wiki.leagueoflegends.com/en-us/Umbral_Glaive#Notes
+        Campeão · Shaco — Caixinha-Surpresa (Jack in the Box) · ativa · Caso citado pela fonte: o Blecaute afeta as armadilhas da habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Umbral_Glaive#Notes
+        Item · Lente do Oráculo (Oracle Lens) · não ativa · O Blecaute não ativa se o portador estiver com o drone da Lente do Oráculo ativo. · Fonte: https://wiki.leagueoflegends.com/en-us/Umbral_Glaive#Notes
+        Runa · Sexto Sentido (Sixth Sense) · não ativa · O Blecaute não ativa numa sentinela que seria detectada pelo Sexto Sentido, quando os dois estão disponíveis. · Fonte: https://wiki.leagueoflegends.com/en-us/Umbral_Glaive#Notes
+    ]
+    Escalonamento[
+        Predador Noturno (Nightstalker) · Letalidade · 1,5 · total · seu · razão · dano verdadeiro bônus do ataque fortalecido contra campeão: 1,5 a cada 1 de Letalidade
+        Blecaute (Blackout) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Aceleração de Habilidade
     Classe: AD (AD 2.640g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -8709,6 +10515,14 @@ Desespero Eterno: Unending Despair[
     Notas: none
     Notas de ARAM: Cura alterada para 250% do dano causado [sic, igual ao base].
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Angústia ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · A Angústia causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Unending_Despair#Notes
+        Mecânica · Combate com campeões (Champion combat) · ativa · Sair do combate com campeões renova na hora o tempo da Angústia. · Fonte: https://wiki.leagueoflegends.com/en-us/Unending_Despair#Notes
+    ]
+    Escalonamento[
+        Angústia (Anguish) · Vida · 3% · bônus · seu · razão · dano mágico a cada 4s nos campeões inimigos a até 650 unidades (a cura é 250% do dano causado)
+    ]
     Categoria de Atributo: Vida, Armadura, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 2.066,67g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -8748,6 +10562,12 @@ Cajado do Vazio: Void Staff[
     Notas: A Penetração Mágica fica mais eficaz quanto maior a RM do alvo: dano mágico aumentado em 10,17% contra 30 de RM, 25% contra 100 e 36,36% contra 200.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Poder de Habilidade, Penetração Mágica Percentual
     Classe: AP (AD 0g · Vitalidade 0g · AP 3.746g)
     Arquétipo Recomendado: Mago
@@ -8798,6 +10618,21 @@ Cicloespada Voltaica: Voltaic Cyclosword[
     Notas: O texto oficial pt_BR exibe "% da Vida atual" sem número (placeholder); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · ativa · Caso citado pela página do Cutelo Negro: este item aplica mais de um acúmulo de Talhar no mesmo frame (instância não básica seguida de instâncias básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · ativa · Atingir com habilidades que aplicam efeitos ao contato gera 6 acúmulos de Energizado, como um ataque básico. · Fonte: https://wiki.leagueoflegends.com/en-us/Voltaic_Cyclosword#Notes
+        Mecânica · Avanços, teleportes curtos e deslocamentos (Dashes, blinks, displacements) · ativa · Toda forma de movimento gera acúmulos de Energizado (1 a cada 24 unidades percorridas), inclusive avanços, teleportes curtos e deslocamentos para outro lugar. · Fonte: https://wiki.leagueoflegends.com/en-us/Voltaic_Cyclosword#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Firmamento causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Voltaic_Cyclosword#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Firmamento não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Voltaic_Cyclosword#Notes
+        Mecânica · Outros efeitos Energizados (Other Energized effects) · acumula · A Cicloespada Voltaica é um efeito Energizado e acumula com outras fontes de Energizado. · Fonte: https://wiki.leagueoflegends.com/en-us/Voltaic_Cyclosword#Notes
+        Mecânica · Estruturas (Structures) · ativa · Efeitos Energizados aplicam o dano ao contato deles a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Voltaic_Cyclosword#Notes
+    ]
+    Escalonamento[
+        Energizado (Energized) · Sem scaling
+        Galvanizar (Galvanize) · Sem scaling
+        Firmamento (Firmament) · Vida · 8% · atual · alvo · razão · dano físico bônus do ataque energizado, até 200 contra não campeões (corpo a corpo)
+        Firmamento (Firmament) · Vida · 6% · atual · alvo · razão · dano físico bônus do ataque energizado, até 200 contra não campeões (à distância)
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Aceleração de Habilidade
     Classe: AD (AD 2.225g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -8838,6 +10673,7 @@ Armadura de Warmog: Warmog's Armor[
     Análise de custo[
         Valor de Ouro: 1.000 Vida = 2.666,67g; 100% Regeneração de Vida base = 300g; total 2.966,67g. Vitalidade de Warmog (dos atributos base): 120 Vida = 320g; total 3.286,67g; por 100 de Vida bônus de outros itens: 12 Vida = 32g. Coração de Warmog com 2.000 de Vida bônus: 300 de Regeneração de Vida = 10.800g; total 14.086,67g; por 100 de Vida bônus: 15 de Regeneração = 540g
         Eficiência de Ouro: 106,02% (base); +1,03% por 100 de Vida bônus de outros itens; pelo menos 454,41% com Coração de Warmog ativo, +17,42% por 100 de Vida bônus de outras fontes
+        Limiar de 100%: já na base
         Valor de Ouro (atributos): 2.966,67g
         Valor de Ouro (base): 3.286,67g
     ]
@@ -8852,6 +10688,16 @@ Armadura de Warmog: Warmog's Armor[
     Notas: O texto oficial pt_BR exibe "restaura 0 de Vida por segundo" e "(0)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: Recarga após dano de campeões alterada para 8s [sic, igual ao base]; após dano de não campeões, 4s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Trenó do Solstício (Solstice Sleigh) — Passeio de Trenó (Going Sledding) · não amplifica · A Vitalidade de Warmog não aumenta a Vida bônus temporária do Passeio de Trenó. · Fonte: https://wiki.leagueoflegends.com/en-us/Warmog's_Armor#Notes
+        Item · Céu Dividido (Sundered Sky) — Golpe de Lumescudo (Lightshield Strike) · não amplifica · A Vitalidade de Warmog não aumenta a Vida bônus temporária do Golpe de Lumescudo. · Fonte: https://wiki.leagueoflegends.com/en-us/Warmog's_Armor#Notes
+        Mecânica · Vida bônus de passivas de itens (Bonus health from item passives) · não amplifica · A Vitalidade de Warmog não conta a Vida bônus ganha por passivas de itens. · Fonte: https://wiki.leagueoflegends.com/en-us/Warmog's_Armor#Notes
+    ]
+    Escalonamento[
+        — (passiva) · Sem scaling
+        Coração de Warmog (Warmog's Heart) · Vida · 15% · máxima · seu · razão · Regeneração de Vida a cada 5s sem dano recente (1,5% a cada 0,5s)
+        Vitalidade de Warmog (Warmog's Vitality) · Vida · 12% · bônus · seu · conversão · Vida bônus (conta só a Vida bônus de itens)
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida
     Classe: Vitalidade (AD 0g · Vitalidade 2.966,67g · AP 0g)
     Arquétipo Recomendado: Tanque
@@ -8889,6 +10735,7 @@ Tiara Sussurrante: Whispering Circlet[
     Análise de custo[
         Valor de Ouro: 200 Vida = 533,33g; 300 Mana = 300g; 75% Regeneração de Mana base = 300g; 8% Poder de Cura e Escudo = 400g; total 1.533,33g; 1,5% de Poder de Cura e Escudo de Harmonia = 75g; total 1.608,33g. Por 100 de Mana bônus de outras fontes: 0,5% = 25g. Por carga: 4 Mana + 0,02% = 5g (não campeão) / 8 Mana + 0,04% = 10g (campeão)
         Eficiência de Ouro: 71,48% (base); +0,22% por carga de não campeões, +0,44% por carga de campeões; +1,11% por 100 de Mana bônus de outras fontes
+        Limiar de 100%: 766,67 de Mana bônus de outras fontes (calculado; com as 360 de Mana bônus de Fluxo de Mana; sem elas, 2.566,67)
         Valor de Ouro (atributos): 1.533,33g
         Valor de Ouro (base): 1.608,33g
     ]
@@ -8904,6 +10751,15 @@ Tiara Sussurrante: Whispering Circlet[
     Notas: O texto oficial pt_BR exibe "0% de Potência de Escudo e Cura" (placeholder) e grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo".
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana (Manaless champions) · não ativa · Campeões sem Mana não ativam o Fluxo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Whispering_Circlet#Notes
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · conta como · Vender um item de Fluxo de Mana tira a Mana bônus ganha com o efeito, mas os acúmulos ficam guardados se esses itens forem comprados de novo, não importa qual item gerou os acúmulos. · Fonte: https://wiki.leagueoflegends.com/en-us/Whispering_Circlet#Notes
+    ]
+    Escalonamento[
+        Harmonia (Harmony) · Mana · 0,5% · bônus · seu · conversão · Poder de Cura e Escudo
+        Fluxo de Mana (Manaflow) · Sem scaling
+        — (transformação) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Poder de Cura e Escudo, Regeneração de Mana, Mana
     Classe: AP (AD 0g · Vitalidade 533,33g · AP 600g)
     Arquétipo Recomendado: Mago, Suporte
@@ -8940,6 +10796,7 @@ Aproximação Invernal: Winter's Approach[
     Análise de custo[
         Valor de Ouro: 15 AdH = 750g; 550 Vida = 1.466,67g; 500 Mana = 500g; total 2.716,67g; 75 de Vida de Fascínio = 200g; total 2.916,67g. Por 100 de Mana bônus de outras fontes: 15 Vida = 40g. Por carga: 3 Mana + 0,45 Vida = 4,2g (não campeão) / 6 Mana + 0,9 Vida = 8,4g (campeão)
         Eficiência de Ouro: 121,53% (base); +0,18% por carga de não campeões, +0,35% por carga de campeões; +1,67% por 100 de Mana bônus de outras fontes
+        Limiar de 100%: já na base
         Valor de Ouro (atributos): 2.716,67g
         Valor de Ouro (base): 2.916,67g
     ]
@@ -8955,6 +10812,15 @@ Aproximação Invernal: Winter's Approach[
     Notas: O texto oficial pt_BR exibe "Recebe 0 de Vida" (placeholder); valor real em Mecânica.
     Notas de ARAM: Cada carga consumida de Fluxo de Mana gera 50% mais Mana.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Campeões sem Mana (Manaless champions) · não ativa · Campeões sem Mana não ativam o Fluxo de Mana. · Fonte: https://wiki.leagueoflegends.com/en-us/Winter's_Approach#Notes
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · conta como · Vender um item de Fluxo de Mana tira a Mana bônus ganha com o efeito, mas os acúmulos ficam guardados se esses itens forem comprados de novo, não importa qual item gerou os acúmulos. · Fonte: https://wiki.leagueoflegends.com/en-us/Winter's_Approach#Notes
+    ]
+    Escalonamento[
+        Fascínio (Awe) · Mana · 15% · bônus · seu · conversão · Vida bônus
+        Fluxo de Mana (Manaflow) · Sem scaling
+        — (transformação) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Mana, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.466,67g · AP 500g)
     Arquétipo Recomendado: Tanque
@@ -8997,6 +10863,16 @@ Limite da Razão: Wit's End[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus do Duelo mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Duelo ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Duelo causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Wit's_End#Notes
+        Mecânica · Estruturas (Structures) · não ativa · O dano ao contato do Duelo não se aplica a estruturas. · Fonte: https://wiki.leagueoflegends.com/en-us/Wit's_End#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus do Duelo se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Wit's_End#Notes
+    ]
+    Escalonamento[
+        Duelo (Fray) · Sem scaling
+    ]
     Categoria de Atributo: Velocidade de Ataque, Resistência Mágica, Tenacidade, Efeitos ao Contato
     Classe: AD (AD 1.250g · Vitalidade 1.106,67g · AP 0g)
     Arquétipo Recomendado: Atirador, Lutador
@@ -9046,6 +10922,13 @@ Lâmina Fantasma de Youmuu: Youmuu's Ghostblade[
     Notas: O texto oficial pt_BR exibe "0 de Velocidade de Movimento" e "por 0s" (placeholders); valores reais em Mecânica.
     Notas de ARAM: Velocidade de Movimento de Passo Espectral alterada para 40% / 35%; Velocidade de Movimento de Assombrar alterada para 30 / 15.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Velocidade de Movimento percentual (Percentage movement speed) · acumula · A Velocidade de Movimento percentual do Passo Espectral acumula de forma aditiva com outras fontes de Velocidade de Movimento percentual. · Fonte: https://wiki.leagueoflegends.com/en-us/Youmuu's_Ghostblade#Notes
+    ]
+    Escalonamento[
+        Assombrar (Haunt) · Sem scaling
+        Passo Espectral (Wraith Step) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Letalidade, Movimento
     Classe: AD (AD 2.465g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Assassino
@@ -9098,6 +10981,10 @@ Flechatroz de Yun Tal: Yun Tal Wildarrows[
     Interações[
         Campeão · Zeri — Rajada Reluzente (Burst Fire) · ativa · Caso citado pela fonte: na Zeri, a Agitação (Flurry) só ativa ao atingir um campeão com todos os projéteis da Rajada Reluzente. · Fonte: https://wiki.leagueoflegends.com/en-us/Yun_Tal_Wildarrows#Notes
     ]
+    Escalonamento[
+        Praticar e Matar (Practice Makes Lethal) · Sem scaling
+        Agitação (Flurry) · Sem scaling
+    ]
     Categoria de Atributo: Dano de Ataque, Velocidade de Ataque, Acerto Crítico
     Classe: AD (AD 2.875g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -9142,6 +11029,15 @@ Invadomínio de Zaz'Zak: Zaz'Zak's Realmspike[
     Notas: Item final da linha de Suporte (Atlas Mundial → Bússola Rúnica → Dádiva dos Mundos); custo de combinação 0g. Valor de venda: 40% do custo (sellratio 0,4). 
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · ativa · Dano mágico causado por Explosão do Vazio ao portador da Força da Natureza gera acúmulos do Impassível normalmente. · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · ativa · A Explosão do Vazio causa dano em área e, por isso, ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Zaz'Zak's_Realmspike#Notes
+    ]
+    Escalonamento[
+        Explosão do Vazio (Void Explosion) · Poder de Habilidade · 15% · total · seu · razão · dano mágico da explosão em área
+        Explosão do Vazio (Void Explosion) · Vida · 3% · máxima · alvo · razão · dano mágico da explosão em área, de cada alvo (até 300 contra monstros)
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 758,33g · AP 300g)
     Arquétipo Recomendado: Suporte
@@ -9191,6 +11087,34 @@ Convergência de Zeke: Zeke's Convergence[
     Notas: O Data Dragon pt_BR 16.22.1 não traz o texto nem o nome da passiva Cryocombustion (só o efeito de Tempestade); Aceleração de Ultimate registrada pela wiki.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Força da Natureza (Force of Nature) — Impassível (Steadfast) · não ativa · Dano mágico causado por Tempestade do Raio de Gelo ao portador da Força da Natureza não gera acúmulos do Impassível (bug). · Fonte: https://wiki.leagueoflegends.com/en-us/Force_of_Nature#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · A Tempestade do Raio de Gelo causa dano de proc, marcado como dano em área, sem aplicar efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · A Tempestade do Raio de Gelo não é bloqueada por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Mecânica · Ultimate (Ultimate ability) · ativa · A Tempestade do Raio de Gelo ativa assim que a ultimate é conjurada. Se a ultimate tem tempo de conjuração, o efeito pode ativar até 0,25s depois do início da conjuração, por imprecisão (inesperado). Em algumas ultimates específicas, a ativação fica para o fim dos efeitos da habilidade ou para durante eles (linhas de Campeão). · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Udyr — conjuração Despertar (Awakened) · ativa · No Udyr, a Tempestade do Raio de Gelo ativa com uma conjuração Despertar. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Briar — Morte Certa (Certain Death) · ativa · A Tempestade do Raio de Gelo ativa no fim do tempo de conjuração inicial. Se o míssil atingir um alvo, a duração do efeito é renovada no fim do avanço. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Elise — Forma de Aranha (Spider Form) · ativa · A Tempestade do Raio de Gelo ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Fiddlesticks — Tempestade de Corvos (Crowstorm) · ativa · A Tempestade do Raio de Gelo ativa no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Galio — Entrada Heroica (Hero's Entrance) · ativa · A Tempestade do Raio de Gelo ativa no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Jayce — Canhão de Mercúrio (Mercury Cannon) · ativa · A Tempestade do Raio de Gelo ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Kled — Avançaaaaaaar!!! (Chaaaaaaaarge!!!) · ativa · A Tempestade do Raio de Gelo ativa no fim da investida, ou no fim do avanço ao perseguir um inimigo. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Nidalee — Aspecto do Puma (Aspect of the Cougar) · ativa · A Tempestade do Raio de Gelo ativa antes da mudança de tipo de alcance (corpo a corpo, à distância). · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Nocturne — Paranoia (Paranoia) · ativa · A Tempestade do Raio de Gelo ativa logo na primeira conjuração. Se a reconjuração for usada, a duração do efeito é renovada no fim do avanço. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Pantheon — Constelação Cadente (Grand Starfall) · ativa · A Tempestade do Raio de Gelo ativa no fim da segunda canalização, ou no fim da canalização inicial se ela for interrompida. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Poppy — Veredito da Guardiã (Keeper's Verdict) · ativa · A Tempestade do Raio de Gelo ativa 0,2s depois do início do tempo de conjuração da reconjuração. Não ativa se a canalização da primeira conjuração for interrompida ou expirar. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Rek'Sai — Investida do Vazio (Void Rush) · ativa · A Tempestade do Raio de Gelo ativa quando ela emerge do chão. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Rengar — Furor da Caçada (Thrill of the Hunt) · ativa · A Tempestade do Raio de Gelo ativa depois que a camuflagem termina. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Shen — Manter a União (Stand United) · ativa · A Tempestade do Raio de Gelo ativa no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Sion — Investida Incontrolável (Unstoppable Onslaught) · ativa · A Tempestade do Raio de Gelo ativa 0,65s depois do fim da canalização se a investida não colidir com um inimigo, ou logo depois do fim da canalização se colidir com uma parede. Se a investida terminar colidindo com um inimigo, ativa 0,1s depois do fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Tahm Kench — Devorar (Devour) · ativa · A Tempestade do Raio de Gelo ativa depois que ele conjura Regurgitate, no fim do deslocamento do alvo, ou depois da supressão do Devorar se ele terminar sem Regurgitate. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Vi — Saque e Enterrada (Cease and Desist) · ativa · A Tempestade do Raio de Gelo ativa 0,5s depois de agarrar o alvo, ou no fim do avanço se a habilidade for cancelada em certas circunstâncias. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+        Campeão · Warwick — Coerção Infinita (Infinite Duress) · ativa · A Tempestade do Raio de Gelo ativa no fim do avanço. Se o avanço colidir com um inimigo, ativa 0,45s depois do início da canalização, e a duração do efeito é renovada no fim da canalização. · Fonte: https://wiki.leagueoflegends.com/en-us/Zeke's_Convergence#Notes
+    ]
+    Escalonamento[
+        — (Cryocombustion) · Sem scaling
+        Tempestade do Raio de Gelo (Frostfire Tempest) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Armadura, Resistência Mágica, Aceleração de Habilidade, Aceleração de Ultimate
     Classe: Vitalidade (AD 0g · Vitalidade 1.800g · AP 0g)
     Arquétipo Recomendado: Suporte, Tanque
@@ -9231,6 +11155,13 @@ Ampulheta de Zhonya: Zhonya's Hourglass[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Bandana de Mercúrio (Quicksilver Sash) — Mercúrio (Quicksilver) · não ativa · Ativar o Tempo Paralisado põe o Mercúrio da Bandana de Mercúrio numa recarga de 0,5s. · Fonte: https://wiki.leagueoflegends.com/en-us/Zhonya's_Hourglass#Notes
+        Item · Cimitarra Mercurial (Mercurial Scimitar) — Mercúrio (Quicksilver) · não ativa · Ativar o Tempo Paralisado põe o Mercúrio da Cimitarra Mercurial numa recarga de 0,5s. · Fonte: https://wiki.leagueoflegends.com/en-us/Zhonya's_Hourglass#Notes
+    ]
+    Escalonamento[
+        Tempo Paralisado (Time Stop) · Sem scaling
+    ]
     Categoria de Atributo: Poder de Habilidade, Armadura
     Classe: AP (AD 0g · Vitalidade 1.000g · AP 2.100g)
     Arquétipo Recomendado: Mago
@@ -9281,6 +11212,13 @@ Mobilização Blindada: Armored Advance[
     Notas: O texto oficial pt_BR exibe "0 de Escudo" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Barricada (Plating) · Sem scaling
+        Vigor Noxiano (Noxian Endurance) · Vida · 8% · bônus · seu · razão · escudo contra dano físico por 5s
+    ]
     Categoria de Atributo: Armadura, Movimento
     Classe: Vitalidade (AD 0g · Vitalidade 700g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -9326,6 +11264,13 @@ Dádiva dos Mundos: Bounty of Worlds[
     Notas: Etapa intermediária da linha de Suporte (Atlas Mundial → Bússola Rúnica → Dádiva dos Mundos → item final). Não pode ser vendido.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Combate (Combat) · não ativa · Em combate, o menu do Aprimorar no HUD fica desativado. · Fonte: https://wiki.leagueoflegends.com/en-us/Bounty_of_Worlds#Notes
+    ]
+    Escalonamento[
+        Aprimorar (Upgrade) · Sem scaling
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 758,33g · AP 300g)
     Arquétipo Recomendado: Suporte
@@ -9371,6 +11316,12 @@ Esmagadores Acorrentados: Chainlaced Crushers[
     Notas: O texto oficial pt_BR exibe "0 de Escudo" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Persistência Noxiana (Noxian Persistence) · Vida · 8% · bônus · seu · razão · escudo contra dano mágico por 5s
+    ]
     Categoria de Atributo: Resistência Mágica, Movimento, Tenacidade
     Classe: Vitalidade (AD 0g · Vitalidade 810g · AP 0g)
     Arquétipo Recomendado: Universal
@@ -9416,6 +11367,13 @@ Lucidez Escarlate: Crimson Lucidity[
     Notas: O texto oficial pt_BR exibe "0 de Velocidade de Movimento" (placeholder); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Perspicácia Ioniana (Ionian Lucidity) · Sem scaling
+        Aceleração Noxiana (Noxian Haste) · Sem scaling
+    ]
     Categoria de Atributo: Aceleração de Habilidade, Movimento, Aceleração de Feitiços de Invocador
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, utilidade)
     Arquétipo Recomendado: Universal
@@ -9449,6 +11407,7 @@ Diadema de Canções: Diadem of Songs[
     Análise de custo[
         Valor de Ouro: 200 Vida = 533,33g; 1.000 Mana = 1.000g; 100% Regeneração de Mana base = 400g; 8% Poder de Cura e Escudo = 400g; total 2.333,33g; 5% de Poder de Cura e Escudo de Harmonia = 250g; total 2.583,33g; por 100 de Mana bônus de outras fontes: 0,5% = 25g
         Eficiência de Ouro: 114,81% (base); +1,11% por 100 de Mana bônus de outras fontes
+        Limiar de 100%: já na base
         Valor de Ouro (atributos): 2.333,33g
         Valor de Ouro (base): 2.583,33g
     ]
@@ -9462,6 +11421,13 @@ Diadema de Canções: Diadem of Songs[
     Notas: Não pertence ao grupo Fluxo de Mana (não é exclusivo com esses itens), exceto com a própria Tiara Sussurrante. O texto oficial pt_BR exibe "0% de Potência de Escudo e Cura" (placeholder) e grafa "Cura e Resistência do Escudo"; catálogo adota "Poder de Cura e Escudo".
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · acumula · Diferente da Tiara Sussurrante, a Diadema de Canções não pertence ao grupo Fluxo de Mana e pode ser combinada com itens desse grupo, exceto a Tiara Sussurrante. · Fonte: https://wiki.leagueoflegends.com/en-us/Diadem_of_Songs#Notes
+    ]
+    Escalonamento[
+        Harmonia (Harmony) · Mana · 0,5% · bônus · seu · conversão · Poder de Cura e Escudo
+        Consonância (Consonance) · Mana · 0,8% · máxima · seu · razão · cura a cada 1s ao campeão aliado mais próximo e mais ferido a até 900 unidades, com você ou um aliado que você curou ou protegeu nos últimos 3s em combate com campeões
+    ]
     Categoria de Atributo: Vida, Poder de Cura e Escudo, Mana, Regeneração de Mana
     Classe: AP (AD 0g · Vitalidade 533,33g · AP 1.400g)
     Arquétipo Recomendado: Suporte
@@ -9497,6 +11463,7 @@ Fimbulwinter: Fimbulwinter[
     Análise de custo[
         Valor de Ouro: 15 AdH = 750g; 550 Vida = 1.466,67g; 1.000 Mana = 1.000g; total 3.216,67g; 150 de Vida de Fascínio = 400g; total 3.616,67g; por 100 de Mana bônus de outras fontes: 15 Vida = 40g
         Eficiência de Ouro: 150,69% (base); +1,67% por 100 de Mana bônus de outras fontes
+        Limiar de 100%: já na base
         Valor de Ouro (atributos): 3.216,67g
         Valor de Ouro (base): 3.616,67g
     ]
@@ -9510,6 +11477,17 @@ Fimbulwinter: Fimbulwinter[
     Notas: Não pertence ao grupo Fluxo de Mana, exceto com a própria Aproximação Invernal. O texto oficial pt_BR exibe "Recebe 0 de Vida" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Imobilização (Immobilize) · ativa · O Perpétuo vale para todo efeito que a wiki classifica como Imobilização: arremessar ao ar (Airborne), Berserk (Berserk), encantar (Charm), Temor (Flee), provocar (Taunt), enraizar (Root), adormecer (Sleep), estase (Stasis), atordoar (Stun), inclusive a suspensão (Suspension), e suprimir (Suppression). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Notes; https://wiki.leagueoflegends.com/en-us/Module:ItemData/data
+        Mecânica · Lentidão (Slow) · ativa · Com portador corpo a corpo, causar Lentidão a um campeão inimigo também ativa o Perpétuo; com portador à distância, só a Imobilização ativa. A página Types of Crowd Control lista a Fimbulwinter entre o que interage com Imobilização e Lentidão. · Fonte: https://wiki.leagueoflegends.com/en-us/Module:ItemData/data; https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Interactions_with_Crowd_Control
+        Mecânica · Sonolência (Drowsy) · ativa · A unidade sob Sonolência sofre Lentidão e depois adormece. Com portador corpo a corpo, a Lentidão da Sonolência ativa o Perpétuo; com qualquer portador, o sono que vem depois ativa (linha Imobilização) (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Drowsy
+        Mecânica · Preso ao chão (Ground) · não ativa · Preso ao chão não é Imobilização nem Lentidão. A fonte diz que as fontes de Preso ao chão que existem também aplicam Lentidão; com portador corpo a corpo, essa Lentidão ativa o Perpétuo (conta pela regra da fonte). · Fonte: https://wiki.leagueoflegends.com/en-us/Types_of_Crowd_Control#Notes
+    ]
+    Escalonamento[
+        Fascínio (Awe) · Mana · 15% · bônus · seu · conversão · Vida bônus
+        Perpétuo (Everlasting) · Mana · 4,5% · atual · seu · razão · escudo por 3s
+        Perpétuo (Everlasting) · Mana · 8,1% · atual · seu · razão · escudo por 3s com mais de um campeão inimigo a até 1.200 unidades
+    ]
     Categoria de Atributo: Vida, Mana, Aceleração de Habilidade
     Classe: Vitalidade (AD 0g · Vitalidade 1.466,67g · AP 1.000g)
     Arquétipo Recomendado: Tanque
@@ -9550,6 +11528,12 @@ Grevas Bélicas: Gunmetal Greaves[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Velocidade de Ataque, Movimento, Roubo de Vida
     Classe: AD (AD 1.392,75g · Vitalidade 0g · AP 0g)
     Arquétipo Recomendado: Atirador
@@ -9594,6 +11578,21 @@ Caminho Imortal: Immortal Path[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Modificadores de cura (Healing modifiers) · acumula · O Hoje e Sempre acumula de forma multiplicativa com outras fontes de modificadores de cura. · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Mecânica · Modificadores de Regeneração de Vida (Health regeneration modifiers) · acumula · O Hoje e Sempre acumula de forma aditiva com outras fontes de modificadores de Regeneração de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Mecânica · Roubo de Vida e Vampirismo (Life steal, Omnivamp) · não amplifica · O Hoje e Sempre não aumenta a cura vinda de Roubo de Vida e de Vampirismo; aumenta direto o atributo do campeão (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Item · Semblante Espiritual (Spirit Visage) — Vitalidade Imensurável (Boundless Vitality) · acumula · O Hoje e Sempre acumula de forma recursiva com a Vitalidade Imensurável do Semblante Espiritual quando os dois modificam Roubo de Vida e Vampirismo (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Campeão · Samira — Talento Natural (Flair) · amplifica · Caso citado pela fonte: habilidades e efeitos que aplicam Roubo de Vida só se beneficiam do aumento de Roubo de Vida, sem o aumento de cura. · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Campeão · Xin Zhao — Vento Vira Relâmpago (Wind Becomes Lightning) · amplifica · Caso citado pela fonte: a cura direta que escala com Roubo de Vida se beneficia do aumento de Roubo de Vida e do aumento de cura, amplificada em 25,44% (1,12 × 1,12) em vez de 12% (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Campeão · Ambessa — Execução Pública (Public Execution) · amplifica · Caso citado pela fonte: a cura direta que escala com Roubo de Vida se beneficia do aumento de Roubo de Vida e do aumento de cura, amplificada em 25,44% (1,12 × 1,12) em vez de 12% (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Immortal_Path#Notes
+        Feitiço de Invocador · Incendiar (Ignite) · não amplifica · A wiki lista Incendiar entre as fontes de dano que os modificadores de dano não afetam, e o Caminho Imortal entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Incendiar. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+        Feitiço de Invocador · Golpear (Smite) · não amplifica · A wiki lista Golpear entre as fontes de dano que os modificadores de dano não afetam, e o Caminho Imortal entre os modificadores de dano causado: o aumento de dano do item não aumenta o dano de Golpear. · Fonte: https://wiki.leagueoflegends.com/en-us/Damage_modifier#Exceptions; https://wiki.leagueoflegends.com/en-us/Damage_modifier#Damage_dealt_modifier
+    ]
+    Escalonamento[
+        Eliminar (Slay) · Sem scaling
+        Hoje e Sempre (Now and Forever) · Sem scaling
+    ]
     Categoria de Atributo: Movimento, Vampirismo
     Classe: Vitalidade (AD 0g · Vitalidade 0g · AP 0g; desempate 3: sem dano, sobrevivência)
     Arquétipo Recomendado: Universal
@@ -9640,6 +11639,19 @@ Muramana: Muramana[
     Notas: Não pertence ao grupo Fluxo de Mana, exceto com o próprio Manamune. Visível na loja como aprimoramento não comprável do Manamune (Trivia).
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Lâmina da Fúria de Guinsoo (Guinsoo's Rageblade) — Golpe Fervente (Seething Strike) · ativa · O Golpe Fantasma (Phantom Hit) aplica o dano bônus do Choque mais uma vez. Caso da lista de interações registradas do Golpe Fantasma, que a fonte avisa poder estar desatualizada. · Fonte: https://wiki.leagueoflegends.com/en-us/Guinsoo's_Rageblade#Notes
+        Item · Cutelo Negro (Black Cleaver) — Talhar (Carve) · não ativa · Caso citado pela página do Cutelo Negro: este item não aplica mais de um acúmulo de Talhar no mesmo frame (instância de dano básico seguida de instâncias não básicas). · Fonte: https://wiki.leagueoflegends.com/en-us/Black_Cleaver#Notes
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · acumula · Diferente da Manamune, a Muramana não pertence ao grupo Fluxo de Mana e pode ser combinada com itens desse grupo, exceto a Manamune. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Mecânica · Efeitos de Habilidade (Spell effects) · não ativa · O Choque causa dano de proc e, por isso, não ativa efeitos de habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Mecânica · Escudo de Feitiço (Spell shield) · não reduz · O Choque não é bloqueado por escudo de feitiço. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Mecânica · Roubo de Vida (Life steal) · ativa · O dano bônus do Choque se beneficia de Roubo de Vida. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Mecânica · Habilidades que aplicam efeitos ao contato (Abilities that apply on-hit effects) · ativa · Habilidades que ativam efeitos ao contato e efeitos de habilidade na mesma instância de dano aplicam o Choque como habilidade; as que ativam efeitos ao contato sem efeitos de habilidade aplicam o Choque como ataque básico; as que ativam efeitos de habilidade numa instância de dano separada aplicam o Choque como ataque e como habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Campeão · Darius — Ataque Mutilador (Crippling Strike) · ativa · Caso citado pela fonte: ativa efeitos ao contato e efeitos de habilidade na mesma instância e aplica o Choque como habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Campeão · Yasuo — Tempestade de Aço (Steel Tempest) · ativa · Caso citado pela fonte: no alvo principal, ativa efeitos ao contato sem efeitos de habilidade e aplica o Choque como ataque básico. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Campeão · Ekko — Mergulho Fásico (Phase Dive) · ativa · Caso citado pela fonte: ativa efeitos de habilidade numa instância separada e aplica o Choque como ataque e como habilidade. · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+        Campeão · Udyr — Tempestade Alada (Wingborne Storm) · ativa · Caso citado pela fonte: com a tempestade inativa, o primeiro ataque fortalecido aplica o Choque como ataque e como habilidade; com a tempestade ativa, os dois ataques aplicam o Choque como ataque, e a tempestade ativa o Choque como habilidade duas vezes, reiniciando no ataque fortalecido (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Muramana#Notes
+    ]
     Escalonamento[
         Fascínio (Awe) · Mana · 2% · máxima · seu · conversão · Dano de Ataque bônus
         Choque (Shock) · Mana · 1,2% · máxima · seu · razão · dano físico bônus de ataque básico ao contato contra campeões
@@ -9696,6 +11708,15 @@ Bússola Rúnica: Runic Compass[
     Notas: Etapa intermediária da linha de Suporte. O texto oficial pt_BR exibe "0 de ouro", "(0s, máximo de 0 cargas)" (placeholders); valores reais em Mecânica. Não pode ser vendido.
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        Item · Abatedora (Cull) — Ceifar (Reap) · ativa · Um abate de tropa dividido pelas Riquezas Compartilhadas com um aliado que tem a Abatedora conta para o Ceifar. · Fonte: https://wiki.leagueoflegends.com/en-us/Cull#Notes
+        Mecânica · Combate com campeões (Champion combat) · não ativa · Se a Missão de Suporte (Support Quest) for concluída em combate com campeões, a transformação da Bússola Rúnica espera até 5s depois de sair do combate. · Fonte: https://wiki.leagueoflegends.com/en-us/Runic_Compass#Notes
+    ]
+    Escalonamento[
+        Missão de Suporte (Support Quest) · Sem scaling
+        Riquezas Compartilhadas (Shared Riches) · Sem scaling
+        — (Ward) · Sem scaling
+    ]
     Categoria de Atributo: Vida, Regeneração de Vida, Regeneração de Mana, Geração de Ouro
     Classe: Vitalidade (AD 0g · Vitalidade 385g · AP 200g)
     Arquétipo Recomendado: Suporte
@@ -9745,6 +11766,10 @@ Abraço de Seraph: Seraph's Embrace[
     Notas: Não pertence ao grupo Fluxo de Mana; é exclusivo com o Cajado do Arcanjo só pelo grupo Salva-Vidas. O texto oficial pt_BR exibe "0 de Poder de Habilidade", "0 de Escudo" e "(0s)" (placeholders); valores reais em Mecânica.
     Notas de ARAM: Recarga de Salva-Vidas alterada para 75s.
     Notas de ARAM: Mayhem: none
+    Interações[
+        Mecânica · Itens de Fluxo de Mana (Manaflow items) · acumula · Diferente do Cajado do Arcanjo, o Abraço de Seraph não pertence ao grupo Fluxo de Mana e pode ser combinado com itens desse grupo; ele é exclusivo com o Cajado do Arcanjo só porque os dois são do grupo Salva-Vidas. · Fonte: https://wiki.leagueoflegends.com/en-us/Seraph's_Embrace#Notes
+        Item · Presa da Serpente (Serpent's Fang) — Ceifador de Escudos (Shield Reaver) · não reduz · O Ceifador de Escudos da Presa da Serpente só afeta o escudo do Salva-Vidas depois que ele foi ativado e já bloqueou dano (inesperado). · Fonte: https://wiki.leagueoflegends.com/en-us/Seraph's_Embrace#Notes
+    ]
     Escalonamento[
         Fascínio (Awe) · Mana · 2% · bônus · seu · conversão · Poder de Habilidade
         Salva-Vidas (Lifeline) · Mana · 18% · máxima · seu · razão · escudo por 3s
@@ -9789,6 +11814,12 @@ Sapatos Enfeitiçados: Spellslinger's Shoes[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        none
+    ]
     Categoria de Atributo: Penetração Mágica, Penetração Mágica Percentual, Movimento
     Classe: AP (AD 0g · Vitalidade 0g · AP 1.302,53g)
     Arquétipo Recomendado: Assassino, Mago
@@ -9820,6 +11851,7 @@ Marcha Célere: Swiftmarch[
     Análise de custo[
         Valor de Ouro: 65 Velocidade de Movimento = 780g; total 780g. Fervor Noxiano por 20 de VdM total: 0,6 DdA ou 1 PdH (adaptativo) = 21g ou 20g
         Eficiência de Ouro: 78% (base); +2% por 20 de VdM total; 100% com 209,52 (DdA) ou 220 (PdH) de VdM total
+        Limiar de 100%: 209,52 de Velocidade de Movimento total com Dano de Ataque; 220 com Poder de Habilidade (wiki)
         Valor de Ouro (atributos): 780g
         Valor de Ouro (base): 780g
     ]
@@ -9833,6 +11865,13 @@ Marcha Célere: Swiftmarch[
     Notas: none
     Notas de ARAM: none
     Notas de ARAM: Mayhem: none
+    Interações[
+        none
+    ]
+    Escalonamento[
+        Pés Velozes (Fleetfooted) · Sem scaling
+        Fervor Noxiano (Noxian Fervor) · Movimento · 5% · total · seu · conversão · Força Adaptativa (Dano de Ataque bônus ou Poder de Habilidade)
+    ]
     Categoria de Atributo: Movimento, Resistência a Lentidão
     Classe: AD (adaptativo: DdA ou PdH conforme a adaptação; decisão de 12/09/2026 para bônus adaptativos)
     Arquétipo Recomendado: Universal
@@ -10800,3 +12839,272 @@ Origem: pedido do usuário em 19/11/2026 para registrar, na seção "Ajustes —
 
 ## Divergências
 Nenhuma nova. As 3 pendências da reconciliação (Diadema de Canções, Manopla dos Glacinatas e Dente de Na'Shor) continuam: a revisão 4095269 ainda tem os valores antigos dos 3 itens.
+
+# Ajustes — Escalonamento, Lote D5-1b (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: pendência D5 do Capítulo 2. Lote aprovado em 20/11/2026 ("aprovado"), com a convenção E10 e a recomendação da pergunta sobre o limiar. Lote: `lotes/Catalogo_Escalonamento_Lote_D5-1b.md`. Estado anterior (md5 `7b9fa015b57512575cafbf2e8c32ca51`) em `fontes/2026-11-20/D5/antes_D5-1b/`. Fontes: `fontes/2026-11-20/D5/extratos_wiki_D5-1b.md` (módulo da wiki na revisão 4095269 e páginas dos itens, lidos em 20/11/2026).
+
+## O que mudou
+- Bloco novo `Escalonamento[` em 38 itens: os itens 39 a 76 da fila D5-1 (Criptoflora → Marcha Célere, na ordem do catálogo). São 88 linhas de escalonamento.
+- Linha nova `Limiar de 100%:` em 9 itens, logo depois de `Eficiência de Ouro:`:
+  - número da wiki: Marcha Célere;
+  - números calculados: Fome Eterna, Manamune, Bastão das Eras e Tiara Sussurrante;
+  - "já na base": Criafendas, Armadura de Warmog, Aproximação Invernal e Fimbulwinter.
+- Lâmina da Fúria de Guinsoo, Terminus, Couraça do Defunto e Caminho Imortal ficam sem a linha de limiar: a eficiência cresce com acúmulos que somem fora da luta, e a linha `Eficiência de Ouro:` já traz a faixa (recomendação aprovada).
+- Total de 173 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Convenção E10 no Guia_de_Campos_v2, seção "Escalonamento[]".
+- Dente de Na'Shor e Diadema de Canções (itens 77 e 78 da fila) ficam para quando a wiki publicar os valores do V26.23.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Escalonamento, Lote D5-2a (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: pendência D5 do Capítulo 2. Lote aprovado em 20/11/2026 ("pode avisar e começar o D5-2"). Lote: `lotes/Catalogo_Escalonamento_Lote_D5-2a.md`. Estado anterior (md5 `2be0438ad871e69af6ad6d9e2d9a6d60`) em `fontes/2026-11-20/D5/antes_D5-2a/`. Fontes: `fontes/2026-11-20/D5/extratos_wiki_D5-2a.md` (módulo da wiki na revisão 4095269, lido em 20/11/2026).
+
+## O que mudou
+- Bloco novo `Escalonamento[` em 71 itens, na ordem do catálogo:
+  - 51 itens sem habilidade, com `none` (nenhum deles tem efeito no módulo da wiki);
+  - 20 itens de tier baixo com habilidade (1 Starter, 2 Consumíveis, 3 Trinkets, 4 Botas e 10 Épicos), com 22 linhas; Fulgor, Capítulo Perdido e Tiamat têm escalonamento, e os outros 17 ficam "Sem scaling".
+- Nenhuma linha `Limiar de 100%:` nova. Lacre Sombrio e Grevas Vorazes têm acúmulos de eliminação e seguem a decisão do Lote D5-1b.
+- Total de 215 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Escalonamento, Lote D5-2b (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: pendência D5 do Capítulo 2. Lote feito e aplicado por ordem do usuário em 20/11/2026 ("É PARA VOCE FAZER TODO O D5 E DEPOIS INFORMAR A FORJA"). Lote: `lotes/Catalogo_Escalonamento_Lote_D5-2b.md`. Estado anterior (md5 `7f7c10c5d09216c65546f35b92a694af`) em `fontes/2026-11-20/D5/antes_D5-2b/`. Fontes: `fontes/2026-11-20/D5/extratos_wiki_D5-2b.md` (módulo da wiki na revisão 4095269, lido em 20/11/2026).
+
+## O que mudou
+- Bloco novo `Escalonamento[` em 61 itens: os Lendários e Evoluções que ainda não tinham o bloco, na ordem do catálogo. São 111 linhas de escalonamento.
+- Linha nova `Limiar de 100%:` em 1 item: Auronúcleo (`já na base`). Jak'Sho, o Inconstante e Ladrão de Almas de Mejai seguem a decisão do Lote D5-1b (acúmulos de luta ou de eliminação) e ficam sem a linha.
+- Total de 234 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Convenção E11 no Guia_de_Campos_v2, seção "Escalonamento[]".
+- Com este lote, 222 de 225 itens têm o bloco. Dente de Na'Shor, Diadema de Canções e Manopla dos Glacinatas ficam para quando a wiki publicar os valores do V26.23.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Escalonamento, Lote D5-3 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: pendência D5 do Capítulo 2. Lote feito e aplicado por ordem do usuário em 20/11/2026 ("Se falta no D5 ENTÃO VOCE NÃO TERRMINOU O D5! ... pode terminarr TUDO não quero NADA PENDENTE"). Lote: `lotes/Catalogo_Escalonamento_Lote_D5-3.md`. Estado anterior (md5 `5809a5626915174383f1aa691e916e43`) em `fontes/2026-11-20/D5/antes_D5-3/`. Fontes: `fontes/2026-11-20/D5/extratos_wiki_D5-3.md` (módulo da wiki na revisão 4095269 e histórico das páginas, lidos em 20/11/2026).
+
+## O que mudou
+- Bloco novo `Escalonamento[` em 3 itens: Manopla dos Glacinatas, Dente de Na'Shor e Diadema de Canções. São 4 linhas de escalonamento, com os mesmos números da `Mecânica (wiki)` de cada item.
+- Linha nova `Limiar de 100%:` em 1 item: Diadema de Canções (`já na base`).
+- Total de 11 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Com este lote, os 225 itens têm o bloco `Escalonamento[`, e a pendência D5 do Capítulo 2 está fechada.
+
+## Divergências
+Nenhuma nova. As notas do V26.23 indicam mudança nos 3 itens, e o módulo e as páginas da wiki ainda trazem o valor antigo (conferido de novo em 20/11/2026). A pendência continua registrada na seção "Ajustes — reconciliação do patch 16.23.1 (19/11/2026)". Quando a wiki publicar os valores novos, a mesma reconciliação troca a Mecânica e a linha de escalonamento dos 3 itens juntas.
+
+# Ajustes — pendência da reconciliação 16.23.1 resolvida (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: pendência "Divergências em aberto" da seção "Ajustes — reconciliação do patch 16.23.1 (19/11/2026)" e pedido do usuário em 20/11/2026 ("ok, faça agora"). Estado anterior (md5 `40999f68b1f53ceacee2d76cdd71d13d`) em `fontes/2026-11-20/pendencia_16.23.1/antes/`. Fontes: `fontes/2026-11-20/pendencia_16.23.1/extrato_V26.23_secoes.md` (V26.23, revisão 4096203, wikitexto lido pelo navegador embutido em 20/11/2026).
+
+## O que se achou
+- As três linhas das notas (Consonância da Diadema de Canções, Lâmina Arcana da Manopla dos Glacinatas e Mordida Icathiana do Dente de Na'Shor) estão na seção "Arena" do V26.23, no grupo "Items" dela, ao lado de itens só da Arena (Perplexidade, Runecarver e Quimiotanque Turbo) e do "Arena Global Buff".
+- A seção "Items" de Summoner's Rift traz só a Cicloespada Voltaica, já corrigida em 19/11/2026. As seções "ARAM" e "ARAM: Mayhem" não mudam valor de item do catálogo.
+- A Arena fica fora do escopo do catálogo. Os três itens não mudaram em Summoner's Rift, ARAM nem ARAM: Mayhem, e o módulo da wiki (revisão 4095269) e as páginas deles estão certos.
+- O extrato de 19/11/2026 (`fontes/2026-11-19/wiki_extratos.md`) leu o grupo "Items" da Arena como se fosse o de Summoner's Rift. Por isso ele também não trouxe a Cicloespada Voltaica, que só apareceu na comparação do módulo.
+- Triagem, fora da hierarquia das Regras_de_Fonte: os dados do jogo do 16.23 extraídos pelo CommunityDragon (`items.cdtb.bin.json`, versão 16.23.8406595) dão para os IDs 6662, 3115 e 2530 os mesmos valores do catálogo (1,5 × Dano de Ataque base; 15 + 0,15 × Poder de Habilidade; 0,8% da Mana). Nenhum valor do catálogo vem dessa leitura.
+
+## O que mudou
+- Nenhuma linha de item mudou. A pendência dos três itens fecha sem alteração: a `Mecânica (wiki)` e o `Escalonamento[` deles (Lote D5-3) ficam como estão.
+- Esta seção é o único acréscimo. As frases das seções anteriores que tratam a pendência como aberta ficam como registro datado.
+
+## Divergências
+Nenhuma em aberto.
+
+# Ajustes — Interações, Lote F2 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F2 (efeitos de ataque e ao contato). Lote montado em 20/11/2026 a pedido do usuário ("ok pode fazer") e aprovado no mesmo dia ("aprovado, pode aplicar e corrigir os três nomes"), com a convenção 9 e a recomendação da pergunta sobre os casos de campeão do Golpe Fantasma. A conferência por workflow não rodou: o usuário aprovou antes da janela de fim de semana. Lote: `lotes/Catalogo_Interacoes_Lote_F2_Ataque_e_Contato.md`. Estado anterior (md5 `54ef699df2e15ee1d1bffef38abd28f1`) em `fontes/2026-11-20/F2/antes/`. Fontes: `fontes/2026-11-20/F2/wiki_extratos_F2.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 10 itens, logo depois de `Notas de ARAM: Mayhem:`: Fulgor (9 linhas), Canção de Sangue (9), Aurora e Crepúsculo (11), Colhedor de Essência (9), Manopla dos Glacinatas (9), Perdição de Lich (9), Força da Trindade (10), Lâmina da Fúria de Guinsoo (36), Mata-Cráquens (9) e Terminus (4).
+- 3 linhas novas no bloco `Interações[` do Furacão de Runaan (Lâmina da Fúria de Guinsoo, Mata-Cráquens e Terminus, todas `não ativa`).
+- São 118 linhas de interação e 138 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Convenção 9 (escudo de feitiço) no Guia_de_Campos_v2, seção "Interações[]".
+- Cobertura da Pendência F: 19 de 225 itens com o bloco `Interações[`.
+- Reciprocidade pendente (convenção 7): 11 itens, na tabela do lote e no CHECKPOINT.
+
+## Divergências
+Nenhuma nas linhas novas. Os três nomes antigos das `Mecânica (wiki)` da Lâmina da Fúria de Guinsoo e do Mata-Cráquens foram corrigidos na seção seguinte.
+
+# Ajustes — nomes na Mecânica da Lâmina da Fúria de Guinsoo e do Mata-Cráquens (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Divergências 1 a 3 do Lote F2, aprovadas pelo usuário em 20/11/2026 ("aprovado, pode aplicar e corrigir os três nomes"). Fonte dos nomes: Data Dragon pt_BR e en_US 16.23.1 (`fontes/2026-11-20/F2/championFull_16.23.1_pt_BR.json` e `…_en_US.json`). Estado anterior (md5 `1ad0205dd156438e35f26a66eb8da194`, logo depois do Lote F2) em `fontes/2026-11-20/F2/antes_nomes/`.
+
+## Correções
+
+| Item · campo | Antes | Depois | Fonte |
+|---|---|---|---|
+| Lâmina da Fúria de Guinsoo · Mecânica (wiki), Golpe Fervente | "(ex.: Muralha de Vento)" | "(ex.: Parede de Vento)" | Data Dragon pt_BR 16.23.1: W do Yasuo, "Parede de Vento" (Wind Wall) |
+| Mata-Cráquens · Mecânica (wiki), Derrubar | "(ex.: Investida do Aphelios)" | "(ex.: Onslaught do Aphelios)" | o Data Dragon pt_BR não dá nome ao Onslaught (habilidade de arma dentro da Q "Habilidades da arma"); fica o nome EN da wiki, como na linha de Interações |
+| Mata-Cráquens · Mecânica (wiki), Derrubar | "Novo Destino (Graves)" | "Nova Destino (Graves)" | Data Dragon pt_BR 16.23.1: passiva do Graves, "Nova Destino" (New Destiny) |
+
+- 2 linhas alteradas, uma de cada item. Nenhuma outra linha mudou, e os três nomes antigos não aparecem em outro lugar do catálogo.
+- Nenhum rótulo, número ou campo de jogo mudou.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F3 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F3 (controle). Lote montado em 20/11/2026 a pedido do usuário ("pode fazer o F3") e aprovado no mesmo dia ("aprovado, pode aplicar e corrigir os dois trechos"). A conferência por workflow não rodou: o usuário aprovou antes da janela de fim de semana. Lote: `lotes/Catalogo_Interacoes_Lote_F3_Controle.md`. Estado anterior (md5 `ac5ee17944d6d8602f509ec881773bf0`) em `fontes/2026-11-20/F3/antes/`. Fontes: `fontes/2026-11-20/F3/wiki_extratos_F3.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 4 itens, logo depois de `Notas de ARAM: Mayhem:`: Bandocanos (4 linhas), Trenó do Solstício (4), Fimbulwinter (4) e Força da Natureza (37).
+- 1 linha nova em cada um dos blocos existentes da Lâmina da Fúria de Guinsoo, da Aurora e Crepúsculo, da Perdição de Lich e do Terminus (par com a Força da Natureza).
+- São 53 linhas de interação e 61 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Nenhuma convenção nova.
+- Cobertura da Pendência F: 23 de 225 itens com o bloco `Interações[`.
+- Reciprocidade pendente (convenção 7): 26 linhas novas na tabela do lote e do CHECKPOINT.
+
+## Divergências
+Nenhuma nas linhas novas. Os dois trechos da `Mecânica (wiki)` da Força da Natureza foram corrigidos na seção seguinte.
+
+# Ajustes — dois trechos da Mecânica da Força da Natureza (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Divergências 1 e 2 do Lote F3, aprovadas pelo usuário em 20/11/2026 ("aprovado, pode aplicar e corrigir os dois trechos"). Fontes: `Force_of_Nature#Notes` na revisão 4064338 (`fontes/2026-11-20/F3/wiki_extratos_F3.md`) e Data Dragon pt_BR 16.23.1 (`fontes/2026-11-19/item_16.23.1_pt_BR.json`, item 3091). Estado anterior (md5 `8cdc8e80b389445583ecf74b6b3c7d8d`, logo depois do Lote F3) em `fontes/2026-11-20/F3/antes_trechos/`.
+
+## Correções
+
+| Item · campo | Antes | Depois | Fonte |
+|---|---|---|---|
+| Força da Natureza · Mecânica (wiki), lista dos que NÃO geram acúmulos | "…Desolar (Resplendor Vazio); Fogo Coordenado (Mandato Imperial); Névoa do Ódio (Malevolência)…" | "…Desolar (Resplendor Vazio); Névoa do Ódio (Malevolência)…" | a Notes de 20/11/2026 não cita o Mandato Imperial nessa lista |
+| Força da Natureza · Mecânica (wiki), lista dos que geram normalmente | "Refrega (Limite da Razão)" | "Duelo (Limite da Razão)" | Data Dragon pt_BR 16.23.1 e a linha de habilidade do próprio Limite da Razão: "Duelo (Fray)" |
+
+- 1 linha alterada (a Mecânica do Impassível). Nenhuma outra linha mudou; "Refrega" e o trecho do Mandato não aparecem em outro lugar do catálogo.
+- Nenhum rótulo, número ou campo de jogo mudou.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F4 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F4 (redução de resistência e vulnerabilidade). Lote montado em 20/11/2026 a pedido do usuário ("pode fazer o F4") e aprovado no mesmo dia ("aprovado, pode aplicar e corrigir o nome"), com a recomendação da pergunta sobre os casos de campeão (mantidos). A conferência por workflow não rodou: o usuário aprovou antes da janela de fim de semana. Lote: `lotes/Catalogo_Interacoes_Lote_F4_Resistencia_Vulnerabilidade.md`. Estado anterior (md5 `5ab0fcc767e418b47a236fbcec5ef382`) em `fontes/2026-11-20/F4/antes/`. Fontes: `fontes/2026-11-20/F4/wiki_extratos_F4.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 4 itens, logo depois de `Notas de ARAM: Mayhem:`: Máscara Abissal (2 linhas), Cutelo Negro (54), Maldição Sanguinária (5) e Malevolência (59).
+- Linhas novas em blocos existentes: Canção de Sangue (2: Incendiar e Golpear), Fulgor (1), Mata-Cráquens (1) e Furacão de Runaan (1), em par com o Cutelo Negro.
+- O bloco do Cutelo Negro começa pela linha da reciprocidade pendente do Lote F1 (Furacão de Runaan, Talhar), palavra por palavra.
+- São 125 linhas de interação e 133 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Nenhuma convenção nova.
+- Cobertura da Pendência F: 27 de 225 itens com o bloco `Interações[`.
+- Reciprocidade pendente (convenção 7): sai a linha do Cutelo Negro e entram 10 linhas novas, na tabela do lote e do CHECKPOINT.
+
+## Divergências
+Nenhuma nas linhas novas. O nome "Névoa do Ódio" na `Mecânica (wiki)` da Força da Natureza foi corrigido na seção seguinte.
+
+# Ajustes — nome na Mecânica da Força da Natureza (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Divergência 1 do Lote F4, aprovada pelo usuário em 20/11/2026 ("aprovado, pode aplicar e corrigir o nome"). Fonte: Data Dragon pt_BR 16.23.1 (`fontes/2026-11-19/item_16.23.1_pt_BR.json`, item 3118). Estado anterior (md5 `bfbce44d7c576b48c3abc8ae60c709d3`, logo depois do Lote F4) em `fontes/2026-11-20/F4/antes_nome/`.
+
+## Correções
+
+| Item · campo | Antes | Depois | Fonte |
+|---|---|---|---|
+| Força da Natureza · Mecânica (wiki), lista dos que NÃO geram acúmulos | "Névoa do Ódio (Malevolência)" | "Névoa Odiosa (Malevolência)" | Data Dragon pt_BR 16.23.1 e a linha de habilidade da própria Malevolência: "Névoa Odiosa (Hatefog)" |
+
+- 1 linha alterada. Nenhuma outra linha mudou; "Névoa do Ódio" segue só nos registros datados das seções de Ajustes.
+- Nenhum rótulo, número ou campo de jogo mudou.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F5 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F5 (amplificação de dano). Lote montado em 20/11/2026 a pedido do usuário ("pode fazer o F5") e aprovado no mesmo dia ("aprovado"), com a recomendação (a) da pergunta sobre as fontes que discordam: as linhas da Máscara Assustadora e do Tormento de Liandry seguem as Notes de cada item ("stacks multiplicatively") e saem sem `[A CONFIRMAR]`; a página Damage modifier ("All damage modifiers stack additively", com "PENDING FOR TEST") fica registrada no lote. A conferência por workflow não rodou: o usuário aprovou antes da janela de fim de semana. Lote: `lotes/Catalogo_Interacoes_Lote_F5_Amplificacao.md`. Estado anterior (md5 `9257a595628e48bb4fb4864ea1831e60`) em `fontes/2026-11-20/F5/antes/`. Fontes: `fontes/2026-11-20/F5/wiki_extratos_F5.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 11 itens, logo depois de `Notas de ARAM: Mayhem:`: Máscara Assustadora (3 linhas), Concretizador (5), Tocha de Chamas Negras (5), Hexótica C44 (4), Foco do Horizonte (8), Tormento de Liandry (6), Lembranças do Lorde Dominik (2), Capuz da Morte de Rabadon (3), Criafendas (2), Lança de Shojin (15) e Caminho Imortal (9).
+- São 62 linhas de interação e 84 linhas novas nos blocos. Nenhuma linha existente foi removida ou alterada.
+- Nenhuma convenção nova.
+- Cobertura da Pendência F: 38 de 225 itens com o bloco `Interações[`.
+- Reciprocidade pendente (convenção 7): 2 linhas novas (Couraça do Defunto e Semblante Espiritual), na tabela do lote e do CHECKPOINT.
+
+## Divergências
+Nenhuma em aberto. A discordância entre as Notes da Máscara Assustadora e do Tormento de Liandry e a página Damage modifier foi resolvida pelo usuário com a opção (a).
+
+# Ajustes — Interações, Lote F6 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F6 (varredura dos itens cuja página não tem a seção Notes). Ordem do usuário em 20/11/2026: "então resolva TODAS as pendencias eu quero que literalmente não sober nada". Lote: `lotes/Catalogo_Interacoes_Lote_F6_Sem_Notes.md`. Estado anterior (md5 `2c5cc04456662a32f5a0d6521431e32f`) em `fontes/2026-11-20/F6/antes/`. Fontes: `fontes/2026-11-20/F6/paginas_sem_notes.md` (página de cada item e revisão lida em 20/11/2026).
+
+## O que mudou
+- Bloco `Interações[` com `none` em 64 itens, logo depois de `Notas de ARAM: Mayhem:`. A página de nenhum deles tem a seção Notes, nenhum está na tabela de reciprocidade pendente, e as páginas gerais lidas nos Lotes F0 a F5 não os ligam a outro item, runa, campeão ou feitiço pelo nome.
+- São 192 linhas novas (3 por item). Nenhuma linha existente foi removida ou alterada.
+- Cobertura da Pendência F: 102 de 225 itens com o bloco `Interações[`.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F7 (20/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F7 (inicio de jogo, consumiveis, botas e componentes). Ordem do usuário em 20/11/2026: "então resolva TODAS as pendencias eu quero que literalmente não sober nada". Lote: `lotes/Catalogo_Interacoes_Lote_F7_inicio_de_jogo,_consumiveis,_botas_e_componentes.md`. Estado anterior (md5 `b9935b6c5f87c5a758eda2eecb43e048`) em `fontes/2026-11-20/F7/antes/`. Fontes: `fontes/2026-11-20/F7/fontes_F7.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 35 itens (1 com `none`), logo depois de `Notas de ARAM: Mayhem:`, com 74 linhas de interação.
+- Linhas novas em blocos que já existiam: 3.
+- Reciprocidade pendente usada: Colete Espinhoso, Cinzas do Destino, Brasa de Bami, Alternador Hextec, Malevolência, Tocha de Chamas Negras, Tormento de Liandry. Reciprocidade pendente nova: 2.
+- Nenhuma linha existente foi removida ou alterada.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F8 (21/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F8 (Escudo, cura, anti-cura e mana). Ordem do usuário em 20/11/2026: "então resolva TODAS as pendencias eu quero que literalmente não sober nada", retomada em 21/11/2026 com "continua". Lote: `lotes/Catalogo_Interacoes_Lote_F8_Escudo,_cura,_anti-cura_e_mana.md`. Estado anterior (md5 `ae3e0b6b96730536f180f7207768b949`) em `fontes/2026-11-21/F8/antes/`. Fontes: `fontes/2026-11-21/F8/fontes_F8.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 29 itens (3 com `none`), logo depois de `Notas de ARAM: Mayhem:`, com 84 linhas de interação.
+- Linhas novas em blocos que já existiam: 4.
+- Reciprocidade pendente usada: Semblante Espiritual, Mandíbula de Malmortius, Juramento do Cavaleiro, Muramana. Reciprocidade pendente nova: 3.
+- Linha `none` substituída pelas linhas novas (reciprocidade) em: Carapaça do Vigia. Nenhuma outra linha existente foi removida ou alterada.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F9 (21/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F9 (Ataque, contato e dano). Ordem do usuário em 20/11/2026: "então resolva TODAS as pendencias eu quero que literalmente não sober nada", retomada em 21/11/2026 com "continua". Lote: `lotes/Catalogo_Interacoes_Lote_F9_Ataque,_contato_e_dano.md`. Estado anterior (md5 `a31cfefbfc457543a695ea10d9c2a7c3`) em `fontes/2026-11-21/F9/antes/`. Fontes: `fontes/2026-11-21/F9/fontes_F9.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 37 itens (1 com `none`), logo depois de `Notas de ARAM: Mayhem:`, com 221 linhas de interação.
+- Linhas novas em blocos que já existiam: 5.
+- Reciprocidade pendente usada: Arco Recurvo, Dente de Na'Shor, Limite da Razão, Turíbulo Ardente, Estilingue do Patrulheiro, Tiamat, Quebrapassos, Hidra Titânica, Espada do Rei Destruído, Eclipse, Coração de Aço, Pistola Laminar Hextec, Explocinturão Hextec, Resplendor Vazio, Égide de Fogo Solar, Quebracascos, Canhão Fumegante, Faca de Statikk, Chuva de Canivete, Cicloespada Voltaica, Eco de Luden, Ápice da Tempestade, Armadura de Espinhos, Desespero Eterno, Invadomínio de Zaz'Zak, Couraça do Defunto, Convergência de Zeke. Reciprocidade pendente nova: 0.
+- Nenhuma linha existente foi removida ou alterada.
+
+## Divergências
+Nenhuma.
+
+# Ajustes — Interações, Lote F10 (21/11/2026)
+Patch: 16.23.1 · Modelo: Claude Opus 5.5
+
+Origem: Pendência F, Lote F10 (Ativas de proteção, selva, botas e demais). Ordem do usuário em 20/11/2026: "então resolva TODAS as pendencias eu quero que literalmente não sober nada", retomada em 21/11/2026 com "continua". Lote: `lotes/Catalogo_Interacoes_Lote_F10_Ativas_de_protecao,_selva,_botas_e_demais.md`. Estado anterior (md5 `c680ce00658bde9de409e35a35379615`) em `fontes/2026-11-21/F10/antes/`. Fontes: `fontes/2026-11-21/F10/fontes_F10.md`.
+
+## O que mudou
+- Bloco novo `Interações[` em 22 itens (3 com `none`), logo depois de `Notas de ARAM: Mayhem:`, com 153 linhas de interação.
+- Linhas novas em blocos que já existiam: 1.
+- Reciprocidade pendente usada: Bandana de Mercúrio, Cimitarra Mercurial, Bússola Rúnica. Reciprocidade pendente nova: 0.
+- Nenhuma linha existente foi removida ou alterada.
+
+## Divergências
+Nenhuma.

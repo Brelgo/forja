@@ -11514,7 +11514,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.128";
+const ATUALIZACAO = "13.129";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -19315,7 +19315,9 @@ function montarEscala() {
   box.appendChild(bases);
   const nota = document.createElement("p");
   nota.className = "escala-nota";
-  nota.textContent = `${conferidos} de ${CATALOG.items.length} itens conferidos pelo Capítulo 1; os outros ficam de fora deste filtro até serem conferidos.`;
+  nota.textContent = conferidos === CATALOG.items.length   // F13-T129: com todos conferidos, não há "os outros"
+    ? `Os ${conferidos} itens conferidos pelo Capítulo 1.`
+    : `${conferidos} de ${CATALOG.items.length} itens conferidos pelo Capítulo 1; os outros ficam de fora deste filtro até serem conferidos.`;
   box.appendChild(nota);
   return box;
 }

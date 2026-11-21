@@ -71,12 +71,20 @@ def por_patch(vs):
     return grupos
 
 
+def numeros(texto):
+    """Os números de um texto, na ordem (o número de patch, como "16.21.1", fica de fora: ver PATCH_NO_TEXTO)."""
+    return re.findall(r"\d+(?:[.,]\d+)*", PATCH_NO_TEXTO.sub("", texto or ""))
+
+
 CAMPOS = OrderedDict([
     ("preço", lambda i: i.get("priceGold")),
     ("custo de combinação", lambda i: i.get("combineCost")),
     ("receita", lambda i: [(c.get("namePt"), c.get("qty")) for c in i.get("components") or []]),
     ("atributos", lambda i: [(a.get("stat"), a.get("value"), a.get("unit"), a.get("raw")) for a in i.get("attributes") or []]),
-    ("habilidades", lambda i: [(h.get("name"), h.get("type"), h.get("description"), h.get("mechanics")) for h in i.get("abilities") or []]),
+    # F13-T129 (Leo, 21/11/2026: "ignorar texto sem número"): a habilidade conta pelos números do texto (descrição
+    # e Mecânica) e pela quantidade de habilidades. Troca só de palavras — "Muralha de Vento" → "Parede de Vento"
+    # (Guinsoo), "Investida" → "Onslaught" (Mata-Cráquens) — é correção do Capítulo 1, não mudança de jogo.
+    ("habilidades", lambda i: [(numeros(h.get("description")), numeros(h.get("mechanics"))) for h in i.get("abilities") or []]),
     ("modos", lambda i: sorted(i.get("gameModes") or [])),
     ("Reembolso", lambda i: [(i.get("cashback") or {}).get(k) for k in ("percent", "refundGold", "netGold")]),
     # F13-T123 (Leo, 10/11/2026: "arredondamento não conta"): o Capítulo 1 passou, no 16.22.1, a arredondar para

@@ -486,6 +486,20 @@ def checar_arquivos(p):
             os.remove(tmp)
     p.conta("arquivos", "o registro de mudanças está em dia com o catálogo", igual, det)
 
+    # F13-T129 (Leo, 21/11/2026: "ignorar texto sem número"): a habilidade conta pelos números. No 16.23.1 o
+    # Capítulo 1 trocou só palavras na Mecânica da Guinsoo ("Muralha" → "Parede"), do Mata-Cráquens e da Força
+    # da Natureza; a Cicloespada Voltaica mudou números (9%/7% → 8%/6%) e continua.
+    try:
+        _m = open(os.path.join(RAIZ, "data", "mudancas.js"), encoding="utf-8").read()
+        _m = json.loads(_m[_m.index("=") + 1:].strip().rstrip(";"))
+        _v = next(v for v in (_m["versoes"] if isinstance(_m, dict) and "versoes" in _m else _m) if v["patch"] == "16.23.1")
+        _fora = [s for s in ("guinsoo-s-rageblade", "kraken-slayer", "force-of-nature") if s in _v["itens"]]
+        p.conta("arquivos", "troca só de palavras na habilidade não marca o item como mudado (16.23.1: Guinsoo, Mata-Cráquens e Força da Natureza fora; a Cicloespada dentro)",
+                not _fora and _v["itens"].get("voltaic-cyclosword") == ["habilidades"],
+                "16.23.1: %s" % sorted(_v["itens"]))
+    except Exception as e:
+        p.conta("arquivos", "troca só de palavras na habilidade não marca o item como mudado", False, "%s: %s" % (type(e).__name__, str(e)[:90]))
+
     # F13-T87: o supabase.sql é o banco inteiro na forma de hoje — colar de novo não
     # pode derrubar as Públicas (antes: view sem runas/habilidades/rota, grant por
     # coluna faltando, um segundo publicar_build). Confere o arquivo contra a página.
@@ -679,7 +693,9 @@ def checar_escala_com(s, p):
                nov: n.length, novAqui: n.length === 1 && !!n[0].closest('.filter-group[data-group="stats"] .filter-group-title'),
                novVis: n.length === 1 && n[0].getBoundingClientRect().width > 0 }; })()""")
     p.conta("catálogo", "Escala com: um chip por atributo que alguma habilidade escala (do catálogo, só as linhas \"seu\"); a nota diz quantos itens o Capítulo 1 já conferiu; o balão \"Novidade\" é um só, no título do grupo Atributo, visível",
-            tela["chips"] == quer["stats"] and tela["nota"].startswith("%d de %d itens conferidos" % (quer["conferidos"], quer["total"]))
+            tela["chips"] == quer["stats"]
+            and (tela["nota"] == "Os %d itens conferidos pelo Capítulo 1." % quer["total"] if quer["conferidos"] == quer["total"]
+                 else tela["nota"].startswith("%d de %d itens conferidos" % (quer["conferidos"], quer["total"])))
             and tela["nov"] == 1 and tela["novAqui"] and tela["novVis"], "%s · quer %s" % (tela, quer["stats"]))
     s.js("""(() => { const g = document.querySelector('.filter-group[data-group="stats"]'); if (g.classList.contains('collapsed')) g.querySelector('.filter-group-title').click();
       g.querySelector('.escala').scrollIntoView({ block: 'center' }); return 1; })()""")
@@ -699,6 +715,19 @@ def checar_escala_com(s, p):
                ultimo: hs.length ? hs[hs.length - 1].querySelector('.g-label').textContent : '',
                depois: (() => { const h = document.querySelector('#grid .nc-head'); if (!h) return -1; let n = 0, el = h.nextElementSibling; while (el) { if (el.classList.contains('card') && !el.classList.contains('nao-conferido')) n++; el = el.nextElementSibling; } return n; })(),
                cards: document.querySelectorAll('#grid .card').length }; })()"""
+    # F13-T129: o catálogo real pode não ter mais nenhum não conferido (21/11: 225 de 225). Primeiro, o real:
+    # sem não conferido, nem aviso nem botão. Depois, três itens sem a Vida perdem o bloco só na memória da
+    # página (o catalog.js não muda) para exercitar o caminho; voltam no fim deste grupo.
+    nreal = s.js(lenc)
+    semReal = s.js("CATALOG.items.filter(i => !Array.isArray(i.scaling)).length")
+    p.conta("catálogo", "com todos conferidos, a contagem não fala de não conferidos e não há botão (F13-T129); com algum faltando, diz quantos",
+            (("ainda não conferido" not in nreal["conta"] and nreal["btn"] == "") if semReal == 0
+             else ("· %d ainda não" % semReal) in nreal["conta"]),
+            "%s · sem bloco no catálogo: %d" % (nreal["conta"], semReal))
+    s.js("""(() => { window.__qaEsc = CATALOG.items.filter(i => Array.isArray(i.scaling) && !i.scaling.some(x => !x.none && x.of === 'seu' && x.stat === 'Vida'))
+        .slice(0, 3).map(i => [i.slug, i.scaling]);
+      window.__qaEsc.forEach(([sl]) => { byId[sl].scaling = null; }); render(); return 1; })()""")
+    time.sleep(0.4)
     semConf = s.js("CATALOG.items.filter(i => !Array.isArray(i.scaling)).map(i => i.slug).sort()")
     n0 = s.js(lenc)
     s.clicar('#nc-btn', 0.8)
@@ -746,7 +775,8 @@ def checar_escala_com(s, p):
             len(nao_esc) == 1 and nao_esc[0]["nao"] == 0 and gs[-1]["l"] == "Ainda não conferidos pelo Capítulo 1" and gs[-1]["conf"] == 0
             and gs[-1]["nao"] == len(semConf),
             "%s" % [(g["l"], g["conf"], g["nao"]) for g in gs[-3:]])
-    s.js("(() => { state.sort = 'tier'; state.sortAttr = ''; syncSortControls(); render(); window.scrollTo(0, 0); return 1; })()")
+    s.js("(() => { (window.__qaEsc || []).forEach(([sl, sc]) => { byId[sl].scaling = sc; }); delete window.__qaEsc;"
+         " state.sort = 'tier'; state.sortAttr = ''; syncSortControls(); render(); window.scrollTo(0, 0); return 1; })()")
     time.sleep(0.4)
 
 
