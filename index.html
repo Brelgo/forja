@@ -3448,6 +3448,24 @@ body.nucleo .grid::before {
 .ficha-vistas button + button { border-left: 1px solid rgba(90,70,48,.45); }
 .ficha-vistas button.ativo { background: var(--loja-cera); color: var(--loja-cera-texto); }
 .receita.v-arvore .rs, .receita.v-soma .rt { display: none; }
+/* F13-T130: as interações */
+.interacoes .inter-tipos { margin: 0 0 8px; flex-wrap: wrap; }
+.inter-lista { list-style: none; margin: 0; padding: 0; }
+.inter-linha { display: grid; grid-template-columns: 92px 1fr; gap: 0 10px; padding: 5px 0; border-bottom: 1px dotted rgba(90,70,48,.28); font-size: 13px; line-height: 1.45; color: var(--loja-tinta); }
+.inter-linha:last-child { border-bottom: 0; }
+.inter-linha[hidden] { display: none; }
+.interacoes.recolhida:not(.filtrada) .inter-resto { display: none; }
+.inter-efeito { align-self: start; justify-self: start; margin-top: 1px; padding: 0 6px; border: 1px solid currentColor; border-radius: 2px;
+  font-family: var(--loja-gravado); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; line-height: 1.7; white-space: nowrap; }
+.inter-efeito.pos { color: #3f5a2a; background: rgba(63,90,42,.08); }
+.inter-efeito.neg { color: var(--loja-cera); background: rgba(141,44,34,.07); }
+.inter-com { font-weight: 700; }
+.inter-tipo { color: var(--loja-tinta-suave); font-size: 11.5px; }
+.inter-texto { display: block; }
+.inter-fonte { font-size: 11px; color: var(--loja-tinta-suave); font-style: italic; }
+.inter-mais { margin-top: 6px; background: transparent; border: 1px solid rgba(90,70,48,.45); border-radius: 2px; padding: 2px 12px; cursor: pointer;
+  font-family: var(--loja-gravado); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--loja-tinta-suave); }
+.interacoes.filtrada .inter-mais { display: none; }
 /* a árvore: o item em cima e, descendo, as peças */
 .rt { display: flex; flex-direction: column; align-items: center; padding: 4px 0 2px; overflow-x: auto; }
 .rt-no { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 8px; border: 1px solid rgba(90,70,48,.45); border-radius: 3px; background: rgba(90,70,48,.08); font-family: var(--loja-texto); color: var(--loja-tinta); text-align: center; }
@@ -4009,6 +4027,9 @@ html.com-entrada { overflow: hidden; }
    a loja escondida entrava na conta (o roteiro mediu: metade dos quadros perdidos da abertura). Com a
    entrada de pé eles não giram; ao fechar, voltam — ninguém vê a diferença (opacidade 0, loja coberta). */
 html.com-entrada .card-burst { animation: none; }
+/* F13-T131: e voltam a girar só no primeiro intervalo livre depois de a entrada fechar — os 225 recomeçando no
+   mesmo quadro do fechar seguravam 30–45 ms. O hover (.card:hover .card-burst) vale mais e gira na hora. */
+html.rajadas-paradas .card-burst { animation: none; }
 body.na-loja .entrada { display: none; }
 
 /* F13-T101 (Leo, 02/11/2026: a opção 2 do tour — "o tour não deve ser algo massante", "pensando para
@@ -11081,8 +11102,19 @@ const Som = (() => {
     a.load();
     return (cache[f] = a);
   }
+  // F13-T131 (Leo, 21/11/2026: os tropeços da abertura): criar os ~80 elementos de uma vez segurava um quadro
+  // de 50 ms logo depois da entrada fechar. Agora em lotes de até PRECARGA_LOTE, nos intervalos livres do navegador.
+  const PRECARGA_LOTE = 6;
   function precarregar() {
-    Object.values(SOM_ARQUIVOS).flat().forEach(carregarArquivo);
+    const fila = Object.values(SOM_ARQUIVOS).flat().filter(f => !cache[f]);
+    const ocioso = window.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 400 })
+                                              : (fn) => setTimeout(() => fn({ timeRemaining: () => 8, didTimeout: false }), 30);
+    const lote = (prazo) => {
+      let n = 0;
+      while (fila.length && n < PRECARGA_LOTE && (n < 2 || prazo.didTimeout || prazo.timeRemaining() > 4)) { carregarArquivo(fila.shift()); n++; }
+      if (fila.length) setTimeout(() => ocioso(lote), 16);   // um quadro entre os lotes
+    };
+    if (fila.length) ocioso(lote);
   }
   // F13-T100 (Leo, 01/11/2026: "o som está mal sincronizado com a animação de abertura" — chegava
   // tarde): o open_catalog só começava a baixar no clique, junto com os outros ~80 arquivos, e tocava
@@ -11514,7 +11546,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.129";
+const ATUALIZACAO = "13.132";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -14108,6 +14140,13 @@ function buildTotal(kind) {
 function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 }
+// F13-T130: os tipos das interações (Capítulo 1), na ordem dos chips; o resto, se vier, entra depois
+const INTER_TIPOS = ["Mecânica", "Item", "Campeão", "Feitiço de Invocador", "Runa"];
+const INTER_ROTULO = { "Feitiço de Invocador": "Feitiço" };
+const INTER_VISIVEIS = 6;
+// F13-T132: a descrição do cliente (Data Dragon) traz a quebra de linha escrita como "\n" (16 habilidades em 21/11,
+// ex.: o Golpe Fervente da Guinsoo); a tela mostra a quebra, o dado fica como veio
+function quebraLinha(t) { return String(t == null ? "" : t).replace(/\\n/g, "<br>"); }
 
 // ---------------- Mestre Forjador (Fase 3, T7) ----------------
 // Elegível = masterwork.eligible === true no catálogo. Os atributos "como
@@ -20236,7 +20275,7 @@ function cardFullHtml(item) {
   const attrs = cfList.map(a => `<div class="cf-line${a.changed ? " apex-changed" : ""}">${esc(a.raw)}${a.changed ? " ↑" : ""}</div>`).join("")
     || (item.attributesNote ? `<div class="cf-line">${esc(item.attributesNote)}</div>` : "");
   const abilities = (item.abilities || []).map(a =>
-    `<div class="cf-ab">${a.name && a.name !== "—" ? `<b>${esc(a.name)}</b> — ` : ""}${a.description}</div>`).join("");
+    `<div class="cf-ab">${a.name && a.name !== "—" ? `<b>${esc(a.name)}</b> — ` : ""}${quebraLinha(a.description)}</div>`).join("");
   const ca = item.costAnalysis;
   const kv = [];
   if (ca && ca.efficiency) kv.push(["Eficiência", ca.efficiency, "cera"]);
@@ -20765,7 +20804,7 @@ function openModal(id) {
     ? item.abilities.map(a => `
         <div class="ability-block">
           ${a.name && a.name !== "—" ? `<div class="ability-name">${a.name}${a.type ? ` <span class="attr-note">· ${a.type}</span>` : ""}</div>` : ""}
-          <div class="ability-desc">${a.description}</div>
+          <div class="ability-desc">${quebraLinha(a.description)}</div>
           ${escalaDe(a)}
           ${a.mechanics ? `<div class="ability-mech"><span class="mech-label">Mecânica</span>${a.mechanics}</div>` : ""}
         </div>`).join("")
@@ -20881,6 +20920,32 @@ function openModal(id) {
       <div class="condition-note">${item.cashback.raw}</div>
     </div>` : "";
 
+  // F13-T130 (Leo, 21/11/2026): as interações do item, do item.interactions (Capítulo 1, Interações[]): o efeito
+  // num selo, com quem, o texto e a fonte. Chips por tipo; com mais de INTER_VISIVEIS linhas, o resto atrás de
+  // "ver todas". [] = conferido, sem interação; null = ainda não conferido (nunca "não interage").
+  const interacoesHtml = (() => {
+    const ls = item.interactions;
+    if (ls === null || ls === undefined)
+      return `<div class="modal-section interacoes"><div class="modal-section-title">Interações</div><div class="attr-note">Ainda não conferidas pelo Capítulo 1.</div></div>`;
+    if (!ls.length)
+      return `<div class="modal-section interacoes"><div class="modal-section-title">Interações</div><div class="attr-note inter-nenhuma">Nenhuma interação registrada para este item.</div></div>`;
+    const tipos = INTER_TIPOS.filter(t => ls.some(x => x.kind === t)).concat([...new Set(ls.map(x => x.kind))].filter(t => !INTER_TIPOS.includes(t)));
+    const fonte = (src) => src.split(/;\s*/).filter(Boolean).map(u => /^https?:\/\//.test(u)
+      ? `<a class="inter-fonte" href="${esc(u)}" target="_blank" rel="noopener">wiki</a>` : `<span class="inter-fonte">${esc(u)}</span>`).join(" ");
+    const linhas = ls.map((x, i) => `<li class="inter-linha${i >= INTER_VISIVEIS ? " inter-resto" : ""}" data-tipo="${esc(x.kind)}">
+        <span class="inter-efeito ${/^não\b/.test(x.effect) ? "neg" : "pos"}">${esc(x.effect)}</span>
+        <span class="inter-corpo"><b class="inter-com">${esc(x.with)}</b> <span class="inter-tipo">· ${esc(INTER_ROTULO[x.kind] || x.kind)}</span>
+        <span class="inter-texto">${esc(x.text).replace(/`([^`]+)`/g, "<i>$1</i>")} ${fonte(x.source || "")}</span></span></li>`).join("");
+    return `<div class="modal-section interacoes${ls.length > INTER_VISIVEIS ? " recolhida" : ""}">
+      <div class="modal-section-title">Interações · ${ls.length}</div>
+      ${tipos.length > 1 ? `<div class="ficha-vistas inter-tipos" role="group" aria-label="Filtrar as interações por tipo">
+        <button type="button" class="ativo" data-inter="">Todas ${ls.length}</button>${tipos.map(t =>
+        `<button type="button" data-inter="${esc(t)}">${esc(INTER_ROTULO[t] || t)} ${ls.filter(x => x.kind === t).length}</button>`).join("")}</div>` : ""}
+      <ul class="inter-lista">${linhas}</ul>
+      ${ls.length > INTER_VISIVEIS ? `<button type="button" class="inter-mais">ver todas as ${ls.length}</button>` : ""}
+    </div>`;
+  })();
+
   // F13-T55 (Leo, 19/10/2026): o que fica atrás do "Exibir detalhes", na ordem dele
   const detalhesHtml = `${costHtml}${apexHtml}${masterworkHtml}${cashbackHtml}${modeNotesHtml}${tagsHtml}`;
 
@@ -20911,6 +20976,7 @@ function openModal(id) {
       ${attrHtml}${attrNoteHtml}
     </div>` : ""}
     ${abilitiesHtml ? `<div class="modal-section"><div class="modal-section-title">Habilidade</div>${abilitiesHtml}</div>` : ""}
+    ${interacoesHtml}
     ${recipeHtml}
     ${buildsIntoHtml}
     ${detalhesHtml.trim() || noteHtml || (item.abilities || []).some(a => a.mechanics)
@@ -20931,6 +20997,23 @@ function openModal(id) {
     modal.querySelectorAll("[data-receita]").forEach(x => x.classList.toggle("ativo", x === b));
     Som.play("catalog:tag_select");
   }));
+  // F13-T130: o tipo filtra (e mostra todas daquele tipo); "ver todas" abre o resto
+  const secInter = modal.querySelector(".interacoes");
+  if (secInter) {
+    secInter.querySelectorAll("[data-inter]").forEach(b => b.addEventListener("click", () => {
+      const t = b.dataset.inter;
+      secInter.querySelectorAll("[data-inter]").forEach(x => x.classList.toggle("ativo", x === b));
+      secInter.querySelectorAll(".inter-linha").forEach(li => { li.hidden = !!t && li.dataset.tipo !== t; });
+      secInter.classList.toggle("filtrada", !!t);
+      Som.play("catalog:tag_select");
+    }));
+    const mais = secInter.querySelector(".inter-mais");
+    if (mais) mais.addEventListener("click", () => {
+      const aberta = secInter.classList.toggle("recolhida") === false;
+      mais.textContent = aberta ? "ver menos" : `ver todas as ${item.interactions.length}`;
+      Som.play("catalog:tag_select");
+    });
+  }
   const btDetalhes = modal.querySelector(".ficha-detalhes-btn");
   if (btDetalhes) btDetalhes.addEventListener("click", () => {
     fichaEstado.detalhes = !fichaEstado.detalhes;
@@ -23633,6 +23716,8 @@ const EntradaLoja = (function () {
     var raiz = $("entrada");
     if (raiz) raiz.classList.add("fechada");
     document.documentElement.classList.remove("com-entrada");
+    var soltar = function () { document.documentElement.classList.remove("rajadas-paradas"); };   // F13-T131
+    if (window.requestIdleCallback) requestIdleCallback(soltar, { timeout: 1500 }); else setTimeout(soltar, 400);
     if (window.Dicas) Dicas.ver();   // F13-T101: a loja aberta é a primeira tela que a dica conhece
   }
   return { montar: montar, abrir: abrir, fechar: fechar, DUR: DUR, get FIM() { return ajustar(); }, REGIOES: REGIOES, regiao: function () { return regiao; } };
@@ -24020,7 +24105,7 @@ function init() {
   const entrada = document.getElementById("entrada");
   const entraDireto = /^#(item=|ficha=|apice$|animacoes$|build$|build-animacoes$|build-observacao$|build-apice$|build-exportar$|calc$|b=|build\/[0-9a-f]{6}$)/.test(location.hash);
   // F13-T100: o som da abertura baixa e decodifica enquanto a entrada está parada (nada toca antes do clique)
-  if (!entraDireto) { document.documentElement.classList.add("com-entrada"); EntradaLoja.montar(); Som.preparar("catalog:open"); }
+  if (!entraDireto) { document.documentElement.classList.add("com-entrada", "rajadas-paradas"); EntradaLoja.montar(); Som.preparar("catalog:open"); }
   document.querySelectorAll("[data-patch]").forEach(el => el.textContent = CATALOG.meta.patch || "");
   document.querySelectorAll("[data-atualizacao]").forEach(el => el.textContent = ATUALIZACAO);
   // F13-T101: o "?" mostra as dicas da tela de novo. O pointerdown não fecha a que ele mesmo abre:

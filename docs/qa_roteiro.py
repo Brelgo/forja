@@ -1040,6 +1040,53 @@ def checar_ficha(s, p):
     p.conta("ficha", "a escala de cada habilidade (F13-T127): a linha do catálogo com a base destacada, em todos os itens conferidos; o sem bloco diz \"ainda não conferida\"",
             esc["conferidos"] > 0 and not esc["erradas"] and esc["notaSem"] == esc["semBloco"] and "50% de Dano de Ataque base" in (esc["sterak"] or ""),
             "%s" % {k: (v[:8] if isinstance(v, list) else v) for k, v in esc.items()})
+    # F13-T130: as interações na ficha — todas as linhas do catálogo, o efeito no selo, com quem; [] diz "nenhuma"; null, "não conferidas"
+    inter = s.js("""(() => { const r = { erradas: [], com: 0, vazias: 0, nulas: 0, recolhidas: 0 };
+      CATALOG.items.forEach(it => {
+        openModal(it.slug); const sec = document.querySelector('#modal .interacoes');
+        const ls = it.interactions;
+        if (!sec) { r.erradas.push(it.namePt + ' (sem seção)'); return; }
+        if (ls === null || ls === undefined) { r.nulas++; if (!/Ainda não conferidas/.test(sec.textContent)) r.erradas.push(it.namePt); return; }
+        if (!ls.length) { r.vazias++; if (!sec.querySelector('.inter-nenhuma') || sec.querySelector('.inter-linha')) r.erradas.push(it.namePt); return; }
+        r.com++;
+        const lis = [...sec.querySelectorAll('.inter-linha')], vis = lis.filter(l => l.offsetParent).length;
+        const chips = [...sec.querySelectorAll('[data-inter]')].slice(1).map(b => +b.textContent.match(/\\d+$/)[0]);
+        const ok = lis.length === ls.length && sec.querySelector('.modal-section-title').textContent === 'Interações · ' + ls.length
+          && vis === Math.min(ls.length, INTER_VISIVEIS)
+          && (chips.length === 0 || chips.reduce((a, b) => a + b, 0) === ls.length)
+          && ls.every((x, i) => lis[i].querySelector('.inter-com').textContent === x.with && lis[i].querySelector('.inter-efeito').textContent === x.effect
+               && lis[i].dataset.tipo === x.kind && lis[i].querySelector('.inter-efeito').classList.contains(/^não\\b/.test(x.effect) ? 'neg' : 'pos'));
+        if (ls.length > INTER_VISIVEIS) r.recolhidas++;
+        if (!ok) r.erradas.push(it.namePt);
+      });
+      openModal(CATALOG.items.find(i => i.nameEn === "Guinsoo's Rageblade").slug);
+      document.querySelector('#modal .interacoes').scrollIntoView({ block: 'center' });
+      return r; })()""")
+    vis = "[...document.querySelectorAll('#modal .inter-linha')].filter(l => l.offsetParent).map(l => l.dataset.tipo)"
+    s.clicar("#modal .inter-mais", 0.4)
+    todas = s.js(vis)
+    s.clicar("#modal .inter-tipos [data-inter='Item']", 0.4)
+    so_item = s.js(vis)
+    s.clicar("#modal .inter-tipos [data-inter='']", 0.4)
+    de_volta = s.js(vis)
+    g = s.js("""(() => { const ls = CATALOG.items.find(i => i.nameEn === "Guinsoo's Rageblade").interactions;
+      return { n: ls.length, item: ls.filter(x => x.kind === 'Item').length }; })()""")
+    p.conta("ficha", "as interações de cada item (F13-T130): todas as linhas do catálogo, com o efeito e com quem; seis à vista e o resto no \"ver todas\"; [] diz \"nenhuma\"",
+            inter["com"] > 0 and not inter["erradas"] and inter["com"] + inter["vazias"] + inter["nulas"] == 225 and inter["recolhidas"] > 0,
+            "%s" % {k: (v[:8] if isinstance(v, list) else v) for k, v in inter.items()})
+    p.conta("ficha", "as interações da Guinsoo com cliques: \"ver todas\" mostra as %d; o chip Item deixa só as %d de item; Todas volta" % (g["n"], g["item"]),
+            len(todas) == g["n"] and so_item == ["Item"] * g["item"] and len(de_volta) == g["n"],
+            "todas %d · item %d (%s) · de volta %d" % (len(todas), len(so_item), sorted(set(so_item)), len(de_volta)))
+    # F13-T132: o "\n" escrito na descrição do cliente vira quebra de linha (na ficha), nunca aparece como texto
+    bn = s.js(r"""(() => { const r = { com: 0, ruins: [] };
+      CATALOG.items.filter(it => (it.abilities || []).some(a => /\\n/.test(a.description || ''))).forEach(it => {
+        r.com++; openModal(it.slug);
+        const ds = [...document.querySelectorAll('#modal .ability-desc')];
+        if (ds.some(d => d.textContent.includes('\\n')) || !ds.some(d => d.querySelector('br'))) r.ruins.push(it.namePt);
+      });
+      return r; })()""")
+    p.conta("ficha", "a quebra de linha da descrição (\"\\n\" do cliente) aparece como quebra, não como texto (F13-T132)",
+            bn["com"] > 0 and not bn["ruins"], "%d itens com \\n; ruins: %s" % (bn["com"], bn["ruins"][:5]))
     p.conta("ficha", "o clique numa peça abre a ficha dela", aberta and aberta != r["nome"], "abriu: %s" % aberta)
 
     # a troca para a conta de somar, lembrada depois de recarregar
@@ -5311,7 +5358,10 @@ def checar_entrada_loja(s, p):
             T.raios = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length;
             let ult = T.clique; const f = (t) => { T.q.push(t - ult); ult = t; if (t - T.clique < 2150 && !document.getElementById('entrada').classList.contains('fechada')) requestAnimationFrame(f); };   // F13-T102: só a abertura (fecha no fim do som)
             requestAnimationFrame(f);
-            setTimeout(() => { T.raiosMeio = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length; }, 900); }, true);
+            setTimeout(() => { T.raiosMeio = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length; }, 900);
+            const ent = document.getElementById('entrada');   // F13-T131: os raios no quadro do fechar (devem esperar o intervalo livre)
+            new MutationObserver((ms, ob) => { if (ent.classList.contains('fechada')) { ob.disconnect();
+              T.raiosFechar = document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length; } }).observe(ent, { attributes: true }); }, true);
           const o = HTMLMediaElement.prototype.play;
           HTMLMediaElement.prototype.play = function () {
             if (/open_catalog/.test(this.src) && T.play == null) { const a = this; T.play = performance.now(); T.rs = a.readyState;
@@ -5322,7 +5372,11 @@ def checar_entrada_loja(s, p):
           return { antes: T.criados.filter(x => c == null || x[0] < c).map(x => nome(x[1])),
                    noClique: T.criados.filter(x => c != null && x[0] >= c && x[0] < c + Math.max(1100, EntradaLoja.FIM)).length,   // F13-T102: até a abertura fechar
                    rs: T.rs == null ? null : T.rs, play: r(T.play), playing: r(T.playing),
-                   raios: T.raios, raiosMeio: T.raiosMeio,
+                   raios: T.raios, raiosMeio: T.raiosMeio, raiosFechar: T.raiosFechar,
+                   // F13-T131: o maior lote de áudios criados juntos (a menos de 3 ms um do outro), depois do clique
+                   lote: (() => { const ts = T.criados.filter(x => c != null && x[0] >= c).map(x => x[0]); let m = 0, i = 0;
+                     ts.forEach((t, j) => { while (t - ts[i] > 3) i++; m = Math.max(m, j - i + 1); }); return m; })(),
+                   depoisClique: T.criados.filter(x => c != null && x[0] >= c).length,
                    q: T.q.map(x => Math.round(x * 10) / 10) }; })()"""
 
         def abre_e_mede(rg, antigo=False):
@@ -5350,8 +5404,19 @@ def checar_entrada_loja(s, p):
             longos = [x for x in r["q"] if x > 34]
             r["pior"] = max(r["q"]) if r["q"] else None
             r["soma"] = round(sum(longos))
-            time.sleep(0.6)
-            r["raiosDepois"] = s.js("document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length")
+            fim_r = time.time() + 3
+            while True:   # F13-T131: os raios voltam no primeiro intervalo livre (até 1,5 s)
+                r["raiosDepois"] = s.js("document.getAnimations().filter(a => a.animationName === 'burst-spin' && a.playState === 'running').length")
+                if r["raiosDepois"] == 225 or time.time() > fim_r:
+                    break
+                time.sleep(0.2)
+            fim_r = time.time() + 6
+            while time.time() < fim_r:   # o pré-carregamento termina (em lotes)
+                if s.js("window.__t100.criados.length") >= 40:
+                    break
+                time.sleep(0.2)
+            time.sleep(0.5)
+            r.update({k: v for k, v in s.js(LE_T100).items() if k in ("lote", "depoisClique")})
             return r
 
         try:
@@ -5379,16 +5444,22 @@ def checar_entrada_loja(s, p):
             # (u) o clique não baixa os outros ~80 sons junto com o da abertura: eles ficam para depois dela
             n_clique = [r["noClique"] for rg in REGIOES_ENTRADA for r in com[rg]]
             p.conta("entrada da loja", "no clique, nenhum outro som começa a baixar junto com o da abertura (o resto baixa depois dela)",
-                    max(n_clique) == 0 and all(r["noClique"] > 40 for rg in REGIOES_ENTRADA for r in sem[rg]),
+                    max(n_clique) == 0 and all(r["noClique"] > 0 for rg in REGIOES_ENTRADA for r in sem[rg]),   # F13-T131: em lotes, o antigo cria ~12 na abertura
                     "áudios criados entre o clique e o fim da abertura: %s (o comportamento antigo, na mesma rodada: %s)"
                     % (n_clique, [r["noClique"] for rg in REGIOES_ENTRADA for r in sem[rg]]))
 
             # (v) por baixo da entrada, os raios dos cards não giram (eram 225 camadas animadas a cada quadro da câmera);
             # depois de fechada, voltam a girar — o efeito do hover dos cards fica intacto
             raios = [(r["raios"], r["raiosMeio"], r["raiosDepois"]) for rg in REGIOES_ENTRADA for r in com[rg]]
-            p.conta("entrada da loja", "durante a abertura a loja escondida não gira os raios dos cards; ao fechar, os 225 voltam",
-                    all(a == 0 and b == 0 and d == 225 for a, b, d in raios),
-                    "[no clique, no meio da abertura, depois de fechada] por abertura: %s" % raios)
+            raios = [(r["raios"], r["raiosMeio"], r.get("raiosFechar"), r["raiosDepois"]) for rg in REGIOES_ENTRADA for r in com[rg]]
+            p.conta("entrada da loja", "durante a abertura a loja escondida não gira os raios dos cards; no quadro do fechar ainda não (F13-T131); logo depois, os 225 voltam",
+                    all(a == 0 and b == 0 and f == 0 and d == 225 for a, b, f, d in raios),
+                    "[no clique, no meio da abertura, no fechar, depois] por abertura: %s" % raios)
+            # F13-T131: os ~80 sons baixam em lotes pequenos (nunca mais de 6 criados juntos); o antigo criava todos de uma vez
+            lotes = [(r["lote"], r["depoisClique"]) for rg in REGIOES_ENTRADA for r in com[rg]]
+            p.conta("entrada da loja", "depois da abertura, os sons são criados em lotes de no máximo 6 (F13-T131), e todos chegam",
+                    all(l <= 6 and n >= 40 for l, n in lotes),
+                    "[maior lote, criados depois do clique] por abertura: %s" % lotes)
 
             # (w) os quadros: nenhuma região passa do teto no melhor de duas aberturas (medido no Chrome sem janela —
             # que aqui usa a placa de vídeo —, com folga sobre o consertado: pior 60–130 ms), e os quadros longos
