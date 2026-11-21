@@ -9,7 +9,8 @@ window.NOTAS = {
    "aj": [
     "todos os 225 itens já dizem com que atributo cada habilidade escala, e o Update Tracker não conta mais troca só de palavras como mudança",
     "a abertura da loja ficou mais lisa logo depois que a porta se abre",
-    "as habilidades que mostravam \"\\n\" escrito agora quebram a linha"
+    "as habilidades que mostravam \"\\n\" escrito agora quebram a linha",
+    "o balão \"Novidade\" agora marca também as interações, na ficha de cada item"
    ],
    "rem": []
   },
