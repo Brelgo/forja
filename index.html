@@ -3481,6 +3481,24 @@ body.nucleo .grid::before {
 .plano-ficha .mesa-btn:disabled { opacity: .5; cursor: default; }
 .plano-ficha .mesa-btn.perigo { color: var(--loja-cera); border-color: rgba(141,44,34,.5); }
 .pl-nota { font-size: 12px; color: var(--loja-tinta-suave); font-style: italic; margin: 10px 0 0; }
+/* F13-T137: os planos de Selva — os dois botões de criar, a ficha com lado e tipo, os dois minimapas */
+.planos-novos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.planos-novos .mesa-btn { position: relative; }
+.pl-tag.az { color: #9cc7ff; border-color: rgba(79,163,255,.55); }
+.pl-tag.vm { color: #f0a0a4; border-color: rgba(224,82,90,.55); }
+.plano-ficha .pl-tag.az { color: #285f9c; border-color: rgba(40,95,156,.5); }
+.plano-ficha .pl-tag.vm { color: #8d2c22; border-color: rgba(141,44,34,.5); }
+.pl-opcoes { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: center; margin: 12px 0 4px; font-size: 13px; color: var(--loja-tinta-suave); }
+.pl-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.pl-chip { padding: 3px 10px; border-radius: 2px; cursor: pointer; font: 14px var(--loja-texto); color: var(--loja-tinta);
+  background: rgba(255,255,255,.22); border: 1px solid rgba(90,70,48,.4); }
+.pl-chip:hover:not(:disabled), .pl-chip:focus-visible { border-color: var(--loja-cera); }
+.pl-chip.on { background: linear-gradient(#a0702a, #7a5216); border-color: var(--loja-latao-escuro); color: #fff4d8; }
+.pl-chip:disabled { opacity: .4; cursor: default; }
+.pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 460px; margin: 12px 0; }
+.pl-par figure { margin: 0; }
+.pl-par figcaption { font-size: 12.5px; color: var(--loja-tinta-suave); margin-top: 4px; }
+.pl-mini .mr-n { font: 700 4.2px var(--loja-texto); fill: #fff; text-anchor: middle; }
 .mesa-voltar { margin-right: 10px; }
 /* F13-T130: as interações */
 .interacoes .inter-tipos { margin: 0 0 8px; flex-wrap: wrap; }
@@ -4802,6 +4820,19 @@ body.ac-brilho .novidade { box-shadow: 0 1px 2px rgba(0,0,0,.6); }
 .mesa-ferra:disabled { opacity: .45; cursor: default; }
 /* F13-T112: a sentinela na mão (erguida, com sombra), a que pousa (um quique) e o fantasma fora do mapa */
 .mesa-janela.sobre-marca { cursor: grab; }
+/* F13-T137: no plano de Selva o clique marca a rota (a mira), e em cima de uma marca o clique a tira */
+#mesa[data-tipo="selva"] .mesa-janela { cursor: crosshair; }
+#mesa[data-tipo="selva"] .mesa-janela.sobre-marca { cursor: pointer; }
+#mesa[data-tipo="selva"] .mesa-janela.arrastando { cursor: grabbing; }
+#mesa[data-tipo="selva"] #mesa-ferr-visao, #mesa:not([data-tipo="selva"]) #mesa-ferr-selva, #mesa[data-tipo="selva"] .mesa-nevoa { display: none; }
+.mr-marca .mm-corpo { transform-box: fill-box; transform-origin: center; }
+.mr-marca.assenta .mm-corpo { animation: mm-assenta .32s cubic-bezier(.3,1.7,.5,1); }
+.mr-num { font: 700 12px var(--loja-texto); fill: #fff; text-anchor: middle; pointer-events: none; }
+.mr-rot { font: 700 12px var(--loja-gravado); letter-spacing: .06em; fill: #ffd9b0; stroke: #1a0d04; stroke-width: 3px; paint-order: stroke; }
+.mesa-selva-info { margin: 0 0 8px; color: var(--forja-titulo); font: 14px var(--loja-texto); }
+#mesa-rota-limpar { margin-bottom: 16px; }
+body.ac-movimento .mr-marca .mm-corpo { animation: none; }
+@media (prefers-reduced-motion: reduce) { .mr-marca .mm-corpo { animation: none; } }
 .mesa-janela.levando, .mesa-janela.levando * { cursor: grabbing; }
 .mm-sent .mm-corpo { transform-box: fill-box; transform-origin: center; transition: transform .14s cubic-bezier(.3,1.6,.5,1); }
 .mm-sent.erguida .mm-corpo { transform: scale(1.3) translateY(-3px); filter: drop-shadow(0 8px 6px rgba(0,0,0,.6)); }
@@ -10719,7 +10750,7 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
      mapa de Summoner's Rift; as marcas (as próximas tarefas) ficam na build aberta. -->
 <div id="view-mapa" class="mapa-view hidden" data-tela="lista">
   <!-- F13-T135 (Leo, 22/11/2026, a amostra da F13-T134): a biblioteca de planos — a aba Mapa abre na lista (Minhas;
-       Publicadas na F13-T138) e na ficha do plano escolhido; "Abrir na mesa" leva à mesa de guerra, que edita esse plano -->
+       Publicadas na F13-T139) e na ficha do plano escolhido; "Abrir na mesa" leva à mesa de guerra, que edita esse plano -->
   <section id="planos" class="mesa planos" aria-label="Os planos de mapa">
     <div class="mesa-cab">
       <h2 class="mesa-tit">Planos de mapa</h2>
@@ -10732,7 +10763,11 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
             <button type="button" class="planos-aba ativa" role="tab" aria-selected="true">Minhas</button>
             <button type="button" class="planos-aba" role="tab" aria-selected="false" disabled title="Em breve: os planos publicados">Publicadas</button>
           </div>
-          <button type="button" id="plano-novo" class="mesa-btn cheio">+ Novo plano</button>
+        </div>
+        <!-- F13-T137: o plano nasce de Visão (as sentinelas) ou de Selva (a rota de farm e a primeira rota) -->
+        <div class="planos-novos">
+          <button type="button" id="plano-novo" class="mesa-btn cheio">+ Plano de visão</button>
+          <button type="button" id="plano-novo-selva" class="mesa-btn cheio">+ Plano de selva<span class="novidade" title="Adição recente do Montador: os planos de Selva, com a rota de farm e a primeira rota">Novidade</span></button>
         </div>
         <input type="search" id="planos-q" class="planos-q" placeholder="Buscar por nome ou ID" aria-label="Buscar plano">
         <div id="planos-lista" class="planos-lista" role="listbox" aria-label="Os seus planos"></div>
@@ -10747,10 +10782,11 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <span class="mesa-leg">o mapa de Summoner's Rift — visão, a primeira volta da selva e o farm</span>
       <span id="mesa-dona" class="mesa-dona"></span>
     </div>
-    <div class="mesa-abas" role="tablist" aria-label="O que o mapa mostra">
-      <button type="button" class="mesa-aba ativa" role="tab" aria-selected="true">Visão</button>
-      <button type="button" class="mesa-aba" role="tab" aria-selected="false" disabled title="Em breve: a primeira volta da selva">Selva</button>
-      <button type="button" class="mesa-aba" role="tab" aria-selected="false" disabled title="Em breve: as rotas de farm">Farm</button>
+    <!-- F13-T137: o plano de Visão tem a aba Visão; o de Selva, a rota de farm e a primeira rota -->
+    <div id="mesa-abas" class="mesa-abas" role="tablist" aria-label="O que o mapa mostra">
+      <button type="button" class="mesa-aba ativa" role="tab" aria-selected="true" data-aba="visao">Visão</button>
+      <button type="button" class="mesa-aba" role="tab" aria-selected="false" data-aba="farm" hidden>Rota de farm</button>
+      <button type="button" class="mesa-aba" role="tab" aria-selected="false" data-aba="primeira" hidden>Primeira rota</button>
     </div>
     <div class="mesa-palco">
       <div class="mesa-moldura">
@@ -10761,6 +10797,7 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       </div>
       <div class="mesa-ferr">
         <!-- F13-T108: as sentinelas. O raio e o ícone vêm do catálogo (Sentinela Invisível, Sentinela de Controle; a Alteração Vidente, F13-T112) -->
+        <div id="mesa-ferr-visao">
         <div class="mesa-ferr-tit">Pôr no mapa</div>
         <div id="mesa-ferras" class="mesa-ferras" aria-label="Arraste para o mapa"></div>
         <p id="mesa-pode" class="mesa-dica"></p>
@@ -10768,6 +10805,15 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
         <label class="mesa-opt"><input type="checkbox" id="mesa-nevoa-on"> Névoa de guerra</label>
         <label class="mesa-opt"><input type="checkbox" id="mesa-raio-on"> Raio em ciano</label>
         <p id="mesa-conta" class="mesa-conta" aria-live="polite"></p>
+        </div>
+        <!-- F13-T137: a rota da selva — marcas numeradas, um clique por ponto -->
+        <div id="mesa-ferr-selva">
+          <div class="mesa-ferr-tit">A rota</div>
+          <p id="mesa-selva-info" class="mesa-selva-info"></p>
+          <p class="mesa-dica">Clique no mapa para pôr a próxima marca; clique numa marca para tirá-la, e as seguintes se renumeram. No teclado, Enter põe uma no meio e Delete tira a última.</p>
+          <p id="mesa-rota-conta" class="mesa-conta" aria-live="polite"></p>
+          <button type="button" id="mesa-rota-limpar" class="mesa-btn">Limpar esta rota</button>
+        </div>
         <div class="mesa-ferr-tit">O mapa</div>
         <p class="mesa-dica">A roda do mouse aproxima e afasta, em volta do ponto onde ele está. Arraste para mover.</p>
         <button type="button" id="mesa-inteiro" class="mesa-btn">Mapa inteiro</button>
@@ -11598,7 +11644,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.136";
+const ATUALIZACAO = "13.137";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -11823,6 +11869,15 @@ function normMapa(m) {
     && v.x >= lim[0] && v.x <= lim[2] && v.z >= lim[1] && v.z <= lim[3])
     .slice(0, MAPA_MAX).map(v => ({ t: v.t, x: Math.round(Number(v.x)), z: Math.round(Number(v.z)) }));
   return { visao };
+}
+// F13-T137: a rota da selva — pontos em unidades do jogo, na ordem (o número da marca é a posição)
+const PLANO_ROTA_MAX = 20, ROTA_COR = { azul: "#4fa3ff", vermelho: "#e0525a" }, ROTA_GANK = "#ff7a1e";
+const PLANO_LADOS = ["azul", "vermelho"], PLANO_JEITOS = ["full", "gank"], PLANO_GANKS = { topo: "Topo", meio: "Meio", robo: "Robô" };
+function normRota(l) {
+  const lim = window.MAPA ? [MAPA.min[0], MAPA.min[1], MAPA.min[0] + MAPA.nx * MAPA.celula, MAPA.min[1] + MAPA.nz * MAPA.celula] : [0, 0, 15000, 15000];
+  return (Array.isArray(l) ? l : []).filter(v => v && Number.isFinite(Number(v.x)) && Number.isFinite(Number(v.z))
+    && v.x >= lim[0] && v.x <= lim[2] && v.z >= lim[1] && v.z <= lim[3])
+    .slice(0, PLANO_ROTA_MAX).map(v => ({ x: Math.round(Number(v.x)), z: Math.round(Number(v.z)) }));
 }
 function normHabilidades(h) {
   const out = Array(HAB_NIVEIS_TOPO).fill(null);
@@ -14462,6 +14517,12 @@ const Mesa = (function () {
   // F13-T135: o plano é o escolhido na biblioteca (Planos); a mesa só lê e grava as sentinelas dele
   let plano = null;
   function marcas() { return normMapa(Planos.atual()).visao.slice(); }
+  // F13-T137: o plano de Selva — a rota de farm e a primeira rota, marcas numeradas postas com um clique e tiradas
+  // clicando de novo, a numeração se refaz (Leo, 15/10/2026); o mapa fica fixo, cada lado no seu lugar
+  let aba = "visao";
+  const NOME_ABA = { farm: "rota de farm", primeira: "primeira rota" };
+  const selva = () => Planos.atual().tipo === "selva";
+  function rota() { const p = Planos.atual(); return p.tipo === "selva" && p.rotas[aba] ? p.rotas[aba].slice() : []; }
   function guardarPlano() { Planos.gravarVisao(plano.visao); }
   function vivas() {
     const l = marcas();
@@ -14614,7 +14675,7 @@ const Mesa = (function () {
     }
     g.putImageData(im, 0, 0);
   }
-  function nevoaLigada() { return !!G && el("mesa-nevoa-on").checked; }
+  function nevoaLigada() { return !!G && el("mesa-nevoa-on").checked && !selva(); }   // F13-T137: a Selva não tem névoa
   function quadro(t) {
     laco = 0;
     if (!montada || el("view-mapa").classList.contains("hidden") || el("view-mapa").dataset.tela !== "mesa" || !nevoaLigada()) return;
@@ -14655,7 +14716,70 @@ const Mesa = (function () {
   }
 
   // ---- as marcas por cima (fora do zoom: o ícone fica do mesmo tamanho; o raio cresce com o mapa)
+  // F13-T137: a rota — a linha de marca em marca e os números; no gank, a última é o desvio para a lane (tracejado, em brasa)
+  function desenharRota() {
+    const svg = el("mesa-marcas"), L = lado(), p = Planos.atual(), l = rota(), cor = ROTA_COR[p.lado] || ROTA_COR.azul;
+    const gank = aba === "primeira" && p.jeito === "gank" && l.length > 1;
+    const pts = l.map(v => { const [px, py] = paraTela(v.x, v.z); return [x + px * z, y + py * z]; });
+    let h = "";
+    for (let i = 1; i < pts.length; i++) {
+      const fim = gank && i === pts.length - 1;
+      h += '<line class="mr-linha' + (fim ? " gank" : "") + '" x1="' + pts[i - 1][0].toFixed(1) + '" y1="' + pts[i - 1][1].toFixed(1) + '" x2="' + pts[i][0].toFixed(1)
+        + '" y2="' + pts[i][1].toFixed(1) + '" stroke="' + (fim ? ROTA_GANK : cor) + '" stroke-width="3" stroke-linecap="round" opacity=".9"' + (fim ? ' stroke-dasharray="8 6"' : "") + "/>";
+    }
+    pts.forEach(([sx, sy], i) => {
+      const fim = gank && i === pts.length - 1;
+      h += '<g class="mr-marca' + (fim ? " gank" : "") + (i === assentaI ? " assenta" : "") + '" transform="translate(' + sx.toFixed(1) + "," + sy.toFixed(1) + ')">'
+        + '<g class="mm-corpo"><circle r="11" fill="' + (fim ? ROTA_GANK : cor) + '" stroke="#1a0d04" stroke-width="2"/><text class="mr-num" dy="4">' + (i + 1) + "</text></g>"
+        + (fim ? '<text class="mr-rot" x="15" dy="4">gank · ' + esc(PLANO_GANKS[p.gank].toLowerCase()) + "</text>" : "") + "</g>";
+    });
+    svg.setAttribute("viewBox", "0 0 " + L + " " + L);
+    svg.innerHTML = h;
+    el("mesa-rota-conta").textContent = l.length ? l.length + (l.length === 1 ? " marca" : " marcas") + " na " + NOME_ABA[aba] : "Nenhuma marca na " + NOME_ABA[aba] + " ainda.";
+  }
+  function porNaRota(cx, cy) {
+    if (podeMexer()) return;
+    const l = rota();
+    if (l.length >= PLANO_ROTA_MAX) { el("mesa-rota-conta").textContent = "No máximo " + PLANO_ROTA_MAX + " marcas por rota."; return; }
+    const lugar = noChao(...doMapa((cx - x) / z, (cy - y) / z));
+    if (!lugar) { el("mesa-rota-conta").textContent = "Aí não: clique num ponto do chão."; return; }
+    l.push({ x: Math.round(lugar[0]), z: Math.round(lugar[1]) });
+    Planos.gravarRota(aba, l);
+    assentar(l.length - 1);
+    desenharMarcas();
+  }
+  function tirarDaRota(i) {
+    const l = rota();
+    if (i < 0 || i >= l.length) return;
+    l.splice(i, 1);
+    Planos.gravarRota(aba, l);
+    assentaI = -1;
+    desenharMarcas();
+  }
+  function clicarRota(cx, cy) { const i = marcaEm(cx, cy); if (i >= 0) tirarDaRota(i); else porNaRota(cx, cy); }
+  function assentar(i) {
+    if (reduzido()) return;
+    assentaI = i;
+    clearTimeout(assentaTimer);
+    assentaTimer = setTimeout(() => { assentaI = -1; }, 340);
+  }
+  function desenharAbas() {
+    const sv = selva();
+    if (!sv) aba = "visao"; else if (!NOME_ABA[aba]) aba = "farm";
+    el("mesa").dataset.tipo = sv ? "selva" : "visao";
+    document.querySelectorAll("#mesa-abas [data-aba]").forEach(b => {
+      b.hidden = (b.dataset.aba === "visao") === sv;
+      const at = b.dataset.aba === aba;
+      b.classList.toggle("ativa", at); b.setAttribute("aria-selected", String(at));
+    });
+    if (sv) {
+      const p = Planos.atual();
+      el("mesa-selva-info").innerHTML = "Lado <b>" + (p.lado === "vermelho" ? "vermelho" : "azul") + "</b> · "
+        + (p.jeito === "gank" ? "gank no <b>" + esc(PLANO_GANKS[p.gank].toLowerCase()) + "</b>" : "<b>full clear</b>");
+    }
+  }
   function desenharMarcas() {
+    if (selva()) { desenharRota(); return; }
     const svg = el("mesa-marcas"), L = lado(), raioOn = el("mesa-raio-on").checked;
     let h = "";
     vivas().forEach((v, i) => {
@@ -14680,7 +14804,7 @@ const Mesa = (function () {
   }
   // a sentinela debaixo de um ponto da janela (até 12 px na tela), a de cima primeiro
   function marcaEm(cx, cy) {
-    const l = marcas();
+    const l = selva() ? rota() : marcas();   // F13-T137: no plano de Selva, as marcas da rota
     for (let i = l.length - 1; i >= 0; i--) {
       const [px, py] = paraTela(l[i].x, l[i].z);
       if (Math.hypot(x + px * z - cx, y + py * z - cy) <= 12) return i;
@@ -14816,7 +14940,7 @@ const Mesa = (function () {
     // na janela: em cima de uma sentinela, pegá-la (com o Editar); fora delas, mover o mapa
     janela.addEventListener("pointerdown", (ev) => {
       if (ev.button !== 0 || arraste) return;
-      const r = janela.getBoundingClientRect(), i = marcaEm(ev.clientX - r.left, ev.clientY - r.top);
+      const r = janela.getBoundingClientRect(), sv = selva(), i = sv ? -1 : marcaEm(ev.clientX - r.left, ev.clientY - r.top);
       if (i >= 0 && !podeMexer()) {
         ev.preventDefault();
         arraste = { id: ev.pointerId, marca: Object.assign({}, marcas()[i]), i: i, fora: false, noMapa: true, alvo: janela };
@@ -14825,9 +14949,9 @@ const Mesa = (function () {
         desenharMarcas();
         return;
       }
-      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y };
+      arraste = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: x, y: y, clique: sv };   // F13-T137: na Selva, o clique marca
       janela.setPointerCapture(ev.pointerId);
-      janela.classList.add("arrastando");
+      if (!sv) janela.classList.add("arrastando");
     });
     janela.addEventListener("pointermove", (ev) => {
       if (!arraste) {   // a mão muda em cima de uma sentinela: ela se pega
@@ -14837,6 +14961,10 @@ const Mesa = (function () {
       }
       if (ev.pointerId !== arraste.id || arraste.alvo !== undefined && arraste.alvo !== janela) return;
       if (arraste.marca) { levar(ev); return; }
+      if (arraste.clique) {   // F13-T137: andou mais que um tremor — é arrasto, não clique
+        if (Math.hypot(ev.clientX - arraste.px, ev.clientY - arraste.py) <= 4) return;
+        arraste.clique = false; janela.classList.add("arrastando");
+      }
       x = arraste.x + ev.clientX - arraste.px;
       y = arraste.y + ev.clientY - arraste.py;
       aplicar();
@@ -14844,7 +14972,9 @@ const Mesa = (function () {
     const solta = (ev) => {
       if (!arraste || ev.pointerId !== arraste.id || arraste.alvo !== undefined && arraste.alvo !== janela) return;
       if (arraste.marca) { largar(); return; }
+      const clique = arraste.clique && ev.type === "pointerup";
       arraste = null; janela.classList.remove("arrastando");
+      if (clique && selva()) { const r = janela.getBoundingClientRect(); clicarRota(ev.clientX - r.left, ev.clientY - r.top); }
     };
     janela.addEventListener("pointerup", solta);
     janela.addEventListener("pointercancel", solta);
@@ -14892,10 +15022,24 @@ const Mesa = (function () {
       else if (ev.key === "ArrowRight") { x -= d; aplicar(); }
       else if (ev.key === "ArrowUp") { y += d; aplicar(); }
       else if (ev.key === "ArrowDown") { y -= d; aplicar(); }
+      else if (selva() && ev.key === "Enter") porNaRota(L / 2, L / 2);                       // F13-T137
+      else if (selva() && (ev.key === "Delete" || ev.key === "Backspace")) tirarDaRota(rota().length - 1);
       else return;
       ev.preventDefault();
     });
     el("mesa-inteiro").addEventListener("click", inteiro);
+    // F13-T137: as abas do plano de Selva (a rota de farm, a primeira rota) e o limpar da rota
+    el("mesa-abas").addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-aba]");
+      if (!b || b.hidden || b.dataset.aba === aba) return;
+      aba = b.dataset.aba; desenharAbas(); desenharMarcas();
+      Som.play("catalog:tag_select");
+    });
+    el("mesa-rota-limpar").addEventListener("click", () => {
+      const n = rota().length;
+      if (!n || !confirm("Tirar as " + n + (n === 1 ? " marca" : " marcas") + " da " + NOME_ABA[aba] + "?")) return;
+      Planos.gravarRota(aba, []); desenharMarcas();
+    });
     addEventListener("resize", () => { if (!el("view-mapa").classList.contains("hidden")) aplicar(); });
   }
   // ao abrir a aba (e a cada render da build, com a aba aberta): o plano é da mesa, não da build
@@ -14904,6 +15048,7 @@ const Mesa = (function () {
     if (el("view-mapa").classList.contains("hidden") || el("view-mapa").dataset.tela !== "mesa") return;   // F13-T135: na lista, a mesa dorme
     if (!montada) montar();
     el("mesa-dona").textContent = "o plano «" + Planos.atual().nome + "» — à parte das builds, guardado neste navegador";
+    desenharAbas();   // F13-T137
     desenharFerras();
     // a aba que volta: a névoa já assentada se o plano mudou; o mesmo, ela segue de onde estava
     const chave = JSON.stringify(marcas());
@@ -14914,12 +15059,13 @@ const Mesa = (function () {
   return { mostrar: mostrar, inteiro: inteiro, estado: function () { return { z: z, x: x, y: y, lado: lado() }; },
            visao: visao, raio: raioDe, paraTela: paraTela, livre: function (t) { return ferraDoCatalogo(t).livre; },
            nevoa: function () { return { ativo: ativo > 0 || sujo, laco: !!laco, caixa: caixa }; },
-           terreno: function () { return Object.assign({ imagem: imagemDoTerreno() }, terreno); }, plano: function () { return { visao: marcas() }; }, moita: function (i) { return MOITA[i]; }, tipo: function (i) { return TIPO[i]; } };
+           terreno: function () { return Object.assign({ imagem: imagemDoTerreno() }, terreno); }, plano: function () { const p = Planos.atual(); return { visao: marcas(), tipo: p.tipo, rotas: { farm: p.rotas.farm.slice(), primeira: p.rotas.primeira.slice() } }; },
+           aba: function () { return aba; }, moita: function (i) { return MOITA[i]; }, tipo: function (i) { return TIPO[i]; } };
 })();
 
 // ---------------- F13-T135: os planos de mapa (a biblioteca na aba Mapa) ----------------
 // Leo, 02/11/2026: "publicado totalmente à parte e exclusivo do site, não atrelado às builds"; 22/11: a amostra da
-// F13-T134. Um plano tem nome, descrição e as sentinelas (Visão); os de Selva (as rotas) chegam na F13-T136. Fica
+// F13-T134. Um plano tem nome, descrição e as sentinelas (Visão), ou as rotas (Selva, F13-T137). Fica
 // no navegador (mesa.planos). Na primeira vez, o plano único da mesa (F13-T119, mesa.plano) e as sentinelas que as
 // builds guardavam (F13-T108, build.mapa) viram planos — uma vez só (a lista `migrou` lembra o que já veio).
 const Planos = (function () {
@@ -14933,7 +15079,12 @@ const Planos = (function () {
   function norm(p) {
     p = p || {};
     return { id: String(p.id || novoId()), nome: String(p.nome || "Plano sem nome").trim().slice(0, 60) || "Plano sem nome",
-             desc: String(p.desc || "").slice(0, 400), tipo: "visao", visao: normMapa(p).visao, de: p.de === "build" || p.de === "mesa" ? p.de : null,
+             desc: String(p.desc || "").slice(0, 400), tipo: p.tipo === "selva" ? "selva" : "visao", visao: normMapa(p).visao,
+             // F13-T137: o de Selva — o lado, full clear ou gank (e em qual lane), e as duas rotas
+             lado: PLANO_LADOS.includes(p.lado) ? p.lado : "azul", jeito: PLANO_JEITOS.includes(p.jeito) ? p.jeito : "full",
+             gank: ["topo", "meio", "robo"].includes(p.gank) ? p.gank : "topo",
+             rotas: { farm: normRota(p.rotas && p.rotas.farm), primeira: normRota(p.rotas && p.rotas.primeira) },
+             de: p.de === "build" || p.de === "mesa" ? p.de : null,
              criado: Number(p.criado) || agora(), atualizado: Number(p.atualizado) || Number(p.criado) || agora() };
   }
   function carregar() {
@@ -14976,9 +15127,9 @@ const Planos = (function () {
     if (mudou) gravar();
   }
   function achar(id) { return carregar().lista.find(p => p.id === id) || null; }
-  function criar(nome) {
+  function criar(nome, tipo) {
     carregar();
-    const p = norm({ nome: nome });
+    const p = norm({ nome: nome, tipo: tipo });
     st.lista.unshift(p); st.ativo = p.id; gravar();
     return p;
   }
@@ -14988,12 +15139,51 @@ const Planos = (function () {
     const p = atual();
     p.visao = normMapa({ visao: v }).visao; p.atualizado = agora(); gravar();
   }
-  function contaTxt(p) { const n = p.visao.length; return n ? n + (n === 1 ? " sentinela" : " sentinelas") : "sem sentinelas"; }
-  function miniatura(p) {
+  function gravarRota(qual, l) {   // F13-T137
+    const p = atual();
+    if (p.tipo !== "selva" || !p.rotas[qual]) return;
+    p.rotas[qual] = normRota(l); p.atualizado = agora(); gravar();
+  }
+  const marcasTxt = (n) => n + (n === 1 ? " marca" : " marcas");
+  function contaTxt(p) {
+    if (p.tipo === "selva") return "rota de farm: " + marcasTxt(p.rotas.farm.length) + " · primeira rota: " + marcasTxt(p.rotas.primeira.length);
+    const n = p.visao.length; return n ? n + (n === 1 ? " sentinela" : " sentinelas") : "sem sentinelas";
+  }
+  function tags(p) {
+    if (p.tipo !== "selva") return '<span class="pl-tag">Visão</span>';
+    return '<span class="pl-tag">Selva</span> <span class="pl-tag ' + (p.lado === "vermelho" ? 'vm">Vermelho' : 'az">Azul') + "</span> "
+      + '<span class="pl-tag">' + (p.jeito === "gank" ? "Gank · " + PLANO_GANKS[p.gank].toLowerCase() : "Full clear") + "</span>";
+  }
+  // a miniatura: as sentinelas (Visão) ou uma rota (Selva: a de farm, ou a primeira quando a de farm está vazia)
+  function miniatura(p, qual, numeros) {
     const G = window.MAPA, LX = G ? G.nx * G.celula : 15000, LZ = G ? G.nz * G.celula : 15000, X0 = G ? G.min[0] : 0, Z0 = G ? G.min[1] : 0;
-    return '<svg class="pl-mini" viewBox="0 0 100 100" aria-hidden="true"><image href="assets/mapa/base_baron1.png" width="100" height="100" class="pl-mini-img"/>'
-      + p.visao.map(v => '<circle cx="' + ((v.x - X0) / LX * 100).toFixed(1) + '" cy="' + ((1 - (v.z - Z0) / LZ) * 100).toFixed(1)
-        + '" r="2.6" fill="' + (COR[v.t] || "#e8c35a") + '" stroke="#1c120b" stroke-width=".8"/>').join("") + "</svg>";
+    const pt = (v) => [((v.x - X0) / LX * 100).toFixed(1), ((1 - (v.z - Z0) / LZ) * 100).toFixed(1)];
+    let h = "";
+    if (p.tipo === "selva") {
+      qual = qual || (p.rotas.farm.length || !p.rotas.primeira.length ? "farm" : "primeira");
+      const l = p.rotas[qual].map(pt), cor = ROTA_COR[p.lado] || ROTA_COR.azul, gank = qual === "primeira" && p.jeito === "gank" && l.length > 1;
+      for (let i = 1; i < l.length; i++) {
+        const fim = gank && i === l.length - 1;
+        h += '<line x1="' + l[i - 1][0] + '" y1="' + l[i - 1][1] + '" x2="' + l[i][0] + '" y2="' + l[i][1] + '" stroke="' + (fim ? ROTA_GANK : cor) + '" stroke-width="1.4"' + (fim ? ' stroke-dasharray="2.5 1.8"' : "") + "/>";
+      }
+      l.forEach(([cx, cy], i) => {
+        const fim = gank && i === l.length - 1;
+        h += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (numeros ? 3.4 : 2.4) + '" fill="' + (fim ? ROTA_GANK : cor) + '" stroke="#1c120b" stroke-width=".7"/>'
+          + (numeros ? '<text class="mr-n" x="' + cx + '" y="' + (Number(cy) + 1.5).toFixed(1) + '">' + (i + 1) + "</text>" : "");
+      });
+    } else {
+      h = p.visao.map(v => { const [cx, cy] = pt(v); return '<circle cx="' + cx + '" cy="' + cy + '" r="2.6" fill="' + (COR[v.t] || "#e8c35a") + '" stroke="#1c120b" stroke-width=".8"/>'; }).join("");
+    }
+    return '<svg class="pl-mini" viewBox="0 0 100 100" aria-hidden="true"><image href="assets/mapa/base_baron1.png" width="100" height="100" class="pl-mini-img"/>' + h + "</svg>";
+  }
+  const chip = (campo, valor, rot, on, des) => '<button type="button" class="pl-chip' + (on ? " on" : "") + '" data-pl-campo="' + campo + '" data-valor="' + valor + '" aria-pressed="' + on + '"'
+    + (des ? " disabled" : "") + ">" + rot + "</button>";
+  function fichaSelva(p) {
+    return '<div class="pl-opcoes"><span>Lado</span><span class="pl-chips">' + chip("lado", "azul", "Azul", p.lado === "azul") + chip("lado", "vermelho", "Vermelho", p.lado === "vermelho") + "</span>"
+      + '<span>Tipo</span><span class="pl-chips">' + chip("jeito", "full", "Full clear", p.jeito === "full") + chip("jeito", "gank", "Gank", p.jeito === "gank") + "</span>"
+      + '<span>Gank em</span><span class="pl-chips">' + Object.keys(PLANO_GANKS).map(g => chip("gank", g, PLANO_GANKS[g], p.jeito === "gank" && p.gank === g, p.jeito !== "gank")).join("") + "</span></div>"
+      + '<div class="pl-par"><figure>' + miniatura(p, "farm", true) + "<figcaption>Rota de farm · " + marcasTxt(p.rotas.farm.length) + "</figcaption></figure>"
+      + "<figure>" + miniatura(p, "primeira", true) + "<figcaption>Primeira rota · " + marcasTxt(p.rotas.primeira.length) + "</figcaption></figure></div>";
   }
   const dataBR = (t) => new Date(t).toLocaleDateString("pt-BR") + " " + new Date(t).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
   function desenharLista() {
@@ -15002,20 +15192,21 @@ const Planos = (function () {
     const vis = st.lista.filter(p => !q || p.nome.toLowerCase().includes(q) || p.id.toLowerCase().includes(q));
     el("planos-lista").innerHTML = vis.length ? vis.map(p => '<button type="button" class="pl-linha' + (p.id === st.ativo ? " sel" : "") + '" role="option" aria-selected="'
         + (p.id === st.ativo) + '" data-plano="' + esc(p.id) + '">' + miniatura(p) + '<span class="pl-txt"><b>' + esc(p.nome) + "</b><small>"
-        + '<span class="pl-tag">Visão</span> ' + contaTxt(p) + (p.de === "build" ? " · veio de uma build" : "") + "</small></span></button>").join("")
-      : '<p class="pl-vazio">' + (st.lista.length ? "Nenhum plano com esse nome ou ID." : "Nenhum plano ainda. Comece pelo “+ Novo plano”.") + "</p>";
+        + tags(p) + " " + (p.tipo === "selva" ? "" : contaTxt(p)) + (p.de === "build" ? " · veio de uma build" : "") + "</small></span></button>").join("")
+      : '<p class="pl-vazio">' + (st.lista.length ? "Nenhum plano com esse nome ou ID." : "Nenhum plano ainda. Comece por “+ Plano de visão” ou “+ Plano de selva”.") + "</p>";
     const p = achar(st.ativo);
     el("plano-ficha").innerHTML = !p ? '<p class="pl-vazio">Escolha um plano na lista, ou crie um novo.</p>'
       : '<input type="text" class="pl-nome" id="plano-nome" maxlength="60" aria-label="Nome do plano" value="' + esc(p.nome) + '">'
-        + '<div class="pl-meta"><span class="pl-tag">Visão</span> ' + contaTxt(p) + " · ID " + esc(p.id) + " · atualizado " + dataBR(p.atualizado) + "</div>"
+        + '<div class="pl-meta">' + tags(p) + " " + contaTxt(p) + " · ID " + esc(p.id) + " · atualizado " + dataBR(p.atualizado) + "</div>"
         + '<textarea class="pl-desc" id="plano-desc" maxlength="400" rows="2" placeholder="Descrição (opcional): para que serve este plano" aria-label="Descrição do plano">'
         + esc(p.desc).replace(/</g, "&lt;") + "</textarea>"
-        + '<div class="pl-grande">' + miniatura(p) + "</div>"
+        + (p.tipo === "selva" ? fichaSelva(p) : '<div class="pl-grande">' + miniatura(p) + "</div>")
         + '<div class="pl-acoes"><button type="button" class="mesa-btn cheio" id="plano-abrir">Abrir na mesa</button>'
         + '<button type="button" class="mesa-btn" disabled title="Em breve: publicar o plano, com link próprio">Publicar</button>'
         + '<button type="button" class="mesa-btn" disabled title="Em breve: o link próprio do plano">Copiar link</button>'
         + '<button type="button" class="mesa-btn perigo" id="plano-excluir">Excluir</button></div>'
-        + '<p class="pl-nota">Plano de Visão: as sentinelas, com a névoa. Os planos de Selva (as rotas) chegam na próxima etapa.</p>';
+        + '<p class="pl-nota">' + (p.tipo === "selva" ? "Plano de Selva: a rota de farm e a primeira rota, uma marca por clique na mesa; no gank, a última marca é o desvio para a lane."
+          : "Plano de Visão: as sentinelas, com a névoa.") + "</p>";
   }
   function mostrar() {
     const v = el("view-mapa");
@@ -15045,14 +15236,16 @@ const Planos = (function () {
       st.ativo = b.dataset.plano; gravar(); desenharLista();
       Som.play("catalog:tag_select");
     });
-    el("plano-novo").addEventListener("click", () => {
-      const p = criar("Plano " + (carregar().lista.length + 1));
+    const novo = (tipo) => {
+      const p = criar((tipo === "selva" ? "Rota da selva " : "Plano ") + (carregar().lista.length + 1), tipo);
       busca = ""; el("planos-q").value = "";
       desenharLista();
       const n = el("plano-nome"); if (n) { n.focus(); n.select(); }
       Som.play("catalog:tag_select");
       return p;
-    });
+    };
+    el("plano-novo").addEventListener("click", () => novo("visao"));
+    el("plano-novo-selva").addEventListener("click", () => novo("selva"));   // F13-T137
     el("planos-q").addEventListener("input", (ev) => { busca = ev.target.value; desenharLista(); });
     const ficha = el("plano-ficha");
     ficha.addEventListener("change", (ev) => {
@@ -15064,6 +15257,16 @@ const Planos = (function () {
     });
     ficha.addEventListener("keydown", (ev) => { if (ev.key === "Enter" && ev.target.id === "plano-nome") ev.target.blur(); });
     ficha.addEventListener("click", (ev) => {
+      const c = ev.target.closest("[data-pl-campo]");   // F13-T137: o lado, full clear ou gank, a lane do gank
+      if (c && !c.disabled) {
+        const p = achar(st.ativo); if (!p) return;
+        const campo = c.dataset.plCampo, valor = c.dataset.valor;
+        if (p[campo] === valor) return;
+        p[campo] = valor; p.atualizado = agora(); gravar(); desenharLista();
+        const volta = ficha.querySelector('[data-pl-campo="' + campo + '"][data-valor="' + valor + '"]'); if (volta) volta.focus();
+        Som.play("catalog:tag_select");
+        return;
+      }
       if (ev.target.closest("#plano-abrir")) abrirMesa(st.ativo);
       else if (ev.target.closest("#plano-excluir")) excluir(st.ativo);
     });
@@ -15073,7 +15276,8 @@ const Planos = (function () {
   return {
     mostrar: function () { if (!ligado) { ligado = true; ligar(); } mostrar(); },
     atual: atual, gravarVisao: gravarVisao, abrirMesa: function (id) { if (!ligado) { ligado = true; ligar(); } abrirMesa(id); }, voltar: voltar,
-    tela: function () { return tela; }, lista: function () { return carregar().lista.map(p => Object.assign({}, p, { visao: p.visao.slice() })); },
+    tela: function () { return tela; }, gravarRota: gravarRota,
+    lista: function () { return carregar().lista.map(p => Object.assign({}, p, { visao: p.visao.slice(), rotas: { farm: p.rotas.farm.slice(), primeira: p.rotas.primeira.slice() } })); },
     ativo: function () { return carregar().ativo; }, trazerDasBuilds: trazerDasBuilds,
   };
 })();
@@ -23962,9 +24166,9 @@ var Dicas = (function () {   // var: os ganchos de cima perguntam por window.Dic
     // ---- o mapa (F13-T107)
     // F13-T135: a aba abre na lista de planos; a mesa fica atrás do "Abrir na mesa"
     { id: "mapa.planos", tela: "mapa", alvo: "#plano-novo", quando: () => Planos.tela() === "lista", titulo: "Os seus planos de mapa",
-      texto: "Cada plano guarda as suas sentinelas. Crie um, dê um nome e uma descrição, e abra na mesa para montar a visão." },
+      texto: "Um plano de visão guarda as sentinelas; um de selva, a rota de farm e a primeira rota. Crie um, dê um nome e uma descrição, e abra na mesa." },
     { id: "mapa.mesa", tela: "mapa", alvo: "#mesa-janela", quando: () => Planos.tela() === "mesa", titulo: "A mesa de guerra",
-      texto: "O mapa de Summoner's Rift, para planejar a partida: ponha sentinelas e veja o que cada uma enxerga. A roda do mouse aproxima e afasta; arraste para mover." },
+      texto: "O mapa de Summoner's Rift, para planejar a partida: ponha sentinelas e veja o que cada uma enxerga, ou marque a rota da selva, um clique por ponto. A roda do mouse aproxima e afasta; arraste para mover." },
     // ---- a calculadora
     { id: "calc.puxar", tela: "calc", alvo: "#calc-from-build", titulo: "Quanto dano você aguenta",
       texto: "Escreva a sua vida e as resistências, ou puxe da build aberta, e veja quanto do dano elas seguram." },

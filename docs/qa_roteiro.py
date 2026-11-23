@@ -687,7 +687,7 @@ def checar_escala_com(s, p):
       return { stats: Object.keys(u).sort((a, b) => a.localeCompare(b, 'pt-BR')), vida: [...(u['Vida'] || [])].sort(),
                conferidos: CATALOG.items.filter(i => Array.isArray(i.scaling)).length, total: CATALOG.items.length }; })()""")
     tela = s.js("""(() => { const g = document.querySelector('.filter-group[data-group="stats"]');
-      const n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal'));   // F13-T133: o da ficha é à parte
+      const n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal') && !x.closest('#planos'));   // F13-T133: o da ficha é à parte; F13-T137: o dos planos também
       return { chips: [...g.querySelectorAll('.escala .chip[data-group="escala"]')].map(c => c.dataset.value),
                nota: (g.querySelector('.escala-nota') || {}).textContent || '',
                nov: n.length, novAqui: n.length === 1 && !!n[0].closest('.filter-group[data-group="stats"] .filter-group-title'),
@@ -8482,7 +8482,7 @@ def checar_mesa(s, p):
         s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
         lista_antes = s.js("({ tela: document.getElementById('view-mapa').dataset.tela, mesa: document.getElementById('mesa').getBoundingClientRect().height, planos: document.getElementById('planos').getBoundingClientRect().height > 0 })")
         s.clicar("#plano-abrir", 0.8)   # F13-T135: a aba abre na lista; o "Abrir na mesa" leva à mesa
-        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal'));
+        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal') && !x.closest('#planos'));
           return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
                    aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
                    ondeNov: n.map(x => x.closest('[data-group]') ? x.closest('[data-group]').dataset.group : x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : (x.parentElement.id || '?')),
@@ -9060,6 +9060,177 @@ def checar_planos(s, p):
         s.tela(1440, 900)
 
 
+def checar_selva(s, p):
+    """F13-T137 (Leo, 21/11/2026: "a rota de farm e a primeira rota, com desvio para alguma lane; lado azul/vermelho,
+    full clear/gank"; 15/10/2026: marcas numeradas postas com um clique, tiradas clicando de novo, a numeração se refaz;
+    o mapa fixo): o plano de Selva. Com cliques de verdade: "+ Plano de selva" (o balão Novidade), o lado, o gank e a
+    lane na ficha; na mesa, as abas Rota de farm e Primeira rota, marcar e tirar no mapa, arrastar move sem marcar,
+    Enter e Delete; o gank tracejado com a lane; recarregar guarda tudo; o plano de Visão segue com a névoa e as
+    sentinelas; o dado torto se arruma."""
+    print("\n%sSELVA%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+
+    def clique_em(x, y):
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": x, "y": y})
+        for tipo in ("mousePressed", "mouseReleased"):
+            s.envia("Input.dispatchMouseEvent", {"type": tipo, "x": x, "y": y, "button": "left", "clickCount": 1})
+        time.sleep(0.15)
+
+    def ponto(x, z):
+        return s.js("""(() => { const j = document.getElementById('mesa-janela').getBoundingClientRect(), e = Mesa.estado(), t = Mesa.paraTela(%d, %d);
+          return [j.left + e.x + t[0] * e.z, j.top + e.y + t[1] * e.z]; })()""" % (x, z))
+
+    def tecla(k, code, vk):
+        for tipo in ("keyDown", "keyUp"):
+            s.envia("Input.dispatchKeyEvent", {"type": tipo, "key": k, "code": code, "windowsVirtualKeyCode": vk})
+        time.sleep(0.15)
+
+    # os acampamentos do lado azul (unidades do jogo) — só lugares para clicar; o app não sabe o que é acampamento
+    AZUL, GROMP, LOBOS, ACUAS, VERMELHO = (3821, 8101), (2288, 8448), (3780, 6443), (6930, 5370), (7772, 4028)
+    try:
+        s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
+        # 1. "+ Plano de selva": nasce de Selva, lado azul e full clear; a ficha com as escolhas e os dois minimapas
+        s.clicar("#plano-novo-selva", 0.5)
+        f1 = s.js("""(() => { const a = Planos.lista().find(x => x.id === Planos.ativo()), f = document.getElementById('plano-ficha');
+          const on = (c) => [...f.querySelectorAll('[data-pl-campo="' + c + '"]')].filter(b => b.classList.contains('on')).map(b => b.dataset.valor);
+          const nv = document.querySelector('#plano-novo-selva .novidade'), r = nv && nv.getBoundingClientRect();
+          return { tipo: a.tipo, lado: a.lado, jeito: a.jeito, nome: a.nome.startsWith('Rota da selva'), on: [on('lado'), on('jeito'), on('gank')],
+                   gankDes: [...f.querySelectorAll('[data-pl-campo="gank"]')].every(b => b.disabled), minis: f.querySelectorAll('.pl-par .pl-mini').length,
+                   leg: [...f.querySelectorAll('.pl-par figcaption')].map(c => c.textContent), tags: [...f.querySelectorAll('.pl-meta .pl-tag')].map(t => t.textContent),
+                   nov: !!nv && r.width > 0 && nv.textContent.trim() === 'Novidade' }; })()""")
+        p.conta("selva", "\"+ Plano de selva\" cria um plano de Selva (azul, full clear); a ficha mostra Lado, Tipo e Gank em (desligado no full clear) e os dois minimapas (rota de farm e primeira rota); o balão \"Novidade\" no botão",
+                f1 == {"tipo": "selva", "lado": "azul", "jeito": "full", "nome": True, "on": [["azul"], ["full"], []], "gankDes": True, "minis": 2,
+                       "leg": ["Rota de farm · 0 marcas", "Primeira rota · 0 marcas"], "tags": ["Selva", "Azul", "Full clear"], "nov": True}, "%s" % f1)
+
+        # 2. o lado, o gank e a lane (cliques de verdade nas escolhas)
+        s.clicar('#plano-ficha [data-pl-campo="lado"][data-valor="vermelho"]', 0.3)
+        s.clicar('#plano-ficha [data-pl-campo="jeito"][data-valor="gank"]', 0.3)
+        s.clicar('#plano-ficha [data-pl-campo="gank"][data-valor="meio"]', 0.3)
+        f2 = s.js("""(() => { const a = JSON.parse(localStorage.getItem('mesa.planos')).lista.find(x => x.tipo === 'selva');
+          return { lado: a.lado, jeito: a.jeito, gank: a.gank, tags: [...document.querySelectorAll('#plano-ficha .pl-meta .pl-tag')].map(t => t.textContent),
+                   linha: [...document.querySelectorAll('.pl-linha.sel .pl-tag')].map(t => t.textContent) }; })()""")
+        p.conta("selva", "na ficha: Vermelho, Gank e Meio ficam guardados no navegador; as etiquetas da ficha e da linha dizem Selva · Vermelho · Gank · meio",
+                f2 == {"lado": "vermelho", "jeito": "gank", "gank": "meio", "tags": ["Selva", "Vermelho", "Gank · meio"], "linha": ["Selva", "Vermelho", "Gank · meio"]}, "%s" % f2)
+
+        # 3. a mesa do plano de Selva: as abas da rota, sem névoa e sem sentinelas
+        s.clicar("#plano-abrir", 0.8)
+        m1 = s.js("""(() => { const d = (id) => getComputedStyle(document.getElementById(id)).display;
+          return { tipo: document.getElementById('mesa').dataset.tipo, abas: [...document.querySelectorAll('#mesa-abas [data-aba]')].filter(b => !b.hidden).map(b => b.dataset.aba),
+                   ativa: (document.querySelector('#mesa-abas .ativa') || {}).dataset.aba, nevoa: d('mesa-nevoa'), visao: d('mesa-ferr-visao'), selva: d('mesa-ferr-selva'),
+                   info: document.getElementById('mesa-selva-info').textContent, laco: Mesa.nevoa().laco }; })()""")
+        p.conta("selva", "na mesa do plano de Selva: só as abas Rota de farm (aberta) e Primeira rota; sem a névoa e sem as sentinelas; a linha diz \"Lado vermelho · gank no meio\"",
+                m1 == {"tipo": "selva", "abas": ["farm", "primeira"], "ativa": "farm", "nevoa": "none", "visao": "none", "selva": "block",
+                       "info": "Lado vermelho · gank no meio", "laco": False}, "%s" % m1)
+
+        # 4. três cliques no mapa: três marcas, numeradas, ligadas por linha
+        for c in (AZUL, GROMP, LOBOS):
+            clique_em(*ponto(*c))
+        m2 = s.js("""(() => ({ n: Mesa.plano().rotas.farm.length, nums: [...document.querySelectorAll('#mesa-marcas .mr-num')].map(t => t.textContent),
+          linhas: document.querySelectorAll('#mesa-marcas .mr-linha').length, conta: document.getElementById('mesa-rota-conta').textContent,
+          perto: Mesa.plano().rotas.farm.every((v, i) => Math.hypot(v.x - %s[i][0], v.z - %s[i][1]) < 120) }))()""" % (json.dumps([AZUL, GROMP, LOBOS]), json.dumps([AZUL, GROMP, LOBOS])))
+        p.conta("selva", "três cliques no mapa põem três marcas onde se clicou, numeradas 1, 2, 3 e ligadas por duas linhas; a conta diz \"3 marcas na rota de farm\"",
+                m2 == {"n": 3, "nums": ["1", "2", "3"], "linhas": 2, "conta": "3 marcas na rota de farm", "perto": True}, "%s" % m2)
+
+        # 5. o clique na marca 2 a tira, e a 3 vira 2
+        clique_em(*ponto(*GROMP))
+        m3 = s.js("""(() => ({ n: Mesa.plano().rotas.farm.length, nums: [...document.querySelectorAll('#mesa-marcas .mr-num')].map(t => t.textContent),
+          ficou: Mesa.plano().rotas.farm.map(v => Math.hypot(v.x - %d, v.z - %d) < 120) }))()""" % LOBOS)
+        p.conta("selva", "o clique numa marca a tira e a numeração se refaz (tirar a 2 faz a 3 virar 2)",
+                m3 == {"n": 2, "nums": ["1", "2"], "ficou": [False, True]}, "%s" % m3)
+
+        # 6. aproximar e arrastar move o mapa, sem marcar
+        c0 = ponto(4800, 5600)
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseWheel", "x": c0[0], "y": c0[1], "deltaX": 0, "deltaY": -300})
+        time.sleep(0.3)
+        e0 = s.js("Mesa.estado()")
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": c0[0], "y": c0[1]})
+        s.envia("Input.dispatchMouseEvent", {"type": "mousePressed", "x": c0[0], "y": c0[1], "button": "left", "buttons": 1, "clickCount": 1})
+        for k in range(1, 7):
+            s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": c0[0] + 10 * k, "y": c0[1] + 6 * k, "button": "left", "buttons": 1})
+            time.sleep(0.03)
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseReleased", "x": c0[0] + 60, "y": c0[1] + 36, "button": "left", "buttons": 0, "clickCount": 1})
+        time.sleep(0.3)
+        e1 = s.js("Mesa.estado()")
+        n6 = s.js("Mesa.plano().rotas.farm.length")
+        p.conta("selva", "com o mapa aproximado, arrastar move o mapa e não põe marca",
+                e0["z"] > 1.05 and (abs(e1["x"] - e0["x"]) > 20 or abs(e1["y"] - e0["y"]) > 10) and n6 == 2, "antes %s · depois %s · marcas %s" % (e0, e1, n6))
+        s.js("Mesa.inteiro(); 'ok'")
+        time.sleep(0.2)
+
+        # 7. a primeira rota (outra aba): no gank, a última marca é o desvio para a lane, tracejado, com o nome da lane
+        s.clicar('#mesa-abas [data-aba="primeira"]', 0.4)
+        for c in (VERMELHO, ACUAS, (4600, 10200)):
+            clique_em(*ponto(*c))
+        m7 = s.js("""(() => ({ aba: Mesa.aba(), prim: Mesa.plano().rotas.primeira.length, farm: Mesa.plano().rotas.farm.length,
+          gank: document.querySelectorAll('#mesa-marcas .mr-marca.gank').length, ultimaGank: (document.querySelectorAll('#mesa-marcas .mr-marca')[2] || { classList: { contains: () => false } }).classList.contains('gank'),
+          tracejada: [...document.querySelectorAll('#mesa-marcas .mr-linha')].map(l => !!l.getAttribute('stroke-dasharray')),
+          rot: (document.querySelector('#mesa-marcas .mr-rot') || {}).textContent }))()""")
+        p.conta("selva", "na Primeira rota, as marcas são outras (a rota de farm segue com 2); no gank, a última é o desvio: em brasa, a linha até ela tracejada e o rótulo \"gank · meio\"",
+                m7 == {"aba": "primeira", "prim": 3, "farm": 2, "gank": 1, "ultimaGank": True, "tracejada": [False, True], "rot": "gank · meio"}, "%s" % m7)
+
+        # 8. o teclado: Enter põe uma no meio, Delete tira a última
+        s.js("document.getElementById('mesa-janela').focus(); 'ok'")
+        tecla("Enter", "Enter", 13)
+        k1 = s.js("Mesa.plano().rotas.primeira.length")
+        tecla("Delete", "Delete", 46)
+        k2 = s.js("Mesa.plano().rotas.primeira.length")
+        p.conta("selva", "no teclado, com o mapa em foco: Enter põe uma marca no meio e Delete tira a última", k1 == 4 and k2 == 3, "%s → %s" % (k1, k2))
+
+        # 9. recarregar guarda tudo; a lista e a ficha mostram as duas rotas
+        s.abrir("?r=137#mapa")
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.6)
+        r9 = s.js("""(() => { const a = Planos.lista().find(x => x.tipo === 'selva'), f = document.getElementById('plano-ficha');
+          return { lado: a.lado, jeito: a.jeito, gank: a.gank, farm: a.rotas.farm.length, prim: a.rotas.primeira.length,
+                   linha: document.querySelector('.pl-linha.sel .pl-mini').querySelectorAll('circle').length,
+                   minis: [...f.querySelectorAll('.pl-par .pl-mini')].map(m => m.querySelectorAll('circle').length),
+                   leg: [...f.querySelectorAll('.pl-par figcaption')].map(c => c.textContent) }; })()""")
+        p.conta("selva", "recarregar guarda o lado, o gank, a lane e as duas rotas; a linha da lista mostra a rota de farm e a ficha os dois minimapas, com a conta de cada um",
+                r9 == {"lado": "vermelho", "jeito": "gank", "gank": "meio", "farm": 2, "prim": 3, "linha": 2, "minis": [2, 3],
+                       "leg": ["Rota de farm · 2 marcas", "Primeira rota · 3 marcas"]}, "%s" % r9)
+
+        # 10. "Limpar esta rota" (o confirm, aceito) esvazia só a rota aberta
+        s.clicar("#plano-abrir", 0.8)
+        s.clicar('#mesa-abas [data-aba="primeira"]', 0.4)
+        s.clicar("#mesa-rota-limpar", 0.5)
+        l10 = s.js("({ prim: Mesa.plano().rotas.primeira.length, farm: Mesa.plano().rotas.farm.length, marcas: document.querySelectorAll('#mesa-marcas .mr-marca').length })")
+        p.conta("selva", "\"Limpar esta rota\" tira as marcas só da rota aberta (depois do confirm)", l10 == {"prim": 0, "farm": 2, "marcas": 0}, "%s" % l10)
+
+        # 11. o plano de Visão segue como era: a aba Visão, a névoa e as sentinelas, sem rotas
+        s.clicar("#mesa-voltar", 0.6)
+        s.clicar("#plano-novo", 0.5)
+        s.clicar("#plano-abrir", 0.8)
+        v11 = s.js("""(() => { const d = (id) => getComputedStyle(document.getElementById(id)).display;
+          return { tipo: document.getElementById('mesa').dataset.tipo, abas: [...document.querySelectorAll('#mesa-abas [data-aba]')].filter(b => !b.hidden).map(b => b.dataset.aba),
+                   nevoa: d('mesa-nevoa'), visao: d('mesa-ferr-visao'), selva: d('mesa-ferr-selva'), rotas: Mesa.plano().rotas, tipoPlano: Mesa.plano().tipo }; })()""")
+        r = s.caixa("#mesa-janela")
+        clique_em(r[0], r[1])   # na Visão, o clique no mapa não marca nada
+        v11b = s.js("({ visao: Mesa.plano().visao.length, rotas: Mesa.plano().rotas.farm.length })")
+        p.conta("selva", "o plano de Visão segue como era: só a aba Visão, a névoa e as sentinelas; o clique no mapa não marca rota",
+                v11 == {"tipo": "visao", "abas": ["visao"], "nevoa": "block", "visao": "block", "selva": "none", "rotas": {"farm": [], "primeira": []}, "tipoPlano": "visao"}
+                and v11b == {"visao": 0, "rotas": 0}, "%s · %s" % (v11, v11b))
+
+        # 12. o dado torto se arruma: lado e lane que não existem, ponto fora do mapa ou sem número, rota longa demais
+        s.js("""(() => { const d = JSON.parse(localStorage.getItem('mesa.planos'));
+          const longa = Array.from({ length: 30 }, (_, i) => ({ x: 2000 + i * 100, z: 3000 }));
+          d.lista.push({ id: 'pl-torto', nome: 'Torto', tipo: 'selva', lado: 'constructor', jeito: 'toString', gank: 'constructor',
+                         rotas: { farm: [{ x: 'a', z: 1 }, { x: -99999, z: 5000 }, { x: 5000, z: 5000 }], primeira: longa } });
+          localStorage.setItem('mesa.planos', JSON.stringify(d)); return 1; })()""")
+        s.abrir("?r=1372#mapa")
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.6)
+        t12 = s.js("(() => { const a = Planos.lista().find(x => x.id === 'pl-torto'); return { lado: a.lado, jeito: a.jeito, gank: a.gank, farm: a.rotas.farm, prim: a.rotas.primeira.length }; })()")
+        p.conta("selva", "o dado torto se arruma ao carregar: lado e lane que não existem voltam ao azul, full clear e topo; ponto sem número ou fora do mapa sai; a rota fica em %s marcas" % 20,
+                t12 == {"lado": "azul", "jeito": "full", "gank": "topo", "farm": [{"x": 5000, "z": 5000}], "prim": 20}, "%s" % t12)
+        p.conta("selva", "console sem erro", not s.erros, "%s" % s.erros)
+    finally:
+        s.tela(1440, 900)
+
+
 GRUPOS = [
     ("catálogo", checar_catalogo),
     ("ficha", checar_ficha),
@@ -9113,6 +9284,7 @@ GRUPOS = [
     ("terreno", checar_terreno),
     ("sentinelas", checar_sentinelas),
     ("planos", checar_planos),
+    ("selva", checar_selva),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
     ("acessibilidade", checar_acessibilidade),
