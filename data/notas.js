@@ -2,6 +2,14 @@
 window.NOTAS = {
  "datas": [
   {
+   "data": "23/11/2026",
+   "add": [
+    "a aba Mapa agora tem uma biblioteca de planos: crie, nomeie, descreva e abra cada plano na mesa, cada um com as suas sentinelas."
+   ],
+   "aj": [],
+   "rem": []
+  },
+  {
    "data": "21/11/2026",
    "add": [
     "a ficha de cada item mostra as interações dele (o que ativa, o que não ativa, com quem), filtradas por tipo"

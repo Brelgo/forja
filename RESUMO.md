@@ -4,10 +4,10 @@ Para começar uma sessão com pouco uso: ler o CLAUDE.md e **este arquivo**. O C
 histórico completo; leia só a seção que a tarefa pedir (procure pelo número `F13-T…` ou pela palavra).
 
 ## O que é e onde está
-- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.133**.
+- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.135**.
 - **O app:** `index.html` (tudo num arquivo, abre com dois cliques). Dados gerados em `data/` — `catalog.js` (225 itens,
   patch 16.23.1, do Capítulo 1, com `interactions` (bloco Interações[]), `scaling` (Escalonamento[], 225 de 225 desde 21/11; sem bloco = não conferido) e `costAnalysis.threshold100` (Limiar de 100%); nunca editar à mão), `runas.js`, `habilidades.js` (Capítulo 1.1), `mudancas.js`,
-  `notas.js`, `mapa.js`, `mapa_variantes.js`, `regioes.js`. Sons em `assets/audio`, mapa em `assets/mapa`.
+  `notas.js`, `mapa.js`, `regioes.js` (o `mapa_variantes.js` não é mais carregado desde a F13-T135). Sons em `assets/audio`, mapa em `assets/mapa`.
 - **Servidor:** Supabase `okifbriwwxohkjxhqzfc` (builds publicadas, popularidade). SQL ou ação lá: só com o OK do Leo.
 - **Robôs no GitHub Actions** (gravam no `main` — `git pull --rebase` antes de enviar): `robo.yml` (o patch, diário,
   é o "Update Tracker" na tela) e `cards.yml` (o card das builds no Discord, a cada 30 min, só `b/`).
@@ -16,7 +16,7 @@ histórico completo; leia só a seção que a tarefa pedir (procure pelo número
 Entrada animada da loja (Freljord, Noxus, Shurima, Águas de Sentina e Ilha das Sombras sorteadas) · Catálogo com filtros, ficha do item (Shift), árvore de
 receita · Build (forja) com caixas, arrastar, Passiva do Ornn, Reembolso, Ápice, rota com cadeado, runas, habilidades ·
 Biblioteca (exportar/importar, texto do jogo) · Builds publicadas (link curto, card no Discord) · Calculadora ·
-Aba Mapa (independente das builds: o plano fica no navegador): o mapa de hoje (alma do Dragão e covil do Barão mudam o terreno), sentinelas com névoa viva (cada moita vê só a si mesma), Vidente com 500 · a forma do Kayn (ícone e card) · Update Tracker (os cartazes de "procurado" do que mudou em cada
+Aba Mapa (independente das builds): biblioteca de planos no navegador (novo, nome, descrição, busca, excluir; cada plano com as suas sentinelas), só o mapa padrão, sentinelas com névoa viva (cada moita vê só a si mesma), Vidente com 500 · a forma do Kayn (ícone e card) · Update Tracker (os cartazes de "procurado" do que mudou em cada
 patch) · Mural de notas · Dicas na hora · som com lojista, volume e mudo.
 
 ## Como cada tarefa anda
@@ -28,7 +28,7 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| **primeiro** | **F13-T135, a biblioteca de planos** (amostra aprovada na F13-T134): aba Mapa com Minhas (local), novo/renomear/excluir/escolher; a mesa edita o plano escolhido; planos de dois tipos, Visão (sentinelas) e Selva (rotas); as sentinelas das builds antigas viram planos de Visão e o `build.mapa` sai. Só o mapa padrão | 5–8% |
+| **primeiro** | **F13-T135b, o `build.mapa` sai das builds**: as sentinelas já viraram planos na F13-T135; falta tirar o mapa da build (texto do jogo, exportar, publicar) | 2–4% |
 | depois | **F13-T136, a Selva na mesa**: marcas numeradas da rota de farm e da primeira rota (com o desvio para a lane), lado azul/vermelho, full clear ou gank (topo, meio, robô) | 5–8% |
 | depois | **F13-T137, as rotas na build de selva** (Leo, 22/11: opção **B**): a build com rota Selva liga um plano de Selva e mostra só o botão "Rotas da selva"; o clique abre os dois minimapas num balão | 4–6% |
 | depois | **F13-T138, publicar os planos**: tabela própria no Supabase (SQL só com o OK do Leo), aba Publicadas, link próprio | 6–10% |
