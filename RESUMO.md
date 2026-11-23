@@ -16,7 +16,7 @@ histórico completo; leia só a seção que a tarefa pedir (procure pelo número
 Entrada animada da loja (Freljord, Noxus, Shurima, Águas de Sentina e Ilha das Sombras sorteadas) · Catálogo com filtros, ficha do item (Shift), árvore de
 receita · Build (forja) com caixas, arrastar, Passiva do Ornn, Reembolso, Ápice, rota com cadeado, runas, habilidades ·
 Biblioteca (exportar/importar, texto do jogo) · Builds publicadas (link curto, card no Discord) · Calculadora ·
-Aba Mapa (independente das builds): biblioteca de planos no navegador (novo, nome, descrição, busca, excluir; cada plano com as suas sentinelas), só o mapa padrão, sentinelas com névoa viva (cada moita vê só a si mesma), Vidente com 500 · a forma do Kayn (ícone e card) · Update Tracker (os cartazes de "procurado" do que mudou em cada
+Aba Mapa (independente das builds): biblioteca de planos no navegador (novo, nome, descrição, busca, excluir; planos de visão com as suas sentinelas e, desde a F13-T137, planos de selva com a rota de farm e a primeira rota, marcas numeradas por clique, lado e full clear ou gank com a lane), só o mapa padrão, sentinelas com névoa viva (cada moita vê só a si mesma), Vidente com 500 · a forma do Kayn (ícone e card) · Update Tracker (os cartazes de "procurado" do que mudou em cada
 patch) · Mural de notas · Dicas na hora · som com lojista, volume e mudo.
 
 ## Como cada tarefa anda
