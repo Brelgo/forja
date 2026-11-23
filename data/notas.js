@@ -7,7 +7,9 @@ window.NOTAS = {
     "a aba Mapa agora tem uma biblioteca de planos: crie, nomeie, descreva e abra cada plano na mesa, cada um com as suas sentinelas."
    ],
    "aj": [],
-   "rem": []
+   "rem": [
+    "o mapa saiu da build; as sentinelas antigas viram planos de mapa ao abrir o site"
+   ]
   },
   {
    "data": "21/11/2026",

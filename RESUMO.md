@@ -4,7 +4,7 @@ Para começar uma sessão com pouco uso: ler o CLAUDE.md e **este arquivo**. O C
 histórico completo; leia só a seção que a tarefa pedir (procure pelo número `F13-T…` ou pela palavra).
 
 ## O que é e onde está
-- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.135**.
+- **Site:** https://brelgo.github.io/forja/ · **repo:** Brelgo/forja (`main`) · **pasta:** esta. Versão no ar: `ATUALIZACAO` **13.136**.
 - **O app:** `index.html` (tudo num arquivo, abre com dois cliques). Dados gerados em `data/` — `catalog.js` (225 itens,
   patch 16.23.1, do Capítulo 1, com `interactions` (bloco Interações[]), `scaling` (Escalonamento[], 225 de 225 desde 21/11; sem bloco = não conferido) e `costAnalysis.threshold100` (Limiar de 100%); nunca editar à mão), `runas.js`, `habilidades.js` (Capítulo 1.1), `mudancas.js`,
   `notas.js`, `mapa.js`, `regioes.js` (o `mapa_variantes.js` não é mais carregado desde a F13-T135). Sons em `assets/audio`, mapa em `assets/mapa`.
@@ -28,10 +28,9 @@ Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no
 ## O que falta (em ordem)
 | Quando | O quê | Custo (Max) |
 |---|---|---|
-| **primeiro** | **F13-T135b, o `build.mapa` sai das builds**: as sentinelas já viraram planos na F13-T135; falta tirar o mapa da build (texto do jogo, exportar, publicar) | 2–4% |
-| depois | **F13-T136, a Selva na mesa**: marcas numeradas da rota de farm e da primeira rota (com o desvio para a lane), lado azul/vermelho, full clear ou gank (topo, meio, robô) | 5–8% |
-| depois | **F13-T137, as rotas na build de selva** (Leo, 22/11: opção **B**): a build com rota Selva liga um plano de Selva e mostra só o botão "Rotas da selva"; o clique abre os dois minimapas num balão | 4–6% |
-| depois | **F13-T138, publicar os planos**: tabela própria no Supabase (SQL só com o OK do Leo), aba Publicadas, link próprio | 6–10% |
+| **primeiro** | **F13-T137, a Selva na mesa**: marcas numeradas da rota de farm e da primeira rota (com o desvio para a lane), lado azul/vermelho, full clear ou gank (topo, meio, robô) | 5–8% |
+| depois | **F13-T138, as rotas na build de selva** (Leo, 22/11: opção **B**): a build com rota Selva liga um plano de Selva e mostra só o botão "Rotas da selva"; o clique abre os dois minimapas num balão | 4–6% |
+| depois | **F13-T139, publicar os planos**: tabela própria no Supabase (SQL só com o OK do Leo), aba Publicadas, link próprio | 6–10% |
 | depois | **Estudo do app instalável (PWA)** antes de construir (Leo, 21/11: "essa função exerce mais do que qualquer criador consegue imaginar"): o que a instalação dá além de um site comum | estudo |
 | final | **O app com overlay** só de builds (Leo, 21/11): na seleção de campeões, builds de outros usuários do campeão escolhido, informação rápida, counters (do Gerador) e os minimapas; na partida, ordem de level up, rota e a fila de itens com o ouro que falta. Só depois de o resto estar todo funcional. Exige app nativo (um PWA não desenha sobre o jogo) e a política de apps de terceiros da Riot | — |
 | depende | Capítulos de dado 1.1–1.4 (campeões, Bestiário, Gerador) e a calculadora de monstros épicos | — |
