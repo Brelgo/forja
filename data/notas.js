@@ -5,7 +5,8 @@ window.NOTAS = {
    "data": "23/11/2026",
    "add": [
     "a aba Mapa agora tem uma biblioteca de planos: crie, nomeie, descreva e abra cada plano na mesa, cada um com as suas sentinelas.",
-    "planos de selva no mapa: a rota de farm e a primeira rota, com lado, full clear ou gank e a lane"
+    "planos de selva no mapa: a rota de farm e a primeira rota, com lado, full clear ou gank e a lane",
+    "o botão \"Rotas da selva\" na build de Selva mostra a rota de farm e a primeira rota do plano ligado"
    ],
    "aj": [],
    "rem": [
