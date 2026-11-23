@@ -231,20 +231,20 @@ window.NOTAS = {
  ],
  "embreve": [
   [
-   "A entrada da loja e o tour",
-   "a fachada de uma região a cada visita, e um passeio guiado pelo Montador"
+   "Compartilhe os seus planos de mapa",
+   "publique a sua visão e as suas rotas da selva, veja os planos de outros jogadores e mande um link para o seu time"
   ],
   [
-   "Mapa interativo",
-   "onde pôr a visão e as rotas da selva e do farm"
+   "A Forja instalada no seu computador",
+   "abrir a Forja como um app, com janela e ícone próprios e atalhos para a nova build, o mapa e a calculadora"
   ],
   [
-   "Calculadora de armadura",
-   "quanto o tanque aguenta, na forja"
+   "Campeões, o Bestiário e os porquês",
+   "a ficha de cada campeão, os monstros da selva e os épicos, a calculadora de monstros épicos e o porquê de cada escolha de item"
   ],
   [
-   "Campeões e o Bestiário",
-   "as fichas dos campeões e dos monstros, e a calculadora dos épicos"
+   "A Forja dentro da partida",
+   "na seleção de campeões, builds de outros jogadores, counters e as rotas da selva; na partida, a ordem das habilidades e a fila de itens com o ouro que falta"
   ]
  ]
 };

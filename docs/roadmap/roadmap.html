@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>A trilha da Forja</title>
+<!-- O roteiro do Montador em imagem (Leo, 23/11/2026: "deixar mais visualmente interessante o roadmap, com uma imagem com
+     as etapas"; e "o roadmap é direcionado para os usuários": na língua de quem usa o site — sem número de tarefa, custo
+     ou bastidor; o mesmo do "Em breve na loja" do mural, docs/notas.json). A fonte é esta página; a imagem (docs/roadmap.png) sai dela pelo Chrome sem janela:
+     chrome --headless=new --hide-scrollbars --window-size=1600,760 --virtual-time-budget=4000 --screenshot=docs/roadmap.png docs/roadmap/roadmap.html
+     Atualizar junto com a tabela "O que falta" do RESUMO.md. -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --papel: #e5d3ad; --tinta: #2c1d12; --tinta-suave: #5a4630; --latao: #b6873a; --latao-esc: #7a5216; --cera: #8d2c22;
+  --placa-1: #2a2420; --placa-2: #1a1512; --borda: #4a3a2c; --brasa: #ff7a1e; --brasa-clara: #ffd27a; --titulo: #e9b36a; --texto: #d8c7a8; --suave: #a8957a;
+  --t-tit: 'IM Fell English SC', Georgia, serif; --t-txt: 'Alegreya', Georgia, serif; --t-grav: 'Cinzel', Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #120e0b; }
+body { width: 1600px; height: 760px; overflow: hidden; color: var(--texto); font-family: var(--t-txt);
+  background: radial-gradient(ellipse at 70% 110%, rgba(255,122,30,.20), transparent 55%), radial-gradient(ellipse at 10% -10%, rgba(182,135,58,.10), transparent 50%),
+              linear-gradient(160deg, #1d1814, #0f0c0a); }
+.cab { display: flex; align-items: baseline; gap: 22px; padding: 34px 48px 0; }
+.cab h1 { margin: 0; font: 400 50px var(--t-tit); color: var(--titulo); letter-spacing: .02em; text-shadow: 0 2px 0 #000, 0 0 24px rgba(255,122,30,.25); }
+.cab p { margin: 0; font: italic 18px var(--t-txt); color: var(--suave); }
+.cab .versao { margin-left: auto; font: 600 13px var(--t-grav); letter-spacing: .18em; text-transform: uppercase; color: var(--brasa-clara);
+  border: 1px solid var(--latao); padding: 6px 12px; border-radius: 3px; background: rgba(0,0,0,.3); }
+.corpo { display: grid; grid-template-columns: 430px 1fr; gap: 34px; padding: 26px 48px 0; }
+
+/* o que já está forjado: o pergaminho */
+.feito { position: relative; padding: 22px 24px 18px; color: var(--tinta); border-radius: 4px; border: 1px solid #b89a66;
+  background: url("../../assets/textures/shopitem_papertexture02_psd.png") center / cover, var(--papel); background-blend-mode: multiply; box-shadow: 0 14px 30px rgba(0,0,0,.55), inset 0 0 40px rgba(90,60,20,.35); }
+.feito h2 { margin: 0 0 2px; font: 400 27px var(--t-tit); color: var(--tinta); }
+.feito .sub { margin: 0 0 14px; font: italic 15px var(--t-txt); color: var(--tinta-suave); }
+.feito ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.feito li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center; font: 17px/1.2 var(--t-txt); }
+.feito li .selo { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 14px var(--t-grav); color: #fff4d8;
+  background: radial-gradient(circle at 35% 30%, #d6a656, var(--latao-esc)); border: 1px solid #5a3c10; box-shadow: 0 1px 2px rgba(0,0,0,.4); }
+.feito li small { font: 600 11px var(--t-grav); letter-spacing: .06em; color: var(--tinta-suave); }
+.feito li.agora { margin-top: 4px; padding: 8px 8px 8px 0; border-top: 1px dashed rgba(90,70,48,.5); }
+.feito li.agora .selo { background: radial-gradient(circle at 35% 30%, var(--brasa-clara), var(--brasa)); border-color: #a24a0c; color: #1a0d04; box-shadow: 0 0 12px rgba(255,122,30,.8); }
+.aqui { position: absolute; right: -22px; bottom: 16px; transform: rotate(-4deg); padding: 6px 14px; font: 700 13px var(--t-grav); letter-spacing: .14em; text-transform: uppercase;
+  color: #1a0d04; background: linear-gradient(var(--brasa-clara), var(--brasa)); border: 1px solid #a24a0c; border-radius: 3px; box-shadow: 0 0 18px rgba(255,122,30,.7), 0 3px 6px rgba(0,0,0,.6); }
+
+/* a trilha: as estações que vêm */
+.trilha { position: relative; }
+.trilha h2 { margin: 0 0 4px; font: 400 27px var(--t-tit); color: var(--titulo); }
+.trilha .sub { margin: 0 0 18px; font: italic 15px var(--t-txt); color: var(--suave); }
+.caminho { position: absolute; left: 40px; top: 96px; bottom: 110px; width: 4px; border-left: 4px dashed rgba(255,122,30,.55); filter: drop-shadow(0 0 6px rgba(255,122,30,.5)); }
+.estacao { position: relative; display: grid; grid-template-columns: 84px 1fr; gap: 18px; align-items: start; margin-bottom: 16px; }
+.estacao .num { position: relative; z-index: 1; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font: 700 34px var(--t-grav); color: var(--titulo);
+  background: radial-gradient(circle at 40% 32%, #4a3d33, #1b1511); border: 3px solid #6a5440; box-shadow: 0 0 0 4px #120e0b, 0 6px 14px rgba(0,0,0,.7); }
+.estacao.proxima .num { color: #1a0d04; background: radial-gradient(circle at 40% 32%, var(--brasa-clara), var(--brasa) 70%, #b24a08); border-color: #ffb36a;
+  box-shadow: 0 0 0 4px #120e0b, 0 0 30px rgba(255,122,30,.85), 0 6px 14px rgba(0,0,0,.7); }
+.estacao.fim .num { font-size: 22px; letter-spacing: .06em; }
+.cartao { padding: 14px 18px 13px; border-radius: 4px; background: linear-gradient(160deg, var(--placa-1), var(--placa-2)); border: 1px solid var(--borda);
+  box-shadow: 0 8px 20px rgba(0,0,0,.5), inset 0 -2px 10px rgba(255,120,30,.06); }
+.estacao.proxima .cartao { border-color: var(--brasa); box-shadow: 0 8px 20px rgba(0,0,0,.5), 0 0 22px rgba(255,122,30,.25); }
+.estacao.depende .cartao { border-style: dashed; }
+.topo { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.quando { font: 700 11.5px var(--t-grav); letter-spacing: .16em; text-transform: uppercase; color: var(--brasa); }
+.estacao h3 { margin: 0; font: 400 25px var(--t-tit); color: var(--titulo); }
+.custo { margin-left: auto; font: 600 12px var(--t-grav); letter-spacing: .08em; color: var(--brasa-clara); border: 1px solid rgba(233,179,106,.45); padding: 3px 9px; border-radius: 2px; }
+.cartao p { margin: 6px 0 0; font: 17px/1.35 var(--t-txt); color: var(--texto); }
+.cartao p b { color: var(--titulo); font-weight: 500; }
+.tags { margin-top: 7px; display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font: 600 11px var(--t-grav); letter-spacing: .06em; padding: 2px 8px; border-radius: 2px; color: var(--suave); border: 1px solid #4a3a2c; background: rgba(0,0,0,.25); }
+.tag.cap { color: #9cc7ff; border-color: rgba(79,163,255,.45); }
+.tag.ok { color: #f0a0a4; border-color: rgba(224,82,90,.45); }
+
+.rodape { position: absolute; left: 48px; right: 48px; bottom: 22px; display: flex; gap: 28px; align-items: center; font: 14.5px var(--t-txt); color: var(--suave); }
+.rodape .leg { display: flex; gap: 18px; align-items: center; }
+.rodape i { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 6px; vertical-align: -2px; }
+.rodape .cortado { margin-left: auto; font-style: italic; }
+.rodape .cortado s { color: #7d6b55; }
+</style>
+</head>
+<body>
+  <header class="cab">
+    <h1>A trilha da Forja</h1>
+    <p>o que já tem na loja e o que vem por aí · novembro de 2026</p>
+    <span class="versao">brelgo.github.io/forja</span>
+  </header>
+
+  <main class="corpo">
+    <section class="feito">
+      <h2>Já na loja</h2>
+      <p class="sub">tudo de graça, direto no navegador</p>
+      <ol>
+        <li><span class="selo">✓</span>Os 225 itens, com filtros e a ficha de cada um</li>
+        <li><span class="selo">✓</span>A forja: monte a build com runas, habilidades e a rota</li>
+        <li><span class="selo">✓</span>Itens que a rota não usa ficam trancados</li>
+        <li><span class="selo">✓</span>Publique a build, com link e card no Discord</li>
+        <li><span class="selo">✓</span>O que mudou a cada patch, no Update Tracker</li>
+        <li><span class="selo">✓</span>A entrada da loja em cinco regiões</li>
+        <li><span class="selo">✓</span>O mapa: sentinelas e a névoa de guerra</li>
+        <li><span class="selo">✓</span>Como cada item escala, e com o que ele combina</li>
+        <li class="agora"><span class="selo">✓</span><span><b>Novo: as rotas da selva</b> — a rota de farm e a primeira rota, lado e gank, direto na build</span></li>
+      </ol>
+      <span class="aqui">Novidade</span>
+    </section>
+
+    <section class="trilha">
+      <h2>O que vem por aí</h2>
+      <p class="sub">na ordem em que chega à loja</p>
+      <div class="caminho" aria-hidden="true"></div>
+
+      <div class="estacao proxima">
+        <div class="num">1</div>
+        <div class="cartao">
+          <div class="topo"><span class="quando">em seguida</span><h3>Compartilhe os seus planos de mapa</h3></div>
+          <p>Publique a sua visão e as suas rotas da selva, veja os planos de outros jogadores na aba <b>Publicadas</b> e mande um <b>link</b> para o seu time.</p>
+        </div>
+      </div>
+
+      <div class="estacao">
+        <div class="num">2</div>
+        <div class="cartao">
+          <div class="topo"><span class="quando">depois</span><h3>A Forja instalada no seu computador</h3></div>
+          <p>Abrir a Forja como um app, com janela e ícone próprios e atalhos para a nova build, o mapa e a calculadora.</p>
+        </div>
+      </div>
+
+      <div class="estacao depende">
+        <div class="num">3</div>
+        <div class="cartao">
+          <div class="topo"><span class="quando">mais adiante</span><h3>Campeões, o Bestiário e os porquês</h3></div>
+          <p>A <b>ficha de cada campeão</b>, o <b>Bestiário</b> com os monstros da selva e os épicos, a <b>calculadora de monstros épicos</b> e o porquê de cada escolha de item.</p>
+        </div>
+      </div>
+
+      <div class="estacao fim depende">
+        <div class="num">fim</div>
+        <div class="cartao">
+          <div class="topo"><span class="quando">o grande objetivo</span><h3>A Forja dentro da partida</h3></div>
+          <p>Na <b>seleção de campeões</b>: builds de outros jogadores, counters e as rotas da selva. Na <b>partida</b>: a ordem das habilidades e a fila de itens, com o ouro que falta para o próximo.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <span class="leg"><span><i style="background: radial-gradient(circle at 35% 30%, #ffd27a, #ff7a1e)"></i>a próxima</span>
+      <span><i style="background: radial-gradient(circle at 35% 30%, #d6a656, #7a5216)"></i>já na loja</span>
+      <span><i style="border: 2px dashed #6a5440"></i>ainda sem data</span></span>
+    <span class="cortado">feito por um jogador, para jogadores · ideias e erros: Discord <b>brelgo</b></span>
+  </footer>
+</body>
+</html>

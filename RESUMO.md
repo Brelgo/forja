@@ -26,6 +26,11 @@ Implementar → `python -X utf8 -I docs/qa_roteiro.py` (roteiro inteiro, ~500 ch
 Pages. Amostra leva "(amostra)" no assunto do commit. Mutante só em worktree no scratchpad.
 
 ## O que falta (em ordem)
+
+![A trilha da Forja: o que já está forjado e as próximas estações](docs/roadmap.png)
+
+A imagem sai de `docs/roadmap/roadmap.html` (o comando está no começo do arquivo); atualizar as duas junto com esta tabela.
+
 | Quando | O quê | Custo (Max) |
 |---|---|---|
 | **primeiro** | **F13-T139, publicar os planos**: tabela própria no Supabase (SQL só com o OK do Leo), aba Publicadas, link próprio | 6–10% |
