@@ -687,7 +687,7 @@ def checar_escala_com(s, p):
       return { stats: Object.keys(u).sort((a, b) => a.localeCompare(b, 'pt-BR')), vida: [...(u['Vida'] || [])].sort(),
                conferidos: CATALOG.items.filter(i => Array.isArray(i.scaling)).length, total: CATALOG.items.length }; })()""")
     tela = s.js("""(() => { const g = document.querySelector('.filter-group[data-group="stats"]');
-      const n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal') && !x.closest('#planos'));   // F13-T133: o da ficha é à parte; F13-T137: o dos planos também
+      const n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal') && !x.closest('#planos') && !x.closest('#selva-pick'));   // F13-T133: o da ficha é à parte; F13-T137/T138: os do mapa também
       return { chips: [...g.querySelectorAll('.escala .chip[data-group="escala"]')].map(c => c.dataset.value),
                nota: (g.querySelector('.escala-nota') || {}).textContent || '',
                nov: n.length, novAqui: n.length === 1 && !!n[0].closest('.filter-group[data-group="stats"] .filter-group-title'),
@@ -8482,7 +8482,7 @@ def checar_mesa(s, p):
         s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
         lista_antes = s.js("({ tela: document.getElementById('view-mapa').dataset.tela, mesa: document.getElementById('mesa').getBoundingClientRect().height, planos: document.getElementById('planos').getBoundingClientRect().height > 0 })")
         s.clicar("#plano-abrir", 0.8)   # F13-T135: a aba abre na lista; o "Abrir na mesa" leva à mesa
-        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal') && !x.closest('#planos'));
+        a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal') && !x.closest('#planos') && !x.closest('#selva-pick'));
           return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
                    aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
                    ondeNov: n.map(x => x.closest('[data-group]') ? x.closest('[data-group]').dataset.group : x.closest('[data-tab]') ? x.closest('[data-tab]').dataset.tab : (x.parentElement.id || '?')),
@@ -9231,6 +9231,136 @@ def checar_selva(s, p):
         s.tela(1440, 900)
 
 
+def checar_rotas_da_selva(s, p):
+    """F13-T138 (Leo, 22/11/2026: a opção B da amostra F13-T134): a build com rota Selva mostra só o botão "Rotas da
+    selva"; o clique abre os dois minimapas do plano de selva ligado. A ligação mora nos planos (mesa.planos), não na
+    build: nada do mapa entra na build gravada, e ligar não muda a "Última atualização". Cliques de verdade no botão,
+    fora do balão, em "Abrir na mesa" e em "+ Plano de selva"; Esc fecha; recarregar guarda; excluir o plano desliga."""
+    print("\n%sROTAS DA SELVA%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+
+    def rota(v):
+        s.js("(() => { const sel = document.getElementById('build-rota'); sel.value = %s; sel.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % json.dumps(v))
+        time.sleep(0.3)
+
+    estado = """(() => { const b = document.getElementById('selva-btn'), r = b.getBoundingClientRect(), nv = b.querySelector('.novidade');
+      return { visivel: !document.getElementById('selva-pick').hidden && r.width > 0, tem: b.classList.contains('tem'), aberto: !document.getElementById('selva-balao').hidden,
+               nov: !!nv && nv.textContent.trim() === 'Novidade' }; })()"""
+    try:
+        # o plano de selva (com marcas nas duas rotas)
+        s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
+        s.clicar("#plano-novo-selva", 0.5)
+        plano = s.js("""(() => { const id = Planos.ativo();
+          Planos.gravarRota('farm', [{ x: 3821, z: 8101 }, { x: 2288, z: 8448 }, { x: 3780, z: 6443 }]);
+          Planos.gravarRota('primeira', [{ x: 7772, z: 4028 }, { x: 6930, z: 5370 }]);
+          return { id: id, nome: Planos.lista().find(x => x.id === id).nome }; })()""")
+
+        # 1. a build: sem rota, Top e ARAM não mostram o botão; Selva mostra (sem plano ligado ainda)
+        s.nova_build()
+        s.js("(() => { if (!build.editing) document.getElementById('edit-toggle').click(); return build.editing; })()")
+        time.sleep(0.3)
+        s.js("(() => { const n = document.getElementById('build-name-input'); n.value = 'Nunu selva'; n.dispatchEvent(new Event('change', { bubbles: true })); saveBuild(); return 1; })()")
+        time.sleep(0.3)
+        sem = s.js(estado)
+        rota("top")
+        top = s.js(estado)
+        rota("selva")
+        selva = s.js(estado)
+        s.clicar("#save-btn", 0.6)   # com o Editar, o Salvar grava (o saveBuild só guarda o rascunho)
+        time.sleep(0.4)
+        p.conta("rotas da selva", "o botão \"Rotas da selva\" só aparece na build de rota Selva (sem rota e Top, não); sem plano ligado, ele fica apagado; o balão \"Novidade\" no botão",
+                not sem["visivel"] and not top["visivel"] and selva == {"visivel": True, "tem": False, "aberto": False, "nov": True}, "sem %s · top %s · selva %s" % (sem, top, selva))
+
+        # 2. o clique abre o balão: sem plano ligado, o seletor e o "+ Plano de selva"; escolher liga e mostra os dois minimapas
+        em = s.js("library.builds.find(x => x.id === build.id).updatedAt")
+        s.clicar("#selva-btn", 0.4)
+        b1 = s.js("""(() => ({ aberto: RotasSelva.aberto(), opcoes: [...document.querySelectorAll('#selva-plano option')].map(o => o.textContent),
+          vazio: (document.querySelector('#selva-balao .sb-vazio') || {}).textContent, novo: !!document.getElementById('selva-novo') }))()""")
+        s.js("(() => { const sel = document.getElementById('selva-plano'); sel.value = %s; sel.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()" % json.dumps(plano["id"]))
+        time.sleep(0.4)
+        b2 = s.js("""(() => ({ ligado: (Planos.ligado(build.id) || {}).id, minis: [...document.querySelectorAll('#selva-balao .sb-par .pl-mini')].map(m => m.querySelectorAll('circle').length),
+          leg: [...document.querySelectorAll('#selva-balao figcaption')].map(c => c.textContent), tags: [...document.querySelectorAll('#selva-balao .sb-tags .pl-tag')].map(t => t.textContent),
+          tem: document.getElementById('selva-btn').classList.contains('tem'), mesa: !!document.getElementById('selva-mesa'), aberto: RotasSelva.aberto() }))()""")
+        p.conta("rotas da selva", "o clique no botão abre o balão com o seletor dos planos de selva; escolher um liga a build a ele e mostra os dois minimapas (rota de farm e primeira rota), as etiquetas e \"Abrir na mesa\"",
+                b1 == {"aberto": True, "opcoes": ["— nenhum —", plano["nome"]], "vazio": "Escolha o plano de selva desta build.", "novo": True}
+                and b2 == {"ligado": plano["id"], "minis": [3, 2], "leg": ["Rota de farm · 3 marcas", "Primeira rota · 2 marcas"], "tags": ["Selva", "Azul", "Full clear"],
+                           "tem": True, "mesa": True, "aberto": True}, "%s · %s" % (b1, b2))
+
+        # 3. a ligação não é da build: nada na build nem no que é gravado; a "Última atualização" não muda
+        s.js("saveBuild(); 'ok'")
+        time.sleep(0.4)
+        fora = s.js("""(() => { const g = localStorage.getItem(STORAGE_KEY), d = JSON.parse(g), b = d.builds.find(x => x.id === build.id);
+          return { campo: Object.keys(build).filter(k => /selva|plano|mapa/i.test(k)), gravado: g.includes(%s), em: b.updatedAt,
+                   ligadas: JSON.parse(localStorage.getItem('mesa.planos')).ligadas[build.id] }; })()""" % json.dumps(plano["id"]))
+        p.conta("rotas da selva", "a ligação mora nos planos (mesa.planos), não na build: nenhum campo novo na build, o id do plano não está no que a biblioteca grava, e a \"Última atualização\" não muda",
+                fora == {"campo": [], "gravado": False, "em": em, "ligadas": plano["id"]}, "%s · antes %s" % (fora, em))
+
+        # 4. fecha com o clique fora e com o Esc
+        s.envia("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": 12, "y": 600})
+        for tipo in ("mousePressed", "mouseReleased"):
+            s.envia("Input.dispatchMouseEvent", {"type": tipo, "x": 12, "y": 600, "button": "left", "clickCount": 1})
+        time.sleep(0.3)
+        f1 = s.js("RotasSelva.aberto()")
+        s.clicar("#selva-btn", 0.4)
+        f2 = s.js("RotasSelva.aberto()")
+        for tipo in ("keyDown", "keyUp"):
+            s.envia("Input.dispatchKeyEvent", {"type": tipo, "key": "Escape", "code": "Escape", "windowsVirtualKeyCode": 27})
+        time.sleep(0.3)
+        f3 = s.js("({ aberto: RotasSelva.aberto(), foco: document.activeElement && document.activeElement.id })")
+        p.conta("rotas da selva", "o balão fecha com o clique fora dele e com o Esc (o foco volta ao botão)",
+                f1 is False and f2 is True and f3 == {"aberto": False, "foco": "selva-btn"}, "%s %s %s" % (f1, f2, f3))
+
+        # 5. recarregar guarda a ligação; "Abrir na mesa" leva ao plano na mesa
+        bid = s.js("build.id")
+        s.abrir("?r=138#forja")
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.8)
+        s.js("(() => { switchTab('build'); activateBuild(%s); showBuildScreen('forja'); return 1; })()" % json.dumps(bid))
+        time.sleep(0.6)
+        depois = s.js(estado)
+        s.clicar("#selva-btn", 0.4)
+        s.clicar("#selva-mesa", 0.8)
+        m5 = s.js("({ hash: location.hash, tela: Planos.tela(), ativo: Planos.ativo(), tipo: document.getElementById('mesa').dataset.tipo, aberto: RotasSelva.aberto() })")
+        p.conta("rotas da selva", "recarregar guarda a ligação (o botão segue aceso); \"Abrir na mesa\" leva à aba Mapa, na mesa do plano ligado",
+                depois["visivel"] and depois["tem"] and m5 == {"hash": "#mapa", "tela": "mesa", "ativo": plano["id"], "tipo": "selva", "aberto": False}, "%s · %s" % (depois, m5))
+
+        # 6. outra build de Selva começa sem plano; "+ Plano de selva" no balão cria um, liga e abre na mesa
+        s.nova_build()
+        s.js("(() => { if (!build.editing) document.getElementById('edit-toggle').click(); return build.editing; })()")
+        time.sleep(0.3)
+        s.js("(() => { const n = document.getElementById('build-name-input'); n.value = 'Kayn selva'; n.dispatchEvent(new Event('change', { bubbles: true })); return 1; })()")
+        rota("selva")
+        s.clicar("#save-btn", 0.6)
+        time.sleep(0.3)
+        outra = s.js(estado)
+        s.clicar("#selva-btn", 0.4)
+        s.clicar("#selva-novo", 0.8)
+        m6 = s.js("""(() => { const a = Planos.lista().find(x => x.id === Planos.ativo());
+          return { nome: a.nome, tipo: a.tipo, ligado: (Planos.ligado(build.id) || {}).id === a.id, tela: Planos.tela(), selvas: Planos.daSelva().length,
+                   primeira: (Planos.ligado(%s) || {}).id }; })()""" % json.dumps(bid))
+        p.conta("rotas da selva", "cada build tem a sua ligação: a outra build de Selva começa sem plano; \"+ Plano de selva\" no balão cria \"Rotas — <build>\", liga e abre na mesa; a primeira segue com o dela",
+                outra["visivel"] and not outra["tem"]
+                and m6 == {"nome": "Rotas — Kayn selva", "tipo": "selva", "ligado": True, "tela": "mesa", "selvas": 2, "primeira": plano["id"]}, "%s · %s" % (outra, m6))
+
+        # 7. excluir o plano desliga a build
+        s.clicar("#mesa-voltar", 0.6)
+        s.js("(() => { const l = [...document.querySelectorAll('#planos-lista .pl-linha')].find(b => b.dataset.plano === %s); l.id = 'qa-ligado'; return 1; })()" % json.dumps(plano["id"]))
+        s.clicar("#qa-ligado", 0.5)
+        s.clicar("#plano-excluir", 0.6)
+        s.js("(() => { switchTab('build'); activateBuild(%s); showBuildScreen('forja'); return 1; })()" % json.dumps(bid))
+        time.sleep(0.6)
+        e7 = s.js(estado)
+        lig = s.js("Object.keys(Planos.ligadas()).length")
+        p.conta("rotas da selva", "excluir o plano ligado desliga a build (o botão volta a apagado; a ligação sai dos planos)",
+                e7["visivel"] and not e7["tem"] and lig == 1, "%s · ligações %s" % (e7, lig))
+        p.conta("rotas da selva", "console sem erro", not s.erros, "%s" % s.erros)
+    finally:
+        s.tela(1440, 900)
+
+
 GRUPOS = [
     ("catálogo", checar_catalogo),
     ("ficha", checar_ficha),
@@ -9285,6 +9415,7 @@ GRUPOS = [
     ("sentinelas", checar_sentinelas),
     ("planos", checar_planos),
     ("selva", checar_selva),
+    ("rotas da selva", checar_rotas_da_selva),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
     ("acessibilidade", checar_acessibilidade),

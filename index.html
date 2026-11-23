@@ -1869,6 +1869,29 @@ select.sort-select {
 .mode-select { min-width: 150px; max-width: 200px; }
 .rota-pick { display: inline-flex; align-items: center; gap: inherit; }
 .rota-pick[hidden] { display: none; }
+/* F13-T138: o botão "Rotas da selva" da build de Selva e o balão com os dois minimapas do plano ligado */
+.selva-pick { position: relative; display: inline-flex; }
+.selva-pick[hidden] { display: none; }
+.selva-btn { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; cursor: pointer; border-radius: 3px;
+  font: 600 11px var(--loja-gravado); letter-spacing: .1em; text-transform: uppercase; color: var(--forja-titulo);
+  background: var(--forja-molde-2); border: 1px solid var(--forja-brasa); }
+.selva-btn:not(.tem) { border-color: var(--forja-placa-borda); color: var(--forja-texto-suave); }
+.selva-btn:hover, .selva-btn:focus-visible, .selva-btn[aria-expanded="true"] { border-color: var(--forja-brasa); color: var(--forja-titulo); box-shadow: 0 0 10px var(--forja-brasa-glow); }
+.selva-balao { position: absolute; top: calc(100% + 10px); left: 0; z-index: 60; width: 470px; padding: 12px 14px 14px; border-radius: 4px;
+  background: linear-gradient(160deg, var(--forja-placa-1), var(--forja-placa-2)); border: 1px solid var(--forja-brasa); box-shadow: 0 14px 30px rgba(0,0,0,.65); }
+.selva-balao[hidden] { display: none; }
+.selva-balao::before { content: ""; position: absolute; left: 34px; top: -7px; width: 12px; height: 12px; transform: rotate(45deg);
+  background: var(--forja-placa-1); border-left: 1px solid var(--forja-brasa); border-top: 1px solid var(--forja-brasa); }
+.sb-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+.sb-tit { font: 600 10.5px var(--loja-gravado); letter-spacing: .16em; text-transform: uppercase; color: var(--forja-brasa); }
+.sb-escolha { display: flex; align-items: center; gap: 6px; color: var(--forja-texto-suave); font: 13px var(--loja-texto); }
+.sb-escolha select { max-width: 250px; }
+.sb-tags { margin-bottom: 8px; }
+.sb-par { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sb-par figure { margin: 0; }
+.sb-par figcaption { margin-top: 4px; color: var(--forja-texto-suave); font: 12.5px var(--loja-texto); }
+.sb-vazio { margin: 4px 0 6px; color: var(--forja-texto-suave); font: italic 13px var(--loja-texto); }
+.sb-acoes { display: flex; gap: 8px; margin-top: 10px; }
 .rota-select { min-width: 110px; }
 
 .mode-warning {
@@ -10665,6 +10688,12 @@ body.ac-movimento .entrada.saindo .en-folha.en-esq, body.ac-movimento .entrada.s
       <span class="library-label">Rota</span>
       <select id="build-rota" class="build-select rota-select" title="A rota da build — o cadeado tranca os itens que ela não usa (só em Summoner's Rift; o ARAM não tem rota)"></select>
     </span>
+    <!-- F13-T138 (Leo, 22/11/2026: a opção B da amostra F13-T134): a build de Selva mostra só o botão; o clique abre os
+         dois minimapas do plano de selva ligado a ela -->
+    <span class="selva-pick" id="selva-pick" hidden>
+      <button type="button" id="selva-btn" class="selva-btn" aria-haspopup="dialog" aria-expanded="false">Rotas da selva<i class="champ-caret" aria-hidden="true"></i><span class="novidade" title="Adição recente do Montador: as rotas da selva na build de Selva">Novidade</span></button>
+      <div id="selva-balao" class="selva-balao" role="dialog" aria-label="Rotas da selva" hidden></div>
+    </span>
     <span class="library-label">Campeão</span>
     <div class="champ-pick" id="champ-pick">
       <button type="button" id="build-champ-btn" class="build-select champ-btn" title="Associa a build a um campeão: vale para o conjunto de itens do cliente e para os filtros" aria-haspopup="listbox" aria-expanded="false">
@@ -11644,7 +11673,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.137";
+const ATUALIZACAO = "13.138";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -15091,9 +15120,11 @@ const Planos = (function () {
     if (!st) {
       let g = null;
       try { g = JSON.parse(localStorage.getItem(CHAVE) || "null"); } catch (e) { /* começa vazia */ }
-      st = { ativo: null, lista: [], migrou: [] };
+      st = { ativo: null, lista: [], migrou: [], ligadas: Object.create(null) };
       if (g && Array.isArray(g.lista)) {
         st.lista = g.lista.map(norm);
+        // F13-T138: a build de Selva → o plano de selva dela (a ligação mora aqui, não na build)
+        if (g.ligadas && typeof g.ligadas === "object") Object.keys(g.ligadas).forEach(k => { if (typeof g.ligadas[k] === "string") st.ligadas[k] = g.ligadas[k]; });
         st.ativo = typeof g.ativo === "string" ? g.ativo : null;
         st.migrou = Array.isArray(g.migrou) ? g.migrou.map(String) : [];
       }
@@ -15138,6 +15169,15 @@ const Planos = (function () {
   function gravarVisao(v) {
     const p = atual();
     p.visao = normMapa({ visao: v }).visao; p.atualizado = agora(); gravar();
+  }
+  // F13-T138: o plano de selva ligado a uma build (só um; nenhum = sem ligação)
+  function planoDaBuild(buildId) { carregar(); const id = buildId && st.ligadas[String(buildId)], p = id && achar(id); return p && p.tipo === "selva" ? p : null; }
+  function ligarBuild(buildId, planoId) {
+    if (!buildId) return;
+    carregar();
+    const p = planoId && achar(planoId);
+    if (p && p.tipo === "selva") st.ligadas[String(buildId)] = p.id; else delete st.ligadas[String(buildId)];
+    gravar();
   }
   function gravarRota(qual, l) {   // F13-T137
     const p = atual();
@@ -15226,6 +15266,7 @@ const Planos = (function () {
     const p = achar(id);
     if (!p || !confirm("Excluir o plano “" + p.nome + "”? Isso não dá pra desfazer.")) return;
     st.lista = st.lista.filter(x => x.id !== id);
+    Object.keys(st.ligadas).forEach(k => { if (st.ligadas[k] === id) delete st.ligadas[k]; });   // F13-T138
     if (st.ativo === id) st.ativo = st.lista.length ? st.lista[0].id : null;
     gravar(); desenharLista();
   }
@@ -15279,7 +15320,71 @@ const Planos = (function () {
     tela: function () { return tela; }, gravarRota: gravarRota,
     lista: function () { return carregar().lista.map(p => Object.assign({}, p, { visao: p.visao.slice(), rotas: { farm: p.rotas.farm.slice(), primeira: p.rotas.primeira.slice() } })); },
     ativo: function () { return carregar().ativo; }, trazerDasBuilds: trazerDasBuilds,
+    // F13-T138: para o botão "Rotas da selva" da build
+    ligado: planoDaBuild, ligar: ligarBuild, daSelva: function () { return carregar().lista.filter(p => p.tipo === "selva"); },
+    criarSelva: function (nome) { return criar(nome, "selva"); }, tags: tags, miniatura: miniatura, marcasTxt: marcasTxt,
+    ligadas: function () { carregar(); return Object.assign({}, st.ligadas); },
   };
+})();
+
+// ---------------- F13-T138: as rotas da selva na build ----------------
+// Leo, 22/11/2026 (a amostra da F13-T134, opção B): a build com rota Selva mostra só o botão "Rotas da selva"; o clique
+// abre os dois minimapas do plano de selva ligado a ela. A ligação mora nos planos (mesa.planos, `ligadas`), não na
+// build: o mapa é plano próprio (Leo, 02/11/2026) — a build não grava, não exporta nem publica nada do mapa.
+const RotasSelva = (function () {
+  const el = (id) => document.getElementById(id);
+  let aberto = false, ligado = false;
+  function vale() { return !!build.id && rotaPossivel(build.mode) && rotaValida(build.rota) === "selva"; }
+  function figura(p, qual, rot) {
+    return "<figure>" + Planos.miniatura(p, qual, true) + "<figcaption>" + rot + " · " + Planos.marcasTxt(p.rotas[qual].length) + "</figcaption></figure>";
+  }
+  function desenhar() {
+    const planos = Planos.daSelva(), p = Planos.ligado(build.id);
+    const opcoes = '<option value="">— nenhum —</option>' + planos.map(x => '<option value="' + esc(x.id) + '"' + (p && p.id === x.id ? " selected" : "") + ">" + esc(x.nome) + "</option>").join("");
+    el("selva-balao").innerHTML = '<div class="sb-topo"><span class="sb-tit">Rotas da selva</span>'
+      + (planos.length ? '<label class="sb-escolha">Plano <select id="selva-plano" class="build-select">' + opcoes + "</select></label>" : "") + "</div>"
+      + (p ? '<div class="sb-tags">' + Planos.tags(p) + '</div><div class="sb-par">' + figura(p, "farm", "Rota de farm") + figura(p, "primeira", "Primeira rota") + "</div>"
+        : '<p class="sb-vazio">' + (planos.length ? "Escolha o plano de selva desta build." : "Nenhum plano de selva ainda: crie um, com a rota de farm e a primeira rota.") + "</p>")
+      + '<div class="sb-acoes">' + (p ? '<button type="button" class="btn mini" id="selva-mesa">Abrir na mesa</button>' : "")
+      + '<button type="button" class="btn ghost mini" id="selva-novo">+ Plano de selva</button></div>';
+  }
+  function abrir(on) {
+    aberto = !!on && vale();
+    el("selva-balao").hidden = !aberto;
+    el("selva-btn").setAttribute("aria-expanded", String(aberto));
+    if (aberto) desenhar();
+  }
+  function irParaMesa(id) { abrir(false); switchTab("mapa"); Planos.abrirMesa(id); }
+  function ligar() {
+    el("selva-btn").addEventListener("click", () => { abrir(!aberto); Som.play("catalog:tag_select"); });
+    el("selva-balao").addEventListener("change", (ev) => {
+      if (ev.target.id !== "selva-plano") return;
+      Planos.ligar(build.id, ev.target.value || null);
+      mostrar();
+      const sel = el("selva-plano"); if (sel) sel.focus();
+    });
+    el("selva-balao").addEventListener("click", (ev) => {
+      if (ev.target.closest("#selva-mesa")) { const p = Planos.ligado(build.id); if (p) irParaMesa(p.id); }
+      else if (ev.target.closest("#selva-novo")) {
+        const p = Planos.criarSelva("Rotas — " + (build.name || "build sem nome"));
+        Planos.ligar(build.id, p.id);
+        irParaMesa(p.id);
+      }
+    });
+    document.addEventListener("pointerdown", (ev) => { if (aberto && !ev.target.closest("#selva-pick")) abrir(false); });
+    document.addEventListener("keydown", (ev) => { if (aberto && ev.key === "Escape") { abrir(false); el("selva-btn").focus(); } });
+  }
+  function mostrar() {
+    const pick = el("selva-pick");
+    if (!pick) return;
+    if (!ligado) { ligado = true; ligar(); }
+    const v = vale(), p = v && Planos.ligado(build.id);
+    pick.hidden = !v;
+    el("selva-btn").classList.toggle("tem", !!p);
+    el("selva-btn").title = p ? "O plano de selva desta build: «" + p.nome + "» — clique para ver as rotas" : "Ligar um plano de selva a esta build";
+    if (aberto) { if (v) desenhar(); else abrir(false); }
+  }
+  return { mostrar: mostrar, abrir: function (on) { abrir(on !== false); }, aberto: function () { return aberto; } };
 })();
 
 function renderBuild() {
@@ -17532,6 +17637,7 @@ function renderModeSelect() {
     rs.disabled = !build.editing;
     document.getElementById("rota-pick").hidden = !rotaPossivel(build.mode);
   }
+  RotasSelva.mostrar();   // F13-T138
 }
 
 // ---------------- Lista de arsenais + troca pelo nome (Fase 7, T3) ----------------
