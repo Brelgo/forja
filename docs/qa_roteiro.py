@@ -8945,7 +8945,7 @@ def checar_sentinelas(s, p):
         s.nova_build()
         s.js("switchTab('mapa'); Planos.abrirMesa(); window.scrollTo(0, 0); 'ok'")
         time.sleep(0.6)
-        dup = s.js("({ id: build.id, naBuild: normMapa(build.mapa).visao.length, m: Mesa.plano().visao, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
+        dup = s.js("({ id: build.id, naBuild: 'mapa' in build ? 1 : 0, m: Mesa.plano().visao, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
         p.conta("sentinelas", "abrir uma build não muda o plano da mesa, e a build não leva as sentinelas", bool(dup["id"]) and dup["naBuild"] == 0 and len(dup["m"]) == 1 and dup["m"][0]["t"] == "controle" and dup["marcas"] == 1, "%s" % dup)
     finally:
         s.js("try { ['mesa-raio-on', 'mesa-nevoa-on'].forEach(id => localStorage.setItem(id === 'mesa-raio-on' ? 'mesa.raio' : 'mesa.nevoa', '1')); } catch (e) {} 'ok'")
@@ -8965,9 +8965,12 @@ def checar_planos(s, p):
     try:
         # 1. a migração: uma build com sentinelas (gravada como antes da F13-T119) e o plano único da mesa
         s.nova_build()
-        s.js("""(() => { build.name = 'Ornn suporte'; build.mapa = { visao: [{ t: 'sentinela', x: 9000, z: 5200 }, { t: 'controle', x: 9800, z: 4400 }] };
-          saveBuild(); return 1; })()""")
+        s.js("(() => { build.name = 'Ornn suporte'; saveBuild(); return 1; })()")
         time.sleep(0.4)
+        # F13-T135b: a build não grava mais o mapa — o de antes (F13-T108) entra direto no que está guardado
+        antes_t = s.js("""(() => { const d = JSON.parse(localStorage.getItem(STORAGE_KEY)); const b = d.builds.find(x => x.id === build.id);
+          b.mapa = { visao: [{ t: 'sentinela', x: 9000, z: 5200 }, { t: 'controle', x: 9800, z: 4400 }] };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); return { id: b.id, em: b.updatedAt }; })()""")
         s.js("""localStorage.setItem('mesa.plano', JSON.stringify({ visao: [{ t: 'vidente', x: 7400, z: 7400 }] })); localStorage.removeItem('mesa.planos'); 'ok'""")
         s.abrir("?r=135#mapa")
         time.sleep(0.6)
@@ -8980,10 +8983,22 @@ def checar_planos(s, p):
         s.entrar()
         time.sleep(0.6)
         m2 = s.js(le)
+        recem = s.js("library.builds.filter(x => 'mapa' in x).length")   # F13-T135b
         tela = s.js("({ tela: document.getElementById('view-mapa').dataset.tela, linhas: document.querySelectorAll('#planos-lista .pl-linha').length, pontos: [...document.querySelectorAll('#planos-lista .pl-linha')].map(l => l.querySelectorAll('circle').length) })")
         p.conta("planos", "a migração: o plano único da mesa vira \"Meu plano de visão\" e as sentinelas da build viram \"Sentinelas — Ornn suporte\"; recarregar não duplica; a aba abre na lista, com as sentinelas na miniatura",
                 sorted(map(tuple, m1)) == [("Meu plano de visão", 1, "mesa"), ("Sentinelas — Ornn suporte", 2, "build")] and m2 == m1
                 and tela["tela"] == "lista" and tela["linhas"] == 2 and sorted(tela["pontos"]) == [1, 2], "%s · de novo %s · %s" % (m1, m2, tela))
+
+        # 1b. F13-T135b: o mapa saiu da build — nem na biblioteca, nem na bigorna, nem no que é gravado; salvar a build
+        # que tinha as sentinelas não muda a "Última atualização"; a build nova nasce sem o campo
+        s.js("(() => { activateBuild(%s); saveBuild(); return 1; })()" % json.dumps(antes_t["id"]))
+        time.sleep(0.4)
+        sem = s.js("""(() => { const d = JSON.parse(localStorage.getItem(STORAGE_KEY)); const g = d.builds.find(x => x.id === %s);
+          const r = { recem: %d, naBigorna: 'mapa' in build, naBiblioteca: library.builds.some(x => 'mapa' in x), gravado: d.builds.some(x => 'mapa' in x),
+                      lista: 'mapa' in buildResumo(library.builds.find(x => x.id === %s)), em: g.updatedAt };
+          createNewBuild('Sem mapa', [], '', null, null); r.nova = 'mapa' in build; return r; })()""" % (json.dumps(antes_t["id"]), recem, json.dumps(antes_t["id"])))
+        p.conta("planos", "F13-T135b: o mapa saiu da build — nem na biblioteca recém-carregada, nem na bigorna, nem na biblioteca, nem no que é gravado, nem nos dados da lista, nem na build nova; salvar a build que tinha sentinelas não muda a \"Última atualização\"",
+                sem == {"recem": 0, "naBigorna": False, "naBiblioteca": False, "gravado": False, "lista": False, "em": antes_t["em"], "nova": False}, "%s · antes %s" % (sem, antes_t))
 
         # 2. "+ Novo plano", o nome digitado (Enter), a descrição
         s.clicar("#plano-novo", 0.5)

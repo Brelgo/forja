@@ -11598,7 +11598,7 @@ const SPAN_LABEL = { 4: "¼", 3: "⅓", 2: "½", 1: "1/1" };
 // F13-T57 (Leo, 19/10/2026: "[N da atualização do projeto]" na placa de entrada):
 // fase.tarefa da última tarefa no ar — sobe a cada tarefa aprovada (o roteiro
 // confere que não ficou para trás do último commit "F13-T…").
-const ATUALIZACAO = "13.135";
+const ATUALIZACAO = "13.136";
 const STORAGE_KEY = "lol-builds-v3";
 const LEGACY_KEY = "lol-build-v2";
 
@@ -11748,7 +11748,7 @@ function newBuildId() {
 }
 
 function snapshotActive() {
-  return { id: build.id, name: build.name, cats: comNomes(build.cats), patch: build.patch || CATALOG.meta.patch, revisao: build.revisao || null, roboVisto: build.roboVisto || null, temp: !!build.temp, pubOrigem: build.pubOrigem || null, layout: layoutValido(build.layout), seq: build.seq, mode: build.mode, rota: rotaValida(build.rota), masterwork: !!build.masterwork, champion: build.champion || null, markers: normMarkers(build.markers), desc: build.desc || "", runas: normRunas(build.runas), habilidades: normHabilidades(build.habilidades), mapa: normMapa(build.mapa), fav: !!build.fav, updatedAt: build.updatedAt || 0, pubId: build.pubId || null, pubVersao: build.pubVersao || 0, pubEm: build.pubEm || 0, pubPatch: build.pubPatch || "", pubAssinatura: build.pubAssinatura || "" };
+  return { id: build.id, name: build.name, cats: comNomes(build.cats), patch: build.patch || CATALOG.meta.patch, revisao: build.revisao || null, roboVisto: build.roboVisto || null, temp: !!build.temp, pubOrigem: build.pubOrigem || null, layout: layoutValido(build.layout), seq: build.seq, mode: build.mode, rota: rotaValida(build.rota), masterwork: !!build.masterwork, champion: build.champion || null, markers: normMarkers(build.markers), desc: build.desc || "", runas: normRunas(build.runas), habilidades: normHabilidades(build.habilidades), fav: !!build.fav, updatedAt: build.updatedAt || 0, pubId: build.pubId || null, pubVersao: build.pubVersao || 0, pubEm: build.pubEm || 0, pubPatch: build.pubPatch || "", pubAssinatura: build.pubAssinatura || "" };
 }
 
 // Em modo Editar as alterações ficam em rascunho (Leo, 14/09/2026): saveBuild() só
@@ -11812,8 +11812,9 @@ const HAB_GERAL = (window.HABILIDADES && window.HABILIDADES.regraGeral) || null;
 // o que fugia da regra comum (o 6º rank do Udyr, o R fora do 6/11/16) em toda
 // importação, cópia e publicação. Sem ponto no 19 e no 20 ficam as 18 casas de
 // sempre: a build que já existia grava e assina igual.
-// F13-T108: as marcas do mapa da build — por enquanto, as sentinelas da aba Visão, em unidades do jogo.
-// Só o que é de Summoner's Rift e cabe no mapa; um teto para um texto torto não encher a build.
+// F13-T108: as marcas do mapa — as sentinelas da aba Visão, em unidades do jogo. Desde a F13-T135 são de um plano
+// de mapa (e a F13-T135b tirou o mapa da build). Só o que é de Summoner's Rift e cabe no mapa; um teto para um
+// texto torto não encher o plano.
 const MAPA_TIPOS = ["sentinela", "controle", "vidente"], MAPA_MAX = 40;   // F13-T112: a Alteração Vidente
 function normMapa(m) {
   const lim = window.MAPA ? [MAPA.min[0], MAPA.min[1], MAPA.min[0] + MAPA.nx * MAPA.celula, MAPA.min[1] + MAPA.nz * MAPA.celula] : [0, 0, 15000, 15000];
@@ -11904,9 +11905,7 @@ function assinaturaDaBuild(b) {
     name: b.name || "", desc: b.desc || "", mode: b.mode || "", rota: rotaValida(b.rota), masterwork: !!b.masterwork,
     champion: b.champion && b.champion.key ? String(b.champion.key) + (b.champion.forma ? ":" + b.champion.forma : "") : null,
     markers: normMarkers(b.markers), runas: normRunas(b.runas), habilidades: normHabilidades(b.habilidades),
-    // F13-T108: as marcas do mapa contam como mudança da build (a assinatura só as leva quando existem:
-    // as builds de antes, sem o campo, não passam a dizer "Há alterações")
-    ...(normMapa(b.mapa).visao.length ? { mapa: normMapa(b.mapa) } : {}),
+    // F13-T135b: o mapa saiu da build (os planos de mapa, F13-T135) — nem o resto guardado de antes conta como mudança
     layout: layoutValido(b.layout), cats: comNomes(b.cats || []),
   }));
 }
@@ -12841,7 +12840,9 @@ function loadBuild() {
       if (d && Array.isArray(d.builds) && !d.builds.length) { if (SPANS.includes(d.defaultSpan)) build.defaultSpan = d.defaultSpan; return; }
       if (d && Array.isArray(d.builds) && d.builds.length) {
         if (SPANS.includes(d.defaultSpan)) build.defaultSpan = d.defaultSpan;
+        const legado = [];   // F13-T135b: as sentinelas que a build guardava (F13-T108) vão aos planos de mapa
         library.builds = d.builds.map(b => {
+          if (b && b.mapa) legado.push({ id: b.id, nome: b.name, mapa: b.mapa });
           // Catálogo mudou desde a última gravação? Guarda a revisão pendente
           // (patch antigo + itens que saíram), até o Leo marcar como revisada.
           const removidos = [];
@@ -12868,7 +12869,6 @@ function loadBuild() {
           desc: typeof b.desc === "string" ? b.desc : "",
           runas: b.runas || null,   // normalizada quando a build vira ativa
           habilidades: b.habilidades || null,
-          mapa: b.mapa || null,   // F13-T108: as sentinelas (normalizadas quando a build vira ativa)
           roboVisto: b.roboVisto || null,   // F13-T121: o patch novo do robô que a build já reviu
           fav: !!b.fav,
           updatedAt: Number(b.updatedAt) || 0,
@@ -12882,6 +12882,8 @@ function loadBuild() {
         // aberta"): volta a que estava na bigorna; se estava vazia, fica vazia —
         // antes a primeira da lista abria sozinha
         library.activeId = d.activeId && library.builds.some(b => b.id === d.activeId) ? d.activeId : null;
+        // F13-T135b: antes de qualquer gravação — a próxima já grava a biblioteca sem o mapa
+        if (legado.length) Planos.trazerDasBuilds(legado);
         if (library.activeId) activateBuild(library.activeId, true);
         return;
       }
@@ -12939,7 +12941,6 @@ function copiarParaBigorna(b) {
   build.desc = typeof b.desc === "string" ? b.desc : "";
   build.runas = normRunas(b.runas);
   build.habilidades = normHabilidades(b.habilidades);
-  build.mapa = normMapa(b.mapa);   // F13-T108
   build.fav = !!b.fav;
   build.updatedAt = Number(b.updatedAt) || 0;
   build.pubId = b.pubId || null; build.pubVersao = Number(b.pubVersao) || 0; build.pubEm = Number(b.pubEm) || 0; build.pubPatch = b.pubPatch || ""; build.pubAssinatura = b.pubAssinatura || "";
@@ -12966,7 +12967,7 @@ function copiarParaBigorna(b) {
 function zerarBuild() {
   Object.assign(build, {
     id: null, name: "", cats: [], seq: 1, mode: "", rota: "", masterwork: false, champion: null,
-    markers: normMarkers(null), desc: "", runas: normRunas(null), habilidades: normHabilidades(null), mapa: normMapa(null),
+    markers: normMarkers(null), desc: "", runas: normRunas(null), habilidades: normHabilidades(null),
     fav: false, updatedAt: 0, pubId: null, pubVersao: 0, pubEm: 0, pubPatch: "", pubAssinatura: "",
     patch: CATALOG.meta.patch, revisao: null, temp: false, pubOrigem: null, layout: "tabuleiro", selectedCatId: null,
   });
@@ -13015,7 +13016,6 @@ function createNewBuild(name, cats, mode, champion, markers) {
     desc: "",
     runas: normRunas(null),
     habilidades: normHabilidades(null),
-    mapa: normMapa(null),   // F13-T108
     fav: false,
     updatedAt: Date.now(),
     patch: CATALOG.meta.patch,
@@ -14960,13 +14960,17 @@ const Planos = (function () {
       if (v.length) st.lista.push(norm({ nome: "Meu plano de visão", visao: v, de: "mesa" }));
       st.migrou.push("mesa.plano"); mudou = true;
     }
-    const builds = (library.builds || []).slice();
-    if (build.id && !builds.some(b => b.id === build.id)) builds.push(build);
-    builds.forEach(b => {
+    if (mudou) gravar();
+  }
+  // F13-T135b: as sentinelas que as builds guardavam (F13-T108, build.mapa), lidas pelo loadBuild do que estava
+  // gravado — a build não leva mais o mapa. Uma vez por build (a lista `migrou`).
+  function trazerDasBuilds(legado) {
+    carregar();
+    let mudou = false;
+    legado.forEach(b => {
       if (!b || !b.id || st.migrou.includes(String(b.id))) return;
-      const viva = b.id === build.id ? build : b;
-      const v = normMapa(viva.mapa).visao;
-      if (v.length) st.lista.push(norm({ nome: "Sentinelas — " + (viva.name || "build sem nome"), visao: v, de: "build" }));
+      const v = normMapa(b.mapa).visao;
+      if (v.length) st.lista.push(norm({ nome: "Sentinelas — " + (b.nome || "build sem nome"), visao: v, de: "build" }));
       st.migrou.push(String(b.id)); mudou = true;
     });
     if (mudou) gravar();
@@ -15070,7 +15074,7 @@ const Planos = (function () {
     mostrar: function () { if (!ligado) { ligado = true; ligar(); } mostrar(); },
     atual: atual, gravarVisao: gravarVisao, abrirMesa: function (id) { if (!ligado) { ligado = true; ligar(); } abrirMesa(id); }, voltar: voltar,
     tela: function () { return tela; }, lista: function () { return carregar().lista.map(p => Object.assign({}, p, { visao: p.visao.slice() })); },
-    ativo: function () { return carregar().ativo; },
+    ativo: function () { return carregar().ativo; }, trazerDasBuilds: trazerDasBuilds,
   };
 })();
 
@@ -17353,7 +17357,6 @@ function buildResumo(b) {
     desc: isActive ? (build.desc || "") : (b.desc || ""),
     runas: isActive ? build.runas : (b.runas || null),
     habilidades: isActive ? build.habilidades : (b.habilidades || null),
-    mapa: normMapa(isActive ? build.mapa : b.mapa),   // F13-T108
     masterwork: isActive ? !!build.masterwork : !!b.masterwork,   // F13-T37: o texto do lote escreve o MESTRE FORJADOR
     // F13-T64 (nº 44): a visualização de uma pública mostra o favorito da pública, não o da cópia de passagem
     fav: (isActive ? build.temp : b.temp) ? favoritosIds().includes((isActive ? build.pubOrigem : b.pubOrigem) || "") : (isActive ? !!build.fav : !!b.fav),
@@ -18002,7 +18005,6 @@ function duplicateBuild(id) {
   // descrição e o layout eram copiados. Achado pela caçada de bugs.
   build.runas = normRunas(JSON.parse(JSON.stringify(d.runas || null)));
   build.habilidades = normHabilidades(JSON.parse(JSON.stringify(d.habilidades || null)));
-  build.mapa = normMapa(JSON.parse(JSON.stringify(d.mapa)));   // F13-T108: a cópia leva as sentinelas
   build.masterwork = mestre;
   gravarBuild();
   // F13-T71: a forja foi desenhada pelo createNewBuild, antes de tudo isto —
