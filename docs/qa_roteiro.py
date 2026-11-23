@@ -8215,7 +8215,7 @@ def checar_dicas(s, p):
                 and m_runas == ["runas.ler", "runas.trilhas"] and m_montar == ["runas.montar"],
                 "%s" % momentos)
 
-        # 6. nas três resoluções, cada uma das 26 dicas (com os momentos valendo) fica inteira na janela e não
+        # 6. nas três resoluções, cada uma das 27 dicas (F13-T135: a da lista de planos) (com os momentos valendo) fica inteira na janela e não
         #    cobre o que aponta; e a "Caixa vazia" da forja (.slot-vazio.dica, de antes) segue intacta
         s.js("Dicas.fechar(); switchTab('build'); showBuildScreen('forja'); window.scrollTo(0, 0); 'ok'")
         time.sleep(0.9)
@@ -8239,7 +8239,7 @@ def checar_dicas(s, p):
         for w, h in ((1440, 900), (1920, 1080), (1600, 900)):
             s.tela(w, h)
             for passo in ("switchTab('catalog')", "switchTab('build'); showBuildScreen('lista')", "switchTab('build'); showBuildScreen('forja')",
-                          "switchTab('runas')", "switchTab('mapa')", "switchTab('calc')"):
+                          "switchTab('runas')", "switchTab('mapa'); Planos.voltar()", "switchTab('mapa'); Planos.abrirMesa()", "switchTab('calc')"):
                 s.js("Dicas.fechar(); window.scrollTo(0, 0); %s; 'ok'" % passo)
                 time.sleep(0.9)
                 r = s.js(mede)
@@ -8261,7 +8261,7 @@ def checar_dicas(s, p):
         todas = s.js("Dicas.DICAS.map(d => d.id)")
         faltam = [x for x in todas if x not in vistos]
         p.conta("dicas", "nas três resoluções, cada uma das %d dicas fica inteira na janela e não cobre o que aponta; a \"Caixa vazia\" da forja segue intacta com o balão aberto" % len(todas),
-                len(todas) == 26 and not faltam and not ruins and n_medidas == 78
+                len(todas) == 27 and not faltam and not ruins and n_medidas == 81
                 and bool(vazia) and vazia["pos"] == "static" and "url(" not in vazia["bg"] and vazia["w"] <= 90,
                 "%d medidas · faltaram: %s · ruins: %s · caixa vazia %s" % (n_medidas, faltam or "nenhuma", ", ".join(ruins[:6]) or "nenhuma", vazia))
         s.tela(1440, 900)
@@ -8457,7 +8457,7 @@ def checar_mesa(s, p):
     s.limpar_memoria()
     s.entrar()
     s.nova_build()
-    s.js("switchTab('mapa'); 'ok'")
+    s.js("switchTab('mapa'); Planos.abrirMesa(); 'ok'")   # F13-T135: a mesa fica atrás do "Abrir na mesa"
     time.sleep(0.6)
     est = "Mesa.estado()"
 
@@ -8473,12 +8473,15 @@ def checar_mesa(s, p):
         e = s.js(est)
         return ((px - e["x"]) / (e["lado"] * e["z"]), (py - e["y"]) / (e["lado"] * e["z"]))
 
-    abre_mapa = "(() => { switchTab('mapa'); window.scrollTo(0, 0); return 1; })()"
+    abre_mapa = "(() => { switchTab('mapa'); Planos.abrirMesa(); window.scrollTo(0, 0); return 1; })()"
     try:
         # 1. a aba: o clique abre a tela do mapa e o endereço vira #mapa; o balão "Novidade" é um só, na adição mais
         #    recente (desde a F13-T114, o botão do Update Tracker);
         #    a linha diz de quem é o mapa — e a build de ARAM avisa que o mapa é o de Summoner's Rift
+        s.js("Planos.voltar(); 'ok'")
         s.clicar('.tab-btn[data-tab="mapa"]', 1.0)
+        lista_antes = s.js("({ tela: document.getElementById('view-mapa').dataset.tela, mesa: document.getElementById('mesa').getBoundingClientRect().height, planos: document.getElementById('planos').getBoundingClientRect().height > 0 })")
+        s.clicar("#plano-abrir", 0.8)   # F13-T135: a aba abre na lista; o "Abrir na mesa" leva à mesa
         a = s.js("""(() => { const v = document.getElementById('view-mapa'), n = [...document.querySelectorAll('.novidade')].filter(x => !x.closest('#modal'));
           return { vis: !v.classList.contains('hidden') && v.getBoundingClientRect().height > 0, hash: location.hash,
                    aba: document.querySelector('.tab-btn.active').dataset.tab, novidades: n.length,
@@ -8501,6 +8504,8 @@ def checar_mesa(s, p):
         s.js(abre_mapa)
         time.sleep(0.5)
         j = janela()
+        p.conta("mesa", "a aba Mapa abre na lista de planos e o \"Abrir na mesa\" leva à mesa (F13-T135)",
+                lista_antes == {"tela": "lista", "mesa": 0, "planos": True}, "%s" % lista_antes)
         p.conta("mesa", "a aba Mapa abre a mesa (endereço #mapa); o balão \"Novidade\" é um só, no grupo Atributo (a adição mais recente: Escala com, F13-T126); a linha diz que o plano é da mesa, à parte das builds (F13-T119; a de ARAM não muda nada); o minimapa de hoje (assets/mapa, F13-T113), numa janela quadrada",
                 a["vis"] and a["hash"] == "#mapa" and a["aba"] == "mapa" and a["novidades"] == 1 and a["ondeNov"] == ["stats"] and a["novTxt"] == ["Novidade"]
                 and "à parte das builds" in a["dona"] and dona_aram == a["dona"]
@@ -8688,83 +8693,30 @@ def checar_formas(s, p):
 
 
 def checar_terreno(s, p):
-    """F13-T113 (Leo, 05/11/2026: "na saída do rio tem um arbusto no meio, não na borda, isso é antigo… e tem as
-    alterações das almas dos dragões no mapa"): o mapa de hoje. A grade é a AIPath_SRX_3 (o data/mapa.js igual à
-    base do data/mapa_variantes.js); a imagem, o minimapa do jogo; a alma e a forma do covil do Barão, escolhidas
-    com cliques de verdade, trocam a imagem e aplicam a camada do jogo na grade (célula a célula, e fora dela nada
-    muda), a visão segue a grade nova, a escolha volta ao recarregar, e as moitas são pintadas da grade."""
+    """F13-T113, e F13-T135 (Leo, 22/11/2026: "pode tirar os botões"): o mapa é só o padrão. A grade é a do
+    data/mapa.js (AIPath_SRX_3) sem camada nenhuma; a imagem, o minimapa de base com a 1ª forma do covil; os
+    botões da alma e do covil não existem; e a escolha antiga guardada no navegador (mesa.terreno, de antes)
+    não muda nada — o caminho antigo: quem tinha a Montanha e a 3ª forma escolhidas abre o mapa padrão."""
     print("\n%sTERRENO%s" % (AMARELO, FIM))
     s.tela(1440, 900)
     s.limpar_memoria()
+    s.js("localStorage.setItem('mesa.terreno', JSON.stringify({ alma: 'montanha', covil: 3 })); 'ok'")
+    s.abrir()
+    time.sleep(0.6)
     s.entrar()
-    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+    s.js("switchTab('mapa'); Planos.abrirMesa(); window.scrollTo(0, 0); 'ok'")
     time.sleep(0.8)
-    base = s.js("""(() => { const H = MAPA_HOJE; return { fonte: MAPA.fonte, igual: ['paredes', 'arbustos', 'soPasso'].every(k => MAPA[k] === H[k]) && MAPA.nx === H.nx && MAPA.nz === H.nz,
-      almas: [...document.querySelectorAll('#mesa-alma [data-alma]')].map(b => b.dataset.alma).join(','),
-      covis: [...document.querySelectorAll('#mesa-covil [data-covil]')].map(b => b.dataset.covil).join(','), img: document.getElementById('mesa-img').src }; })()""")
-    p.conta("terreno", "a grade é a de hoje (AIPath_SRX_3, igual à base das variantes); as almas que mudam o terreno e as três formas do covil",
-            base["fonte"].endswith("AIPath_SRX_3.aimesh_ngrid") and base["igual"] and base["almas"] == ",infernal,montanha,oceano"
-            and base["covis"] == "1,2,3" and base["img"].endswith("assets/mapa/base_baron1.png"), "%s" % base)
-    # célula a célula: dentro das regiões da camada o tipo é o da camada; fora delas, o da base (a ordem: a alma,
-    # depois a forma do covil, como o app aplica)
-    confere = """(chaves) => { const H = MAPA_HOJE, NX = H.nx, N = NX * H.nz, b = (k) => { const s = atob(H[k]); return (i) => (s.charCodeAt(i >> 3) >> (i & 7)) & 1; };
-      const p = b('paredes'), a = b('arbustos'), sp = b('soPasso'), esp = new Uint8Array(N);
-      for (let i = 0; i < N; i++) esp[i] = p(i) | a(i) << 1 | sp(i) << 2;
-      let mudam = 0;
-      for (const c of chaves) for (const [x0, z0, w, h, t] of H.variantes[c].regioes) for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) {
-        const i = (z0 + r) * NX + x0 + q, v = t.charCodeAt(r * w + q) - 48; if (esp[i] !== v) mudam++; esp[i] = v; }
-      let erradas = 0; for (let i = 0; i < N; i++) if (Mesa.tipo(i) !== esp[i]) erradas++;
-      return { mudam: mudam, erradas: erradas }; }"""
-    res, imgs = {}, {}
-    for alma, covil, chaves, img in (("montanha", None, ["montanha"], "mountain_baron1"), (None, 2, ["montanha", "barao2"], "mountain_baron2"),
-                                     ("infernal", None, ["infernal", "barao2"], "base_baron2"), ("oceano", 3, ["oceano", "barao3"], "ocean_baron3"),
-                                     ("", 1, [], "base_baron1")):
-        if alma is not None:
-            s.clicar('#mesa-alma [data-alma="%s"]' % alma, 0.4)
-        if covil:
-            s.clicar('#mesa-covil [data-covil="%d"]' % covil, 0.4)
-        nome = "+".join(chaves) or "sem alma, 1ª forma"
-        res[nome] = s.js("(%s)(%s)" % (confere, json.dumps(chaves)))
-        imgs[nome] = s.js("(() => { const i = document.getElementById('mesa-img'); return i.src.split('/').pop() + ':' + (i.complete && i.naturalWidth > 0); })()")
-        ok_img = imgs[nome] == img + ".png:true"
-        p.conta("terreno", "%s: a camada do jogo na grade (célula a célula, nada muda fora dela) e a imagem %s" % (nome, img),
-                ok_img and res[nome]["erradas"] == 0 and (res[nome]["mudam"] > 0) == bool(chaves), "%s · %s" % (res[nome], imgs[nome]))
-    aceso = s.js("[...document.querySelectorAll('.mesa-terr-opt.ativa')].map(b => b.dataset.alma || b.dataset.covil).join(',')")
-    p.conta("terreno", "o botão aceso é o da escolha (a alma e a forma do covil)", aceso == ",1", "%r" % aceso)
-    # a camada que não muda nada na grade de hoje não vira opção (a Quimtec, no SRX_3)
-    quim = s.js("(() => { const H = MAPA_HOJE, NX = H.nx; let m = 0; for (const [x0, z0, w, h, t] of H.variantes.quimtec.regioes) for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) if (Mesa.tipo((z0 + r) * NX + x0 + q) !== t.charCodeAt(r * w + q) - 48) m++; return { muda: m, botao: !!document.querySelector('#mesa-alma [data-alma=quimtec]') }; })()")
-    p.conta("terreno", "a alma que não muda o terreno de hoje fica fora do seletor (a Quimtec: o covil dela já é o da base)", quim == {"muda": 0, "botao": False}, "%s" % quim)
-    # a visão segue a grade nova: um ponto que a camada da Montanha abre (parede na base, chão nela) é visto de perto só com ela
-    s.clicar('#mesa-alma [data-alma="montanha"]', 0.4)
-    vis = s.js("""(() => { const H = MAPA_HOJE, NX = H.nx, T = H.celula, sp = atob(H.paredes), pb = (i) => (sp.charCodeAt(i >> 3) >> (i & 7)) & 1;
-      for (const [x0, z0, w, h, t] of H.variantes.montanha.regioes) for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) {
-        const k = x0 + q, z = z0 + r, i = z * NX + k;
-        if (!pb(i) || t.charCodeAt(r * w + q) !== 48) continue;
-        const wx = H.min[0] + (k + .5) * T, wz = H.min[1] + (z + .5) * T;
-        const ve = Mesa.visao(wx + 2 * T, wz, Mesa.raio('sentinela')).some(c => c[0] === k && c[1] === z);
-        return { ponto: [k, z], ve: ve, tipo: Mesa.tipo(i) };
-      } return null; })()""")
-    s.clicar('#mesa-alma [data-alma=""]', 0.4)
-    vis_base = s.js("(() => { const c = %s; if (!c) return null; const H = MAPA_HOJE, T = H.celula, wx = H.min[0] + (c[0] + .5) * T, wz = H.min[1] + (c[1] + .5) * T; return Mesa.visao(wx + 2 * T, wz, Mesa.raio('sentinela')).some(x => x[0] === c[0] && x[1] === c[1]); })()"
-                    % json.dumps(vis["ponto"] if vis else None))
-    p.conta("terreno", "a visão segue a grade: a parede que a Montanha abre é vista com ela e não sem ela",
-            bool(vis) and vis["ve"] is True and vis["tipo"] == 0 and vis_base is False, "%s · sem alma: %s" % (vis, vis_base))
-    # volta ao recarregar; as moitas pintadas da grade
-    s.clicar('#mesa-alma [data-alma="oceano"]', 0.3)
-    s.clicar('#mesa-covil [data-covil="3"]', 0.3)
-    s.abrir("")
-    time.sleep(1)
-    s.entrar()
-    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
-    time.sleep(0.8)
-    volta = s.js("JSON.stringify(Mesa.terreno())")
-    p.conta("terreno", "a escolha volta ao recarregar (no navegador, como a névoa)", json.loads(volta) == {"imagem": "assets/mapa/ocean_baron3.png", "alma": "oceano", "covil": 3}, volta)
-    moitas = s.js("""(() => { const c = document.getElementById('mesa-moitas'), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
-      let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) n++;
-      let esp = 0; for (let i = 0; i < MAPA.nx * MAPA.nz; i++) if (Mesa.tipo(i) & 2) esp++;
-      return { pintadas: n, moitas: esp, w: c.width, h: c.height }; })()""")
-    p.conta("terreno", "as moitas pintadas são as da grade com a escolha (uma por célula)",
-            moitas["pintadas"] == moitas["moitas"] and moitas["moitas"] > 1000 and moitas["w"] == 295, "%s" % moitas)
+    t = s.js("""(() => { const G = MAPA, N = G.nx * G.nz, b = (k) => { const x = atob(G[k]); return (i) => (x.charCodeAt(i >> 3) >> (i & 7)) & 1; };
+      const p = b('paredes'), a = b('arbustos'), sp = b('soPasso'); let dif = 0;
+      for (let i = 0; i < N; i++) if (Mesa.tipo(i) !== (p(i) | a(i) << 1 | sp(i) << 2)) dif++;
+      return { fonte: G.fonte, dif: dif, img: document.getElementById('mesa-img').src, terreno: Mesa.terreno(),
+               botoes: document.querySelectorAll('#mesa-alma, #mesa-covil, [data-alma], [data-covil]').length,
+               variantes: typeof window.MAPA_HOJE, script: [...document.scripts].some(x => /mapa_variantes/.test(x.src)) }; })()""")
+    p.conta("terreno", "só o mapa padrão: a grade do data/mapa.js sem camada (nenhuma célula diferente), o minimapa de base, sem botões de alma ou covil, e o data/mapa_variantes.js não carrega",
+            t["fonte"].endswith("AIPath_SRX_3.aimesh_ngrid") and t["dif"] == 0 and t["img"].endswith("assets/mapa/base_baron1.png")
+            and t["botoes"] == 0 and t["variantes"] == "undefined" and not t["script"], "%s" % t)
+    p.conta("terreno", "a escolha antiga guardada (Montanha, 3ª forma) não muda nada: a mesa abre no mapa padrão",
+            t["terreno"] == {"imagem": "assets/mapa/base_baron1.png", "alma": "", "covil": 1}, "%s" % t["terreno"])
     p.conta("terreno", "console sem erro", not s.erros, "%s" % s.erros)
 
 
@@ -8782,7 +8734,7 @@ def checar_sentinelas(s, p):
     s.tela(1440, 900)
     s.limpar_memoria()
     s.entrar()
-    s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")   # sem build aberta (F13-T119)
+    s.js("switchTab('mapa'); Planos.abrirMesa(); window.scrollTo(0, 0); 'ok'")   # sem build aberta (F13-T119); F13-T135: a mesa do plano
     time.sleep(0.8)
 
     def mouse(tipo, x, y, **k):
@@ -8982,6 +8934,7 @@ def checar_sentinelas(s, p):
         s.abrir("?r=108#mapa")
         time.sleep(0.6)
         s.entrar()
+        s.js("Planos.abrirMesa(); 'ok'")   # F13-T135: o plano escolhido volta (no navegador)
         time.sleep(0.8)
         d2 = s.js("({ raioOn: document.getElementById('mesa-raio-on').checked, nevoaOn: document.getElementById('mesa-nevoa-on').checked, nevoa: document.getElementById('mesa-nevoa').hidden, n: Mesa.plano().visao.length, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
         p.conta("sentinelas", "a névoa e o raio em ciano se desligam (o raio some, a névoa some) e continuam desligados ao recarregar; a sentinela volta sozinha (o plano fica no navegador, sem Salvar)",
@@ -8990,12 +8943,105 @@ def checar_sentinelas(s, p):
 
         # 9. o plano é da mesa: abrir uma build nova não muda o plano, e a build não leva as sentinelas
         s.nova_build()
-        s.js("switchTab('mapa'); window.scrollTo(0, 0); 'ok'")
+        s.js("switchTab('mapa'); Planos.abrirMesa(); window.scrollTo(0, 0); 'ok'")
         time.sleep(0.6)
         dup = s.js("({ id: build.id, naBuild: normMapa(build.mapa).visao.length, m: Mesa.plano().visao, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length })")
         p.conta("sentinelas", "abrir uma build não muda o plano da mesa, e a build não leva as sentinelas", bool(dup["id"]) and dup["naBuild"] == 0 and len(dup["m"]) == 1 and dup["m"][0]["t"] == "controle" and dup["marcas"] == 1, "%s" % dup)
     finally:
         s.js("try { ['mesa-raio-on', 'mesa-nevoa-on'].forEach(id => localStorage.setItem(id === 'mesa-raio-on' ? 'mesa.raio' : 'mesa.nevoa', '1')); } catch (e) {} 'ok'")
+        s.tela(1440, 900)
+
+
+def checar_planos(s, p):
+    """F13-T135 (Leo, 22/11/2026: a amostra da F13-T134, "pode começar a T135"): a biblioteca de planos na aba Mapa.
+    A migração (uma vez só): o plano único da mesa (F13-T119) e as sentinelas que as builds guardavam (F13-T108) viram
+    planos de Visão; recarregar não duplica. Com cliques de verdade: "+ Novo plano", o nome digitado, a descrição, a
+    busca, escolher na lista, "Abrir na mesa" e "← Planos", e "Excluir" (o confirm). Cada plano tem as suas
+    sentinelas. Nas três resoluções, a lista e a ficha cabem sem rolagem de lado."""
+    print("\n%sPLANOS%s" % (AMARELO, FIM))
+    s.tela(1440, 900)
+    s.limpar_memoria()
+    s.entrar()
+    try:
+        # 1. a migração: uma build com sentinelas (gravada como antes da F13-T119) e o plano único da mesa
+        s.nova_build()
+        s.js("""(() => { build.name = 'Ornn suporte'; build.mapa = { visao: [{ t: 'sentinela', x: 9000, z: 5200 }, { t: 'controle', x: 9800, z: 4400 }] };
+          saveBuild(); return 1; })()""")
+        time.sleep(0.4)
+        s.js("""localStorage.setItem('mesa.plano', JSON.stringify({ visao: [{ t: 'vidente', x: 7400, z: 7400 }] })); localStorage.removeItem('mesa.planos'); 'ok'""")
+        s.abrir("?r=135#mapa")
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.6)
+        le = "Planos.lista().map(x => [x.nome, x.visao.length, x.de])"
+        m1 = s.js(le)
+        s.abrir("?r=1351#mapa")
+        time.sleep(0.6)
+        s.entrar()
+        time.sleep(0.6)
+        m2 = s.js(le)
+        tela = s.js("({ tela: document.getElementById('view-mapa').dataset.tela, linhas: document.querySelectorAll('#planos-lista .pl-linha').length, pontos: [...document.querySelectorAll('#planos-lista .pl-linha')].map(l => l.querySelectorAll('circle').length) })")
+        p.conta("planos", "a migração: o plano único da mesa vira \"Meu plano de visão\" e as sentinelas da build viram \"Sentinelas — Ornn suporte\"; recarregar não duplica; a aba abre na lista, com as sentinelas na miniatura",
+                sorted(map(tuple, m1)) == [("Meu plano de visão", 1, "mesa"), ("Sentinelas — Ornn suporte", 2, "build")] and m2 == m1
+                and tela["tela"] == "lista" and tela["linhas"] == 2 and sorted(tela["pontos"]) == [1, 2], "%s · de novo %s · %s" % (m1, m2, tela))
+
+        # 2. "+ Novo plano", o nome digitado (Enter), a descrição
+        s.clicar("#plano-novo", 0.5)
+        s.js("(() => { const n = document.getElementById('plano-nome'); n.focus(); n.select(); return 1; })()")
+        s.envia("Input.insertText", {"text": "Visão do dragão"})
+        s.envia("Input.dispatchKeyEvent", {"type": "keyDown", "key": "Enter", "code": "Enter", "windowsVirtualKeyCode": 13})
+        s.envia("Input.dispatchKeyEvent", {"type": "keyUp", "key": "Enter", "code": "Enter", "windowsVirtualKeyCode": 13})
+        time.sleep(0.4)
+        s.clicar("#plano-desc", 0.3)
+        s.envia("Input.insertText", {"text": "As sentinelas do lado do dragão."})
+        s.clicar("#planos-q", 0.3)   # sair da descrição grava (change)
+        novo = s.js("""(() => { const a = Planos.lista().find(x => x.id === Planos.ativo());
+          return { nome: a.nome, desc: a.desc, n: Planos.lista().length, sel: (document.querySelector('.pl-linha.sel b') || {}).textContent, topo: document.querySelector('.pl-linha b').textContent,
+                   guardado: JSON.parse(localStorage.getItem('mesa.planos')).lista.some(x => x.nome === 'Visão do dragão' && x.desc === 'As sentinelas do lado do dragão.') }; })()""")
+        p.conta("planos", "\"+ Novo plano\" cria e escolhe um plano no topo da lista; o nome digitado e a descrição ficam guardados no navegador",
+                novo == {"nome": "Visão do dragão", "desc": "As sentinelas do lado do dragão.", "n": 3, "sel": "Visão do dragão", "topo": "Visão do dragão", "guardado": True}, "%s" % novo)
+
+        # 3. a busca filtra pelo nome
+        s.envia("Input.insertText", {"text": "ornn"})
+        time.sleep(0.3)
+        busca = s.js("[...document.querySelectorAll('#planos-lista .pl-linha b')].map(b => b.textContent)")
+        s.js("(() => { const q = document.getElementById('planos-q'); q.value = ''; q.dispatchEvent(new Event('input')); return 1; })()")
+        time.sleep(0.2)
+        p.conta("planos", "a busca deixa só os planos com o nome (\"ornn\" → a da build)", busca == ["Sentinelas — Ornn suporte"], "%s" % busca)
+
+        # 4. cada plano tem as suas sentinelas: na mesa do novo, uma Sentinela de Controle; o da build segue com 2
+        s.clicar("#plano-abrir", 0.8)
+        s.js("document.querySelector('#mesa-ferras [data-ferra=\"controle\"]').click(); 'ok'")   # o Enter/clique sem arrastar: uma no meio
+        time.sleep(0.4)
+        na_mesa = s.js("({ tela: document.getElementById('view-mapa').dataset.tela, n: Mesa.plano().visao.length, dona: document.getElementById('mesa-dona').textContent })")
+        s.clicar("#mesa-voltar", 0.6)
+        s.js("(() => { const l = [...document.querySelectorAll('#planos-lista .pl-linha')].find(b => /Ornn/.test(b.textContent)); l.id = 'qa-ornn'; return 1; })()")
+        s.clicar("#qa-ornn", 0.5)
+        s.clicar("#plano-abrir", 0.8)
+        outro = s.js("({ n: Mesa.plano().visao.length, marcas: document.querySelectorAll('#mesa-marcas .mm-sent').length, dona: document.getElementById('mesa-dona').textContent })")
+        s.clicar("#mesa-voltar", 0.6)
+        p.conta("planos", "cada plano tem as suas sentinelas: a do plano novo fica nele; abrir o da build mostra as 2 dele; a linha de cima da mesa diz o nome do plano",
+                na_mesa["tela"] == "mesa" and na_mesa["n"] == 1 and "Visão do dragão" in na_mesa["dona"]
+                and outro["n"] == 2 and outro["marcas"] == 2 and "Sentinelas — Ornn suporte" in outro["dona"], "%s · %s" % (na_mesa, outro))
+
+        # 5. "Excluir" (o confirm, aceito): o plano sai; o escolhido passa a ser o primeiro
+        antes = s.js("Planos.lista().length")
+        s.clicar("#plano-excluir", 0.6)
+        depois = s.js("({ n: Planos.lista().length, nomes: Planos.lista().map(x => x.nome), ativo: Planos.ativo() === (Planos.lista()[0] || {}).id })")
+        p.conta("planos", "\"Excluir\" tira o plano escolhido (depois do confirm) e escolhe o primeiro da lista",
+                antes == 3 and depois["n"] == 2 and "Sentinelas — Ornn suporte" not in depois["nomes"] and depois["ativo"], "%s → %s" % (antes, depois))
+
+        # 6. nas três resoluções: a lista e a ficha cabem, sem rolagem de lado
+        ruins = []
+        for w, h in ((1440, 900), (1920, 1080), (1600, 900)):
+            s.tela(w, h)
+            time.sleep(0.4)
+            r = s.js("(() => { const a = document.getElementById('planos').getBoundingClientRect(), f = document.getElementById('plano-ficha').getBoundingClientRect(); return { dir: a.right, larg: innerWidth, rola: document.documentElement.scrollWidth > innerWidth + 1, ficha: f.width }; })()")
+            if r["dir"] > r["larg"] or r["rola"] or r["ficha"] < 400:
+                ruins.append("%dx%d %s" % (w, h, r))
+        p.conta("planos", "nas três resoluções a lista e a ficha cabem, sem rolagem de lado", not ruins, ", ".join(ruins) or "ok")
+        p.conta("planos", "console sem erro", not s.erros, "%s" % s.erros)
+    finally:
         s.tela(1440, 900)
 
 
@@ -9051,6 +9097,7 @@ GRUPOS = [
     ("forma do campeão", checar_formas),
     ("terreno", checar_terreno),
     ("sentinelas", checar_sentinelas),
+    ("planos", checar_planos),
     ("desatualizadas", checar_desatualizadas),
     ("mudanças", checar_mudancas),
     ("acessibilidade", checar_acessibilidade),
